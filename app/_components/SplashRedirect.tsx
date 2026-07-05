@@ -21,15 +21,6 @@ export default function SplashRedirect({ target }: { target: string }) {
         Ɔpemfoɔ Akwantuo
       </p>
       <p className="mt-1 font-body text-[15px] text-[#6A1F8A]/70">Caring for every mother</p>
-      <div className="mt-16 flex gap-2">
-        {[0, 1, 2].map((i) => (
-          <span
-            key={i}
-            className="size-2 animate-pulse rounded-badge bg-[#6A1F8A]/40"
-            style={{ animationDelay: `${i * 150}ms` }}
-          />
-        ))}
-      </div>
     </main>
   );
 }

@@ -21,10 +21,6 @@ export default function OnboardingWelcomePage() {
         </p>
       </div>
 
-      <div className="flex justify-center pt-7">
-        <span className="h-2 w-6 rounded-badge bg-primary" />
-      </div>
-
       <div className="flex-1" />
 
       <Link
