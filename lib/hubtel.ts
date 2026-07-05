@@ -33,10 +33,16 @@ export async function sendOtpSms(phone: string, otp: string): Promise<void> {
 }
 
 // True when there's no real SMS provider wired up, so callers can surface the
-// OTP directly in the API response for local testing. Never true in
-// production even if someone forgets to set the Hubtel env vars there.
+// OTP directly in the API response instead of it going nowhere. Local dev
+// gets this for free. A `next build`/deploy with NODE_ENV=production (true
+// for any Vercel deployment, demo or real) requires the explicit
+// SHOW_DEV_OTP=true opt-in, so a real production deploy stays safe by
+// default even if Hubtel credentials are never configured there.
 export function isSmsUnconfigured(): boolean {
-  return process.env.NODE_ENV !== "production" && (!HUBTEL_CLIENT_ID || !HUBTEL_CLIENT_SECRET);
+  const hasCreds = Boolean(HUBTEL_CLIENT_ID && HUBTEL_CLIENT_SECRET);
+  if (hasCreds) return false;
+  if (process.env.NODE_ENV !== "production") return true;
+  return process.env.SHOW_DEV_OTP === "true";
 }
 
 export async function sendReferralCreatedSms(
