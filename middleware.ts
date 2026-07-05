@@ -11,7 +11,13 @@ const ROLE_PREFIXES: Record<string, string> = {
   "/doctor": "DOCTOR",
 };
 
-const AUTH_RATE_LIMIT_PATHS = ["/api/auth/login", "/api/auth/otp/send", "/api/auth/otp/verify"];
+const AUTH_RATE_LIMIT_PATHS = [
+  "/api/auth/login",
+  "/api/auth/otp/send",
+  "/api/auth/otp/verify",
+  "/api/auth/register",
+  "/api/auth/forgot-password",
+];
 const hits = new Map<string, { count: number; resetAt: number }>();
 
 function checkRateLimit(key: string, limit: number, windowMs: number): boolean {

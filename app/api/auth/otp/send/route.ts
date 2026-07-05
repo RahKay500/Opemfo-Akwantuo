@@ -17,9 +17,10 @@ export async function POST(request: NextRequest) {
 
   const existing = await prisma.user.findUnique({ where: { phone } });
 
-  if (existing && existing.passwordHash) {
-    // Already has an account with a password set — don't leak that via a
-    // different response shape, but don't re-run onboarding OTP either.
+  if (existing?.isActive) {
+    // Already a fully verified account (mother or self-registered staff
+    // mid-OTP-verification both leave isActive false until verified, so this
+    // only blocks phones that have actually completed onboarding before).
     return NextResponse.json(
       { error: "This phone number already has an account. Please log in instead." },
       { status: 409 }

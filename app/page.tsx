@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import SplashRedirect from "@/app/_components/SplashRedirect";
 import { verifyAccessToken } from "@/lib/auth";
 
 const ROLE_HOME: Record<string, string> = {
@@ -10,15 +10,16 @@ const ROLE_HOME: Record<string, string> = {
 
 export default async function Splash() {
   const accessToken = cookies().get("access_token")?.value;
+  let target = "/onboarding";
 
   if (accessToken) {
     try {
       const { role } = await verifyAccessToken(accessToken);
-      redirect(ROLE_HOME[role] ?? "/login");
+      target = ROLE_HOME[role] ?? "/onboarding";
     } catch {
-      redirect("/login");
+      target = "/onboarding";
     }
   }
 
-  redirect("/login");
+  return <SplashRedirect target={target} />;
 }

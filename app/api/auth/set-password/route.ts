@@ -26,15 +26,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Setup session expired. Please verify your OTP again." }, { status: 401 });
   }
 
-  const passwordHash = await hashPassword(password);
+  const before = await prisma.user.findUnique({ where: { id: userId } });
+  if (!before) {
+    return NextResponse.json({ error: "Account not found." }, { status: 404 });
+  }
+
   const user = await prisma.user.update({
     where: { id: userId },
-    data: { passwordHash, isActive: true },
+    data: {
+      isActive: true,
+      ...(password ? { passwordHash: await hashPassword(password) } : {}),
+    },
   });
 
+  // Distinguish: brand-new account (mother OTP onboarding, or staff
+  // registration finalizing without re-collecting a password) vs an existing,
+  // already-active account changing its password via forgot-password.
+  const action = !before.isActive ? "ACCOUNT_CREATED" : "PASSWORD_RESET";
   await logAudit({
     actorId: user.id,
-    action: "ACCOUNT_CREATED",
+    action,
     entityType: "User",
     entityId: user.id,
     ipAddress: request.headers.get("x-forwarded-for"),
