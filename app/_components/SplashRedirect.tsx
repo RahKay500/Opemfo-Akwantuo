@@ -8,7 +8,7 @@ export default function SplashRedirect({ target }: { target: string }) {
   const router = useRouter();
 
   useEffect(() => {
-    const t = setTimeout(() => router.replace(target), 700);
+    const t = setTimeout(() => router.replace(target), 3000);
     return () => clearTimeout(t);
   }, [router, target]);
 
