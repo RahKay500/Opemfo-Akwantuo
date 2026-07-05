@@ -1,21 +1,29 @@
-import { getCurrentUser } from "@/lib/current-user";
-import LogoutButton from "@/components/ui/LogoutButton";
 import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
+import BottomNav, { type BottomNavItem } from "@/components/ui/BottomNav";
+import EmergencyBell from "@/components/ui/EmergencyBell";
 
-export default async function MotherLayout({
+const NAV_ITEMS: BottomNavItem[] = [
+  { href: "/mother/dashboard", label: "Home", icon: "home" },
+  { href: "/mother/records", label: "Records", icon: "records" },
+  { href: "/mother/referral", label: "Referral", icon: "referral" },
+  { href: "/mother/notifications", label: "Alerts", icon: "alerts" },
+  { href: "/mother/profile", label: "Profile", icon: "profile" },
+];
+
+export default function MotherLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCurrentUser();
-
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[#F6F1F8]">
       <SessionKeepAlive />
-      {/* Temporary Phase 1-2 header — replaced by BottomNav + EmergencyBell in Phase 3 */}
-      <div className="flex items-center justify-between border-b border-border-color px-4 py-3">
-        <span className="font-body text-sm text-text-secondary">Hi, {user?.name ?? "Mother"}</span>
-        <LogoutButton />
+      {/* pb clears both the 80px BottomNav and the EmergencyBell floating
+          above it (bottom-24 + its own 70px) so bottom-of-page content like
+          a submit button is never covered by the fixed overlays. */}
+      <div className="flex-1 pb-44">{children}</div>
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px]">
+        <BottomNav items={NAV_ITEMS} />
       </div>
-      <div className="flex-1">{children}</div>
+      <EmergencyBell />
     </div>
   );
 }

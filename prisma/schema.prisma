@@ -91,6 +91,7 @@ model Facility {
   type      FacilityType
   region    String
   district  String
+  phone     String?
   isActive  Boolean      @default(true)
   createdAt DateTime     @default(now())
 

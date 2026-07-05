@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import type { Role } from "@prisma/client";
-import type { NextResponse } from "next/server";
+import type { NextRequest, NextResponse } from "next/server";
 
 // jose (not jsonwebtoken) because middleware.ts runs on the edge runtime,
 // where Node's crypto module isn't available.
@@ -109,4 +109,17 @@ export function setAuthCookies(
 export function clearAuthCookies(response: NextResponse): void {
   response.cookies.set("access_token", "", { path: "/", maxAge: 0 });
   response.cookies.set(REFRESH_COOKIE_NAME, "", { path: "/", maxAge: 0 });
+}
+
+// Shared "who's calling this API route" check — middleware already blocks
+// unauthenticated access to page routes, but API routes verify for
+// themselves since they can be hit directly.
+export async function getSessionFromRequest(request: NextRequest): Promise<AccessTokenPayload | null> {
+  const token = request.cookies.get("access_token")?.value;
+  if (!token) return null;
+  try {
+    return await verifyAccessToken(token);
+  } catch {
+    return null;
+  }
 }

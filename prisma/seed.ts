@@ -10,6 +10,7 @@ async function main() {
       type: "CHPS",
       region: "Bono East",
       district: "Kintampo North Municipal",
+      phone: "+233352091234",
     },
   });
 
@@ -19,6 +20,27 @@ async function main() {
       type: "DISTRICT_HOSPITAL",
       region: "Bono East",
       district: "Kintampo North Municipal",
+      phone: "+233352092345",
+    },
+  });
+
+  const korleBu = await prisma.facility.create({
+    data: {
+      name: "Korle Bu Teaching Hospital",
+      type: "TEACHING_HOSPITAL",
+      region: "Greater Accra",
+      district: "Korle Klottey",
+      phone: "+233302501234",
+    },
+  });
+
+  const temaGeneral = await prisma.facility.create({
+    data: {
+      name: "Tema General Hospital",
+      type: "DISTRICT_HOSPITAL",
+      region: "Greater Accra",
+      district: "Tema Metropolitan",
+      phone: "+233303202345",
     },
   });
 
@@ -73,21 +95,151 @@ async function main() {
     },
   });
 
-  await prisma.visit.create({
+  const weeksAgo = (n: number) => new Date(Date.now() - n * 7 * 24 * 60 * 60 * 1000);
+
+  await prisma.visit.createMany({
+    data: [
+      {
+        patientId: patient.id,
+        nurseId: midwife.id,
+        visitType: "ANTENATAL",
+        gestationalAge: 19,
+        systolic: 116,
+        diastolic: 74,
+        fetalHeartRate: 138,
+        temperature: 36.7,
+        weight: 66.2,
+        fundalHeight: 19,
+        observations: "Routine antenatal visit, no concerns.",
+        flagged: false,
+        createdAt: weeksAgo(6),
+      },
+      {
+        patientId: patient.id,
+        nurseId: midwife.id,
+        visitType: "ANTENATAL",
+        gestationalAge: 21,
+        systolic: 122,
+        diastolic: 78,
+        fetalHeartRate: 140,
+        temperature: 36.6,
+        weight: 67.1,
+        fundalHeight: 21,
+        observations: "Routine antenatal visit, no concerns.",
+        flagged: false,
+        createdAt: weeksAgo(4),
+      },
+      {
+        patientId: patient.id,
+        nurseId: midwife.id,
+        visitType: "ANTENATAL",
+        gestationalAge: 23,
+        systolic: 138,
+        diastolic: 88,
+        fetalHeartRate: 145,
+        temperature: 36.9,
+        weight: 67.8,
+        fundalHeight: 23,
+        observations: "Elevated blood pressure observed, advised rest and follow-up.",
+        flagged: true,
+        flagReason: "Elevated blood pressure",
+        flagPriority: "HIGH",
+        createdAt: weeksAgo(2),
+      },
+      {
+        patientId: patient.id,
+        nurseId: midwife.id,
+        visitType: "ANTENATAL",
+        gestationalAge: 25,
+        systolic: 118,
+        diastolic: 76,
+        fetalHeartRate: 142,
+        temperature: 36.8,
+        weight: 68.5,
+        fundalHeight: 25,
+        observations: "Blood pressure back to normal range.",
+        flagged: false,
+        createdAt: new Date(),
+      },
+    ],
+  });
+
+  const daysAgo = (n: number, hour = 10, minute = 32) => {
+    const d = new Date(Date.now() - n * 24 * 60 * 60 * 1000);
+    d.setHours(hour, minute, 0, 0);
+    return d;
+  };
+
+  const activeReferral = await prisma.referral.create({
     data: {
       patientId: patient.id,
-      nurseId: midwife.id,
-      visitType: "ANTENATAL",
-      gestationalAge: 24,
-      systolic: 118,
-      diastolic: 76,
-      fetalHeartRate: 142,
-      temperature: 36.8,
-      weight: 68.5,
-      fundalHeight: 24,
-      observations: "Routine antenatal visit, no concerns.",
-      flagged: false,
+      fromFacilityId: chps.id,
+      toFacilityId: korleBu.id,
+      initiatedById: midwife.id,
+      priority: "CRITICAL",
+      systemSuggestedPriority: "CRITICAL",
+      reason: "Suspected pre-eclampsia — elevated BP with proteinuria risk",
+      transportMethod: "Ambulance",
+      status: "ACKNOWLEDGED",
+      sentAt: daysAgo(2, 10, 32),
+      acknowledgedAt: daysAgo(2, 10, 45),
     },
+  });
+
+  await prisma.referral.create({
+    data: {
+      patientId: patient.id,
+      fromFacilityId: chps.id,
+      toFacilityId: temaGeneral.id,
+      initiatedById: midwife.id,
+      priority: "MEDIUM",
+      systemSuggestedPriority: "MEDIUM",
+      reason: "Routine specialist antenatal review",
+      transportMethod: "Private vehicle",
+      status: "COMPLETED",
+      sentAt: new Date("2025-03-08T09:00:00"),
+      acknowledgedAt: new Date("2025-03-08T09:15:00"),
+      arrivedAt: new Date("2025-03-08T11:00:00"),
+      completedAt: new Date("2025-03-08T13:30:00"),
+      outcomeNotes: "Reviewed and discharged back to CHPS care.",
+    },
+  });
+
+  const flaggedVisit = await prisma.visit.findFirst({ where: { patientId: patient.id, flagged: true } });
+
+  const hoursAgo = (n: number) => new Date(Date.now() - n * 60 * 60 * 1000);
+
+  await prisma.notification.createMany({
+    data: [
+      {
+        userId: motherUser.id,
+        type: "REFERRAL",
+        title: "Your referral to Korle Bu Teaching Hospital has been acknowledged",
+        message: "The hospital is ready for your arrival. Please proceed when ready.",
+        isRead: false,
+        relatedId: activeReferral.id,
+        relatedType: "Referral",
+        createdAt: hoursAgo(2),
+      },
+      {
+        userId: motherUser.id,
+        type: "APPOINTMENT",
+        title: "Appointment confirmed for 18 June",
+        message: "Your antenatal visit at Kintampo CHPS Compound is confirmed for 10:30 AM.",
+        isRead: true,
+        createdAt: daysAgo(2, 8, 0),
+      },
+      {
+        userId: motherUser.id,
+        type: "VITALS",
+        title: "High blood pressure",
+        message: "Your blood pressure at the last visit was slightly elevated. Your midwife will review.",
+        isRead: false,
+        relatedId: flaggedVisit?.id,
+        relatedType: "Visit",
+        createdAt: daysAgo(2, 9, 15),
+      },
+    ],
   });
 
   // Left unregistered on purpose — for exercising the OTP send/verify/set-password

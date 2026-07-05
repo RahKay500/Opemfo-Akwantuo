@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
-export default function LogoutButton() {
+export default function LogoutButton({ variant = "badge" }: { variant?: "badge" | "row" }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -17,12 +18,25 @@ export default function LogoutButton() {
     }
   }
 
+  if (variant === "row") {
+    return (
+      <button
+        type="button"
+        onClick={handleLogout}
+        disabled={loading}
+        className="flex h-14 w-full items-center justify-center border-b border-border-color font-body text-sm text-[#DC2626] disabled:opacity-60"
+      >
+        {loading ? "Signing out…" : "Sign Out"}
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
       onClick={handleLogout}
       disabled={loading}
-      className="rounded-badge border border-border-color px-3 py-1.5 font-body text-xs font-medium text-pink-deep disabled:opacity-60"
+      className={cn("rounded-badge border border-border-color px-3 py-1.5 font-body text-xs font-medium text-pink-deep disabled:opacity-60")}
     >
       {loading ? "Logging out…" : "Log out"}
     </button>

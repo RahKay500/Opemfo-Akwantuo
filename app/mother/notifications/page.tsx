@@ -1,8 +1,29 @@
-export default function NotificationsPage() {
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/current-user";
+import { prisma } from "@/lib/prisma";
+import NotificationsClient from "./NotificationsClient";
+
+export default async function MotherNotificationsPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const notifications = await prisma.notification.findMany({
+    where: { userId: user.id },
+    orderBy: { createdAt: "desc" },
+  });
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-2 p-6">
-      <h1 className="font-heading text-lg font-bold text-text-primary">Mother / notifications</h1>
-      <p className="font-body text-sm text-text-secondary">Scaffolded in Phase 1 — screen UI built in Phase 3.</p>
+    <main className="flex flex-col">
+      <NotificationsClient
+        notifications={notifications.map((n) => ({
+          id: n.id,
+          type: n.type,
+          title: n.title,
+          message: n.message,
+          isRead: n.isRead,
+          createdAt: n.createdAt.toISOString(),
+        }))}
+      />
     </main>
   );
 }

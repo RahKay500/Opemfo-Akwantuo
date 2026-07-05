@@ -3,7 +3,7 @@ import { normalizeGhanaPhone, stripEmoji } from "@/lib/utils";
 
 // Server-side backstop: the client already strips emoji live, but the API
 // can be called directly, so this can't rely on that alone.
-const personName = z
+export const personName = z
   .string()
   .transform((value) => stripEmoji(value).trim())
   .pipe(z.string().min(2, "Enter your full name"));
