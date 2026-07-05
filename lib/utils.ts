@@ -25,3 +25,15 @@ export function formatDate(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return d.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" });
 }
+
+// iOS/Android contact autofill can hand back a saved contact name with an
+// emoji the person added for their own organization (e.g. a hospital emoji
+// before their name) -- strips it so it doesn't end up in clinical records.
+// Also strips zero-width joiner (U+200D) and the emoji variation selector
+// (U+FE0F), which glue/style compound emoji and would otherwise leave stray
+// marks behind once the base emoji character is removed.
+const EMOJI_PATTERN = /[\p{Extended_Pictographic}\u200D\uFE0F]/gu;
+
+export function stripEmoji(text: string): string {
+  return text.replace(EMOJI_PATTERN, "").replace(/\s+/g, " ").trimStart();
+}

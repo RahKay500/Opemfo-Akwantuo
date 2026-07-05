@@ -6,7 +6,8 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { normalizeGhanaPhone, cn } from "@/lib/utils";
+import { normalizeGhanaPhone, stripEmoji, cn } from "@/lib/utils";
+import { localPhoneSchema } from "@/lib/validations/auth";
 import { FamilyIcon, MidwifeIcon, DoctorIcon, EyeIcon, EyeOffIcon, CheckIcon } from "@/components/ui/icons";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 
@@ -14,7 +15,7 @@ const formSchema = z
   .object({
     role: z.enum(["MIDWIFE", "DOCTOR"], { message: "Choose a role" }),
     name: z.string().min(2, "Enter your full name"),
-    phone: z.string().min(9, "Enter your phone number"),
+    phone: localPhoneSchema,
     password: z
       .string()
       .min(8, "At least 8 characters")
@@ -72,18 +73,15 @@ export default function CreateAccountPage() {
 
   async function onSubmit(values: FormValues) {
     setServerError(null);
-    const phone = normalizeGhanaPhone(values.phone);
-    if (!phone) {
-      setServerError("Enter a valid Ghana phone number, e.g. 024 123 4567.");
-      return;
-    }
+    // Non-null: localPhoneSchema's refine already confirmed this normalizes.
+    const phone = normalizeGhanaPhone(values.phone)!;
 
     setSubmitting(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: values.name, phone, role: values.role, password: values.password }),
+        body: JSON.stringify({ name: values.name.trim(), phone, role: values.role, password: values.password }),
       });
       const data = await res.json();
 
@@ -145,7 +143,14 @@ export default function CreateAccountPage() {
             <input
               placeholder="Enter your full name"
               className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              {...register("name")}
+              {...register("name", {
+                // Contact-autofill can carry an emoji from how the phone's
+                // saved (e.g. "🏥 Efua Mensah") — strip it live so it never
+                // reaches a clinical record, whether typed or autofilled.
+                onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+                  e.target.value = stripEmoji(e.target.value);
+                },
+              })}
             />
             {errors.name && <p className="mt-1 text-xs text-[#DC2626]">{errors.name.message}</p>}
           </div>
@@ -157,6 +162,7 @@ export default function CreateAccountPage() {
             <input
               type="tel"
               placeholder="024 123 4567"
+              maxLength={12}
               className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               {...register("phone")}
             />

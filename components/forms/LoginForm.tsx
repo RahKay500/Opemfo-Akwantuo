@@ -7,10 +7,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
 import { normalizeGhanaPhone } from "@/lib/utils";
+import { localPhoneSchema } from "@/lib/validations/auth";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icons";
 
 const formSchema = z.object({
-  phone: z.string().min(9, "Enter your phone number"),
+  phone: localPhoneSchema,
   password: z.string().min(1, "Enter your password"),
 });
 
@@ -36,11 +37,8 @@ export default function LoginForm() {
 
   async function onSubmit(values: FormValues) {
     setServerError(null);
-    const phone = normalizeGhanaPhone(values.phone);
-    if (!phone) {
-      setServerError("Enter a valid Ghana phone number, e.g. 024 123 4567.");
-      return;
-    }
+    // Non-null: localPhoneSchema's refine already confirmed this normalizes.
+    const phone = normalizeGhanaPhone(values.phone)!;
 
     setSubmitting(true);
     try {
@@ -74,6 +72,7 @@ export default function LoginForm() {
         <input
           type="tel"
           placeholder="024 123 4567"
+          maxLength={12}
           className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
           {...register("phone")}
         />

@@ -63,6 +63,7 @@ export default function ForgotPasswordPage() {
         <input
           type="tel"
           placeholder="024 123 4567"
+          maxLength={12}
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           className="h-14 w-full rounded-[14px] border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
