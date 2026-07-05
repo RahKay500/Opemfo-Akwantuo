@@ -74,7 +74,8 @@ export default function CreateAccountPage() {
         return;
       }
 
-      router.push(`/otp?phone=${encodeURIComponent(data.phone)}&next=account-created`);
+      const devOtpParam = data.devOtp ? `&devOtp=${data.devOtp}` : "";
+      router.push(`/otp?phone=${encodeURIComponent(data.phone)}&next=account-created${devOtpParam}`);
     } catch {
       setServerError("Network error. Please try again.");
     } finally {

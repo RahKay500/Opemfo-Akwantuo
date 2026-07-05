@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateOtp } from "@/lib/auth";
-import { sendOtpSms } from "@/lib/hubtel";
+import { isSmsUnconfigured, sendOtpSms } from "@/lib/hubtel";
 import { forgotPasswordSchema } from "@/lib/validations/auth";
 
 // Reuses the same otp/verify + set-password routes as onboarding — verifying
@@ -16,6 +16,7 @@ export async function POST(request: NextRequest) {
 
   const { phone } = parsed.data;
   const user = await prisma.user.findUnique({ where: { phone } });
+  let devOtp: string | undefined;
 
   // Same response whether or not the account exists, so this can't be used
   // to enumerate registered phone numbers.
@@ -24,7 +25,11 @@ export async function POST(request: NextRequest) {
     const otpExpiry = new Date(Date.now() + 10 * 60_000);
     await prisma.user.update({ where: { id: user.id }, data: { otp, otpExpiry } });
     await sendOtpSms(phone, otp);
+    if (isSmsUnconfigured()) devOtp = otp;
   }
 
-  return NextResponse.json({ message: "If that number is registered, a reset code has been sent." });
+  return NextResponse.json({
+    message: "If that number is registered, a reset code has been sent.",
+    ...(devOtp ? { devOtp } : {}),
+  });
 }

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateOtp, hashPassword } from "@/lib/auth";
-import { sendOtpSms } from "@/lib/hubtel";
+import { isSmsUnconfigured, sendOtpSms } from "@/lib/hubtel";
 import { registerSchema } from "@/lib/validations/auth";
 
 // Self-service registration for MIDWIFE/DOCTOR staff (per Figma's CreateAccountScreen —
@@ -47,5 +47,5 @@ export async function POST(request: NextRequest) {
 
   await sendOtpSms(phone, otp);
 
-  return NextResponse.json({ phone });
+  return NextResponse.json({ phone, ...(isSmsUnconfigured() ? { devOtp: otp } : {}) });
 }

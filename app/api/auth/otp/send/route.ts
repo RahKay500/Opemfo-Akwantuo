@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateOtp } from "@/lib/auth";
-import { sendOtpSms } from "@/lib/hubtel";
+import { isSmsUnconfigured, sendOtpSms } from "@/lib/hubtel";
 import { otpSendSchema } from "@/lib/validations/auth";
 
 export async function POST(request: NextRequest) {
@@ -37,5 +37,5 @@ export async function POST(request: NextRequest) {
 
   await sendOtpSms(phone, otp);
 
-  return NextResponse.json({ message: "OTP sent." });
+  return NextResponse.json({ message: "OTP sent.", ...(isSmsUnconfigured() ? { devOtp: otp } : {}) });
 }

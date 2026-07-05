@@ -22,12 +22,14 @@ export default function ForgotPasswordPage() {
 
     setSubmitting(true);
     try {
-      await fetch("/api/auth/forgot-password", {
+      const res = await fetch("/api/auth/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone: normalized }),
       });
-      router.push(`/otp?phone=${encodeURIComponent(normalized)}&next=reset-password`);
+      const data = await res.json();
+      const devOtpParam = data.devOtp ? `&devOtp=${data.devOtp}` : "";
+      router.push(`/otp?phone=${encodeURIComponent(normalized)}&next=reset-password${devOtpParam}`);
     } catch {
       setError("Network error. Please try again.");
     } finally {

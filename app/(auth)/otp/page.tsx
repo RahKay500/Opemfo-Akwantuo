@@ -28,6 +28,9 @@ function OTPForm() {
   const [error, setError] = useState<string | null>(null);
   const [verifying, setVerifying] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  // Only ever populated when no real SMS provider is configured — see
+  // lib/hubtel.ts's isSmsUnconfigured(). Never present in production.
+  const [devOtp, setDevOtp] = useState(searchParams.get("devOtp"));
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -98,11 +101,13 @@ function OTPForm() {
     if (cooldown > 0) return;
     setError(null);
     try {
-      await fetch(resendEndpoint, {
+      const res = await fetch(resendEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ phone }),
       });
+      const data = await res.json();
+      setDevOtp(data.devOtp ?? null);
       setCooldown(60);
     } catch {
       setError("Couldn't resend the code. Please try again.");
@@ -121,6 +126,16 @@ function OTPForm() {
       </div>
 
       <div className="w-full px-6 pt-10">
+        {devOtp && (
+          <button
+            type="button"
+            onClick={() => setOtp(devOtp)}
+            className="mb-4 w-full rounded-input border border-dashed border-lilac-dark bg-lilac-light px-3 py-2 text-center font-body text-sm text-lilac-deeper"
+          >
+            No SMS provider configured — dev code is <span className="font-bold">{devOtp}</span> (tap to fill)
+          </button>
+        )}
+
         <OTPInput value={otp} onChange={setOtp} autoFocus />
         {error && <p className="mt-3 text-center text-sm text-[#DC2626]">{error}</p>}
 

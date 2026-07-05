@@ -32,6 +32,13 @@ export async function sendOtpSms(phone: string, otp: string): Promise<void> {
   await sendSms(phone, `Your Ɔpemfoɔ Akwantuo verification code is ${otp}. It expires in 10 minutes.`);
 }
 
+// True when there's no real SMS provider wired up, so callers can surface the
+// OTP directly in the API response for local testing. Never true in
+// production even if someone forgets to set the Hubtel env vars there.
+export function isSmsUnconfigured(): boolean {
+  return process.env.NODE_ENV !== "production" && (!HUBTEL_CLIENT_ID || !HUBTEL_CLIENT_SECRET);
+}
+
 export async function sendReferralCreatedSms(
   hospitalPhone: string,
   emergencyContactPhone: string | null,
