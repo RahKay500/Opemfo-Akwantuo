@@ -59,7 +59,10 @@ export default function OTPInput({ length = 6, value, onChange, autoFocus }: OTP
           onKeyDown={(e) => handleKeyDown(index, e)}
           onPaste={handlePaste}
           className={cn(
-            "h-16 flex-1 rounded-input border-[1.5px] border-border-color bg-white text-center font-heading text-xl font-bold text-text-primary outline-none",
+            // min-w-0 is required: flex items (especially <input>, a replaced
+            // element) default to min-width:auto, so flex-1 alone can't
+            // shrink them below their intrinsic ~200px browser default width.
+            "h-16 min-w-0 flex-1 rounded-input border-[1.5px] border-border-color bg-white text-center font-heading text-xl font-bold text-text-primary outline-none",
             "focus:border-2 focus:border-primary focus:bg-lilac-light",
             digit && "border-2 border-primary bg-lilac-light"
           )}

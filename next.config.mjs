@@ -13,7 +13,11 @@ const nextConfig = {
             key: "Content-Security-Policy",
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline'",
+              // Next.js dev mode's React Refresh/HMR runtime uses eval() —
+              // without 'unsafe-eval' here, every client component silently
+              // fails to hydrate in development (forms look filled-in-able
+              // but nothing responds). Production doesn't need it.
+              `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob:",
               "font-src 'self' data:",
