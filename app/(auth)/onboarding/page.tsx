@@ -21,10 +21,8 @@ export default function OnboardingWelcomePage() {
         </p>
       </div>
 
-      <div className="flex justify-center gap-2 pt-7">
+      <div className="flex justify-center pt-7">
         <span className="h-2 w-6 rounded-badge bg-primary" />
-        <span className="size-2 rounded-badge bg-border-color" />
-        <span className="size-2 rounded-badge bg-border-color" />
       </div>
 
       <div className="flex-1" />
