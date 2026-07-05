@@ -1,0 +1,64 @@
+import { NextResponse, type NextRequest } from "next/server";
+import { jwtVerify } from "jose";
+
+const ACCESS_SECRET = new TextEncoder().encode(
+  process.env.JWT_ACCESS_SECRET ?? "dev-access-secret-change-me"
+);
+
+const ROLE_PREFIXES: Record<string, string> = {
+  "/mother": "MOTHER",
+  "/midwife": "MIDWIFE",
+  "/doctor": "DOCTOR",
+};
+
+const AUTH_RATE_LIMIT_PATHS = ["/api/auth/login", "/api/auth/otp/send", "/api/auth/otp/verify"];
+const hits = new Map<string, { count: number; resetAt: number }>();
+
+function checkRateLimit(key: string, limit: number, windowMs: number): boolean {
+  const now = Date.now();
+  const entry = hits.get(key);
+  if (!entry || entry.resetAt <= now) {
+    hits.set(key, { count: 1, resetAt: now + windowMs });
+    return true;
+  }
+  if (entry.count >= limit) return false;
+  entry.count += 1;
+  return true;
+}
+
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (AUTH_RATE_LIMIT_PATHS.includes(pathname)) {
+    const ip = request.headers.get("x-forwarded-for") ?? "unknown";
+    const allowed = checkRateLimit(`${ip}:${pathname}`, 10, 60_000);
+    if (!allowed) {
+      return NextResponse.json({ error: "Too many requests, try again shortly." }, { status: 429 });
+    }
+  }
+
+  const protectedPrefix = Object.keys(ROLE_PREFIXES).find((prefix) => pathname.startsWith(prefix));
+  if (!protectedPrefix) {
+    return NextResponse.next();
+  }
+
+  const accessToken = request.cookies.get("access_token")?.value;
+  if (!accessToken) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  try {
+    const { payload } = await jwtVerify(accessToken, ACCESS_SECRET);
+    if (payload.role !== ROLE_PREFIXES[protectedPrefix]) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
+  } catch {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  return NextResponse.next();
+}
+
+export const config = {
+  matcher: ["/mother/:path*", "/midwife/:path*", "/doctor/:path*", "/api/auth/:path*"],
+};
