@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { normalizeGhanaPhone, cn } from "@/lib/utils";
-import { PersonPlusIcon, EyeIcon, EyeOffIcon, CheckIcon } from "@/components/ui/icons";
+import { FamilyIcon, MidwifeIcon, DoctorIcon, EyeIcon, EyeOffIcon, CheckIcon } from "@/components/ui/icons";
 import PasswordStrength from "@/components/ui/PasswordStrength";
 
 const formSchema = z
@@ -30,8 +30,26 @@ const formSchema = z
 type FormValues = z.infer<typeof formSchema>;
 
 const ROLES = [
-  { value: "MIDWIFE" as const, label: "Midwife", blurb: "Manage patient care", icon: PersonPlusIcon },
-  { value: "DOCTOR" as const, label: "Doctor", blurb: "Review referrals", icon: PersonPlusIcon },
+  {
+    value: "MIDWIFE" as const,
+    label: "Midwife",
+    blurb: "Manage patient care",
+    icon: MidwifeIcon,
+    // Figma's exact stroke color for this icon — happens to equal our
+    // lilac-dark token.
+    iconClassName: "text-lilac-dark",
+  },
+  {
+    value: "DOCTOR" as const,
+    label: "Doctor",
+    blurb: "Review referrals",
+    icon: DoctorIcon,
+    // Figma's exact stroke color for this icon is #EA580C, which equals our
+    // "high" triage token — using the raw hex here since this is a role-card
+    // icon, not a priority indicator, and triage classes are reserved for
+    // priority indicators only.
+    iconClassName: "text-[#EA580C]",
+  },
 ];
 
 export default function CreateAccountPage() {
@@ -87,7 +105,7 @@ export default function CreateAccountPage() {
     <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] pb-12 pt-11">
       <div className="flex w-full flex-col items-center pt-[60px]">
         <div className="flex size-14 items-center justify-center rounded-[28px] bg-primary">
-          <PersonPlusIcon className="size-8 text-lilac-deeper" />
+          <FamilyIcon className="size-8 text-white" />
         </div>
         <h1 className="mt-4 font-heading text-[28px] font-bold text-text-primary">Create your account</h1>
         <p className="mt-1 font-body text-[15px] text-text-secondary">Join Ɔpimfuo to get started</p>
@@ -96,7 +114,7 @@ export default function CreateAccountPage() {
       <form onSubmit={handleSubmit(onSubmit)} className="w-full px-6 pt-10">
         <p className="mb-3 font-body text-sm font-medium text-text-primary">I am a...</p>
         <div className="mb-4 flex gap-3">
-          {ROLES.map(({ value, label, blurb }) => (
+          {ROLES.map(({ value, label, blurb, icon: Icon, iconClassName }) => (
             <button
               key={value}
               type="button"
@@ -111,7 +129,7 @@ export default function CreateAccountPage() {
                   <CheckIcon className="size-2.5 text-white" />
                 </span>
               )}
-              <PersonPlusIcon className="size-8 text-lilac-deeper" />
+              <Icon className={cn("size-8", iconClassName)} />
               <span className="font-heading text-[15px] font-bold text-text-primary">{label}</span>
               <span className="text-center font-body text-xs text-text-secondary">{blurb}</span>
             </button>
