@@ -1,21 +1,16 @@
-import { getCurrentUser } from "@/lib/current-user";
-import LogoutButton from "@/components/ui/LogoutButton";
 import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
+import MidwifeBottomNav from "@/components/ui/MidwifeBottomNav";
 
-export default async function MidwifeLayout({
+export default function MidwifeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCurrentUser();
-
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-[#F6F1F8]">
       <SessionKeepAlive />
-      {/* Temporary Phase 1-2 header — replaced by BottomNav in Phase 4 */}
-      <div className="flex items-center justify-between border-b border-border-color px-4 py-3">
-        <span className="font-body text-sm text-text-secondary">Hi, {user?.name ?? "Midwife"}</span>
-        <LogoutButton />
+      <div className="flex-1 pb-20">{children}</div>
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px]">
+        <MidwifeBottomNav />
       </div>
-      <div className="flex-1">{children}</div>
     </div>
   );
 }

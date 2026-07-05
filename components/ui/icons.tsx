@@ -293,6 +293,98 @@ export function PhoneCallIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function SearchIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14 14L11.1333 11.1333" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ShareIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 14 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M10.2539 5.72135C11.1978 5.72135 11.9629 4.95621 11.9629 4.01236C11.9629 3.06851 11.1978 2.30337 10.2539 2.30337C9.31008 2.30337 8.54494 3.06851 8.54494 4.01236C8.54494 4.95621 9.31008 5.72135 10.2539 5.72135Z" stroke="currentColor" strokeWidth="1.13933" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M3.41797 9.70899C4.36182 9.70899 5.12696 8.94385 5.12696 8C5.12696 7.05615 4.36182 6.29101 3.41797 6.29101C2.47413 6.29101 1.70899 7.05615 1.70899 8C1.70899 8.94385 2.47413 9.70899 3.41797 9.70899Z" stroke="currentColor" strokeWidth="1.13933" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10.2539 13.6966C11.1978 13.6966 11.9629 12.9315 11.9629 11.9876C11.9629 11.0438 11.1978 10.2787 10.2539 10.2787C9.31008 10.2787 8.54494 11.0438 8.54494 11.9876C8.54494 12.9315 9.31008 13.6966 10.2539 13.6966Z" stroke="currentColor" strokeWidth="1.13933" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4.8934 8.86019L8.7842 11.1274" stroke="currentColor" strokeWidth="1.13933" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8.7785 4.87255L4.8934 7.13981" stroke="currentColor" strokeWidth="1.13933" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function PatientsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M14.6667 19.25V17.4167C14.6667 16.4442 14.2804 15.5116 13.5927 14.8239C12.9051 14.1363 11.9725 13.75 11 13.75H5.5C4.52754 13.75 3.59491 14.1363 2.90728 14.8239C2.21964 15.5116 1.83333 16.4442 1.83333 17.4167V19.25" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8.25 10.0833C10.275 10.0833 11.9167 8.44171 11.9167 6.41667C11.9167 4.39162 10.275 2.75 8.25 2.75C6.22496 2.75 4.58333 4.39162 4.58333 6.41667C4.58333 8.44171 6.22496 10.0833 8.25 10.0833Z" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20.1667 19.25V17.4167C20.1661 16.6043 19.8957 15.815 19.3979 15.173C18.9002 14.5309 18.2033 14.0723 17.4167 13.8692" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.6667 2.86917C15.4554 3.07111 16.1545 3.52981 16.6537 4.17295C17.1529 4.81609 17.4239 5.60709 17.4239 6.42125C17.4239 7.23541 17.1529 8.02641 16.6537 8.66955C16.1545 9.31269 15.4554 9.77139 14.6667 9.97333" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ReferralArrowIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M6.41667 6.41667H15.5833V15.5833" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6.41667 15.5833L15.5833 6.41667" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function FlagIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M19.9192 16.5L12.5858 3.66667C12.4259 3.38452 12.1941 3.14984 11.9138 2.98656C11.6336 2.82329 11.3151 2.73726 10.9908 2.73726C10.6665 2.73726 10.348 2.82329 10.0678 2.98656C9.78761 3.14984 9.55573 3.38452 9.39583 3.66667L2.0625 16.5C1.90088 16.7799 1.81613 17.0976 1.81684 17.4208C1.81756 17.744 1.90371 18.0613 2.06658 18.3405C2.22944 18.6197 2.46322 18.8509 2.74422 19.0106C3.02522 19.1703 3.34346 19.2529 3.66667 19.25H18.3333C18.655 19.2497 18.9709 19.1647 19.2493 19.0037C19.5278 18.8426 19.759 18.6112 19.9196 18.3325C20.0803 18.0539 20.1649 17.7379 20.1648 17.4162C20.1647 17.0945 20.08 16.7786 19.9192 16.5Z" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11 8.25V11.9167" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11 15.5833H11.01" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ClockIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M7.33333 1.83333V5.5" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.6667 1.83333V5.5" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M17.4167 3.66667H4.58333C3.57081 3.66667 2.75 4.48748 2.75 5.5V18.3333C2.75 19.3459 3.57081 20.1667 4.58333 20.1667H17.4167C18.4292 20.1667 19.25 19.3459 19.25 18.3333V5.5C19.25 4.48748 18.4292 3.66667 17.4167 3.66667Z" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M2.75 9.16667H19.25" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function PlusIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M4.58333 11H17.4167" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11 4.58333V17.4167" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function NavPatientsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M14.6667 19.25V17.4167C14.6667 16.4442 14.2804 15.5116 13.5927 14.8239C12.9051 14.1363 11.9725 13.75 11 13.75H5.5C4.52754 13.75 3.59491 14.1363 2.90728 14.8239C2.21964 15.5116 1.83333 16.4442 1.83333 17.4167V19.25" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M8.25 10.0833C10.275 10.0833 11.9167 8.44171 11.9167 6.41667C11.9167 4.39162 10.275 2.75 8.25 2.75C6.22496 2.75 4.58333 4.39162 4.58333 6.41667C4.58333 8.44171 6.22496 10.0833 8.25 10.0833Z" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20.1667 19.25V17.4167C20.1661 16.6043 19.8957 15.815 19.3979 15.173C18.9002 14.5309 18.2033 14.0723 17.4167 13.8692" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M14.6667 2.86917C15.4554 3.07111 16.1545 3.52981 16.6537 4.17295C17.1529 4.81609 17.4239 5.60709 17.4239 6.42125C17.4239 7.23541 17.1529 8.02641 16.6537 8.66955C16.1545 9.31269 15.4554 9.77139 14.6667 9.97333" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function NavReferralsIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M16.5 19.25C18.0188 19.25 19.25 18.0188 19.25 16.5C19.25 14.9812 18.0188 13.75 16.5 13.75C14.9812 13.75 13.75 14.9812 13.75 16.5C13.75 18.0188 14.9812 19.25 16.5 19.25Z" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5.5 8.25C7.01878 8.25 8.25 7.01878 8.25 5.5C8.25 3.98122 7.01878 2.75 5.5 2.75C3.98122 2.75 2.75 3.98122 2.75 5.5C2.75 7.01878 3.98122 8.25 5.5 8.25Z" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M5.5 19.25V8.25C5.5 10.438 6.36919 12.5365 7.91637 14.0836C9.46354 15.6308 11.562 16.5 13.75 16.5" stroke="currentColor" strokeWidth="1.83333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function EmergencyBellIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

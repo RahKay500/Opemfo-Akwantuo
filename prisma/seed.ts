@@ -170,6 +170,107 @@ async function main() {
     return d;
   };
 
+  const hoursAgoDate = (n: number) => new Date(Date.now() - n * 60 * 60 * 1000);
+
+  const otherMothers = [
+    {
+      name: "Adwoa Asante",
+      phone: "+233551234568",
+      dateOfBirth: new Date("1995-02-20"),
+      lmp: new Date("2025-11-30"),
+      visit: {
+        gestationalAge: 34,
+        systolic: 165,
+        diastolic: 112,
+        fetalHeartRate: 148,
+        temperature: 37.1,
+        flagReason: "Systolic BP 165 mmHg (critical ≥ 160); Diastolic BP 112 mmHg (critical ≥ 110)",
+        flagPriority: "CRITICAL" as const,
+        hoursAgo: 2,
+      },
+      todayTime: "10:30 AM",
+    },
+    {
+      name: "Ama Owusu",
+      phone: "+233551234569",
+      dateOfBirth: new Date("1999-07-08"),
+      lmp: new Date("2025-12-20"),
+      visit: {
+        gestationalAge: 28,
+        systolic: 148,
+        diastolic: 95,
+        fetalHeartRate: 150,
+        temperature: 36.9,
+        flagReason: "Systolic BP 148 mmHg (high ≥ 140); Diastolic BP 95 mmHg (high ≥ 90)",
+        flagPriority: "HIGH" as const,
+        hoursAgo: 4,
+      },
+      todayTime: "11:00 AM",
+    },
+    {
+      name: "Efua Darkwa",
+      phone: "+233551234570",
+      dateOfBirth: new Date("1997-11-15"),
+      lmp: new Date("2025-09-15"),
+      visit: {
+        gestationalAge: 20,
+        systolic: 118,
+        diastolic: 76,
+        fetalHeartRate: 140,
+        temperature: 36.7,
+        flagReason: "Borderline fundal height for gestational age",
+        flagPriority: "MEDIUM" as const,
+        hoursAgo: 6,
+      },
+      todayTime: "12:00 PM",
+    },
+  ];
+
+  for (const m of otherMothers) {
+    const mUser = await prisma.user.create({
+      data: { name: m.name, phone: m.phone, passwordHash, role: "MOTHER" },
+    });
+    const mPatient = await prisma.patient.create({
+      data: {
+        name: m.name,
+        phone: m.phone,
+        dateOfBirth: m.dateOfBirth,
+        facilityId: chps.id,
+        registeredById: midwife.id,
+        userId: mUser.id,
+        gravida: 1,
+        para: 0,
+        lmp: m.lmp,
+        edd: new Date(m.lmp.getTime() + 280 * 24 * 60 * 60 * 1000),
+      },
+    });
+    await prisma.visit.create({
+      data: {
+        patientId: mPatient.id,
+        nurseId: midwife.id,
+        visitType: "ANTENATAL",
+        gestationalAge: m.visit.gestationalAge,
+        systolic: m.visit.systolic,
+        diastolic: m.visit.diastolic,
+        fetalHeartRate: m.visit.fetalHeartRate,
+        temperature: m.visit.temperature,
+        flagged: true,
+        flagReason: m.visit.flagReason,
+        flagPriority: m.visit.flagPriority,
+        createdAt: hoursAgoDate(m.visit.hoursAgo),
+      },
+    });
+    await prisma.appointmentRequest.create({
+      data: {
+        patientId: mPatient.id,
+        requestType: "ROUTINE",
+        preferredDate: new Date(),
+        preferredTime: m.todayTime,
+        status: "CONFIRMED",
+      },
+    });
+  }
+
   const activeReferral = await prisma.referral.create({
     data: {
       patientId: patient.id,

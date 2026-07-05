@@ -8,6 +8,15 @@ export interface PregnancyProgress {
   weeksToGo: number;
 }
 
+export function calculateAge(dateOfBirth: Date, asOf: Date = new Date()): number {
+  let age = asOf.getFullYear() - dateOfBirth.getFullYear();
+  const monthDiff = asOf.getMonth() - dateOfBirth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && asOf.getDate() < dateOfBirth.getDate())) {
+    age--;
+  }
+  return age;
+}
+
 export function calculatePregnancyProgress(lmp: Date, asOf: Date = new Date()): PregnancyProgress {
   const rawWeek = Math.floor((asOf.getTime() - lmp.getTime()) / MS_PER_WEEK);
   const week = Math.min(Math.max(rawWeek, 0), GESTATION_WEEKS);

@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/prisma";
-import { calculatePregnancyProgress } from "@/lib/pregnancy";
+import { calculatePregnancyProgress, calculateAge } from "@/lib/pregnancy";
 
 export interface MotherProfileData {
   patientId: string;
@@ -16,16 +16,6 @@ export interface MotherProfileData {
   emergencyContactRelation: string | null;
   currentWeek: number;
   visitsCount: number;
-}
-
-function calculateAge(dateOfBirth: Date): number {
-  const now = new Date();
-  let age = now.getFullYear() - dateOfBirth.getFullYear();
-  const monthDiff = now.getMonth() - dateOfBirth.getMonth();
-  if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < dateOfBirth.getDate())) {
-    age--;
-  }
-  return age;
 }
 
 export async function getMotherProfileData(userId: string): Promise<MotherProfileData | null> {

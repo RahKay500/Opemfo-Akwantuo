@@ -32,6 +32,13 @@ export async function sendOtpSms(phone: string, otp: string): Promise<void> {
   await sendSms(phone, `Your Ɔpemfoɔ Akwantuo verification code is ${otp}. It expires in 10 minutes.`);
 }
 
+export async function sendPatientRegisteredSms(phone: string): Promise<void> {
+  await sendSms(
+    phone,
+    "Welcome to Ɔpemfoɔ Akwantuo! You've been registered by your midwife. Download the app and enter this phone number to set up your account."
+  );
+}
+
 // True when there's no real SMS provider wired up, so callers can surface the
 // OTP directly in the API response instead of it going nowhere. Local dev
 // gets this for free. A `next build`/deploy with NODE_ENV=production (true

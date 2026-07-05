@@ -39,6 +39,24 @@ export async function POST(request: NextRequest) {
     },
   });
 
+  // A midwife may have already registered this phone number as a Patient
+  // in-clinic before the mother ever downloaded the app. On first activation,
+  // link her new account back to that existing record instead of leaving two
+  // disconnected identities — and adopt the clinically-recorded real name
+  // over the OTP flow's placeholder "New Mother".
+  if (!before.isActive && user.role === "MOTHER") {
+    const existingPatient = await prisma.patient.findFirst({
+      where: { phone: user.phone, userId: null },
+    });
+    if (existingPatient) {
+      await prisma.$transaction([
+        prisma.patient.update({ where: { id: existingPatient.id }, data: { userId: user.id } }),
+        prisma.user.update({ where: { id: user.id }, data: { name: existingPatient.name } }),
+      ]);
+      user.name = existingPatient.name;
+    }
+  }
+
   // Distinguish: brand-new account (mother OTP onboarding, or staff
   // registration finalizing without re-collecting a password) vs an existing,
   // already-active account changing its password via forgot-password.
