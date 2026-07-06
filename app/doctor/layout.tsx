@@ -1,21 +1,16 @@
-import { getCurrentUser } from "@/lib/current-user";
-import LogoutButton from "@/components/ui/LogoutButton";
 import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
+import DoctorBottomNav from "@/components/ui/DoctorBottomNav";
 
-export default async function DoctorLayout({
+export default function DoctorLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const user = await getCurrentUser();
-
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-white">
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-[#F6F1F8]">
       <SessionKeepAlive />
-      {/* Temporary Phase 1-2 header — replaced by BottomNav in Phase 5 */}
-      <div className="flex items-center justify-between border-b border-border-color px-4 py-3">
-        <span className="font-body text-sm text-text-secondary">Hi, {user?.name ?? "Doctor"}</span>
-        <LogoutButton />
+      <div className="flex-1 pb-20">{children}</div>
+      <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px]">
+        <DoctorBottomNav />
       </div>
-      <div className="flex-1">{children}</div>
     </div>
   );
 }
