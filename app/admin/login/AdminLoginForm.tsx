@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function AdminLoginForm() {
   const router = useRouter();
@@ -68,6 +69,10 @@ export default function AdminLoginForm() {
       >
         {submitting ? "Signing in…" : "Sign in"}
       </button>
+
+      <Link href="/admin/recover" className="text-center text-sm text-[#6B7280] hover:text-[#1A1A2E]">
+        Trouble signing in?
+      </Link>
     </form>
   );
 }

@@ -11,6 +11,12 @@ export const changeAdminPasswordSchema = z.object({
   newPassword: strongPassword,
 });
 
+export const recoverAdminSchema = z.object({
+  phone: localPhoneSchema,
+  envPassword: z.string().min(1, "Enter the server recovery password"),
+  newPassword: strongPassword,
+});
+
 export const createFacilitySchema = z.object({
   name: z.string().min(2, "Enter a facility name"),
   type: z.enum(["CHPS", "DISTRICT_HOSPITAL", "TEACHING_HOSPITAL"]),

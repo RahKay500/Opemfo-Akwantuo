@@ -308,9 +308,15 @@ model AuditLog {
 // that checks against this row, and the admin can change their own password
 // from here on without needing those env vars touched again.
 model SuperAdmin {
-  id           String   @id @default(cuid())
-  phone        String   @unique
-  passwordHash String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  phone               String    @unique
+  passwordHash        String
+  // A password change only takes effect once the OTP sent to this admin's
+  // own phone is confirmed — otherwise a hijacked-but-unlocked session could
+  // silently lock the real admin out with no recovery path.
+  pendingPasswordHash String?
+  otp                 String?
+  otpExpiry           DateTime?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 }
