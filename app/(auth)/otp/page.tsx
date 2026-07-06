@@ -7,10 +7,10 @@ import { MessageIcon } from "@/components/ui/icons";
 import OTPInput from "@/components/ui/OTPInput";
 import { maskGhanaPhone } from "@/lib/mask";
 
-type Next = "set-password" | "reset-password" | "account-created";
+type Next = "set-password" | "reset-password";
 
 function resolveNext(value: string | null): Next {
-  if (value === "reset-password" || value === "account-created") return value;
+  if (value === "reset-password") return value;
   return "set-password";
 }
 
@@ -20,8 +20,8 @@ function OTPForm() {
   const phone = searchParams.get("phone") ?? "";
   const next = resolveNext(searchParams.get("next"));
   // Which "resend" endpoint applies: forgot-password already sent the first
-  // code for a reset, otp/send covers both mother onboarding and staff
-  // registration (both leave the account inactive until verified).
+  // code for a reset, otp/send covers activating a pending account (mother
+  // or staff, both left inactive until verified).
   const resendEndpoint = next === "reset-password" ? "/api/auth/forgot-password" : "/api/auth/otp/send";
 
   const [otp, setOtp] = useState("");
@@ -70,25 +70,6 @@ function OTPForm() {
         return;
       }
       const setupToken = verifyData.setupToken as string;
-
-      if (next === "account-created") {
-        // Staff registration: password was already collected and hashed at
-        // /api/auth/register, so this just proves phone ownership and
-        // activates the account — no password field to send here.
-        const finalizeRes = await fetch("/api/auth/set-password", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ setupToken }),
-        });
-        const finalizeData = await finalizeRes.json();
-        if (!finalizeRes.ok) {
-          setError(typeof finalizeData.error === "string" ? finalizeData.error : "Something went wrong.");
-          return;
-        }
-        router.push(`/account-created?role=${finalizeData.user.role}`);
-        return;
-      }
-
       router.push(`/${next}?token=${encodeURIComponent(setupToken)}`);
     } catch {
       setError("Network error. Please try again.");

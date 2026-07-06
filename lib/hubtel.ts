@@ -39,10 +39,10 @@ export async function sendStaffActivationSms(phone: string, otp: string): Promis
   );
 }
 
-export async function sendPatientRegisteredSms(phone: string): Promise<void> {
+export async function sendMotherActivationSms(phone: string, otp: string): Promise<void> {
   await sendSms(
     phone,
-    "Welcome to Ɔpemfoɔ Akwantuo! You've been registered by your midwife. Download the app and enter this phone number to set up your account."
+    `Welcome to Ɔpemfoɔ Akwantuo! Your midwife has registered you. Your activation code is ${otp}. Open the app to set your password.`
   );
 }
 

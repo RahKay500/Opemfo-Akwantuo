@@ -7,6 +7,7 @@ export default function RecoverForm() {
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [envPassword, setEnvPassword] = useState("");
+  const [newPhone, setNewPhone] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export default function RecoverForm() {
       const res = await fetch("/api/admin/auth/recover", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, envPassword, newPassword }),
+        body: JSON.stringify({ phone, envPassword, newPassword, newPhone: newPhone || undefined }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -63,7 +64,7 @@ export default function RecoverForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-[#1A1A2E]">Phone number</label>
+        <label className="text-sm font-medium text-[#1A1A2E]">Server phone number (SUPER_ADMIN_PHONE)</label>
         <input
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -78,6 +79,17 @@ export default function RecoverForm() {
           value={envPassword}
           onChange={(e) => setEnvPassword(e.target.value)}
           placeholder="SUPER_ADMIN_PASSWORD"
+          className="h-11 rounded-md border border-[#E2E8F0] px-3.5 text-sm text-[#1A1A2E] outline-none focus:border-[#E4A8F3]"
+        />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-[#1A1A2E]">
+          New phone number <span className="font-normal text-[#6B7280]">(only if handing off to a new admin)</span>
+        </label>
+        <input
+          value={newPhone}
+          onChange={(e) => setNewPhone(e.target.value)}
+          placeholder="Leave blank to keep the same number"
           className="h-11 rounded-md border border-[#E2E8F0] px-3.5 text-sm text-[#1A1A2E] outline-none focus:border-[#E4A8F3]"
         />
       </div>

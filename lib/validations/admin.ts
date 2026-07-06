@@ -15,6 +15,7 @@ export const recoverAdminSchema = z.object({
   phone: localPhoneSchema,
   envPassword: z.string().min(1, "Enter the server recovery password"),
   newPassword: strongPassword,
+  newPhone: localPhoneSchema.optional().or(z.literal("")),
 });
 
 export const createFacilitySchema = z.object({

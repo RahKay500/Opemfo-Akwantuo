@@ -24,7 +24,7 @@ export default function OnboardingWelcomePage() {
       <div className="flex-1" />
 
       <Link
-        href="/create-account"
+        href="/activate"
         className="flex h-14 w-full items-center justify-center rounded-button bg-lilac-dark font-heading text-[17px] font-bold text-white"
       >
         Get Started

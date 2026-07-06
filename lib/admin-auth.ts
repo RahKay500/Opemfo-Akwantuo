@@ -123,10 +123,16 @@ export async function confirmPasswordChange(
 // SuperAdmin row itself is bootstrapped from those same vars in the first
 // place. A session hijacker has no path to this without also compromising
 // the server config, which is a different, higher trust boundary.
+//
+// An optional newPhone also covers succession: when the person holding this
+// role leaves, whoever controls the env vars can hand the account to a
+// replacement's phone number in the same step, rather than being stuck
+// resetting a password for a number the outgoing admin still controls.
 export async function recoverSuperAdminPassword(
   phone: string,
   envPassword: string,
-  newPassword: string
+  newPassword: string,
+  newPhone?: string
 ): Promise<{ success: boolean; error?: string }> {
   const expectedPhone = process.env.SUPER_ADMIN_PHONE;
   const expectedPassword = process.env.SUPER_ADMIN_PASSWORD;
@@ -138,10 +144,11 @@ export async function recoverSuperAdminPassword(
   }
 
   const passwordHash = await bcrypt.hash(newPassword, 12);
+  const targetPhone = newPhone || phone;
   await prisma.superAdmin.upsert({
     where: { phone },
-    update: { passwordHash, pendingPasswordHash: null, otp: null, otpExpiry: null },
-    create: { phone, passwordHash },
+    update: { phone: targetPhone, passwordHash, pendingPasswordHash: null, otp: null, otpExpiry: null },
+    create: { phone: targetPhone, passwordHash },
   });
   return { success: true };
 }

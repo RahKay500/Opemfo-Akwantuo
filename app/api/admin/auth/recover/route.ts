@@ -16,7 +16,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
   }
 
-  const result = await recoverSuperAdminPassword(phone, parsed.data.envPassword, parsed.data.newPassword);
+  const newPhone = parsed.data.newPhone ? normalizeGhanaPhone(parsed.data.newPhone) ?? undefined : undefined;
+
+  const result = await recoverSuperAdminPassword(phone, parsed.data.envPassword, parsed.data.newPassword, newPhone);
   if (!result.success) {
     return NextResponse.json({ success: false, error: result.error }, { status: 401 });
   }

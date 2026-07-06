@@ -120,9 +120,9 @@ export default function LoginForm() {
       </button>
 
       <p className="text-center font-body text-sm text-text-secondary">
-        Don&apos;t have an account?{" "}
-        <Link href="/create-account" className="font-medium text-pink-deep">
-          Create one
+        Registered by your midwife or Super Admin?{" "}
+        <Link href="/activate" className="font-medium text-pink-deep">
+          Activate account
         </Link>
       </p>
     </form>

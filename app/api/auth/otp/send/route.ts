@@ -12,28 +12,33 @@ export async function POST(request: NextRequest) {
   }
 
   const { phone } = parsed.data;
-  const otp = generateOtp();
-  const otpExpiry = new Date(Date.now() + 10 * 60_000);
 
   const existing = await prisma.user.findUnique({ where: { phone } });
 
-  if (existing?.isActive) {
-    // Already a fully verified account (mother or self-registered staff
-    // mid-OTP-verification both leave isActive false until verified, so this
-    // only blocks phones that have actually completed onboarding before).
+  if (!existing) {
+    // Accounts are never created from a bare phone number anymore — a mother
+    // must first be registered by a midwife (POST /api/patients), and staff
+    // must first be provisioned by the Super Admin. This just activates a
+    // pending account, it never originates one.
+    return NextResponse.json(
+      {
+        error:
+          "No pending account found for this number. Ask your midwife or Super Admin to register you first.",
+      },
+      { status: 404 }
+    );
+  }
+
+  if (existing.isActive) {
     return NextResponse.json(
       { error: "This phone number already has an account. Please log in instead." },
       { status: 409 }
     );
   }
 
-  if (existing) {
-    await prisma.user.update({ where: { id: existing.id }, data: { otp, otpExpiry } });
-  } else {
-    await prisma.user.create({
-      data: { phone, name: "New Mother", role: "MOTHER", isActive: false, otp, otpExpiry },
-    });
-  }
+  const otp = generateOtp();
+  const otpExpiry = new Date(Date.now() + 10 * 60_000);
+  await prisma.user.update({ where: { id: existing.id }, data: { otp, otpExpiry } });
 
   await sendOtpSms(phone, otp);
 

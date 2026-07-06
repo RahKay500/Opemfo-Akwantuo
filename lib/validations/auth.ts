@@ -53,16 +53,8 @@ export const forgotPasswordSchema = z.object({
   phone: ghanaPhone,
 });
 
-export const registerSchema = z.object({
-  name: personName,
-  phone: ghanaPhone,
-  role: z.enum(["MIDWIFE", "DOCTOR"]),
-  password: strongPassword,
-});
-
 export type LoginInput = z.infer<typeof loginSchema>;
 export type OtpSendInput = z.infer<typeof otpSendSchema>;
 export type OtpVerifyInput = z.infer<typeof otpVerifySchema>;
 export type SetPasswordInput = z.infer<typeof setPasswordSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
-export type RegisterInput = z.infer<typeof registerSchema>;
