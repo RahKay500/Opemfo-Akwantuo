@@ -57,32 +57,32 @@ enum AppointmentStatus {
 }
 
 model User {
-  id           String   @id @default(cuid())
-  name         String
-  phone        String   @unique
-  passwordHash String?
-  role         Role
-  facilityId   String?
-  facility     Facility? @relation(fields: [facilityId], references: [id])
-  isActive     Boolean  @default(true)
-  otp          String?
-  otpExpiry    DateTime?
+  id            String    @id @default(cuid())
+  name          String
+  phone         String    @unique
+  passwordHash  String?
+  role          Role
+  facilityId    String?
+  facility      Facility? @relation(fields: [facilityId], references: [id])
+  isActive      Boolean   @default(true)
+  otp           String?
+  otpExpiry     DateTime?
   // Professional licence number, captured at provisioning time by the Super
   // Admin portal. Not verified against any registry yet — stored for a
   // future verification step.
   licenseNumber String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  patient                Patient?              @relation("MotherAccount")
-  registeredPatients      Patient[]             @relation("RegisteredBy")
-  visitsAsNurse           Visit[]               @relation("NurseVisits")
-  referralsInitiated      Referral[]            @relation("ReferralInitiator")
-  referralSharesGiven     ReferralShare[]       @relation("SharedByNurse")
-  referralSharesReceived  ReferralShare[]       @relation("SharedWithDoctor")
-  symptomsReported        Symptom[]             @relation("SymptomReporter")
-  symptomsReviewed        Symptom[]             @relation("SymptomReviewer")
-  emergencyAlertsResolved EmergencyAlert[]      @relation("EmergencyResolver")
+  patient                 Patient?         @relation("MotherAccount")
+  registeredPatients      Patient[]        @relation("RegisteredBy")
+  visitsAsNurse           Visit[]          @relation("NurseVisits")
+  referralsInitiated      Referral[]       @relation("ReferralInitiator")
+  referralSharesGiven     ReferralShare[]  @relation("SharedByNurse")
+  referralSharesReceived  ReferralShare[]  @relation("SharedWithDoctor")
+  symptomsReported        Symptom[]        @relation("SymptomReporter")
+  symptomsReviewed        Symptom[]        @relation("SymptomReviewer")
+  emergencyAlertsResolved EmergencyAlert[] @relation("EmergencyResolver")
   notifications           Notification[]
   auditLogs               AuditLog[]
 
@@ -99,36 +99,36 @@ model Facility {
   isActive  Boolean      @default(true)
   createdAt DateTime     @default(now())
 
-  users                User[]
-  patients             Patient[]
-  referralsFrom        Referral[] @relation("ReferralFromFacility")
-  referralsTo          Referral[] @relation("ReferralToFacility")
+  users         User[]
+  patients      Patient[]
+  referralsFrom Referral[] @relation("ReferralFromFacility")
+  referralsTo   Referral[] @relation("ReferralToFacility")
 }
 
 model Patient {
-  id                        String    @id @default(cuid())
-  name                      String
-  phone                     String
-  dateOfBirth               DateTime
-  ghanaCardId               String?
-  facilityId                String
-  facility                  Facility  @relation(fields: [facilityId], references: [id])
-  registeredById            String
-  registeredBy              User      @relation("RegisteredBy", fields: [registeredById], references: [id])
-  userId                    String?   @unique
-  user                      User?     @relation("MotherAccount", fields: [userId], references: [id])
-  bloodGroup                String?
-  gravida                   Int?
-  para                      Int?
-  lmp                       DateTime?
-  edd                       DateTime?
-  knownConditions           String?
-  emergencyContactName      String?
-  emergencyContactPhone     String?
-  emergencyContactRelation  String?
-  deliveryDate              DateTime?
-  createdAt                 DateTime  @default(now())
-  updatedAt                 DateTime  @updatedAt
+  id                       String    @id @default(cuid())
+  name                     String
+  phone                    String
+  dateOfBirth              DateTime
+  ghanaCardId              String?
+  facilityId               String
+  facility                 Facility  @relation(fields: [facilityId], references: [id])
+  registeredById           String
+  registeredBy             User      @relation("RegisteredBy", fields: [registeredById], references: [id])
+  userId                   String?   @unique
+  user                     User?     @relation("MotherAccount", fields: [userId], references: [id])
+  bloodGroup               String?
+  gravida                  Int?
+  para                     Int?
+  lmp                      DateTime?
+  edd                      DateTime?
+  knownConditions          String?
+  emergencyContactName     String?
+  emergencyContactPhone    String?
+  emergencyContactRelation String?
+  deliveryDate             DateTime?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
 
   visits              Visit[]
   referrals           Referral[]
@@ -141,55 +141,55 @@ model Patient {
 }
 
 model Visit {
-  id               String    @id @default(cuid())
-  patientId        String
-  patient          Patient   @relation(fields: [patientId], references: [id])
-  nurseId          String
-  nurse            User      @relation("NurseVisits", fields: [nurseId], references: [id])
-  visitType        VisitType
-  gestationalAge   Int?
-  daysPostpartum   Int?
-  systolic         Int?
-  diastolic        Int?
-  fetalHeartRate   Int?
-  temperature      Float?
-  weight           Float?
-  fundalHeight     Float?
-  observations     String?
-  flagged          Boolean   @default(false)
-  flagReason       String?
-  flagPriority     Priority?
-  createdAt        DateTime  @default(now())
+  id             String    @id @default(cuid())
+  patientId      String
+  patient        Patient   @relation(fields: [patientId], references: [id])
+  nurseId        String
+  nurse          User      @relation("NurseVisits", fields: [nurseId], references: [id])
+  visitType      VisitType
+  gestationalAge Int?
+  daysPostpartum Int?
+  systolic       Int?
+  diastolic      Int?
+  fetalHeartRate Int?
+  temperature    Float?
+  weight         Float?
+  fundalHeight   Float?
+  observations   String?
+  flagged        Boolean   @default(false)
+  flagReason     String?
+  flagPriority   Priority?
+  createdAt      DateTime  @default(now())
 
   @@index([patientId])
   @@index([nurseId])
 }
 
 model Referral {
-  id                       String         @id @default(cuid())
-  patientId                String
-  patient                  Patient        @relation(fields: [patientId], references: [id])
-  fromFacilityId           String
-  fromFacility             Facility       @relation("ReferralFromFacility", fields: [fromFacilityId], references: [id])
-  toFacilityId             String
-  toFacility               Facility       @relation("ReferralToFacility", fields: [toFacilityId], references: [id])
-  initiatedById            String
-  initiatedBy              User           @relation("ReferralInitiator", fields: [initiatedById], references: [id])
-  priority                 Priority
-  systemSuggestedPriority  Priority
-  nurseOverrideReason      String?
-  reason                   String
-  additionalNotes          String?
-  transportMethod          String?
-  includeHistory           Boolean        @default(true)
-  includeVitals            Boolean        @default(true)
-  includeFlags             Boolean        @default(true)
-  status                   ReferralStatus @default(SENT)
-  sentAt                   DateTime       @default(now())
-  acknowledgedAt           DateTime?
-  arrivedAt                DateTime?
-  completedAt              DateTime?
-  outcomeNotes             String?
+  id                      String         @id @default(cuid())
+  patientId               String
+  patient                 Patient        @relation(fields: [patientId], references: [id])
+  fromFacilityId          String
+  fromFacility            Facility       @relation("ReferralFromFacility", fields: [fromFacilityId], references: [id])
+  toFacilityId            String
+  toFacility              Facility       @relation("ReferralToFacility", fields: [toFacilityId], references: [id])
+  initiatedById           String
+  initiatedBy             User           @relation("ReferralInitiator", fields: [initiatedById], references: [id])
+  priority                Priority
+  systemSuggestedPriority Priority
+  nurseOverrideReason     String?
+  reason                  String
+  additionalNotes         String?
+  transportMethod         String?
+  includeHistory          Boolean        @default(true)
+  includeVitals           Boolean        @default(true)
+  includeFlags            Boolean        @default(true)
+  status                  ReferralStatus @default(SENT)
+  sentAt                  DateTime       @default(now())
+  acknowledgedAt          DateTime?
+  arrivedAt               DateTime?
+  completedAt             DateTime?
+  outcomeNotes            String?
 
   shares ReferralShare[]
 
@@ -200,19 +200,19 @@ model Referral {
 }
 
 model ReferralShare {
-  id                  String    @id @default(cuid())
-  referralId          String?
-  referral            Referral? @relation(fields: [referralId], references: [id])
-  patientId           String?
-  patient             Patient?  @relation(fields: [patientId], references: [id])
-  sharedByNurseId     String
-  sharedByNurse       User      @relation("SharedByNurse", fields: [sharedByNurseId], references: [id])
-  sharedWithDoctorId  String
-  sharedWithDoctor    User      @relation("SharedWithDoctor", fields: [sharedWithDoctorId], references: [id])
-  reason              String?
-  expiresAt           DateTime
-  isActive            Boolean   @default(true)
-  createdAt           DateTime  @default(now())
+  id                 String    @id @default(cuid())
+  referralId         String?
+  referral           Referral? @relation(fields: [referralId], references: [id])
+  patientId          String?
+  patient            Patient?  @relation(fields: [patientId], references: [id])
+  sharedByNurseId    String
+  sharedByNurse      User      @relation("SharedByNurse", fields: [sharedByNurseId], references: [id])
+  sharedWithDoctorId String
+  sharedWithDoctor   User      @relation("SharedWithDoctor", fields: [sharedWithDoctorId], references: [id])
+  reason             String?
+  expiresAt          DateTime
+  isActive           Boolean   @default(true)
+  createdAt          DateTime  @default(now())
 
   @@index([referralId])
   @@index([patientId])
@@ -220,34 +220,34 @@ model ReferralShare {
 }
 
 model Symptom {
-  id               String          @id @default(cuid())
-  patientId        String
-  patient          Patient         @relation(fields: [patientId], references: [id])
-  reportedById     String
-  reportedBy       User            @relation("SymptomReporter", fields: [reportedById], references: [id])
-  symptoms         Json
-  severity         SymptomSeverity
-  notes            String?
-  startedWhen      String?
-  createdAt        DateTime        @default(now())
+  id                String          @id @default(cuid())
+  patientId         String
+  patient           Patient         @relation(fields: [patientId], references: [id])
+  reportedById      String
+  reportedBy        User            @relation("SymptomReporter", fields: [reportedById], references: [id])
+  symptoms          Json
+  severity          SymptomSeverity
+  notes             String?
+  startedWhen       String?
+  createdAt         DateTime        @default(now())
   reviewedByNurseId String?
-  reviewedByNurse  User?           @relation("SymptomReviewer", fields: [reviewedByNurseId], references: [id])
+  reviewedByNurse   User?           @relation("SymptomReviewer", fields: [reviewedByNurseId], references: [id])
 
   @@index([patientId])
 }
 
 model AppointmentRequest {
-  id             String                 @id @default(cuid())
-  patientId      String
-  patient        Patient                @relation(fields: [patientId], references: [id])
-  requestType    AppointmentRequestType
-  preferredDate  DateTime
-  preferredTime  String?
-  reason         String?
-  urgency        String?
-  notes          String?
-  status         AppointmentStatus      @default(PENDING)
-  createdAt      DateTime               @default(now())
+  id            String                 @id @default(cuid())
+  patientId     String
+  patient       Patient                @relation(fields: [patientId], references: [id])
+  requestType   AppointmentRequestType
+  preferredDate DateTime
+  preferredTime String?
+  reason        String?
+  urgency       String?
+  notes         String?
+  status        AppointmentStatus      @default(PENDING)
+  createdAt     DateTime               @default(now())
 
   @@index([patientId])
 }
@@ -287,8 +287,8 @@ model AuditLog {
   actorId    String?
   actor      User?    @relation(fields: [actorId], references: [id])
   // Set instead of actorId for actions with no User row — e.g. the Super
-  // Admin portal, which authenticates via env credentials only and is
-  // explicitly never a row in this table.
+  // Admin portal, whose accounts live in the separate SuperAdmin model, not
+  // here, since they aren't a MOTHER/MIDWIFE/DOCTOR.
   actorLabel String?
   action     String
   entityType String
@@ -299,4 +299,18 @@ model AuditLog {
 
   @@index([actorId])
   @@index([entityType, entityId])
+}
+
+// Deliberately separate from User — the Super Admin isn't a MOTHER, MIDWIFE,
+// or DOCTOR and shouldn't be reachable through any role-based query on that
+// table. Bootstrapped once from SUPER_ADMIN_PHONE/SUPER_ADMIN_PASSWORD env
+// vars if this table is empty (see lib/admin-auth.ts); every login after
+// that checks against this row, and the admin can change their own password
+// from here on without needing those env vars touched again.
+model SuperAdmin {
+  id           String   @id @default(cuid())
+  phone        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

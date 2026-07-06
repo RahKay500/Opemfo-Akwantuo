@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { href: "/admin/facilities", label: "Facilities" },
   { href: "/admin/staff", label: "Staff" },
   { href: "/admin/audit", label: "Audit Log" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export default function Sidebar() {

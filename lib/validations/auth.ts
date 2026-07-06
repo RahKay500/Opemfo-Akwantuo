@@ -36,7 +36,7 @@ export const otpVerifySchema = z.object({
   otp: z.string().length(6),
 });
 
-const strongPassword = z
+export const strongPassword = z
   .string()
   .min(8, "Password must be at least 8 characters")
   .regex(/[A-Z]/, "Password must contain an uppercase letter")

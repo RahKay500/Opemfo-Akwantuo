@@ -16,12 +16,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
   }
 
-  const valid = await checkAdminCredentials(phone, parsed.data.password);
-  if (!valid) {
+  const admin = await checkAdminCredentials(phone, parsed.data.password);
+  if (!admin) {
     return NextResponse.json({ success: false, error: "Invalid phone number or password." }, { status: 401 });
   }
 
-  const token = await signAdminToken();
+  const token = await signAdminToken(admin.id);
   const response = NextResponse.json({ success: true });
   setAdminCookie(response, token);
 
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     actorLabel: "Super Admin",
     action: "ADMIN_LOGIN",
     entityType: "SuperAdmin",
-    entityId: "super-admin",
+    entityId: admin.id,
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 

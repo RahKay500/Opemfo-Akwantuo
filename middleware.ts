@@ -57,7 +57,7 @@ export async function middleware(request: NextRequest) {
     }
     try {
       const { payload } = await jwtVerify(adminToken, ADMIN_SECRET);
-      if (payload.sub !== "super-admin") {
+      if (typeof payload.sub !== "string" || !payload.sub) {
         return NextResponse.redirect(new URL("/admin/login", request.url));
       }
     } catch {

@@ -1,9 +1,14 @@
 import { z } from "zod";
-import { localPhoneSchema } from "@/lib/validations/auth";
+import { localPhoneSchema, strongPassword } from "@/lib/validations/auth";
 
 export const adminLoginSchema = z.object({
   phone: localPhoneSchema,
   password: z.string().min(1, "Enter your password"),
+});
+
+export const changeAdminPasswordSchema = z.object({
+  currentPassword: z.string().min(1, "Enter your current password"),
+  newPassword: strongPassword,
 });
 
 export const createFacilitySchema = z.object({
