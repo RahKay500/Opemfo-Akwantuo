@@ -1,0 +1,289 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
+import StatusBadge from "@/components/admin/StatusBadge";
+import Modal from "@/components/admin/Modal";
+import FormField from "@/components/admin/FormField";
+
+export interface FacilityRow {
+  id: string;
+  name: string;
+  type: "CHPS" | "DISTRICT_HOSPITAL" | "TEACHING_HOSPITAL";
+  region: string;
+  district: string;
+  phone: string | null;
+  isActive: boolean;
+  staffCount: number;
+}
+
+const TYPE_LABELS: Record<FacilityRow["type"], string> = {
+  CHPS: "CHPS",
+  DISTRICT_HOSPITAL: "District Hospital",
+  TEACHING_HOSPITAL: "Teaching Hospital",
+};
+
+interface FormState {
+  name: string;
+  type: FacilityRow["type"];
+  region: string;
+  district: string;
+  phone: string;
+}
+
+const EMPTY_FORM: FormState = { name: "", type: "CHPS", region: "", district: "", phone: "" };
+
+export default function FacilitiesClient({ facilities }: { facilities: FacilityRow[] }) {
+  const router = useRouter();
+  const [addOpen, setAddOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<FacilityRow | null>(null);
+  const [deactivateTarget, setDeactivateTarget] = useState<FacilityRow | null>(null);
+  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [error, setError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+
+  function openEdit(facility: FacilityRow) {
+    setForm({
+      name: facility.name,
+      type: facility.type,
+      region: facility.region,
+      district: facility.district,
+      phone: facility.phone ?? "",
+    });
+    setEditTarget(facility);
+    setError(null);
+  }
+
+  function closeModals() {
+    setAddOpen(false);
+    setEditTarget(null);
+    setDeactivateTarget(null);
+    setForm(EMPTY_FORM);
+    setError(null);
+  }
+
+  async function handleCreate() {
+    setError(null);
+    if (!form.name.trim() || !form.region.trim() || !form.district.trim()) {
+      setError("Fill in all required fields.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/admin/facilities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, phone: form.phone || undefined }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setError(typeof data.error === "string" ? data.error : "Something went wrong.");
+        return;
+      }
+      closeModals();
+      router.refresh();
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleUpdate() {
+    if (!editTarget) return;
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin/facilities/${editTarget.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...form, phone: form.phone || undefined }),
+      });
+      const data = await res.json();
+      if (!data.success) {
+        setError(typeof data.error === "string" ? data.error : "Something went wrong.");
+        return;
+      }
+      closeModals();
+      router.refresh();
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleToggleActive(facility: FacilityRow) {
+    setSubmitting(true);
+    try {
+      await fetch(`/api/admin/facilities/${facility.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !facility.isActive }),
+      });
+      closeModals();
+      router.refresh();
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const columns: DataTableColumn<FacilityRow>[] = [
+    { key: "name", header: "Name", render: (r) => r.name },
+    { key: "type", header: "Type", render: (r) => TYPE_LABELS[r.type] },
+    { key: "region", header: "Region", render: (r) => r.region },
+    { key: "district", header: "District", render: (r) => r.district },
+    { key: "staffCount", header: "Staff", render: (r) => r.staffCount },
+    { key: "status", header: "Status", render: (r) => <StatusBadge status={r.isActive ? "Active" : "Inactive"} /> },
+    {
+      key: "actions",
+      header: "",
+      render: (r) => (
+        <div className="flex gap-3">
+          <button type="button" onClick={() => openEdit(r)} className="text-sm font-medium text-[#1A1A2E] underline">
+            Edit
+          </button>
+          <button
+            type="button"
+            onClick={() => (r.isActive ? setDeactivateTarget(r) : handleToggleActive(r))}
+            className="text-sm font-medium text-[#DC2626] underline"
+          >
+            {r.isActive ? "Deactivate" : "Reactivate"}
+          </button>
+        </div>
+      ),
+    },
+  ];
+
+  return (
+    <>
+      <div className="mb-4 flex justify-end">
+        <button
+          type="button"
+          onClick={() => {
+            setForm(EMPTY_FORM);
+            setError(null);
+            setAddOpen(true);
+          }}
+          className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
+        >
+          Add Facility
+        </button>
+      </div>
+
+      <DataTable columns={columns} rows={facilities} rowKey={(r) => r.id} emptyMessage="No facilities yet." />
+
+      <Modal open={addOpen} onClose={closeModals} title="Add Facility">
+        <FacilityForm form={form} setForm={setForm} error={error} />
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleCreate}
+            disabled={submitting}
+            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Creating…" : "Create Facility"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={editTarget !== null} onClose={closeModals} title="Edit Facility">
+        <FacilityForm form={form} setForm={setForm} error={error} />
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleUpdate}
+            disabled={submitting}
+            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Saving…" : "Save Changes"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={deactivateTarget !== null} onClose={closeModals} title="Deactivate Facility">
+        <p className="text-sm text-[#6B7280]">
+          Are you sure you want to deactivate <strong>{deactivateTarget?.name}</strong>? Staff at this facility will
+          remain assigned, but the facility won&apos;t be selectable for new registrations.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => deactivateTarget && handleToggleActive(deactivateTarget)}
+            disabled={submitting}
+            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Deactivating…" : "Deactivate"}
+          </button>
+        </div>
+      </Modal>
+
+    </>
+  );
+}
+
+function FacilityForm({
+  form,
+  setForm,
+  error,
+}: {
+  form: FormState;
+  setForm: (f: FormState) => void;
+  error: string | null;
+}) {
+  return (
+    <div className="flex flex-col gap-4">
+      <FormField label="Facility name" required>
+        <input
+          value={form.name}
+          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+      <FormField label="Type" required>
+        <select
+          value={form.type}
+          onChange={(e) => setForm({ ...form, type: e.target.value as FormState["type"] })}
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        >
+          <option value="CHPS">CHPS</option>
+          <option value="DISTRICT_HOSPITAL">District Hospital</option>
+          <option value="TEACHING_HOSPITAL">Teaching Hospital</option>
+        </select>
+      </FormField>
+      <FormField label="Region" required>
+        <input
+          value={form.region}
+          onChange={(e) => setForm({ ...form, region: e.target.value })}
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+      <FormField label="District" required>
+        <input
+          value={form.district}
+          onChange={(e) => setForm({ ...form, district: e.target.value })}
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+      <FormField label="Phone">
+        <input
+          value={form.phone}
+          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          placeholder="Optional"
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+      {error && <p className="text-sm text-[#DC2626]">{error}</p>}
+    </div>
+  );
+}

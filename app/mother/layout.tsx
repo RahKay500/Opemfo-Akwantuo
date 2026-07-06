@@ -14,7 +14,7 @@ export default function MotherLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F6F1F8]">
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-[#F6F1F8]">
       <SessionKeepAlive />
       {/* pb clears both the 80px BottomNav and the EmergencyBell floating
           above it (bottom-24 + its own 70px) so bottom-of-page content like

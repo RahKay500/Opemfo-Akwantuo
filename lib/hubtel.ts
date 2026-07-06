@@ -32,6 +32,13 @@ export async function sendOtpSms(phone: string, otp: string): Promise<void> {
   await sendSms(phone, `Your Ɔpemfoɔ Akwantuo verification code is ${otp}. It expires in 10 minutes.`);
 }
 
+export async function sendStaffActivationSms(phone: string, otp: string): Promise<void> {
+  await sendSms(
+    phone,
+    `Welcome to Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the app to set your password.`
+  );
+}
+
 export async function sendPatientRegisteredSms(phone: string): Promise<void> {
   await sendSms(
     phone,

@@ -32,9 +32,7 @@ export default function RootLayout({
       <body
         className={`${nunito.variable} ${inter.variable} font-body antialiased bg-surface`}
       >
-        <div className="mx-auto min-h-screen w-full max-w-[430px] bg-white">
-          {children}
-        </div>
+        {children}
       </body>
     </html>
   );

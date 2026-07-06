@@ -8,7 +8,7 @@ export default async function DoctorLayout({
   const user = await getCurrentUser();
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-white">
       <SessionKeepAlive />
       {/* Temporary Phase 1-2 header — replaced by BottomNav in Phase 5 */}
       <div className="flex items-center justify-between border-b border-border-color px-4 py-3">

@@ -67,6 +67,10 @@ model User {
   isActive     Boolean  @default(true)
   otp          String?
   otpExpiry    DateTime?
+  // Professional licence number, captured at provisioning time by the Super
+  // Admin portal. Not verified against any registry yet — stored for a
+  // future verification step.
+  licenseNumber String?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -280,8 +284,12 @@ model Notification {
 
 model AuditLog {
   id         String   @id @default(cuid())
-  actorId    String
-  actor      User     @relation(fields: [actorId], references: [id])
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id])
+  // Set instead of actorId for actions with no User row — e.g. the Super
+  // Admin portal, which authenticates via env credentials only and is
+  // explicitly never a row in this table.
+  actorLabel String?
   action     String
   entityType String
   entityId   String
