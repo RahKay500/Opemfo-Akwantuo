@@ -18,7 +18,7 @@ export default async function AdminAuditPage() {
   return (
     <>
       <Header title="Audit Log" />
-      <div className="px-8 py-6">
+      <div className="px-4 py-6 lg:px-8">
         <AuditClient
           logs={logs.map((l) => ({
             id: l.id,

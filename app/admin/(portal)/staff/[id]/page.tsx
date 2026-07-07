@@ -23,7 +23,7 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
   return (
     <>
       <Header title="Staff Detail" />
-      <div className="px-8 py-6">
+      <div className="px-4 py-6 lg:px-8">
         <StaffDetailClient
           staff={{
             id: staff.id,

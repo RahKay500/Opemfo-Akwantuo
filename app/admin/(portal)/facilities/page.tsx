@@ -15,7 +15,7 @@ export default async function AdminFacilitiesPage() {
   return (
     <>
       <Header title="Facilities" />
-      <div className="px-8 py-6">
+      <div className="px-4 py-6 lg:px-8">
         <FacilitiesClient
           facilities={facilities.map((f) => ({
             id: f.id,

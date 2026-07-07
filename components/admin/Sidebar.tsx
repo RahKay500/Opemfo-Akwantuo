@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { usePathname } from "next/navigation";
+import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
 
 const NAV_ITEMS = [
   { href: "/admin/dashboard", label: "Dashboard" },
@@ -14,18 +14,6 @@ const NAV_ITEMS = [
 
 export default function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
-  const [signingOut, setSigningOut] = useState(false);
-
-  async function handleSignOut() {
-    setSigningOut(true);
-    try {
-      await fetch("/api/admin/auth/logout", { method: "POST" });
-    } finally {
-      router.push("/admin/login");
-      router.refresh();
-    }
-  }
 
   return (
     <aside className="flex h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white">
@@ -54,14 +42,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="border-t border-white/10 px-3 py-4">
-        <button
-          type="button"
-          onClick={handleSignOut}
-          disabled={signingOut}
-          className="w-full rounded-md px-4 py-2.5 text-left text-sm font-medium text-white/70 transition-colors hover:bg-white/5 hover:text-white disabled:opacity-60"
-        >
-          {signingOut ? "Signing out…" : "Sign out"}
-        </button>
+        <AdminSignOutButton />
       </div>
     </aside>
   );

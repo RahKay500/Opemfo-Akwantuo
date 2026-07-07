@@ -37,7 +37,7 @@ export default function AuditClient({ logs, actions }: { logs: AuditRow[]; actio
 
   return (
     <>
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center">
         <select
           value={actionFilter}
           onChange={(e) => setActionFilter(e.target.value)}
@@ -50,19 +50,21 @@ export default function AuditClient({ logs, actions }: { logs: AuditRow[]; actio
             </option>
           ))}
         </select>
-        <input
-          type="date"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
-        <span className="text-sm text-[#6B7280]">to</span>
-        <input
-          type="date"
-          value={to}
-          onChange={(e) => setTo(e.target.value)}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
+        <div className="flex items-center gap-3">
+          <input
+            type="date"
+            value={from}
+            onChange={(e) => setFrom(e.target.value)}
+            className="h-10 min-w-0 flex-1 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-none"
+          />
+          <span className="shrink-0 text-sm text-[#6B7280]">to</span>
+          <input
+            type="date"
+            value={to}
+            onChange={(e) => setTo(e.target.value)}
+            className="h-10 min-w-0 flex-1 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-none"
+          />
+        </div>
       </div>
 
       <DataTable columns={columns} rows={filtered} rowKey={(r) => r.id} emptyMessage="No audit entries match this filter." />

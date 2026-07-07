@@ -27,7 +27,7 @@ export default async function AdminStaffPage() {
           </Link>
         }
       />
-      <div className="px-8 py-6">
+      <div className="px-4 py-6 lg:px-8">
         <StaffClient
           staff={staff.map((s) => ({
             id: s.id,

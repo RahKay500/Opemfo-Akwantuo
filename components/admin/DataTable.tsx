@@ -30,8 +30,8 @@ export default function DataTable<T>({
   const pageRows = rows.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div className="rounded-lg border border-[#E2E8F0] bg-white">
-      <table className="w-full text-left text-sm">
+    <div className="overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
+      <table className="hidden w-full text-left text-sm lg:table">
         <thead>
           <tr className="border-b border-[#E2E8F0] text-xs font-medium uppercase tracking-wide text-[#6B7280]">
             {columns.map((col) => (
@@ -66,6 +66,28 @@ export default function DataTable<T>({
           ))}
         </tbody>
       </table>
+
+      <div className="divide-y divide-[#E2E8F0] lg:hidden">
+        {pageRows.length === 0 && (
+          <div className="px-5 py-8 text-center text-[#6B7280]">{emptyMessage}</div>
+        )}
+        {pageRows.map((row) => (
+          <div
+            key={rowKey(row)}
+            onClick={() => onRowClick?.(row)}
+            className={`flex flex-col gap-2 px-4 py-3.5 ${onRowClick ? "cursor-pointer active:bg-[#F8FAFC]" : ""}`}
+          >
+            {columns.map((col) => (
+              <div key={col.key} className="flex items-start justify-between gap-3">
+                <span className="shrink-0 text-xs font-medium uppercase tracking-wide text-[#6B7280]">
+                  {col.header}
+                </span>
+                <span className="text-right text-sm text-[#1A1A2E]">{col.render(row)}</span>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
 
       {totalPages > 1 && (
         <div className="flex items-center justify-between border-t border-[#E2E8F0] px-5 py-3">
