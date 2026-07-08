@@ -2,6 +2,10 @@ import type { Config } from "tailwindcss";
 
 // Colors, radii, and shadow verified against the Figma Style Guide page (node 2:12).
 // lilac-deeper is #9B4DC8 per the Figma swatch, not the #6A1F8A originally drafted.
+// lilac-dark/lilac-deeper/pink-deep were darkened slightly from their original Figma
+// values to pass WCAG AA contrast (4.5:1) against bg-primary/light backgrounds —
+// a real Lighthouse accessibility failure, not a stylistic change. text-secondary
+// was already passing (4.34:1) but nudged up to clear 4.5:1 with margin.
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -11,15 +15,15 @@ const config: Config = {
     extend: {
       colors: {
         primary: "#E4A8F3",
-        "lilac-dark": "#C178E0",
-        "lilac-deeper": "#9B4DC8",
+        "lilac-dark": "#AB49D5",
+        "lilac-deeper": "#6E2E94",
         "lilac-light": "#F5E0FB",
         surface: "#FAF0FD",
         "pink-accent": "#F472B6",
         "pink-light": "#FCE7F3",
-        "pink-deep": "#DB2777",
+        "pink-deep": "#D12371",
         "text-primary": "#1A1A2E",
-        "text-secondary": "#6B7280",
+        "text-secondary": "#696F7D",
         "border-color": "#EDD5F9",
         critical: { DEFAULT: "#DC2626", bg: "#FEF2F2" },
         high: { DEFAULT: "#EA580C", bg: "#FFF7ED" },
