@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito, Inter } from "next/font/google";
 import "./globals.css";
+import "@/lib/zod-config";
 
 const nunito = Nunito({
   subsets: ["latin"],
