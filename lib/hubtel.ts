@@ -46,6 +46,13 @@ export async function sendMotherActivationSms(phone: string, otp: string): Promi
   );
 }
 
+export async function sendFacilityAdminActivationSms(phone: string, otp: string, facilityName: string): Promise<void> {
+  await sendSms(
+    phone,
+    `You've been added as the Facility Admin for ${facilityName} on Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the admin portal to set your password.`
+  );
+}
+
 // True when there's no real SMS provider wired up, so callers can surface the
 // OTP directly in the API response instead of it going nowhere. Local dev
 // gets this for free. A `next build`/deploy with NODE_ENV=production (true

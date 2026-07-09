@@ -101,8 +101,9 @@ model Facility {
 
   users         User[]
   patients      Patient[]
-  referralsFrom Referral[] @relation("ReferralFromFacility")
-  referralsTo   Referral[] @relation("ReferralToFacility")
+  referralsFrom Referral[]   @relation("ReferralFromFacility")
+  referralsTo   Referral[]   @relation("ReferralToFacility")
+  admins        SuperAdmin[]
 }
 
 model Patient {
@@ -290,6 +291,11 @@ model AuditLog {
   // Admin portal, whose accounts live in the separate SuperAdmin model, not
   // here, since they aren't a MOTHER/MIDWIFE/DOCTOR.
   actorLabel String?
+  // Set only for facility-scoped admin actions (staff created/updated/
+  // deactivated/OTP-resent) so a Facility Admin's audit view can filter to
+  // just their own facility. Platform-level actions (facility created, admin
+  // login/password changes, facility-admin created) leave this null.
+  facilityId String?
   action     String
   entityType String
   entityId   String
@@ -299,18 +305,25 @@ model AuditLog {
 
   @@index([actorId])
   @@index([entityType, entityId])
+  @@index([facilityId])
 }
 
-// Deliberately separate from User — the Super Admin isn't a MOTHER, MIDWIFE,
-// or DOCTOR and shouldn't be reachable through any role-based query on that
-// table. Bootstrapped once from SUPER_ADMIN_PHONE/SUPER_ADMIN_PASSWORD env
-// vars if this table is empty (see lib/admin-auth.ts); every login after
-// that checks against this row, and the admin can change their own password
-// from here on without needing those env vars touched again.
+// Deliberately separate from User — Super Admins aren't a MOTHER, MIDWIFE, or
+// DOCTOR and shouldn't be reachable through any role-based query on that
+// table. Two tiers share this one model: facilityId null is the Platform
+// Super Admin (bootstrapped once from SUPER_ADMIN_PHONE/SUPER_ADMIN_PASSWORD
+// env vars — see lib/admin-auth.ts — manages the facility list and creates
+// Facility Admin accounts); facilityId set is a Facility Admin, scoped to
+// managing only that facility's staff, created by the Platform Super Admin
+// and activated via OTP + set-password exactly like staff (isActive/
+// passwordHash null until then).
 model SuperAdmin {
   id                  String    @id @default(cuid())
   phone               String    @unique
-  passwordHash        String
+  passwordHash        String?
+  facilityId          String?
+  facility            Facility? @relation(fields: [facilityId], references: [id])
+  isActive            Boolean   @default(true)
   // A password change only takes effect once the OTP sent to this admin's
   // own phone is confirmed — otherwise a hijacked-but-unlocked session could
   // silently lock the real admin out with no recovery path.
@@ -319,4 +332,6 @@ model SuperAdmin {
   otpExpiry           DateTime?
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
+
+  @@index([facilityId])
 }

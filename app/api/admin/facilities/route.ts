@@ -6,8 +6,8 @@ import { createFacilitySchema } from "@/lib/validations/admin";
 
 export async function GET(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId !== null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const facilities = await prisma.facility.findMany({
@@ -32,8 +32,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId !== null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const body = await request.json().catch(() => null);

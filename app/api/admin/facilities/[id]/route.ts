@@ -6,8 +6,8 @@ import { updateFacilitySchema } from "@/lib/validations/admin";
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId !== null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const body = await request.json().catch(() => null);

@@ -35,17 +35,39 @@ export const updateFacilitySchema = z.object({
   isActive: z.boolean().optional(),
 });
 
+export const createFacilityAdminSchema = z.object({
+  phone: localPhoneSchema,
+  facilityId: z.string().min(1, "Select a facility"),
+});
+
+export const updateFacilityAdminSchema = z.object({
+  facilityId: z.string().min(1).optional(),
+  isActive: z.boolean().optional(),
+});
+
+export const activateAdminRequestSchema = z.object({
+  phone: localPhoneSchema,
+});
+
+export const activateAdminConfirmSchema = z.object({
+  phone: localPhoneSchema,
+  otp: z.string().length(6),
+  password: strongPassword,
+});
+
+// facilityId is deliberately absent — a Facility Admin can only ever create
+// staff at their own facility, derived from their session, not a client-
+// supplied value. Reassigning staff between facilities is a Platform Admin
+// concern, out of scope for a facility-scoped account.
 export const createStaffSchema = z.object({
   name: z.string().min(2, "Enter a full name"),
   phone: localPhoneSchema,
   role: z.enum(["MIDWIFE", "DOCTOR"]),
-  facilityId: z.string().min(1, "Select a facility"),
   licenseNumber: z.string().optional(),
 });
 
 export const updateStaffSchema = z.object({
   name: z.string().min(2).optional(),
-  facilityId: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
   licenseNumber: z.string().optional(),
 });

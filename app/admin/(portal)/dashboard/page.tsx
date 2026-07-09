@@ -1,33 +1,44 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { isSuperAdmin } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { getAdminDashboardData } from "@/lib/queries/admin-dashboard";
 import Header from "@/components/admin/Header";
 import StatsCard from "@/components/admin/StatsCard";
 import RecentActivityTable from "./RecentActivityTable";
 
 export default async function AdminDashboardPage() {
-  if (!(await isSuperAdmin())) redirect("/admin/login");
+  const session = await getAdminSession();
+  if (!session) redirect("/admin/login");
 
-  const data = await getAdminDashboardData();
+  const data = await getAdminDashboardData(session.facilityId);
+  const isFacilityAdmin = session.facilityId !== null;
 
   return (
     <>
       <Header
-        title="Dashboard"
+        title={isFacilityAdmin ? `Dashboard — ${data.facilityName ?? "Your Facility"}` : "Dashboard"}
         action={
-          <Link
-            href="/admin/staff/new"
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
-          >
-            Add Staff
-          </Link>
+          isFacilityAdmin ? (
+            <Link
+              href="/admin/staff/new"
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
+            >
+              Add Staff
+            </Link>
+          ) : (
+            <Link
+              href="/admin/facility-admins/new"
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
+            >
+              Add Facility Admin
+            </Link>
+          )
         }
       />
 
       <div className="px-4 py-6 lg:px-8">
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <StatsCard label="Total Facilities" value={data.totalFacilities} />
+          {!isFacilityAdmin && <StatsCard label="Total Facilities" value={data.totalFacilities ?? 0} />}
           <StatsCard label="Total Nurses" value={data.totalNurses} />
           <StatsCard label="Total Doctors" value={data.totalDoctors} />
           <StatsCard label="Pending Activation" value={data.pendingActivation} />

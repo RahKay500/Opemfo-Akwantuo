@@ -1,13 +1,17 @@
 import { redirect } from "next/navigation";
-import { isSuperAdmin } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import AuditClient from "./AuditClient";
 
 export default async function AdminAuditPage() {
-  if (!(await isSuperAdmin())) redirect("/admin/login");
+  const session = await getAdminSession();
+  if (!session) redirect("/admin/login");
 
   const logs = await prisma.auditLog.findMany({
+    // A Facility Admin only ever sees their own facility's staff-related
+    // entries; the Platform Super Admin (facilityId null) sees everything.
+    where: session.facilityId !== null ? { facilityId: session.facilityId } : {},
     orderBy: { createdAt: "desc" },
     take: 500,
     include: { actor: { select: { name: true } } },

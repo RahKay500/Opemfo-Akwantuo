@@ -6,15 +6,15 @@ import { updateStaffSchema } from "@/lib/validations/admin";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId === null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const staff = await prisma.user.findUnique({
     where: { id: params.id },
     include: { facility: { select: { id: true, name: true } } },
   });
-  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR")) {
+  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") || staff.facilityId !== session.facilityId) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
 
@@ -48,8 +48,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId === null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const body = await request.json().catch(() => null);
@@ -59,15 +59,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 
   const existing = await prisma.user.findUnique({ where: { id: params.id } });
-  if (!existing || (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR")) {
+  if (
+    !existing ||
+    (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
+    existing.facilityId !== session.facilityId
+  ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
-  }
-
-  if (parsed.data.facilityId) {
-    const facility = await prisma.facility.findUnique({ where: { id: parsed.data.facilityId } });
-    if (!facility || !facility.isActive) {
-      return NextResponse.json({ success: false, error: "Selected facility is not available." }, { status: 400 });
-    }
   }
 
   const staff = await prisma.user.update({ where: { id: params.id }, data: parsed.data });
@@ -77,12 +74,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       ? "STAFF_DEACTIVATED"
       : parsed.data.isActive === true
         ? "STAFF_REACTIVATED"
-        : parsed.data.facilityId
-          ? "STAFF_FACILITY_CHANGED"
-          : "STAFF_UPDATED";
+        : "STAFF_UPDATED";
 
   await logAudit({
     actorLabel: "Super Admin",
+    facilityId: session.facilityId,
     action,
     entityType: "User",
     entityId: staff.id,

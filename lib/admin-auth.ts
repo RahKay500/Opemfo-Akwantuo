@@ -19,10 +19,11 @@ const ADMIN_SESSION_MAX_AGE = 8 * 60 * 60;
 
 export interface AdminSessionPayload {
   sub: string; // SuperAdmin.id
+  facilityId: string | null; // null = Platform Super Admin; set = Facility Admin
 }
 
-export async function signAdminToken(adminId: string): Promise<string> {
-  return new SignJWT({ sub: adminId })
+export async function signAdminToken(adminId: string, facilityId: string | null): Promise<string> {
+  return new SignJWT({ sub: adminId, facilityId })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(ADMIN_SESSION_EXPIRY)
@@ -34,15 +35,18 @@ export async function verifyAdminToken(token: string): Promise<AdminSessionPaylo
   if (typeof payload.sub !== "string" || !payload.sub) {
     throw new Error("Invalid admin token");
   }
+  if (payload.facilityId !== null && typeof payload.facilityId !== "string") {
+    throw new Error("Invalid admin token");
+  }
   return payload as unknown as AdminSessionPayload;
 }
 
 // Runs on every login attempt (cheap — a single indexed count query). The
 // very first time this app talks to a fresh database, the SuperAdmin table
-// is empty, so this seeds exactly one row from the bootstrap env vars and
-// never touches them again afterwards. Updating SUPER_ADMIN_PHONE/PASSWORD
-// later has no effect once that row exists — password changes from then on
-// go through changeAdminPassword, not env vars.
+// is empty, so this seeds exactly one Platform Super Admin row from the
+// bootstrap env vars and never touches them again afterwards. Updating
+// SUPER_ADMIN_PHONE/PASSWORD later has no effect once that row exists —
+// password changes from then on go through requestPasswordChange, not env vars.
 async function ensureSuperAdminBootstrapped(): Promise<void> {
   const count = await prisma.superAdmin.count();
   if (count > 0) return;
@@ -52,17 +56,20 @@ async function ensureSuperAdminBootstrapped(): Promise<void> {
   if (!phone || !password) return;
 
   const passwordHash = await bcrypt.hash(password, 12);
-  await prisma.superAdmin.create({ data: { phone, passwordHash } });
+  await prisma.superAdmin.create({ data: { phone, passwordHash, facilityId: null, isActive: true } });
 }
 
-export async function checkAdminCredentials(phone: string, password: string): Promise<{ id: string } | null> {
+export async function checkAdminCredentials(
+  phone: string,
+  password: string
+): Promise<{ id: string; facilityId: string | null } | null> {
   await ensureSuperAdminBootstrapped();
 
   const admin = await prisma.superAdmin.findUnique({ where: { phone } });
-  if (!admin) return null;
+  if (!admin || !admin.isActive || !admin.passwordHash) return null;
 
   const valid = await bcrypt.compare(password, admin.passwordHash);
-  return valid ? { id: admin.id } : null;
+  return valid ? { id: admin.id, facilityId: admin.facilityId } : null;
 }
 
 // Step 1 of 2: verifies the current password and stages the new one, but
@@ -76,7 +83,7 @@ export async function requestPasswordChange(
   newPassword: string
 ): Promise<{ success: boolean; error?: string; phone?: string; otp?: string }> {
   const admin = await prisma.superAdmin.findUnique({ where: { id: adminId } });
-  if (!admin) return { success: false, error: "Account not found." };
+  if (!admin || !admin.passwordHash) return { success: false, error: "Account not found." };
 
   const valid = await bcrypt.compare(currentPassword, admin.passwordHash);
   if (!valid) return { success: false, error: "Current password is incorrect." };
@@ -116,13 +123,14 @@ export async function confirmPasswordChange(
   return { success: true };
 }
 
-// Last-resort recovery: re-entering the original bootstrap env-var
-// credentials resets the database password directly, no current-password
-// or OTP required. This is intentional — whoever controls the server's
-// env vars is the ultimate owner of this account, matching how the
-// SuperAdmin row itself is bootstrapped from those same vars in the first
-// place. A session hijacker has no path to this without also compromising
-// the server config, which is a different, higher trust boundary.
+// Last-resort recovery for the Platform Super Admin: re-entering the
+// original bootstrap env-var credentials resets the database password
+// directly, no current-password or OTP required. This is intentional —
+// whoever controls the server's env vars is the ultimate owner of this
+// account, matching how the SuperAdmin row itself is bootstrapped from those
+// same vars in the first place. A session hijacker has no path to this
+// without also compromising the server config, which is a different, higher
+// trust boundary.
 //
 // An optional newPhone also covers succession: when the person holding this
 // role leaves, whoever controls the env vars can hand the account to a
@@ -147,10 +155,66 @@ export async function recoverSuperAdminPassword(
   const targetPhone = newPhone || phone;
   await prisma.superAdmin.upsert({
     where: { phone },
-    update: { phone: targetPhone, passwordHash, pendingPasswordHash: null, otp: null, otpExpiry: null },
-    create: { phone: targetPhone, passwordHash },
+    update: {
+      phone: targetPhone,
+      passwordHash,
+      facilityId: null,
+      isActive: true,
+      pendingPasswordHash: null,
+      otp: null,
+      otpExpiry: null,
+    },
+    create: { phone: targetPhone, passwordHash, facilityId: null, isActive: true },
   });
   return { success: true };
+}
+
+// Step 1 of 2 for a newly-created Facility Admin's first activation: finds
+// the pending row (created by the Platform Super Admin via
+// POST /api/admin/facility-admins — isActive:false, passwordHash:null) and
+// sends it a fresh OTP. Mirrors how staff activation works, but scoped to
+// SuperAdmin since admins are deliberately never a User row.
+export async function requestFacilityAdminActivation(
+  phone: string
+): Promise<{ success: boolean; error?: string; otp?: string }> {
+  const admin = await prisma.superAdmin.findUnique({ where: { phone } });
+  if (!admin || admin.isActive || admin.passwordHash) {
+    return { success: false, error: "No pending Facility Admin account found for this number." };
+  }
+
+  const otp = generateOtp();
+  const otpExpiry = new Date(Date.now() + 10 * 60_000);
+  await prisma.superAdmin.update({ where: { id: admin.id }, data: { otp, otpExpiry } });
+
+  await sendOtpSms(phone, otp);
+  return { success: true, otp };
+}
+
+// Step 2 of 2: verifies the OTP and sets the Facility Admin's own password in
+// one submission (no intermediate setup token — this is a fresh, admin-only
+// flow, so it doesn't need to mirror the User table's 3-step dance, and
+// deliberately doesn't reuse lib/auth.ts's signSetupToken/ACCESS_SECRET,
+// which belongs to the separate Mother/Midwife/Doctor auth system).
+export async function confirmFacilityAdminActivation(
+  phone: string,
+  otp: string,
+  password: string
+): Promise<{ success: boolean; error?: string; id?: string; facilityId?: string | null }> {
+  const admin = await prisma.superAdmin.findUnique({ where: { phone } });
+  if (!admin || admin.isActive || admin.passwordHash) {
+    return { success: false, error: "No pending Facility Admin account found for this number." };
+  }
+  if (!admin.otp || !admin.otpExpiry || admin.otp !== otp || admin.otpExpiry < new Date()) {
+    return { success: false, error: "Invalid or expired code." };
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  await prisma.superAdmin.update({
+    where: { id: admin.id },
+    data: { passwordHash, isActive: true, otp: null, otpExpiry: null },
+  });
+
+  return { success: true, id: admin.id, facilityId: admin.facilityId };
 }
 
 const isProd = process.env.NODE_ENV === "production";

@@ -25,6 +25,8 @@ const AUTH_RATE_LIMIT_PATHS = [
   "/api/auth/forgot-password",
   "/api/admin/auth/login",
   "/api/admin/auth/recover",
+  "/api/admin/auth/activate/request",
+  "/api/admin/auth/activate/confirm",
 ];
 const hits = new Map<string, { count: number; resetAt: number }>();
 
@@ -51,7 +53,12 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login" && pathname !== "/admin/recover") {
+  if (
+    pathname.startsWith("/admin") &&
+    pathname !== "/admin/login" &&
+    pathname !== "/admin/recover" &&
+    pathname !== "/admin/activate"
+  ) {
     const adminToken = request.cookies.get("admin_session")?.value;
     if (!adminToken) {
       return NextResponse.redirect(new URL("/admin/login", request.url));
@@ -98,5 +105,7 @@ export const config = {
     "/admin/:path*",
     "/api/admin/auth/login",
     "/api/admin/auth/recover",
+    "/api/admin/auth/activate/request",
+    "/api/admin/auth/activate/confirm",
   ],
 };

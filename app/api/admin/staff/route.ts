@@ -7,21 +7,23 @@ import { createStaffSchema } from "@/lib/validations/admin";
 import { generateOtp } from "@/lib/auth";
 import { sendStaffActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
 
+// Staff management is exclusively a Facility Admin's job (session.facilityId
+// set) — the Platform Super Admin (facilityId: null) manages facilities and
+// Facility Admin accounts instead, never staff directly.
 export async function GET(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId === null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const { searchParams } = new URL(request.url);
   const role = searchParams.get("role");
-  const facilityId = searchParams.get("facilityId");
   const q = searchParams.get("q");
 
   const staff = await prisma.user.findMany({
     where: {
       role: role === "MIDWIFE" || role === "DOCTOR" ? role : { in: ["MIDWIFE", "DOCTOR"] },
-      ...(facilityId ? { facilityId } : {}),
+      facilityId: session.facilityId,
       ...(q ? { OR: [{ name: { contains: q, mode: "insensitive" } }, { phone: { contains: q } }] } : {}),
     },
     orderBy: { createdAt: "desc" },
@@ -46,8 +48,8 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
-    return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
+  if (!session || session.facilityId === null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const body = await request.json().catch(() => null);
@@ -66,9 +68,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "This phone number is already registered." }, { status: 409 });
   }
 
-  const facility = await prisma.facility.findUnique({ where: { id: parsed.data.facilityId } });
+  const facility = await prisma.facility.findUnique({ where: { id: session.facilityId } });
   if (!facility || !facility.isActive) {
-    return NextResponse.json({ success: false, error: "Selected facility is not available." }, { status: 400 });
+    return NextResponse.json({ success: false, error: "Your facility is not available." }, { status: 400 });
   }
 
   // Plaintext, matching the existing OTP verify flow's comparison (User.otp is
@@ -92,6 +94,7 @@ export async function POST(request: NextRequest) {
 
   await logAudit({
     actorLabel: "Super Admin",
+    facilityId: facility.id,
     action: "STAFF_CREATED",
     entityType: "User",
     entityId: staff.id,

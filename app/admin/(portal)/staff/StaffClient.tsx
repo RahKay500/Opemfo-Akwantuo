@@ -12,42 +12,31 @@ export interface StaffRow {
   name: string;
   phone: string;
   role: "MIDWIFE" | "DOCTOR";
-  facilityId: string | null;
-  facilityName: string | null;
   isActive: boolean;
   hasPassword: boolean;
   createdAt: string;
 }
 
-export default function StaffClient({
-  staff,
-  facilities,
-}: {
-  staff: StaffRow[];
-  facilities: { id: string; name: string }[];
-}) {
+export default function StaffClient({ staff }: { staff: StaffRow[] }) {
   const router = useRouter();
   const [query, setQuery] = useState("");
   const [roleFilter, setRoleFilter] = useState<"All" | "MIDWIFE" | "DOCTOR">("All");
-  const [facilityFilter, setFacilityFilter] = useState("All");
 
   const filtered = useMemo(() => {
     return staff.filter((s) => {
       if (roleFilter !== "All" && s.role !== roleFilter) return false;
-      if (facilityFilter !== "All" && s.facilityId !== facilityFilter) return false;
       if (query) {
         const q = query.toLowerCase();
         if (!s.name.toLowerCase().includes(q) && !s.phone.includes(query)) return false;
       }
       return true;
     });
-  }, [staff, query, roleFilter, facilityFilter]);
+  }, [staff, query, roleFilter]);
 
   const columns: DataTableColumn<StaffRow>[] = [
     { key: "name", header: "Name", render: (r) => r.name },
     { key: "phone", header: "Phone", render: (r) => r.phone },
     { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife" : "Doctor") },
-    { key: "facility", header: "Facility", render: (r) => r.facilityName ?? "—" },
     {
       key: "status",
       header: "Status",
@@ -73,18 +62,6 @@ export default function StaffClient({
           <option value="All">All roles</option>
           <option value="MIDWIFE">Midwife</option>
           <option value="DOCTOR">Doctor</option>
-        </select>
-        <select
-          value={facilityFilter}
-          onChange={(e) => setFacilityFilter(e.target.value)}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        >
-          <option value="All">All facilities</option>
-          {facilities.map((f) => (
-            <option key={f.id} value={f.id}>
-              {f.name}
-            </option>
-          ))}
         </select>
       </div>
 

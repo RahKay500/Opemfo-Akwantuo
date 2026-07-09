@@ -1,21 +1,19 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { isSuperAdmin } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import StaffClient from "./StaffClient";
 
 export default async function AdminStaffPage() {
-  if (!(await isSuperAdmin())) redirect("/admin/login");
+  const session = await getAdminSession();
+  if (!session) redirect("/admin/login");
+  if (session.facilityId === null) redirect("/admin/dashboard");
 
-  const [staff, facilities] = await Promise.all([
-    prisma.user.findMany({
-      where: { role: { in: ["MIDWIFE", "DOCTOR"] } },
-      orderBy: { createdAt: "desc" },
-      include: { facility: { select: { name: true } } },
-    }),
-    prisma.facility.findMany({ where: { isActive: true }, orderBy: { name: "asc" } }),
-  ]);
+  const staff = await prisma.user.findMany({
+    where: { role: { in: ["MIDWIFE", "DOCTOR"] }, facilityId: session.facilityId },
+    orderBy: { createdAt: "desc" },
+  });
 
   return (
     <>
@@ -34,13 +32,10 @@ export default async function AdminStaffPage() {
             name: s.name,
             phone: s.phone,
             role: s.role as "MIDWIFE" | "DOCTOR",
-            facilityId: s.facilityId,
-            facilityName: s.facility?.name ?? null,
             isActive: s.isActive,
             hasPassword: Boolean(s.passwordHash),
             createdAt: s.createdAt.toISOString(),
           }))}
-          facilities={facilities.map((f) => ({ id: f.id, name: f.name }))}
         />
       </div>
     </>

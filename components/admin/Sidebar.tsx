@@ -3,17 +3,11 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
+import { getAdminNavItems } from "@/lib/admin-nav";
 
-const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard" },
-  { href: "/admin/facilities", label: "Facilities" },
-  { href: "/admin/staff", label: "Staff" },
-  { href: "/admin/audit", label: "Audit Log" },
-  { href: "/admin/settings", label: "Settings" },
-];
-
-export default function Sidebar() {
+export default function Sidebar({ facilityId }: { facilityId: string | null }) {
   const pathname = usePathname();
+  const navItems = getAdminNavItems(facilityId);
 
   return (
     <aside className="flex h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white">
@@ -23,7 +17,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3">
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const active = pathname === item.href || pathname.startsWith(item.href + "/");
           return (
             <Link

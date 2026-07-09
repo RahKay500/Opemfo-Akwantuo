@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
-import { isSuperAdmin } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import FacilitiesClient from "./FacilitiesClient";
 
 export default async function AdminFacilitiesPage() {
-  if (!(await isSuperAdmin())) redirect("/admin/login");
+  const session = await getAdminSession();
+  if (!session) redirect("/admin/login");
+  if (session.facilityId !== null) redirect("/admin/dashboard");
 
   const facilities = await prisma.facility.findMany({
     orderBy: { name: "asc" },

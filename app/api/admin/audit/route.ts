@@ -17,6 +17,9 @@ export async function GET(request: NextRequest) {
   const pageSize = 20;
 
   const where: Prisma.AuditLogWhereInput = {
+    // A Facility Admin only ever sees their own facility's staff-related
+    // entries; the Platform Super Admin (facilityId null) sees everything.
+    ...(session.facilityId !== null ? { facilityId: session.facilityId } : {}),
     ...(action ? { action } : {}),
     ...(from || to
       ? {

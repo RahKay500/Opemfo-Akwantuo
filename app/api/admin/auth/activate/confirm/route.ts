@@ -1,12 +1,12 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { checkAdminCredentials, signAdminToken, setAdminCookie } from "@/lib/admin-auth";
+import { confirmFacilityAdminActivation, signAdminToken, setAdminCookie } from "@/lib/admin-auth";
 import { normalizeGhanaPhone } from "@/lib/utils";
-import { adminLoginSchema } from "@/lib/validations/admin";
+import { activateAdminConfirmSchema } from "@/lib/validations/admin";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
-  const parsed = adminLoginSchema.safeParse(body);
+  const parsed = activateAdminConfirmSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ success: false, error: "Invalid input." }, { status: 400 });
   }
@@ -16,20 +16,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
   }
 
-  const admin = await checkAdminCredentials(phone, parsed.data.password);
-  if (!admin) {
-    return NextResponse.json({ success: false, error: "Invalid phone number or password." }, { status: 401 });
+  const result = await confirmFacilityAdminActivation(phone, parsed.data.otp, parsed.data.password);
+  if (!result.success || !result.id) {
+    return NextResponse.json({ success: false, error: result.error }, { status: 400 });
   }
 
-  const token = await signAdminToken(admin.id, admin.facilityId);
+  const token = await signAdminToken(result.id, result.facilityId ?? null);
   const response = NextResponse.json({ success: true });
   setAdminCookie(response, token);
 
   await logAudit({
-    actorLabel: "Super Admin",
-    action: "ADMIN_LOGIN",
+    actorLabel: "Facility Admin",
+    facilityId: result.facilityId,
+    action: "FACILITY_ADMIN_ACTIVATED",
     entityType: "SuperAdmin",
-    entityId: admin.id,
+    entityId: result.id,
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 

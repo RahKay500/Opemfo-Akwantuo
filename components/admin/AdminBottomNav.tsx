@@ -3,21 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { getAdminNavItems } from "@/lib/admin-nav";
 
-const NAV_ITEMS = [
-  { href: "/admin/dashboard", label: "Dashboard" },
-  { href: "/admin/facilities", label: "Facilities" },
-  { href: "/admin/staff", label: "Staff" },
-  { href: "/admin/audit", label: "Audit" },
-  { href: "/admin/settings", label: "Settings" },
-];
-
-export default function AdminBottomNav() {
+export default function AdminBottomNav({ facilityId }: { facilityId: string | null }) {
   const pathname = usePathname();
+  const navItems = getAdminNavItems(facilityId);
 
   return (
     <nav className="flex h-16 w-full border-t border-[#E2E8F0] bg-white">
-      {NAV_ITEMS.map((item) => {
+      {navItems.map((item) => {
         const active = pathname === item.href || pathname.startsWith(item.href + "/");
         return (
           <Link

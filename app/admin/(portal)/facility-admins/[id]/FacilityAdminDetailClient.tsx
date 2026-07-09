@@ -8,13 +8,11 @@ import FormField from "@/components/admin/FormField";
 import { formatDate } from "@/lib/utils";
 import { deriveStaffStatus } from "@/lib/staff-status";
 
-export interface StaffDetail {
+export interface FacilityAdminDetail {
   id: string;
-  name: string;
   phone: string;
-  role: "MIDWIFE" | "DOCTOR";
+  facilityId: string | null;
   facilityName: string | null;
-  licenseNumber: string | null;
   isActive: boolean;
   hasPassword: boolean;
   createdAt: string;
@@ -22,28 +20,36 @@ export interface StaffDetail {
 }
 
 const ACTION_LABELS: Record<string, string> = {
-  STAFF_CREATED: "Account created",
-  STAFF_DEACTIVATED: "Account deactivated",
-  STAFF_REACTIVATED: "Account reactivated",
-  STAFF_UPDATED: "Details updated",
-  STAFF_OTP_RESENT: "Activation OTP resent",
+  FACILITY_ADMIN_CREATED: "Account created",
+  FACILITY_ADMIN_ACTIVATED: "Account activated",
+  FACILITY_ADMIN_DEACTIVATED: "Account deactivated",
+  FACILITY_ADMIN_REACTIVATED: "Account reactivated",
+  FACILITY_ADMIN_FACILITY_CHANGED: "Facility reassigned",
+  FACILITY_ADMIN_UPDATED: "Details updated",
+  FACILITY_ADMIN_OTP_RESENT: "Activation OTP resent",
 };
 
-export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
+export default function FacilityAdminDetailClient({
+  admin,
+  facilities,
+}: {
+  admin: FacilityAdminDetail;
+  facilities: { id: string; name: string }[];
+}) {
   const router = useRouter();
-  const [editOpen, setEditOpen] = useState(false);
+  const [facilityOpen, setFacilityOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
-  const [name, setName] = useState(staff.name);
+  const [facilityId, setFacilityId] = useState(admin.facilityId ?? "");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [otpMessage, setOtpMessage] = useState<string | null>(null);
-  const status = deriveStaffStatus(staff.isActive, staff.hasPassword);
+  const status = deriveStaffStatus(admin.isActive, admin.hasPassword);
 
   async function handleUpdate(data: Record<string, unknown>) {
     setError(null);
     setSubmitting(true);
     try {
-      const res = await fetch(`/api/admin/staff/${staff.id}`, {
+      const res = await fetch(`/api/admin/facility-admins/${admin.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -53,7 +59,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         setError(typeof json.error === "string" ? json.error : "Something went wrong.");
         return;
       }
-      setEditOpen(false);
+      setFacilityOpen(false);
       setDeactivateOpen(false);
       router.refresh();
     } catch {
@@ -67,7 +73,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
     setSubmitting(true);
     setOtpMessage(null);
     try {
-      const res = await fetch(`/api/admin/staff/${staff.id}/resend-otp`, { method: "POST" });
+      const res = await fetch(`/api/admin/facility-admins/${admin.id}/resend-otp`, { method: "POST" });
       const json = await res.json();
       if (!json.success) {
         setOtpMessage(typeof json.error === "string" ? json.error : "Something went wrong.");
@@ -87,8 +93,8 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
       <div className="rounded-lg border border-[#E2E8F0] bg-white p-6">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-[#1A1A2E]">{staff.name}</h2>
-            <p className="mt-1 text-sm text-[#6B7280]">{staff.role === "MIDWIFE" ? "Midwife" : "Doctor"}</p>
+            <h2 className="text-lg font-semibold text-[#1A1A2E]">{admin.facilityName ?? "Facility Admin"}</h2>
+            <p className="mt-1 text-sm text-[#6B7280]">Facility Admin</p>
           </div>
           <StatusBadge status={status} />
         </div>
@@ -96,19 +102,15 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
           <div>
             <dt className="text-[#6B7280]">Phone</dt>
-            <dd className="mt-0.5 text-[#1A1A2E]">{staff.phone}</dd>
+            <dd className="mt-0.5 text-[#1A1A2E]">{admin.phone}</dd>
           </div>
           <div>
             <dt className="text-[#6B7280]">Facility</dt>
-            <dd className="mt-0.5 text-[#1A1A2E]">{staff.facilityName ?? "—"}</dd>
-          </div>
-          <div>
-            <dt className="text-[#6B7280]">Licence number</dt>
-            <dd className="mt-0.5 text-[#1A1A2E]">{staff.licenseNumber ?? "Not provided"}</dd>
+            <dd className="mt-0.5 text-[#1A1A2E]">{admin.facilityName ?? "—"}</dd>
           </div>
           <div>
             <dt className="text-[#6B7280]">Created at</dt>
-            <dd className="mt-0.5 text-[#1A1A2E]">{formatDate(staff.createdAt)}</dd>
+            <dd className="mt-0.5 text-[#1A1A2E]">{formatDate(admin.createdAt)}</dd>
           </div>
         </dl>
 
@@ -129,12 +131,12 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
           <button
             type="button"
             onClick={() => {
-              setName(staff.name);
-              setEditOpen(true);
+              setFacilityId(admin.facilityId ?? "");
+              setFacilityOpen(true);
             }}
             className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]"
           >
-            Edit name
+            Change facility
           </button>
           {status === "Active" && (
             <button
@@ -161,8 +163,8 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
       <div className="rounded-lg border border-[#E2E8F0] bg-white p-6">
         <h3 className="text-sm font-semibold text-[#1A1A2E]">Audit log</h3>
         <div className="mt-3 flex flex-col divide-y divide-[#E2E8F0]">
-          {staff.auditLogs.length === 0 && <p className="py-3 text-sm text-[#6B7280]">No actions recorded yet.</p>}
-          {staff.auditLogs.map((log) => (
+          {admin.auditLogs.length === 0 && <p className="py-3 text-sm text-[#6B7280]">No actions recorded yet.</p>}
+          {admin.auditLogs.map((log) => (
             <div key={log.id} className="flex items-center justify-between py-3 text-sm">
               <span className="text-[#1A1A2E]">{ACTION_LABELS[log.action] ?? log.action}</span>
               <span className="text-[#6B7280]">{formatDate(log.createdAt)}</span>
@@ -171,21 +173,27 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         </div>
       </div>
 
-      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit name">
-        <FormField label="Full name" required>
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+      <Modal open={facilityOpen} onClose={() => setFacilityOpen(false)} title="Change facility">
+        <FormField label="Facility" required>
+          <select
+            value={facilityId}
+            onChange={(e) => setFacilityId(e.target.value)}
             className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-          />
+          >
+            {facilities.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.name}
+              </option>
+            ))}
+          </select>
         </FormField>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setEditOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+          <button type="button" onClick={() => setFacilityOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
             Cancel
           </button>
           <button
             type="button"
-            onClick={() => handleUpdate({ name })}
+            onClick={() => handleUpdate({ facilityId })}
             disabled={submitting}
             className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
           >
@@ -196,8 +204,8 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
 
       <Modal open={deactivateOpen} onClose={() => setDeactivateOpen(false)} title="Deactivate account">
         <p className="text-sm text-[#6B7280]">
-          Are you sure you want to deactivate <strong>{staff.name}</strong>&apos;s account? They will immediately lose
-          access to the app.
+          Are you sure you want to deactivate this Facility Admin&apos;s account? They will immediately lose access
+          to the admin portal.
         </p>
         <div className="mt-5 flex justify-end gap-2">
           <button type="button" onClick={() => setDeactivateOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
