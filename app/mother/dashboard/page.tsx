@@ -35,7 +35,7 @@ export default async function MotherDashboardPage() {
       <div className="flex h-40 flex-col justify-end rounded-b-card bg-primary px-6 pb-5 pt-11">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-body text-sm text-white/70">{greeting()}</p>
+            <p className="font-body text-sm text-white">{greeting()}</p>
             <p className="font-heading text-2xl font-bold text-white">{data.name}</p>
           </div>
           <div className="flex items-center gap-3">

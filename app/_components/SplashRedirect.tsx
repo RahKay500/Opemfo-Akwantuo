@@ -20,7 +20,7 @@ export default function SplashRedirect({ target }: { target: string }) {
       <p className="mt-6 font-heading text-[26px] font-bold tracking-[-0.5px] text-white">
         Ɔpemfoɔ Akwantuo
       </p>
-      <p className="mt-1 font-body text-[15px] text-white/70">Caring for every mother</p>
+      <p className="mt-1 font-body text-[15px] text-white">Caring for every mother</p>
     </main>
   );
 }

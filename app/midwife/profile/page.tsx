@@ -25,7 +25,7 @@ export default async function MidwifeProfilePage() {
           <span className="font-heading text-3xl font-bold text-lilac-deeper">{initials(data.name)}</span>
         </div>
         <p className="mt-2.5 font-heading text-2xl font-bold text-white">{data.name}</p>
-        <p className="mt-0.5 font-body text-[13px] text-white/75">Midwife · {data.facilityName}</p>
+        <p className="mt-0.5 font-body text-[13px] text-white">Midwife · {data.facilityName}</p>
       </div>
 
       <div className="flex flex-col gap-4 px-5 pb-8 pt-4">

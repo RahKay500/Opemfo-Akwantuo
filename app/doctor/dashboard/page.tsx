@@ -29,9 +29,9 @@ export default async function DoctorDashboardPage() {
   return (
     <main className="flex flex-col">
       <div className="relative flex flex-col justify-end rounded-b-3xl bg-primary px-6 pb-5 pt-11">
-        <p className="font-body text-[11px] font-medium tracking-[0.1em] text-white/70">DOCTOR</p>
+        <p className="font-body text-[11px] font-medium tracking-[0.1em] text-white">DOCTOR</p>
         <p className="font-heading text-2xl font-bold text-white">{data.name}</p>
-        <p className="font-body text-[13px] text-white/70">{data.facilityName}</p>
+        <p className="font-body text-[13px] text-white">{data.facilityName}</p>
         <div className="absolute right-6 top-11 flex items-center gap-3">
           <div className="relative">
             <BellIcon className="size-6 text-white" />
