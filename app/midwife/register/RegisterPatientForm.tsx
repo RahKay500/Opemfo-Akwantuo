@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import DateOfBirthInput from "@/components/ui/DateOfBirthInput";
 
 const STEPS = ["Personal", "Pregnancy", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -124,12 +125,10 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               />
             </Field>
             <Field label="Date of Birth">
-              <input
-                type="date"
+              <DateOfBirthInput
                 value={dateOfBirth}
-                onChange={(e) => setDateOfBirth(e.target.value)}
+                onChange={setDateOfBirth}
                 max={new Date().toISOString().split("T")[0]}
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               />
             </Field>
             <Field label="Phone Number">
