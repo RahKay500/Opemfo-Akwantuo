@@ -2,15 +2,18 @@ import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
 import MotherBottomNav from "@/components/ui/MotherBottomNav";
 import MotherSidebar from "@/components/ui/MotherSidebar";
 import EmergencyBell from "@/components/ui/EmergencyBell";
+import { getCurrentUser } from "@/lib/current-user";
 
-export default function MotherLayout({
+export default async function MotherLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const user = await getCurrentUser();
+
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
       <div className="hidden lg:block">
-        <MotherSidebar />
+        <MotherSidebar name={user?.name ?? ""} />
       </div>
       {/* pb clears both the 80px MotherBottomNav and the EmergencyBell
           floating above it (bottom-24 + its own 70px) so bottom-of-page

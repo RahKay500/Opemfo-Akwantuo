@@ -3,7 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { NavHomeIcon, NavPatientsIcon, PlusIcon, NavReferralsIcon, NavProfileIcon } from "@/components/ui/icons";
+import {
+  NavHomeIcon,
+  NavPatientsIcon,
+  PlusIcon,
+  NavReferralsIcon,
+  NavProfileIcon,
+  MidwifeIcon,
+} from "@/components/ui/icons";
 
 const NAV_ITEMS = [
   { href: "/midwife/dashboard", label: "Home", icon: NavHomeIcon },
@@ -13,17 +20,24 @@ const NAV_ITEMS = [
   { href: "/midwife/profile", label: "Profile", icon: NavProfileIcon },
 ];
 
-export default function MidwifeSidebar() {
+export default function MidwifeSidebar({ name }: { name: string }) {
   const pathname = usePathname();
 
   return (
     <aside className="flex h-screen w-60 shrink-0 flex-col border-r border-border-color bg-white">
-      <div className="px-6 pb-6 pt-8">
+      <div className="px-6 pb-5 pt-8">
         <p className="font-heading text-lg font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
         <p className="mt-1 text-xs font-medium text-lilac-dark">Midwife</p>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3">
+      <div className="flex items-center gap-2.5 border-b border-border-color px-6 pb-5">
+        <div className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-lilac-light">
+          <MidwifeIcon className="size-[18px] text-lilac-dark" />
+        </div>
+        <p className="truncate font-body text-sm font-medium text-text-primary">{name}</p>
+      </div>
+
+      <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
           const active = pathname === href;
           return (

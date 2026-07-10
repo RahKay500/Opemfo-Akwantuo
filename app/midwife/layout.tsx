@@ -1,15 +1,18 @@
 import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
 import MidwifeBottomNav from "@/components/ui/MidwifeBottomNav";
 import MidwifeSidebar from "@/components/ui/MidwifeSidebar";
+import { getCurrentUser } from "@/lib/current-user";
 
-export default function MidwifeLayout({
+export default async function MidwifeLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const user = await getCurrentUser();
+
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
       <div className="hidden lg:block">
-        <MidwifeSidebar />
+        <MidwifeSidebar name={user?.name ?? ""} />
       </div>
       <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:overflow-x-auto lg:pb-10">
         <div className="w-full max-w-[430px] lg:max-w-3xl">{children}</div>
