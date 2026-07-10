@@ -3,42 +3,16 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherDashboardData } from "@/lib/queries/mother-dashboard";
 import { formatDate, initials } from "@/lib/utils";
-import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, PartnerIcon, ChevronRightIcon } from "@/components/ui/icons";
+import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, ChevronRightIcon } from "@/components/ui/icons";
 import StatCard from "@/components/ui/StatCard";
+import ProgressRing from "@/components/ui/ProgressRing";
+import SharePartnerCard from "@/components/ui/SharePartnerCard";
 
 function greeting(): string {
   const hour = new Date().getHours();
   if (hour < 12) return "Good morning,";
   if (hour < 17) return "Good afternoon,";
   return "Good evening,";
-}
-
-function ProgressRing({ percent }: { percent: number }) {
-  const radius = 34;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference * (1 - percent / 100);
-
-  return (
-    <div className="relative size-20">
-      <svg viewBox="0 0 80 80" className="size-20 -rotate-90">
-        <circle cx="40" cy="40" r={radius} fill="none" stroke="#EDD5F9" strokeWidth="8" />
-        <circle
-          cx="40"
-          cy="40"
-          r={radius}
-          fill="none"
-          stroke="#C178E0"
-          strokeWidth="8"
-          strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-        />
-      </svg>
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className="font-heading text-base font-bold text-text-primary">{percent}%</span>
-      </div>
-    </div>
-  );
 }
 
 export default async function MotherDashboardPage() {
@@ -126,16 +100,7 @@ export default async function MotherDashboardPage() {
           />
         </div>
 
-        <div className="flex items-center gap-4 rounded-card bg-white p-5 shadow-card">
-          <div className="flex size-12 items-center justify-center rounded-badge bg-pink-light">
-            <PartnerIcon className="size-[22px] text-pink-deep" />
-          </div>
-          <div className="flex-1">
-            <p className="font-heading text-[15px] font-bold text-text-primary">Share with your partner</p>
-            <p className="mt-0.5 font-body text-xs text-text-secondary">Keep them involved in your journey</p>
-          </div>
-          <span className="font-body text-[13px] font-medium text-pink-deep">Set up →</span>
-        </div>
+        <SharePartnerCard />
 
         <div>
           <div className="flex items-center justify-between">

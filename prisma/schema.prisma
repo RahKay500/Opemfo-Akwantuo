@@ -137,8 +137,25 @@ model Patient {
   symptoms            Symptom[]
   appointmentRequests AppointmentRequest[]
   emergencyAlerts     EmergencyAlert[]
+  partnerLinks        PartnerLink[]
 
   @@index([facilityId])
+}
+
+// A shareable, revocable read-only link a mother can hand to her partner —
+// deliberately not a full account (no login, no Role) since a partner isn't
+// clinical staff and doesn't need a persistent identity. Only one row per
+// patient should have revokedAt: null at a time; generating a new link
+// revokes the previous one instead of allowing several simultaneously.
+model PartnerLink {
+  id        String    @id @default(cuid())
+  patientId String
+  patient   Patient   @relation(fields: [patientId], references: [id])
+  token     String    @unique
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([patientId])
 }
 
 model Visit {
