@@ -23,8 +23,8 @@ export default function MidwifeBottomNav() {
         if (isFab) {
           return (
             <Link key={href} href={href} className="flex flex-1 flex-col items-center justify-center gap-1">
-              <div className="-mt-4 flex size-12 items-center justify-center rounded-badge bg-primary shadow-[0px_4px_6px_rgba(228,168,243,0.4)]">
-                <Icon className="size-[22px] text-lilac-deeper" />
+              <div className="-mt-4 flex size-12 items-center justify-center rounded-badge bg-primary shadow-[0px_4px_6px_rgba(110,46,148,0.4)]">
+                <Icon className="size-[22px] text-white" />
               </div>
               <span className="font-body text-[11px] font-medium text-text-secondary">{label}</span>
             </Link>

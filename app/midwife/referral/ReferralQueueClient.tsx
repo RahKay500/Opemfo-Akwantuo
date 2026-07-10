@@ -57,7 +57,7 @@ export default function ReferralQueueClient({ referrals }: { referrals: MidwifeR
             onClick={() => setFilter(f)}
             className={cn(
               "shrink-0 rounded-badge border-[1.5px] px-4 py-2 font-body text-[13px] font-medium",
-              filter === f ? "border-primary bg-primary text-lilac-deeper" : "border-border-color bg-white text-text-secondary"
+              filter === f ? "border-primary bg-primary text-white" : "border-border-color bg-white text-text-secondary"
             )}
           >
             {f}

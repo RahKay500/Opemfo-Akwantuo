@@ -6,6 +6,9 @@ import type { Config } from "tailwindcss";
 // values to pass WCAG AA contrast (4.5:1) against bg-primary/light backgrounds —
 // a real Lighthouse accessibility failure, not a stylistic change. text-secondary
 // was already passing (4.34:1) but nudged up to clear 4.5:1 with margin.
+// primary was later changed by request from the original light Figma lilac
+// (#E4A8F3) to the same dark shade as lilac-deeper — every place that paired
+// bg-primary with text-lilac-deeper was swept to text-white to stay readable.
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -14,7 +17,7 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#E4A8F3",
+        primary: "#6E2E94",
         "lilac-dark": "#AB49D5",
         "lilac-deeper": "#6E2E94",
         "lilac-light": "#F5E0FB",

@@ -14,8 +14,8 @@ export default async function MidwifeReferralQueuePage() {
   return (
     <main className="flex flex-col">
       <div className="flex flex-col justify-end rounded-b-3xl bg-primary px-6 pb-5 pt-11">
-        <p className="font-heading text-[22px] font-bold text-lilac-deeper">My Referrals</p>
-        <p className="mt-1 font-body text-[13px] text-lilac-deeper/70">{facility?.name ?? ""}</p>
+        <p className="font-heading text-[22px] font-bold text-white">My Referrals</p>
+        <p className="mt-1 font-body text-[13px] text-white/70">{facility?.name ?? ""}</p>
       </div>
       <ReferralQueueClient referrals={referrals} />
     </main>

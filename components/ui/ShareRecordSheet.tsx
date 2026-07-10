@@ -75,7 +75,7 @@ export default function ShareRecordSheet({
             <button
               type="button"
               onClick={handleClose}
-              className="h-12 w-full rounded-button bg-primary font-heading text-base font-bold text-lilac-deeper"
+              className="h-12 w-full rounded-button bg-primary font-heading text-base font-bold text-white"
             >
               Done
             </button>
@@ -120,7 +120,7 @@ export default function ShareRecordSheet({
               type="button"
               onClick={handleShare}
               disabled={submitting || doctors.length === 0}
-              className="h-12 w-full rounded-button bg-primary font-heading text-base font-bold text-lilac-deeper disabled:opacity-60"
+              className="h-12 w-full rounded-button bg-primary font-heading text-base font-bold text-white disabled:opacity-60"
             >
               {submitting ? "Sharing…" : "Share Record"}
             </button>

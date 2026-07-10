@@ -84,7 +84,7 @@ export default function MotherBookPage() {
         <button
           type="button"
           onClick={() => router.push("/mother/dashboard")}
-          className="mt-2 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper"
+          className="mt-2 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white"
         >
           Back to Dashboard
         </button>
@@ -196,7 +196,7 @@ export default function MotherBookPage() {
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
+            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
           >
             {submitting ? "Sending…" : "Send Request"}
           </button>

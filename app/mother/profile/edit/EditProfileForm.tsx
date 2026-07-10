@@ -58,7 +58,7 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F6F1F8]">
-      <div className="flex items-center gap-2 bg-white px-4 pb-3.5 pt-[50px] shadow-[0px_1px_3px_0px_rgba(228,168,243,0.12)]">
+      <div className="flex items-center gap-2 bg-white px-4 pb-3.5 pt-[50px] shadow-[0px_1px_3px_0px_rgba(110,46,148,0.12)]">
         <Link href="/mother/profile" className="flex size-7 items-center justify-center">
           <ArrowLeftIcon className="size-[22px] text-text-primary" />
         </Link>

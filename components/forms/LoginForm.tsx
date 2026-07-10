@@ -114,7 +114,7 @@ export default function LoginForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="mt-1 h-14 rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
+        className="mt-1 h-14 rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
       >
         {submitting ? "Signing in…" : "Sign in"}
       </button>

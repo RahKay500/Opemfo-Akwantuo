@@ -22,7 +22,7 @@ export default function LifecycleTracker({ steps }: { steps: LifecycleStep[] }) 
               )}
               {step.state === "current" && (
                 <div className="relative flex size-7 items-center justify-center rounded-badge bg-primary ring-4 ring-lilac-light">
-                  <span className="size-2.5 rounded-badge bg-lilac-deeper" />
+                  <span className="size-2.5 rounded-badge bg-white" />
                 </div>
               )}
               {step.state === "pending" && (

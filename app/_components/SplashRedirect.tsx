@@ -17,10 +17,10 @@ export default function SplashRedirect({ target }: { target: string }) {
       <div className="flex size-[120px] items-center justify-center rounded-[60px] bg-white">
         <Image src="/images/logo.png" alt="" width={100} height={100} priority />
       </div>
-      <p className="mt-6 font-heading text-[26px] font-bold tracking-[-0.5px] text-lilac-deeper">
+      <p className="mt-6 font-heading text-[26px] font-bold tracking-[-0.5px] text-white">
         Ɔpemfoɔ Akwantuo
       </p>
-      <p className="mt-1 font-body text-[15px] text-[#6A1F8A]/70">Caring for every mother</p>
+      <p className="mt-1 font-body text-[15px] text-white/70">Caring for every mother</p>
     </main>
   );
 }

@@ -8,7 +8,7 @@ export default function OnboardingWelcomePage() {
         <div className="flex size-24 items-center justify-center rounded-[32px] bg-white">
           <HeartIcon className="size-10 text-primary" />
         </div>
-        <p className="font-heading text-[32px] font-bold tracking-[-0.5px] text-lilac-deeper">
+        <p className="font-heading text-[32px] font-bold tracking-[-0.5px] text-white">
           Ɔpemfoɔ Akwantuo
         </p>
       </div>

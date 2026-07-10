@@ -233,7 +233,7 @@ export default function DoctorRecordClient({
             type="button"
             onClick={handleMarkReviewed}
             disabled={submitting}
-            className="flex h-[52px] flex-1 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-lilac-deeper disabled:opacity-60"
+            className="flex h-[52px] flex-1 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-white disabled:opacity-60"
           >
             {submitting ? "Saving…" : "Mark as Reviewed"}
           </button>

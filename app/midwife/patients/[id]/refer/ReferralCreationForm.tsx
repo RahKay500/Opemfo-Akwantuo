@@ -220,7 +220,7 @@ export default function ReferralCreationForm({
                 <span
                   className={cn(
                     "absolute top-0.5 size-5 rounded-badge transition-transform",
-                    toggles[t.key] ? "translate-x-[22px] bg-lilac-deeper" : "translate-x-0.5 bg-[#9CA3AF]"
+                    toggles[t.key] ? "translate-x-[22px] bg-white" : "translate-x-0.5 bg-[#9CA3AF]"
                   )}
                 />
               </button>

@@ -90,7 +90,7 @@ export default function SharePartnerSheet({ open, onClose }: { open: boolean; on
               type="button"
               onClick={handleGenerate}
               disabled={busy}
-              className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
+              className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
             >
               {busy ? "Generating…" : "Generate link"}
             </button>
@@ -108,7 +108,7 @@ export default function SharePartnerSheet({ open, onClose }: { open: boolean; on
             <button
               type="button"
               onClick={handleShare}
-              className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper"
+              className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white"
             >
               {copied ? "Copied!" : "Share link"}
             </button>

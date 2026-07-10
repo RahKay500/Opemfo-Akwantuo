@@ -35,12 +35,12 @@ export default async function MotherDashboardPage() {
       <div className="flex h-40 flex-col justify-end rounded-b-card bg-primary px-6 pb-5 pt-11">
         <div className="flex items-center justify-between">
           <div>
-            <p className="font-body text-sm text-[#6A1F8A]/70">{greeting()}</p>
-            <p className="font-heading text-2xl font-bold text-lilac-deeper">{data.name}</p>
+            <p className="font-body text-sm text-white/70">{greeting()}</p>
+            <p className="font-heading text-2xl font-bold text-white">{data.name}</p>
           </div>
           <div className="flex items-center gap-3">
             <Link href="/mother/notifications" className="relative" aria-label="View notifications">
-              <BellIcon className="size-6 text-lilac-deeper" />
+              <BellIcon className="size-6 text-white" />
               <span className="absolute -right-0.5 -top-0.5 size-2 rounded-badge bg-pink-accent" />
             </Link>
             <Link

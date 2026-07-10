@@ -74,7 +74,7 @@ export default function NotificationsClient({ notifications }: { notifications: 
             onClick={() => setTab(t)}
             className={cn(
               "shrink-0 rounded-badge border-[1.5px] px-4 py-2 font-body text-[13px] font-medium",
-              tab === t ? "border-primary bg-primary text-lilac-deeper" : "border-border-color bg-white text-text-secondary"
+              tab === t ? "border-primary bg-primary text-white" : "border-border-color bg-white text-text-secondary"
             )}
           >
             {t}
@@ -95,7 +95,7 @@ export default function NotificationsClient({ notifications }: { notifications: 
               onClick={() => router.push(`/mother/notifications/${n.id}`)}
               className={cn(
                 "flex gap-3 rounded-card bg-white p-4 text-left",
-                n.isRead ? "shadow-card" : "border-l-[3px] border-primary shadow-[0px_2px_8px_0px_rgba(228,168,243,0.25)]"
+                n.isRead ? "shadow-card" : "border-l-[3px] border-primary shadow-[0px_2px_8px_0px_rgba(110,46,148,0.25)]"
               )}
             >
               <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-badge", bg)}>

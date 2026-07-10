@@ -99,7 +99,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 className={cn(
                   "rounded-badge border-[1.5px] px-4 py-2 font-body text-xs font-medium",
                   i === step
-                    ? "border-primary bg-primary text-lilac-deeper"
+                    ? "border-primary bg-primary text-white"
                     : i < step
                       ? "border-primary bg-white text-lilac-deeper"
                       : "border-border-color bg-white text-text-secondary"
@@ -269,7 +269,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           <button
             type="button"
             onClick={handleContinue}
-            className="h-14 flex-1 rounded-card bg-primary font-heading text-[15px] font-bold text-lilac-deeper"
+            className="h-14 flex-1 rounded-card bg-primary font-heading text-[15px] font-bold text-white"
           >
             Continue
           </button>
@@ -278,7 +278,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="h-14 flex-1 rounded-card bg-primary font-heading text-[15px] font-bold text-lilac-deeper disabled:opacity-60"
+            className="h-14 flex-1 rounded-card bg-primary font-heading text-[15px] font-bold text-white disabled:opacity-60"
           >
             {submitting ? "Registering…" : "Register Patient"}
           </button>

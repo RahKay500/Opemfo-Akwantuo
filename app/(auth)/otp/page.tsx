@@ -136,7 +136,7 @@ function OTPForm() {
           type="button"
           onClick={handleVerify}
           disabled={verifying || otp.length !== 6}
-          className="mt-10 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper disabled:bg-border-color disabled:text-text-secondary"
+          className="mt-10 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:bg-border-color disabled:text-text-secondary"
         >
           {verifying ? "Verifying…" : "Verify"}
         </button>

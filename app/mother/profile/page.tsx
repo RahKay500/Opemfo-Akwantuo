@@ -28,8 +28,8 @@ export default async function MotherProfilePage() {
         <div className="flex size-20 items-center justify-center rounded-badge border-[3px] border-white bg-lilac-light">
           <span className="font-heading text-2xl font-bold text-lilac-deeper">{initials(data.name)}</span>
         </div>
-        <p className="mt-3 font-heading text-[22px] font-bold text-lilac-deeper">{data.name}</p>
-        <p className="mt-0.5 font-body text-[13px] text-lilac-deeper/70">
+        <p className="mt-3 font-heading text-[22px] font-bold text-white">{data.name}</p>
+        <p className="mt-0.5 font-body text-[13px] text-white/70">
           Mother · Patient ID: {data.displayId}
         </p>
       </div>

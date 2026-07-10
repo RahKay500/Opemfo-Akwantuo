@@ -109,7 +109,7 @@ export default function PatientDetailClient({
           <div className="flex flex-col gap-2.5">
             <Link
               href={`/midwife/patients/${patientId}/vitals`}
-              className="flex h-12 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-lilac-deeper"
+              className="flex h-12 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-white"
             >
               + Log Vitals
             </Link>
@@ -184,7 +184,7 @@ export default function PatientDetailClient({
         </button>
         <Link
           href={`/midwife/patients/${patientId}/refer`}
-          className="flex h-[52px] flex-1 items-center justify-center rounded-input bg-primary font-heading text-xs font-bold text-lilac-deeper"
+          className="flex h-[52px] flex-1 items-center justify-center rounded-input bg-primary font-heading text-xs font-bold text-white"
         >
           Create Referral
         </Link>

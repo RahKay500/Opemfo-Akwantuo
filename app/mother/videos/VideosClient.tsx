@@ -16,7 +16,7 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
           <div className="flex size-14 items-center justify-center rounded-badge bg-white">
             <PlayIcon className="ml-0.5 size-[22px] text-lilac-deeper" />
           </div>
-          <span className="absolute left-3 top-3 rounded-badge bg-primary px-2.5 py-1 font-body text-xs font-medium text-lilac-deeper">
+          <span className="absolute left-3 top-3 rounded-badge bg-primary px-2.5 py-1 font-body text-xs font-medium text-white">
             Week {currentWeek}
           </span>
         </div>
@@ -37,7 +37,7 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             onClick={() => setCategory(c)}
             className={cn(
               "shrink-0 rounded-badge border-[1.5px] px-4 py-1.5 font-body text-xs font-medium",
-              category === c ? "border-primary bg-primary text-lilac-deeper" : "border-border-color bg-white text-text-secondary"
+              category === c ? "border-primary bg-primary text-white" : "border-border-color bg-white text-text-secondary"
             )}
           >
             {c}

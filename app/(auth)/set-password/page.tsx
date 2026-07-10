@@ -81,7 +81,7 @@ function SetPasswordForm() {
           type="button"
           onClick={handleSubmit}
           disabled={submitting || !token}
-          className="mt-6 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
+          className="mt-6 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
         >
           {submitting ? "Setting password…" : "Set Password"}
         </button>

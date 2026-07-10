@@ -52,7 +52,7 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
                     ? "border-critical bg-critical-bg text-critical"
                     : "border-critical-bg bg-critical-bg text-critical"
                   : filter === f
-                    ? "border-primary bg-primary text-lilac-deeper"
+                    ? "border-primary bg-primary text-white"
                     : "border-border-color bg-white text-text-secondary"
               )}
             >

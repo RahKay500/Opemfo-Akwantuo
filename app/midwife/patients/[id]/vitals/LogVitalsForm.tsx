@@ -141,7 +141,7 @@ export default function LogVitalsForm({
         type="button"
         onClick={handleSubmit}
         disabled={submitting}
-        className="h-14 w-full rounded-card bg-primary font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
+        className="h-14 w-full rounded-card bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
       >
         {submitting ? "Saving…" : "Save Visit"}
       </button>

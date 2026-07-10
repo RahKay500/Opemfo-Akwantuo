@@ -40,7 +40,7 @@ export default function EmergencyConfirmSheet({ open, onClose }: { open: boolean
           <button
             type="button"
             onClick={handleClose}
-            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-lilac-deeper"
+            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white"
           >
             Close
           </button>
