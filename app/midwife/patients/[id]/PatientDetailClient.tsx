@@ -173,7 +173,7 @@ export default function PatientDetailClient({
         )}
       </div>
 
-      <div className="fixed inset-x-0 bottom-20 z-20 mx-auto flex w-full max-w-[430px] gap-3 border-t border-border-color bg-white px-5 pb-4 pt-4">
+      <div className="fixed inset-x-0 bottom-20 z-20 mx-auto flex w-full max-w-[430px] gap-3 border-t border-border-color bg-white px-5 pb-4 pt-4 lg:inset-x-auto lg:bottom-0 lg:left-60 lg:right-0 lg:max-w-3xl">
         <button
           type="button"
           onClick={() => setShareOpen(true)}

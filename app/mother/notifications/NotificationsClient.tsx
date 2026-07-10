@@ -82,9 +82,9 @@ export default function NotificationsClient({ notifications }: { notifications: 
         ))}
       </div>
 
-      <div className="flex flex-col gap-2 px-5 pb-8 pt-4">
+      <div className="flex flex-col gap-2 px-5 pb-8 pt-4 lg:grid lg:grid-cols-2 lg:gap-3">
         {filtered.length === 0 && (
-          <p className="py-8 text-center font-body text-sm text-text-secondary">No notifications here.</p>
+          <p className="py-8 text-center font-body text-sm text-text-secondary lg:col-span-2">No notifications here.</p>
         )}
         {filtered.map((n) => {
           const { bg, color, Icon } = styleFor(n.type);

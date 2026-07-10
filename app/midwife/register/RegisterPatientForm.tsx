@@ -255,7 +255,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
       </div>
 
-      <div className="fixed inset-x-0 bottom-20 z-20 mx-auto flex w-full max-w-[430px] gap-3 border-t border-border-color bg-white px-6 py-4">
+      <div className="fixed inset-x-0 bottom-20 z-20 mx-auto flex w-full max-w-[430px] gap-3 border-t border-border-color bg-white px-6 py-4 lg:inset-x-auto lg:bottom-0 lg:left-60 lg:right-0 lg:max-w-3xl">
         {step > 0 && (
           <button
             type="button"

@@ -62,9 +62,9 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
         </div>
       </div>
 
-      <div className="flex flex-col gap-2.5 px-5 pb-8 pt-4">
+      <div className="flex flex-col gap-2.5 px-5 pb-8 pt-4 lg:grid lg:grid-cols-2 lg:gap-4">
         {filtered.length === 0 && (
-          <p className="py-8 text-center font-body text-sm text-text-secondary">No patients match this filter.</p>
+          <p className="py-8 text-center font-body text-sm text-text-secondary lg:col-span-2">No patients match this filter.</p>
         )}
         {filtered.map((patient) => (
           <Link

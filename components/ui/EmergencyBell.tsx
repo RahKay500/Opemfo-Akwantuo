@@ -10,7 +10,7 @@ export default function EmergencyBell() {
 
   return (
     <>
-      <div className="fixed bottom-24 left-1/2 z-40 -translate-x-1/2">
+      <div className="fixed bottom-24 left-1/2 z-40 -translate-x-1/2 lg:left-[calc(240px+(100vw-240px)/2)]">
         <motion.span
           className="pointer-events-none absolute inset-0 rounded-badge bg-critical/60"
           animate={{ scale: [1, 1.6, 1.6], opacity: [0.6, 0, 0] }}

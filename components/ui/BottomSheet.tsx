@@ -22,7 +22,7 @@ export default function BottomSheet({ open, onClose, children }: BottomSheetProp
             onClick={onClose}
           />
           <motion.div
-            className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] rounded-t-card bg-white p-6 pb-8 shadow-card"
+            className="fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[430px] rounded-t-card bg-white p-6 pb-8 shadow-card lg:inset-x-auto lg:left-60 lg:right-0 lg:max-w-3xl"
             initial={{ y: "100%" }}
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
