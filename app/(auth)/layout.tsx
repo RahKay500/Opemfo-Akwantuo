@@ -1,20 +1,9 @@
-"use client";
-
-import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { CheckIcon } from "@/components/ui/icons";
 
 const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emergency alerts & escalation"];
 
-// Onboarding already has its own single-panel branding treatment (a
-// bg-primary hero card with the same icon/wordmark) — wrapping it in this
-// split-panel shell too would show the brand twice.
 export default function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const pathname = usePathname();
-  if (pathname === "/onboarding") {
-    return <div className="min-h-screen w-full bg-white">{children}</div>;
-  }
-
   return (
     <div className="flex min-h-screen bg-white">
       <div className="hidden w-[420px] shrink-0 flex-col justify-center gap-10 bg-primary px-12 py-16 lg:flex">
