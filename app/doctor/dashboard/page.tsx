@@ -37,9 +37,13 @@ export default async function DoctorDashboardPage() {
             <BellIcon className="size-6 text-lilac-deeper" />
             {data.stats.flagged > 0 && <span className="absolute -top-0.5 right-1 size-2 rounded-badge bg-pink-accent" />}
           </div>
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
+          <Link
+            href="/doctor/profile"
+            className="flex size-10 items-center justify-center rounded-badge bg-lilac-light"
+            aria-label="View profile"
+          >
             <span className="font-heading text-sm font-bold text-lilac-deeper">{initials(data.name)}</span>
-          </div>
+          </Link>
         </div>
       </div>
 

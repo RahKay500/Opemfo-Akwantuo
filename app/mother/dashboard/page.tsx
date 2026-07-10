@@ -65,13 +65,17 @@ export default async function MotherDashboardPage() {
             <p className="font-heading text-2xl font-bold text-lilac-deeper">{data.name}</p>
           </div>
           <div className="flex items-center gap-3">
-            <div className="relative">
+            <Link href="/mother/notifications" className="relative" aria-label="View notifications">
               <BellIcon className="size-6 text-lilac-deeper" />
               <span className="absolute -right-0.5 -top-0.5 size-2 rounded-badge bg-pink-accent" />
-            </div>
-            <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
+            </Link>
+            <Link
+              href="/mother/profile"
+              className="flex size-10 items-center justify-center rounded-badge bg-lilac-light"
+              aria-label="View profile"
+            >
               <span className="font-heading text-sm font-bold text-lilac-deeper">{initials(data.name)}</span>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

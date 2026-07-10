@@ -1,9 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { jwtVerify } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 
 const ACCESS_SECRET = new TextEncoder().encode(
   process.env.JWT_ACCESS_SECRET ?? "dev-access-secret-change-me"
 );
+// Duplicated from lib/auth.ts rather than imported — that module also pulls
+// in bcryptjs (password hashing), which isn't guaranteed edge-runtime safe,
+// and middleware.ts already keeps its own copy of ACCESS_SECRET for the same
+// reason. Same value as lib/auth.ts's REFRESH_SECRET/ACCESS_TOKEN_EXPIRY.
+const REFRESH_SECRET = new TextEncoder().encode(
+  process.env.JWT_REFRESH_SECRET ?? "dev-refresh-secret-change-me"
+);
+const ACCESS_TOKEN_EXPIRY = "15m";
 
 // Entirely separate secret/cookie from the mother/midwife/doctor sessions
 // above — the Super Admin portal has no User row and its own auth system.
@@ -80,20 +88,57 @@ export async function middleware(request: NextRequest) {
   }
 
   const accessToken = request.cookies.get("access_token")?.value;
-  if (!accessToken) {
+  if (accessToken) {
+    try {
+      const { payload } = await jwtVerify(accessToken, ACCESS_SECRET);
+      if (payload.role !== ROLE_PREFIXES[protectedPrefix]) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+      return NextResponse.next();
+    } catch {
+      // Falls through to the refresh-token attempt below — a plain expiry
+      // (the access token only lives 15 minutes) shouldn't force a full
+      // re-login when a valid 30-day refresh token is sitting right there.
+    }
+  }
+
+  // No valid access token — try a silent refresh before giving up. Without
+  // this, every session died the moment the 15-minute access token expired,
+  // even with a perfectly valid refresh token present, forcing a re-login on
+  // whatever click happened to come next.
+  const refreshToken = request.cookies.get("refresh_token")?.value;
+  if (!refreshToken) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
-    const { payload } = await jwtVerify(accessToken, ACCESS_SECRET);
+    const { payload } = await jwtVerify(refreshToken, REFRESH_SECRET);
     if (payload.role !== ROLE_PREFIXES[protectedPrefix]) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
+
+    const newAccessToken = await new SignJWT({
+      userId: payload.userId,
+      role: payload.role,
+      facilityId: payload.facilityId ?? null,
+    })
+      .setProtectedHeader({ alg: "HS256" })
+      .setIssuedAt()
+      .setExpirationTime(ACCESS_TOKEN_EXPIRY)
+      .sign(ACCESS_SECRET);
+
+    const response = NextResponse.next();
+    response.cookies.set("access_token", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 15 * 60,
+    });
+    return response;
   } catch {
     return NextResponse.redirect(new URL("/login", request.url));
   }
-
-  return NextResponse.next();
 }
 
 export const config = {
