@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherDashboardData } from "@/lib/queries/mother-dashboard";
-import { formatDate, initials } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, ChevronRightIcon } from "@/components/ui/icons";
 import StatCard from "@/components/ui/StatCard";
 import ProgressRing from "@/components/ui/ProgressRing";
@@ -48,7 +49,7 @@ export default async function MotherDashboardPage() {
               className="flex size-10 items-center justify-center rounded-badge bg-lilac-light"
               aria-label="View profile"
             >
-              <span className="font-heading text-sm font-bold text-lilac-deeper">{initials(data.name)}</span>
+              <Image src="/images/logo.png" alt="" width={22} height={22} />
             </Link>
           </div>
         </div>

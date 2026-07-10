@@ -2,10 +2,11 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifeDashboardData } from "@/lib/queries/midwife-dashboard";
-import { formatRelativeTime, initials } from "@/lib/utils";
+import { formatRelativeTime } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import {
   BellIcon,
+  MidwifeIcon,
   PatientsIcon,
   ReferralArrowIcon,
   FlagIcon,
@@ -50,7 +51,7 @@ export default async function MidwifeDashboardPage() {
             className="flex size-10 items-center justify-center rounded-badge bg-lilac-light"
             aria-label="View profile"
           >
-            <span className="font-heading text-sm font-bold text-lilac-deeper">{initials(data.name)}</span>
+            <MidwifeIcon className="size-5 text-lilac-dark" />
           </Link>
         </div>
       </div>

@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorDashboardData } from "@/lib/queries/doctor-dashboard";
 import { formatRelativeTime, initials, cn } from "@/lib/utils";
-import { BellIcon, ShareIcon, CheckIcon, FlagIcon, ReferralArrowIcon } from "@/components/ui/icons";
+import { BellIcon, DoctorIcon, ShareIcon, CheckIcon, FlagIcon, ReferralArrowIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 
 const PRIORITY_BORDER: Record<string, string> = {
@@ -42,7 +42,7 @@ export default async function DoctorDashboardPage() {
             className="flex size-10 items-center justify-center rounded-badge bg-lilac-light"
             aria-label="View profile"
           >
-            <span className="font-heading text-sm font-bold text-lilac-deeper">{initials(data.name)}</span>
+            <DoctorIcon className="size-5 text-[#EA580C]" />
           </Link>
         </div>
       </div>
