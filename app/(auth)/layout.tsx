@@ -12,7 +12,7 @@ const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emer
 export default function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const pathname = usePathname();
   if (pathname === "/onboarding") {
-    return <div className="mx-auto min-h-screen w-full max-w-[430px] bg-white">{children}</div>;
+    return <div className="min-h-screen w-full bg-white">{children}</div>;
   }
 
   return (

@@ -22,7 +22,7 @@ export default async function Splash() {
   }
 
   return (
-    <div className="mx-auto min-h-screen w-full max-w-[430px] bg-white">
+    <div className="min-h-screen w-full bg-white">
       <SplashRedirect target={target} />
     </div>
   );
