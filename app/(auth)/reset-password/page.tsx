@@ -72,7 +72,7 @@ function ResetPasswordForm() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-start bg-[#F6F1F8] px-6 pb-6 pt-11">
+    <main className="flex min-h-screen flex-col items-start bg-[#F6F1F8] px-6 pb-6 pt-11 lg:bg-transparent">
       <button type="button" onClick={() => router.back()} className="flex size-10 items-center justify-center">
         <ArrowLeftIcon className="size-6 text-text-primary" />
       </button>

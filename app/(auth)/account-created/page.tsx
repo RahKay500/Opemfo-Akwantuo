@@ -21,7 +21,7 @@ function AccountCreatedContent() {
   }, [role]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11">
+    <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11 lg:bg-transparent">
       <div className="flex-1" />
       <div className="flex size-[120px] items-center justify-center rounded-badge bg-[#F0FDF4]">
         <div className="flex size-20 items-center justify-center rounded-badge bg-[#16A34A]">

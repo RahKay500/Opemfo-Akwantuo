@@ -9,14 +9,14 @@ export default function AuthLayout({ children }: Readonly<{ children: React.Reac
       <div className="hidden w-[420px] shrink-0 flex-col justify-center gap-10 bg-primary px-12 py-16 lg:flex">
         <div className="text-center">
           <div className="mx-auto flex size-14 items-center justify-center rounded-badge bg-white">
-            <Image src="/images/logo.png" alt="" width={32} height={32} />
+            <Image src="/images/logo.png" alt="" width={40} height={40} />
           </div>
           <p className="mt-5 font-heading text-2xl font-bold text-white">Ɔpemfoɔ Akwantuo</p>
           <p className="mt-2 font-body text-sm text-white/90">
             Connecting CHPS compounds to district hospitals for safer maternal care
           </p>
         </div>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4">
           {FEATURES.map((f) => (
             <div key={f} className="flex items-center gap-3">
               <span className="flex size-6 shrink-0 items-center justify-center rounded-badge bg-white/20">
