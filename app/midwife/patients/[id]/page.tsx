@@ -89,6 +89,36 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
           sentAt: r.sentAt.toISOString(),
         }))}
         doctors={doctors.map((d) => ({ id: d.id, name: d.name, facilityName: d.facility?.name ?? "" }))}
+        vaccinations={patient.vaccinations.map((v) => ({
+          id: v.id,
+          type: v.type,
+          doseNumber: v.doseNumber,
+          dateGiven: v.dateGiven.toISOString(),
+          batchNumber: v.batchNumber,
+        }))}
+        iptpDoses={patient.iptpDoses.map((d) => ({
+          id: d.id,
+          doseNumber: d.doseNumber,
+          dateGiven: d.dateGiven.toISOString(),
+        }))}
+        deliveryRecord={
+          patient.deliveryRecord
+            ? {
+                dateOfDelivery: patient.deliveryRecord.dateOfDelivery
+                  ? patient.deliveryRecord.dateOfDelivery.toISOString()
+                  : null,
+                typeOfDelivery: patient.deliveryRecord.typeOfDelivery,
+                durationOfLabourHours: patient.deliveryRecord.durationOfLabourHours,
+                durationOfLabourMinutes: patient.deliveryRecord.durationOfLabourMinutes,
+                estimatedBloodLossMl: patient.deliveryRecord.estimatedBloodLossMl,
+                statePerineum: patient.deliveryRecord.statePerineum,
+                birthAttendant: patient.deliveryRecord.birthAttendant,
+                babySex: patient.deliveryRecord.babySex,
+                babyBirthWeightKg: patient.deliveryRecord.babyBirthWeightKg,
+                babyCondition: patient.deliveryRecord.babyCondition,
+              }
+            : null
+        }
       />
     </main>
   );

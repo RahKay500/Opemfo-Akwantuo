@@ -9,6 +9,9 @@ export async function getMidwifePatientDetail(patientId: string, midwifeFacility
         orderBy: { sentAt: "desc" },
         include: { toFacility: { select: { name: true } }, initiatedBy: { select: { name: true } } },
       },
+      vaccinations: { orderBy: { dateGiven: "desc" } },
+      iptpDoses: { orderBy: { dateGiven: "desc" } },
+      deliveryRecord: true,
     },
   });
 

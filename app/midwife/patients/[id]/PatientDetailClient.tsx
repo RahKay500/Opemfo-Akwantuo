@@ -8,7 +8,7 @@ import ShareRecordSheet from "@/components/ui/ShareRecordSheet";
 import { ShareIcon } from "@/components/ui/icons";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
-const TABS = ["Overview", "Vitals", "Visits", "Referrals"] as const;
+const TABS = ["Overview", "Vitals", "Vaccinations", "Delivery", "Visits", "Referrals"] as const;
 
 export interface PatientDetailVisit {
   id: string;
@@ -35,24 +35,72 @@ export interface PatientDetailReferral {
   sentAt: string;
 }
 
+export interface PatientDetailVaccination {
+  id: string;
+  type: string;
+  doseNumber: number;
+  dateGiven: string;
+  batchNumber: string | null;
+}
+
+export interface PatientDetailIptpDose {
+  id: string;
+  doseNumber: number;
+  dateGiven: string;
+}
+
+export interface PatientDetailDeliveryRecord {
+  dateOfDelivery: string | null;
+  typeOfDelivery: string | null;
+  durationOfLabourHours: number | null;
+  durationOfLabourMinutes: number | null;
+  estimatedBloodLossMl: number | null;
+  statePerineum: string | null;
+  birthAttendant: string | null;
+  babySex: string | null;
+  babyBirthWeightKg: number | null;
+  babyCondition: string | null;
+}
+
 export default function PatientDetailClient({
   patientId,
   patientName,
   visits,
   referrals,
   doctors,
+  vaccinations,
+  iptpDoses,
+  deliveryRecord,
 }: {
   patientId: string;
   patientName: string;
   visits: PatientDetailVisit[];
   referrals: PatientDetailReferral[];
   doctors: { id: string; name: string; facilityName: string }[];
+  vaccinations: PatientDetailVaccination[];
+  iptpDoses: PatientDetailIptpDose[];
+  deliveryRecord: PatientDetailDeliveryRecord | null;
 }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
   const [shareOpen, setShareOpen] = useState(false);
 
   const latestVisit = visits[0] ?? null;
   const activeFlag = latestVisit?.flagged ? latestVisit : null;
+
+  const vaccinationRows = [
+    ...vaccinations.map((v) => ({
+      id: v.id,
+      badge: v.type === "TD" ? "Td" : v.type,
+      title: `Dose ${v.doseNumber}${v.batchNumber ? ` · Batch ${v.batchNumber}` : ""}`,
+      dateGiven: v.dateGiven,
+    })),
+    ...iptpDoses.map((d) => ({
+      id: d.id,
+      badge: "IPTp",
+      title: `Dose ${d.doseNumber}`,
+      dateGiven: d.dateGiven,
+    })),
+  ].sort((a, b) => new Date(b.dateGiven).getTime() - new Date(a.dateGiven).getTime());
 
   return (
     <>
@@ -132,6 +180,88 @@ export default function PatientDetailClient({
                 </p>
               </div>
             ))}
+          </div>
+        )}
+
+        {tab === "Vaccinations" && (
+          <div className="flex flex-col gap-2.5">
+            <Link
+              href={`/midwife/patients/${patientId}/vaccinations`}
+              className="flex h-12 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-white"
+            >
+              + Log Vaccination
+            </Link>
+            {vaccinationRows.length === 0 && (
+              <p className="font-body text-sm text-text-secondary">No vaccinations recorded yet.</p>
+            )}
+            {vaccinationRows.map((v) => (
+              <div key={v.id} className="rounded-card bg-white p-4 shadow-card">
+                <div className="flex items-center justify-between">
+                  <span className="rounded-badge bg-lilac-light px-2.5 py-1 font-body text-xs font-medium text-lilac-deeper">
+                    {v.badge}
+                  </span>
+                  <p className="font-body text-xs text-text-secondary">{formatDate(v.dateGiven)}</p>
+                </div>
+                <p className="mt-2 font-heading text-[15px] font-bold text-text-primary">{v.title}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {tab === "Delivery" && (
+          <div className="flex flex-col gap-2.5">
+            {!deliveryRecord && (
+              <>
+                <p className="font-body text-sm text-text-secondary">No delivery record yet.</p>
+                <Link
+                  href={`/midwife/patients/${patientId}/delivery`}
+                  className="flex h-12 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-white"
+                >
+                  + Record Delivery
+                </Link>
+              </>
+            )}
+            {deliveryRecord && (
+              <>
+                <div className="rounded-card bg-white p-4 shadow-card">
+                  <div className="flex items-center justify-between">
+                    <p className="font-heading text-[15px] font-bold text-text-primary">
+                      {deliveryRecord.typeOfDelivery ?? "Delivery"}
+                    </p>
+                    <p className="font-body text-xs text-text-secondary">
+                      {deliveryRecord.dateOfDelivery ? formatDate(deliveryRecord.dateOfDelivery) : "—"}
+                    </p>
+                  </div>
+                  <p className="mt-2 font-body text-xs text-text-secondary">
+                    {[
+                      deliveryRecord.durationOfLabourHours != null || deliveryRecord.durationOfLabourMinutes != null
+                        ? `Labour ${deliveryRecord.durationOfLabourHours ?? 0}h ${deliveryRecord.durationOfLabourMinutes ?? 0}m`
+                        : null,
+                      deliveryRecord.estimatedBloodLossMl ? `Blood loss ${deliveryRecord.estimatedBloodLossMl}ml` : null,
+                      deliveryRecord.statePerineum ? `Perineum: ${deliveryRecord.statePerineum}` : null,
+                      deliveryRecord.birthAttendant ? `Attendant: ${deliveryRecord.birthAttendant}` : null,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                  <p className="mt-1 font-body text-xs text-text-secondary">
+                    {[
+                      deliveryRecord.babySex ? `Baby: ${deliveryRecord.babySex}` : null,
+                      deliveryRecord.babyBirthWeightKg ? `${deliveryRecord.babyBirthWeightKg}kg` : null,
+                      deliveryRecord.babyCondition,
+                    ]
+                      .filter(Boolean)
+                      .join(" · ")}
+                  </p>
+                </div>
+                <Link
+                  href={`/midwife/patients/${patientId}/delivery`}
+                  className="flex h-12 items-center justify-center rounded-input border-[1.5px] border-border-color font-heading text-sm font-bold text-text-secondary"
+                >
+                  Edit Delivery Record
+                </Link>
+              </>
+            )}
           </div>
         )}
 
