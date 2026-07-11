@@ -3,7 +3,7 @@ import { HeartIcon } from "@/components/ui/icons";
 
 export default function OnboardingWelcomePage() {
   return (
-    <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11">
+    <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11 lg:justify-center lg:bg-transparent lg:pt-0">
       {/* Hidden at lg: the shared auth layout's left panel already carries this
           same branding on desktop — showing it again here would duplicate it. */}
       <div className="flex h-[360px] w-full flex-col items-center justify-center gap-4 rounded-card bg-primary lg:hidden">
@@ -23,11 +23,11 @@ export default function OnboardingWelcomePage() {
         </p>
       </div>
 
-      <div className="flex-1" />
+      <div className="flex-1 lg:hidden" />
 
       <Link
         href="/activate"
-        className="flex h-14 w-full items-center justify-center rounded-button bg-lilac-dark font-heading text-[17px] font-bold text-white"
+        className="flex h-14 w-full items-center justify-center rounded-button bg-lilac-dark font-heading text-[17px] font-bold text-white lg:mt-8"
       >
         Get Started
       </Link>

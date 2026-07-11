@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: Readonly<{ children: React.Reac
     <div className="flex min-h-screen bg-white">
       <div className="hidden w-[420px] shrink-0 flex-col justify-center gap-10 bg-primary px-12 py-16 lg:flex">
         <div>
-          <div className="flex size-14 items-center justify-center rounded-badge bg-white">
+          <div className="mx-auto flex size-14 items-center justify-center rounded-badge bg-white">
             <Image src="/images/logo.png" alt="" width={32} height={32} />
           </div>
           <p className="mt-5 font-heading text-2xl font-bold text-white">Ɔpemfoɔ Akwantuo</p>
