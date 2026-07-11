@@ -35,7 +35,7 @@ export default function EmergencyConfirmSheet({ open, onClose }: { open: boolean
         <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="font-heading text-xl font-bold text-text-primary">Help is on the way</h2>
           <p className="font-body text-sm text-text-secondary">
-            Your midwife has been alerted and will contact you shortly.
+            Your midwife/nurse has been alerted and will contact you shortly.
           </p>
           <button
             type="button"
@@ -52,7 +52,7 @@ export default function EmergencyConfirmSheet({ open, onClose }: { open: boolean
           </div>
           <h2 className="font-heading text-xl font-bold text-text-primary">Trigger emergency alert?</h2>
           <p className="font-body text-sm text-text-secondary">
-            This will immediately notify your midwife and emergency contact that you need urgent help.
+            This will immediately notify your midwife/nurse and emergency contact that you need urgent help.
           </p>
           <button
             type="button"

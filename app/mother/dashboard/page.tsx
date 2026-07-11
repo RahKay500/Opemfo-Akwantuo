@@ -25,7 +25,7 @@ export default async function MotherDashboardPage() {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 p-6 text-center">
         <p className="font-body text-sm text-text-secondary">
-          No patient record is linked to this account yet. Your midwife needs to register you first.
+          No patient record is linked to this account yet. Your midwife/nurse needs to register you first.
         </p>
       </main>
     );

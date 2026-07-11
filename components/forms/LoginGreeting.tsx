@@ -5,7 +5,7 @@ import { getLastRole, type LastRole } from "@/lib/last-role";
 
 const ROLE_LABEL: Record<LastRole, string> = {
   MOTHER: "Ɔpemfoɔ",
-  MIDWIFE: "Midwife",
+  MIDWIFE: "Midwife/Nurse",
   DOCTOR: "Doc",
 };
 

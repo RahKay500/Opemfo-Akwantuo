@@ -36,7 +36,7 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
   const columns: DataTableColumn<StaffRow>[] = [
     { key: "name", header: "Name", render: (r) => r.name },
     { key: "phone", header: "Phone", render: (r) => r.phone },
-    { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife" : "Doctor") },
+    { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife/Nurse" : "Doctor") },
     {
       key: "status",
       header: "Status",
@@ -60,7 +60,7 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         >
           <option value="All">All roles</option>
-          <option value="MIDWIFE">Midwife</option>
+          <option value="MIDWIFE">Midwife/Nurse</option>
           <option value="DOCTOR">Doctor</option>
         </select>
       </div>

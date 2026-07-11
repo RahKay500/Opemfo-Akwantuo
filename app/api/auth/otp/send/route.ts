@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       {
         error:
-          "No pending account found for this number. Ask your midwife or Super Admin to register you first.",
+          "No pending account found for this number. Ask your midwife/nurse or Super Admin to register you first.",
       },
       { status: 404 }
     );

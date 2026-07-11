@@ -18,7 +18,7 @@ export default function OnboardingWelcomePage() {
       <div className="flex flex-col items-center gap-3 pt-9 text-center lg:pt-0">
         <h1 className="font-heading text-2xl font-bold text-text-primary">Caring for every mother</h1>
         <p className="font-body text-[15px] text-text-secondary">
-          Track pregnancies, manage referrals and connect mothers, midwives and doctors — all in one
+          Track pregnancies, manage referrals and connect mothers, midwives/nurses and doctors — all in one
           place.
         </p>
       </div>

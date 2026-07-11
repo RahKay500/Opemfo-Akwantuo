@@ -119,7 +119,7 @@ export default function NewStaffForm() {
           onChange={(e) => setRole(e.target.value as "MIDWIFE" | "DOCTOR")}
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         >
-          <option value="MIDWIFE">Midwife</option>
+          <option value="MIDWIFE">Midwife/Nurse</option>
           <option value="DOCTOR">Doctor</option>
         </select>
       </FormField>

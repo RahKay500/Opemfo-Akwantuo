@@ -27,7 +27,7 @@ export default function MidwifeSidebar({ name }: { name: string }) {
     <aside className="flex h-screen w-60 shrink-0 flex-col border-r border-border-color bg-white">
       <div className="px-6 pb-5 pt-8">
         <p className="font-heading text-lg font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
-        <p className="mt-1 text-xs font-medium text-lilac-dark">Midwife</p>
+        <p className="mt-1 text-xs font-medium text-lilac-dark">Midwife/Nurse</p>
       </div>
 
       <div className="flex items-center gap-2.5 border-b border-border-color px-6 pb-5">

@@ -17,7 +17,7 @@ export interface ActivityRow {
 
 const COLUMNS: DataTableColumn<ActivityRow>[] = [
   { key: "name", header: "Name", render: (r) => r.name },
-  { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife" : "Doctor") },
+  { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife/Nurse" : "Doctor") },
   { key: "facility", header: "Facility", render: (r) => r.facilityName ?? "—" },
   { key: "createdAt", header: "Created at", render: (r) => formatDate(r.createdAt) },
   {

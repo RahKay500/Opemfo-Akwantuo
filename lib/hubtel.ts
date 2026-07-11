@@ -42,7 +42,7 @@ export async function sendStaffActivationSms(phone: string, otp: string): Promis
 export async function sendMotherActivationSms(phone: string, otp: string): Promise<void> {
   await sendSms(
     phone,
-    `Welcome to Ɔpemfoɔ Akwantuo! Your midwife has registered you. Your activation code is ${otp}. Open the app to set your password.`
+    `Welcome to Ɔpemfoɔ Akwantuo! Your midwife/nurse has registered you. Your activation code is ${otp}. Open the app to set your password.`
   );
 }
 
@@ -105,7 +105,7 @@ export async function sendEmergencyTriggeredSms(
 ): Promise<void> {
   await sendSms(nursePhone, `EMERGENCY: ${patientName} has triggered the emergency alert. Respond immediately.`);
   if (emergencyContactPhone) {
-    await sendSms(emergencyContactPhone, `${patientName} has triggered an emergency alert. Their nurse has been notified.`);
+    await sendSms(emergencyContactPhone, `${patientName} has triggered an emergency alert. Their midwife/nurse has been notified.`);
   }
 }
 

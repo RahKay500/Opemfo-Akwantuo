@@ -58,7 +58,7 @@ export default function ActivateAccountPage() {
           Activate your account
         </h1>
         <p className="font-body text-[15px] leading-[23px] text-text-secondary">
-          If your midwife or Super Admin has already registered you, enter your phone number and
+          If your midwife/nurse or Super Admin has already registered you, enter your phone number and
           we&apos;ll send you a code to set up your password.
         </p>
       </div>

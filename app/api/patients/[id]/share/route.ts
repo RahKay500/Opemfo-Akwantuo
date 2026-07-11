@@ -59,7 +59,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       userId: doctor.id,
       type: "RECORD_SHARE",
       title: `Record shared: ${patient.name}`,
-      message: `${midwife?.name ?? "A midwife"} shared ${patient.name}'s record with you for review.`,
+      message: `${midwife?.name ?? "A midwife/nurse"} shared ${patient.name}'s record with you for review.`,
       relatedId: share.id,
       relatedType: "ReferralShare",
     },

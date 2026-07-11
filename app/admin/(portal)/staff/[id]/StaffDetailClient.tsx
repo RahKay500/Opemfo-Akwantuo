@@ -88,7 +88,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-[#1A1A2E]">{staff.name}</h2>
-            <p className="mt-1 text-sm text-[#6B7280]">{staff.role === "MIDWIFE" ? "Midwife" : "Doctor"}</p>
+            <p className="mt-1 text-sm text-[#6B7280]">{staff.role === "MIDWIFE" ? "Midwife/Nurse" : "Doctor"}</p>
           </div>
           <StatusBadge status={status} />
         </div>

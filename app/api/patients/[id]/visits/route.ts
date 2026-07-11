@@ -89,7 +89,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
         userId: patient.userId,
         type: "VITALS",
         title: systolic && diastolic && (systolic >= 140 || diastolic >= 90) ? "High blood pressure" : "Vitals flagged at your visit",
-        message: "Your midwife recorded a reading that needs follow-up. They will reach out if needed.",
+        message: "Your midwife/nurse recorded a reading that needs follow-up. They will reach out if needed.",
         relatedId: visit.id,
         relatedType: "Visit",
       },
