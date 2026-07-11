@@ -56,6 +56,30 @@ enum AppointmentStatus {
   DECLINED
 }
 
+// Ghana MCH Record Book's Antenatal/Postnatal Follow-Up table notation:
+// negative (－), or positive by degree (+/++/+++).
+enum UrineTestResult {
+  NEGATIVE
+  TRACE
+  PLUS_1
+  PLUS_2
+  PLUS_3
+}
+
+enum FetalPresentation {
+  CEPHALIC
+  BREECH
+  OTHER
+}
+
+// PNC1 (24-48hrs) / PNC2 (6th-7th day) / PNC3 (at 6 weeks) per the MCH
+// Record Book's postnatal visit schedule.
+enum PostnatalVisitType {
+  PNC1
+  PNC2
+  PNC3
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String
@@ -85,6 +109,8 @@ model User {
   emergencyAlertsResolved EmergencyAlert[] @relation("EmergencyResolver")
   notifications           Notification[]
   auditLogs               AuditLog[]
+  deliveryRecordsRecorded DeliveryRecord[] @relation("DeliveryRecordedBy")
+  postnatalVisitsAsNurse  PostnatalVisit[] @relation("PostnatalVisitNurse")
 
   @@index([facilityId])
 }
@@ -131,6 +157,49 @@ model Patient {
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
 
+  // Ghana MCH Record Book — Family Identification (page 3)
+  nhisNumber              String?
+  maritalStatus           String?
+  educationalLevel        String?
+  occupation              String?
+  spouseName              String?
+  spousePhone             String?
+  spouseOccupation        String?
+  emergencyTransportPhone String?
+
+  // Obstetric History (page 4) — no. of pregnancies/births already covered
+  // by gravida/para above; the document splits abortions into these two.
+  numberOfAbortionsSpontaneous Int?
+  numberOfAbortionsInduced     Int?
+  // Array of {dateOfDeliveryOrLoss, placeOfBirth, problemsDuringPregnancy,
+  // gestationalAgeAtBirth, modeOfDelivery, outcome, complications, childSex,
+  // birthWeightKg, childPresentHealth}, one entry per prior pregnancy.
+  previousPregnancies Json?
+  // Free-form values from the document's risk-factor list (e.g. "Previous CS",
+  // "Grand multiparty", "Previous PPH", "Previous PIH", "Myomectomy", "Sickle
+  // cell disease").
+  majorRiskFactors    String[]
+
+  // Medical/Surgical/Social/Family History (page 5-6)
+  medicalHistory Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, epilepsy, asthma, allergiesDrugFood, medicationHistory, hivInfection, previousSurgery, other}
+  socialHistory  Json? // {alcohol, smoking}
+  familyHistory  Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, multiplePregnancies, birthDefects, mentalHealthDisorder, other}
+
+  // Investigations (page 6) — bloodGroup already exists above.
+  rhTyping String?
+  hbsAg    String?
+  sickling String?
+  g6pd     String?
+  vdrl     String?
+  hivStatus String?
+
+  height                      Float?
+  weightAtAnc1                Float?
+  bmiAtAnc1                   Float?
+  // Document expresses this as a range (e.g. "66.5-71kg"), not a single value.
+  estimatedDesiredWeightAtEdd String?
+  contraceptionUsed           String?
+
   visits              Visit[]
   referrals           Referral[]
   referralShares      ReferralShare[]
@@ -138,6 +207,11 @@ model Patient {
   appointmentRequests AppointmentRequest[]
   emergencyAlerts     EmergencyAlert[]
   partnerLinks        PartnerLink[]
+  vaccinations        Vaccination[]
+  iptpDoses           IptpDose[]
+  deliveryRecord      DeliveryRecord?
+  postnatalVisits     PostnatalVisit[]
+  labResults          LabResult[]
 
   @@index([facilityId])
 }
@@ -178,6 +252,17 @@ model Visit {
   flagReason     String?
   flagPriority   Priority?
   createdAt      DateTime  @default(now())
+
+  // Remaining Antenatal Follow-Up table columns (page 7) not already covered
+  // by the fields above.
+  urineProt         UrineTestResult?
+  urineSugar        UrineTestResult?
+  oedema            Boolean?
+  fetalPresentation FetalPresentation?
+  // Document uses fraction notation like "4/5th" — free text, not numeric.
+  fetalDescent      String?
+  ifaSupplied       Int?
+  complaints        String?
 
   @@index([patientId])
   @@index([nurseId])
@@ -351,4 +436,119 @@ model SuperAdmin {
   updatedAt           DateTime  @updatedAt
 
   @@index([facilityId])
+}
+
+// Ghana MCH Record Book, Tetanus-diphtheria Immunization Schedule (page 8).
+// type is free text (e.g. "TD") rather than an enum so a future vaccine type
+// doesn't need a migration.
+model Vaccination {
+  id             String   @id @default(cuid())
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  type           String
+  doseNumber     Int
+  dateGiven      DateTime
+  batchNumber    String?
+  gestationalAge Int?
+  createdAt      DateTime @default(now())
+
+  @@index([patientId])
+}
+
+// Intermittent Preventive Treatment for malaria in pregnancy (page 8) — kept
+// separate from Vaccination since IPTp is antimalarial chemoprevention, not
+// a vaccine, matching how the record book itself separates the two tables.
+model IptpDose {
+  id             String   @id @default(cuid())
+  patientId      String
+  patient        Patient  @relation(fields: [patientId], references: [id])
+  doseNumber     Int
+  dateGiven      DateTime
+  gestationalAge Int?
+  createdAt      DateTime @default(now())
+
+  @@index([patientId])
+}
+
+// Delivery Outcome + Mother's Condition at Discharge (page 21).
+model DeliveryRecord {
+  id           String  @id @default(cuid())
+  patientId    String  @unique
+  patient      Patient @relation(fields: [patientId], references: [id])
+  recordedById String
+  recordedBy   User    @relation("DeliveryRecordedBy", fields: [recordedById], references: [id])
+
+  weeksOfPregnancy      Int?
+  dateOfDelivery        DateTime?
+  timeOfDelivery        String?
+  timeOfPlacentaDelivery String?
+  durationOfLabourHours   Int?
+  durationOfLabourMinutes Int?
+  // Normal / Vacuum / Caesarean Section / Other
+  typeOfDelivery          String?
+  indicationForVacuumOrCs String?
+  anesthesia              String?
+  estimatedBloodLossMl    Int?
+  bloodTransfusion        Boolean?
+  statePlacentaMembranes  String?
+  manualRemovalOfPlacenta Boolean?
+  // Intact / Tear / Episiotomy
+  statePerineum               String?
+  labourDeliveryComplications String?
+  birthAttendant               String?
+  placeOfDelivery               String?
+  breastfedWithin30Min           Boolean?
+  skinToSkinContact               Boolean?
+  babySex                          String?
+  babyBirthWeightKg                Float?
+  babyCondition                     String?
+  createdAt                         DateTime @default(now())
+
+  @@index([patientId])
+}
+
+// Postnatal Follow-Up (page 23) — PNC1 (24-48hrs) / PNC2 (6th-7th day) /
+// PNC3 (6 weeks) per the record book's postnatal visit schedule.
+model PostnatalVisit {
+  id        String             @id @default(cuid())
+  patientId String
+  patient   Patient            @relation(fields: [patientId], references: [id])
+  nurseId   String
+  nurse     User               @relation("PostnatalVisitNurse", fields: [nurseId], references: [id])
+  visitType PostnatalVisitType
+
+  dateOfVisit             DateTime
+  weight                  Float?
+  systolic                Int?
+  diastolic               Int?
+  pulse                   Int?
+  temperature             Float?
+  urineProt               UrineTestResult?
+  urineSugar              UrineTestResult?
+  fundalHeight            Float?
+  lochiaColour            String?
+  lochiaOdour             String?
+  incisionPerineumCs      String?
+  conditionOfBreastNipple String?
+  moodChanges             String?
+  ifaSupplied             Int?
+  complaints              String?
+  createdAt               DateTime @default(now())
+
+  @@index([patientId])
+}
+
+// Investigation for Mother after Delivery (page 23) and any other ad-hoc lab
+// work not already covered by Patient's own investigation fields.
+model LabResult {
+  id         String   @id @default(cuid())
+  patientId  String
+  patient    Patient  @relation(fields: [patientId], references: [id])
+  testType   String
+  dateGiven  DateTime
+  result     String
+  isAbnormal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([patientId])
 }
