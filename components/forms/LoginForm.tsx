@@ -9,6 +9,7 @@ import Link from "next/link";
 import { normalizeGhanaPhone } from "@/lib/utils";
 import { localPhoneSchema } from "@/lib/validations/auth";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icons";
+import { setLastRole } from "@/lib/last-role";
 
 const formSchema = z.object({
   phone: localPhoneSchema,
@@ -54,6 +55,7 @@ export default function LoginForm() {
         return;
       }
 
+      setLastRole(data.user.role);
       router.push(ROLE_HOME[data.user.role] ?? "/login");
       router.refresh();
     } catch {

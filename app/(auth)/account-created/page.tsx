@@ -1,8 +1,9 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckIcon } from "@/components/ui/icons";
+import { setLastRole } from "@/lib/last-role";
 
 const ROLE_HOME: Record<string, string> = {
   MOTHER: "/mother/dashboard",
@@ -14,6 +15,10 @@ function AccountCreatedContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get("role") ?? "";
+
+  useEffect(() => {
+    setLastRole(role);
+  }, [role]);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11">

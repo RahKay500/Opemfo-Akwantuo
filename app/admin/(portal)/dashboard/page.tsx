@@ -39,7 +39,7 @@ export default async function AdminDashboardPage() {
       <div className="px-4 py-6 lg:px-8">
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {!isFacilityAdmin && <StatsCard label="Total Facilities" value={data.totalFacilities ?? 0} />}
-          <StatsCard label="Total Nurses" value={data.totalNurses} />
+          <StatsCard label="Total Midwives" value={data.totalNurses} />
           <StatsCard label="Total Doctors" value={data.totalDoctors} />
           <StatsCard label="Pending Activation" value={data.pendingActivation} />
         </div>

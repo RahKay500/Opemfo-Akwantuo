@@ -1,5 +1,6 @@
 import { PersonIcon } from "@/components/ui/icons";
 import LoginForm from "@/components/forms/LoginForm";
+import LoginGreeting from "@/components/forms/LoginGreeting";
 
 export default function LoginPage() {
   return (
@@ -8,8 +9,7 @@ export default function LoginPage() {
         <div className="flex size-[72px] items-center justify-center rounded-[36px] bg-lilac-light">
           <PersonIcon className="size-9 text-lilac-deeper" />
         </div>
-        <h1 className="mt-5 font-heading text-[28px] font-bold text-text-primary">Welcome</h1>
-        <p className="mt-1 font-body text-[15px] text-text-secondary">Sign in to continue</p>
+        <LoginGreeting />
       </div>
 
       <div className="w-full px-6 pt-10">
