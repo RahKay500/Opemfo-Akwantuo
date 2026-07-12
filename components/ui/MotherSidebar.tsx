@@ -17,7 +17,6 @@ import {
   PartnerIcon,
 } from "@/components/ui/icons";
 import EmergencyConfirmSheet from "@/components/ui/EmergencyConfirmSheet";
-import SharePartnerSheet from "@/components/ui/SharePartnerSheet";
 
 const NAV_ITEMS = [
   { href: "/mother/dashboard", label: "Home", icon: NavHomeIcon },
@@ -45,7 +44,6 @@ export default function MotherSidebar({
 }) {
   const pathname = usePathname();
   const [emergencyOpen, setEmergencyOpen] = useState(false);
-  const [partnerOpen, setPartnerOpen] = useState(false);
 
   return (
     <>
@@ -108,14 +106,16 @@ export default function MotherSidebar({
             );
           })}
 
-          <button
-            type="button"
-            onClick={() => setPartnerOpen(true)}
-            className="flex items-center gap-3 rounded-input px-4 py-2.5 text-left font-body text-sm font-medium text-text-secondary hover:bg-lilac-light/50"
+          <Link
+            href="/mother/partner"
+            className={cn(
+              "flex items-center gap-3 rounded-input px-4 py-2.5 font-body text-sm font-medium",
+              pathname === "/mother/partner" ? "bg-lilac-light text-lilac-dark" : "text-text-secondary hover:bg-lilac-light/50"
+            )}
           >
             <PartnerIcon className="size-5" />
             Share with Partner
-          </button>
+          </Link>
         </nav>
 
         <div className="px-3 pb-4">
@@ -131,7 +131,6 @@ export default function MotherSidebar({
       </aside>
 
       <EmergencyConfirmSheet open={emergencyOpen} onClose={() => setEmergencyOpen(false)} />
-      <SharePartnerSheet open={partnerOpen} onClose={() => setPartnerOpen(false)} />
     </>
   );
 }
