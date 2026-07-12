@@ -94,8 +94,8 @@ export default function MotherBookPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="border-b border-border-color bg-white px-5 pb-4 pt-14 text-center">
-        <h1 className="font-heading text-xl font-bold text-text-primary">Book a Visit</h1>
+      <div className="px-5 pb-4 pt-14 text-center lg:pb-0 lg:pt-8 lg:text-left">
+        <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">Book a Visit</h1>
       </div>
 
       <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
