@@ -11,8 +11,8 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
 
   return (
     <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
-      <button type="button" className="overflow-hidden rounded-card bg-white text-left shadow-card">
-        <div className="relative flex h-[200px] items-center justify-center bg-lilac-light">
+      <button type="button" className="overflow-hidden rounded-card bg-white text-left shadow-card lg:flex lg:items-stretch">
+        <div className="relative flex h-[200px] items-center justify-center bg-lilac-light lg:h-auto lg:w-[30%] lg:shrink-0">
           <div className="flex size-14 items-center justify-center rounded-badge bg-white">
             <PlayIcon className="ml-0.5 size-[22px] text-lilac-deeper" />
           </div>
@@ -20,12 +20,20 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             Week {currentWeek}
           </span>
         </div>
-        <div className="p-4">
-          <p className="font-heading text-base font-bold text-text-primary">{FEATURED_VIDEO.title}</p>
-          <p className="mt-1 font-body text-xs text-text-secondary">
+        <div className="p-4 lg:flex lg:flex-1 lg:flex-col lg:justify-center lg:p-10">
+          <p className="hidden font-body text-xs font-bold uppercase tracking-wide text-lilac-deeper lg:block">
+            Featured
+          </p>
+          <p className="font-heading text-base font-bold text-text-primary lg:mt-2 lg:text-2xl">
+            {FEATURED_VIDEO.title}
+          </p>
+          <p className="mt-1 font-body text-xs text-text-secondary lg:mt-2 lg:text-sm">
             {FEATURED_VIDEO.duration} · {FEATURED_VIDEO.source}
           </p>
-          <p className="mt-2 font-body text-[13px] font-medium text-pink-deep">Watch now →</p>
+          <p className="mt-2 font-body text-[13px] font-medium text-pink-deep lg:hidden">Watch now →</p>
+          <span className="mt-5 hidden w-fit rounded-button bg-lilac-mid px-6 py-3 font-heading text-sm font-bold text-lilac-deeper lg:block">
+            Watch now →
+          </span>
         </div>
       </button>
 
