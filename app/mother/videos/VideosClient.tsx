@@ -45,7 +45,7 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {videos.map((video) => (
           <button key={video.id} type="button" className="overflow-hidden rounded-card bg-white text-left shadow-card">
             <div className="flex h-[120px] items-center justify-center bg-lilac-light">

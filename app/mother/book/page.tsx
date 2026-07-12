@@ -193,12 +193,12 @@ export default function MotherBookPage() {
 
         {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
 
-        <div>
+        <div className="lg:text-center">
           <button
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
+            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60 lg:mx-auto lg:w-auto lg:px-16"
           >
             {submitting ? "Sending…" : "Send Request"}
           </button>
