@@ -10,7 +10,7 @@ export interface MotherDashboardData {
   babyHeartRate: { value: number; isNormal: boolean } | null;
   nextAppointment: { date: Date; status: string; facilityName: string } | null;
   recentVisits: { id: string; date: Date; visitType: string; nurseName: string }[];
-  recentNotifications: { id: string; type: string; title: string; message: string; createdAt: Date }[];
+  recentNotifications: { id: string; type: string; title: string; message: string; createdAt: Date; isRead: boolean }[];
 }
 
 export async function getMotherDashboardData(userId: string): Promise<MotherDashboardData | null> {
@@ -82,6 +82,7 @@ export async function getMotherDashboardData(userId: string): Promise<MotherDash
       title: n.title,
       message: n.message,
       createdAt: n.createdAt,
+      isRead: n.isRead,
     })),
   };
 }

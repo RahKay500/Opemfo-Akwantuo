@@ -16,6 +16,15 @@ function greeting(): string {
   return "Good evening,";
 }
 
+const TRIMESTER_ORDINAL: Record<string, string> = { First: "1st", Second: "2nd", Third: "3rd" };
+
+function daysUntil(date: Date): string {
+  const days = Math.ceil((date.getTime() - Date.now()) / (24 * 60 * 60 * 1000));
+  if (days <= 0) return "Today";
+  if (days === 1) return "Tomorrow";
+  return `In ${days} days`;
+}
+
 export default async function MotherDashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
@@ -67,7 +76,9 @@ export default async function MotherDashboardPage() {
                 <p className="font-body text-[10px] text-white/80">Week</p>
               </div>
               <div className="flex-1 rounded-input bg-white/15 px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-white">{data.pregnancy.trimester}</p>
+                <p className="font-heading text-sm font-bold text-white">
+                  {TRIMESTER_ORDINAL[data.pregnancy.trimester] ?? data.pregnancy.trimester}
+                </p>
                 <p className="font-body text-[10px] text-white/80">Trimester</p>
               </div>
               <div className="flex-1 rounded-input bg-white/15 px-3 py-2 text-center">
@@ -77,7 +88,7 @@ export default async function MotherDashboardPage() {
                 <p className="font-body text-[10px] text-white/80">Due Date</p>
               </div>
             </div>
-            <ProgressRing percent={data.pregnancy.progressPercent} />
+            <ProgressRing percent={data.pregnancy.progressPercent} onDark showCaption />
           </div>
         )}
       </div>
@@ -97,7 +108,7 @@ export default async function MotherDashboardPage() {
               iconClassName="text-primary"
               label="Next Visit"
               value={data.nextAppointment ? formatDate(data.nextAppointment.date) : "None"}
-              badge={data.nextAppointment ? { text: "Confirmed", tone: "info" } : undefined}
+              badge={data.nextAppointment ? { text: daysUntil(data.nextAppointment.date), tone: "info" } : undefined}
             />
             <StatCard
               icon={HeartRateIcon}
@@ -196,12 +207,20 @@ export default async function MotherDashboardPage() {
                   key={n.id}
                   href={`/mother/notifications/${n.id}`}
                   className={cn(
-                    "block pb-3",
+                    "flex items-start justify-between gap-3 pb-3",
                     i < data.recentNotifications.length - 1 && "border-b border-border-color"
                   )}
                 >
-                  <p className="font-heading text-[13px] font-bold text-text-primary">{n.title}</p>
-                  <p className="mt-0.5 font-body text-xs text-text-secondary">{formatRelativeTime(n.createdAt)}</p>
+                  <div className="flex items-start gap-2">
+                    <span
+                      className={cn(
+                        "mt-1.5 size-1.5 shrink-0 rounded-badge",
+                        n.isRead ? "border border-text-secondary" : "bg-pink-deep"
+                      )}
+                    />
+                    <p className="font-heading text-[13px] font-bold text-text-primary">{n.title}</p>
+                  </div>
+                  <p className="shrink-0 font-body text-xs text-text-secondary">{formatRelativeTime(n.createdAt)}</p>
                 </Link>
               ))}
             </div>

@@ -42,16 +42,14 @@ export default function MotherBottomNav() {
           type="button"
           onClick={() => setEmergencyOpen(true)}
           aria-label="Trigger emergency alert"
-          className="flex flex-1 flex-col items-center justify-center gap-1"
+          className="relative flex flex-1 flex-col items-center justify-center gap-1"
         >
-          <span className="relative flex size-[22px] items-center justify-center">
-            <motion.span
-              className="pointer-events-none absolute inset-0 rounded-badge bg-critical/40"
-              animate={{ scale: [1, 1.6, 1.6], opacity: [0.6, 0, 0] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-            />
-            <EmergencyBellIcon fill="currentColor" className="relative size-[22px] text-critical" />
-          </span>
+          <motion.span
+            className="pointer-events-none absolute left-1/2 top-[13px] size-[22px] -translate-x-1/2 rounded-badge bg-critical/40"
+            animate={{ scale: [1, 1.6, 1.6], opacity: [0.6, 0, 0] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+          />
+          <EmergencyBellIcon fill="currentColor" className="size-[22px] text-critical" />
           <span className="font-body text-[11px] font-medium text-critical">Emergency</span>
         </button>
 
