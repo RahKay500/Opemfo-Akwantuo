@@ -11,6 +11,7 @@ export interface MotherRecordsVisit {
   diastolic: number | null;
   fetalHeartRate: number | null;
   temperature: number | null;
+  weight: number | null;
   nurseName: string;
   flagged: boolean;
   flagReason: string | null;
@@ -57,6 +58,7 @@ export async function getMotherRecordsData(
       diastolic: v.diastolic,
       fetalHeartRate: v.fetalHeartRate,
       temperature: v.temperature,
+      weight: v.weight,
       nurseName: v.nurse.name,
       flagged: v.flagged,
       flagReason: v.flagReason,

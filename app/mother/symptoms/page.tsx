@@ -107,14 +107,14 @@ export default function MotherSymptomsPage() {
         <h1 className="font-heading text-xl font-bold text-text-primary">How are you feeling?</h1>
       </div>
 
-      <div className="flex flex-col gap-6 px-5 pb-8 pt-5">
-        <div className="rounded-card bg-lilac-light p-4">
+      <div className="flex flex-col gap-6 px-5 pb-8 pt-5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
+        <div className="rounded-card bg-lilac-light p-4 lg:col-span-2">
           <p className="font-body text-sm text-lilac-deeper">
             Tell your nurse how you&apos;re feeling. This helps them monitor your health between visits.
           </p>
         </div>
 
-        <div>
+        <div className="lg:col-start-1 lg:row-start-1 lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
           <p className="font-body text-sm font-medium text-text-primary">Select any symptoms you have</p>
           <div className="mt-3 flex flex-wrap gap-2.5">
             {SYMPTOMS.map((symptom) => (
@@ -128,7 +128,7 @@ export default function MotherSymptomsPage() {
           </div>
         </div>
 
-        <div>
+        <div className="lg:col-start-2 lg:row-start-1 lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
           <p className="font-body text-sm font-medium text-text-primary">How severe is it?</p>
           <div className="mt-3 flex gap-2.5">
             {SEVERITIES.map((s) => (
@@ -149,7 +149,7 @@ export default function MotherSymptomsPage() {
           </div>
         </div>
 
-        <div>
+        <div className="lg:col-start-2 lg:row-start-2 lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
           <p className="font-body text-sm font-medium text-text-primary">Anything else to add?</p>
           <textarea
             value={notes}
@@ -160,7 +160,7 @@ export default function MotherSymptomsPage() {
           />
         </div>
 
-        <div>
+        <div className="lg:col-start-1 lg:row-start-2 lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
           <p className="font-body text-sm font-medium text-text-primary">When did symptoms start?</p>
           <div className="mt-2 flex gap-2">
             {STARTED_WHEN_OPTIONS.map((option) => (
@@ -181,9 +181,9 @@ export default function MotherSymptomsPage() {
           </div>
         </div>
 
-        {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
+        {error && <p className="font-body text-sm text-[#DC2626] lg:col-start-2 lg:row-start-3">{error}</p>}
 
-        <div>
+        <div className="lg:col-start-2 lg:row-start-4">
           <button
             type="button"
             onClick={handleSubmit}

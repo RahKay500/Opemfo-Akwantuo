@@ -49,7 +49,7 @@ export default async function MotherRecordsPage({
   return (
     <main className="flex flex-col">
       <div className="border-b border-border-color bg-white px-5 pb-4 pt-14 text-center">
-        <h1 className="font-heading text-xl font-bold text-text-primary">My Records</h1>
+        <h1 className="font-heading text-xl font-bold text-text-primary">My Health Records</h1>
       </div>
 
       <div className="px-5 pt-3">
@@ -75,7 +75,7 @@ export default async function MotherRecordsPage({
         </div>
       </div>
 
-      <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
+      <div className="px-5 pb-8 pt-5 lg:grid lg:grid-cols-[1fr_320px] lg:items-start lg:gap-6">
         {data.bpTrend.length > 0 && (
           <div className="rounded-card bg-white p-5 shadow-card">
             <div className="flex items-center justify-between">
@@ -96,7 +96,8 @@ export default async function MotherRecordsPage({
           </div>
         )}
 
-        <div>
+        {/* Mobile: full-width Visit History list, unchanged from before. */}
+        <div className="mt-5 lg:hidden">
           <h2 className="font-heading text-[17px] font-bold text-text-primary">Visit History</h2>
           <div className="mt-3 flex flex-col gap-2.5">
             {data.visits.length === 0 && (
@@ -125,6 +126,54 @@ export default async function MotherRecordsPage({
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Desktop: compact right-column visit cards, matching Figma. */}
+        <div className="hidden lg:flex lg:flex-col lg:gap-3">
+          {data.visits.length === 0 && (
+            <p className="font-body text-sm text-text-secondary">No visits recorded yet.</p>
+          )}
+          {data.visits.map((visit) => (
+            <div
+              key={visit.id}
+              className={cn(
+                "rounded-card border-l-4 bg-white p-4 shadow-card",
+                visit.flagged ? "border-critical" : "border-transparent"
+              )}
+            >
+              <p className="font-heading text-[13px] font-bold text-text-primary">{formatDate(visit.date)}</p>
+              <div className="mt-2 flex gap-2">
+                <div
+                  className={cn(
+                    "flex-1 rounded-input p-2 text-center",
+                    visit.flagged ? "bg-critical-bg" : "bg-lilac-light"
+                  )}
+                >
+                  <p className="font-body text-[10px] text-text-secondary">BP</p>
+                  <p className={cn("font-heading text-sm font-bold", visit.flagged ? "text-critical" : "text-text-primary")}>
+                    {visit.systolic != null && visit.diastolic != null ? `${visit.systolic}/${visit.diastolic}` : "—"}
+                  </p>
+                </div>
+                <div className="flex-1 rounded-input bg-lilac-light p-2 text-center">
+                  <p className="font-body text-[10px] text-text-secondary">Weight</p>
+                  <p className="font-heading text-sm font-bold text-text-primary">
+                    {visit.weight != null ? `${visit.weight}kg` : "—"}
+                  </p>
+                </div>
+                <div className="flex-1 rounded-input bg-lilac-light p-2 text-center">
+                  <p className="font-body text-[10px] text-text-secondary">Fetal HR</p>
+                  <p className="font-heading text-sm font-bold text-text-primary">
+                    {visit.fetalHeartRate != null ? `${visit.fetalHeartRate} bpm` : "—"}
+                  </p>
+                </div>
+              </div>
+              {visit.flagged && (
+                <p className="mt-2 font-body text-xs text-critical">
+                  ⚠ {visit.flagReason ?? "Flagged for review"}
+                </p>
+              )}
+            </div>
+          ))}
         </div>
       </div>
     </main>

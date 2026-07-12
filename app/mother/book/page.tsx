@@ -101,7 +101,7 @@ export default function MotherBookPage() {
       <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
         <div>
           <p className="font-body text-sm font-medium text-text-primary">What do you need?</p>
-          <div className="mt-3 flex flex-col gap-3">
+          <div className="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
             {REQUEST_TYPES.map((type) => (
               <button
                 key={type.value}
@@ -123,36 +123,38 @@ export default function MotherBookPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-4">
-          <div>
-            <label className="font-body text-[13px] font-medium text-text-secondary">Preferred date</label>
-            <input
-              type="date"
-              value={preferredDate}
-              onChange={(e) => setPreferredDate(e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
-              className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-            />
-          </div>
+        <div className="flex flex-col gap-4 lg:rounded-card lg:bg-white lg:p-6 lg:shadow-card">
+          <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
+            <div>
+              <label className="font-body text-[13px] font-medium text-text-secondary">Preferred date</label>
+              <input
+                type="date"
+                value={preferredDate}
+                onChange={(e) => setPreferredDate(e.target.value)}
+                min={new Date().toISOString().split("T")[0]}
+                className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </div>
 
-          <div>
-            <label className="font-body text-[13px] font-medium text-text-secondary">Preferred time</label>
-            <div className="mt-1.5 flex gap-2">
-              {TIMES.map((time) => (
-                <button
-                  key={time}
-                  type="button"
-                  onClick={() => setPreferredTime(time)}
-                  className={cn(
-                    "flex-1 rounded-input border-[1.5px] py-3 text-center font-body text-sm font-medium",
-                    preferredTime === time
-                      ? "border-primary bg-lilac-light text-lilac-deeper"
-                      : "border-border-color bg-white text-text-secondary"
-                  )}
-                >
-                  {time}
-                </button>
-              ))}
+            <div>
+              <label className="font-body text-[13px] font-medium text-text-secondary">Preferred time</label>
+              <div className="mt-1.5 flex gap-2">
+                {TIMES.map((time) => (
+                  <button
+                    key={time}
+                    type="button"
+                    onClick={() => setPreferredTime(time)}
+                    className={cn(
+                      "flex-1 rounded-input border-[1.5px] py-3 text-center font-body text-sm font-medium",
+                      preferredTime === time
+                        ? "border-primary bg-lilac-light text-lilac-deeper"
+                        : "border-border-color bg-white text-text-secondary"
+                    )}
+                  >
+                    {time}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
 
