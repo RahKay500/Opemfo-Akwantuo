@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { NavHomeIcon, NavRecordsIcon, NavReferralIcon, NavProfileIcon, EmergencyBellIcon } from "@/components/ui/icons";
 import EmergencyConfirmSheet from "@/components/ui/EmergencyConfirmSheet";
@@ -43,7 +44,14 @@ export default function MotherBottomNav() {
           aria-label="Trigger emergency alert"
           className="flex flex-1 flex-col items-center justify-center gap-1"
         >
-          <EmergencyBellIcon className="size-[22px] text-critical" />
+          <span className="relative flex size-[22px] items-center justify-center">
+            <motion.span
+              className="pointer-events-none absolute inset-0 rounded-badge bg-critical/50"
+              animate={{ scale: [1, 1.7, 1.7], opacity: [0.6, 0, 0] }}
+              transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+            />
+            <EmergencyBellIcon className="relative size-[22px] text-critical" />
+          </span>
           <span className="font-body text-[11px] font-medium text-critical">Emergency</span>
         </button>
 
