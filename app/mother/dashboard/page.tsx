@@ -3,6 +3,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherDashboardData } from "@/lib/queries/mother-dashboard";
+import { getMotherReferralData } from "@/lib/queries/mother-referral";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, ChevronRightIcon } from "@/components/ui/icons";
 import StatCard from "@/components/ui/StatCard";
@@ -29,7 +30,10 @@ export default async function MotherDashboardPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const data = await getMotherDashboardData(user.id);
+  const [data, referralData] = await Promise.all([
+    getMotherDashboardData(user.id),
+    getMotherReferralData(user.id),
+  ]);
   if (!data) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 p-6 text-center">
@@ -40,9 +44,12 @@ export default async function MotherDashboardPage() {
     );
   }
 
+  const activeReferral = referralData?.active ?? null;
+  const REFERRAL_STEP_LABELS = ["Submitted", "Accepted", "En Route", "Arrived"];
+
   return (
     <main className="flex flex-col">
-      <div className="flex flex-col rounded-b-card bg-primary px-6 pb-5 pt-11">
+      <div className="flex flex-col rounded-b-card bg-gradient-to-r from-lilac-deeper to-primary px-6 pb-5 pt-11">
         <div className="flex items-start justify-between">
           <div>
             <p className="font-body text-sm text-white">{greeting()}</p>
@@ -122,6 +129,47 @@ export default async function MotherDashboardPage() {
               }
             />
           </div>
+
+          {activeReferral && (
+            <div className="rounded-card bg-white p-5 shadow-card">
+              <div className="flex items-center justify-between">
+                <h2 className="font-heading text-[15px] font-bold text-text-primary">Active Referral</h2>
+                <Link href="/mother/referral" className="font-body text-[13px] font-medium text-pink-deep">
+                  Track →
+                </Link>
+              </div>
+              <div className="mt-2 flex items-start gap-2">
+                <span className="mt-1.5 size-1.5 shrink-0 rounded-badge bg-pink-deep" />
+                <div>
+                  <p className="font-heading text-base font-bold text-text-primary">{activeReferral.hospitalName}</p>
+                  <p className="mt-0.5 font-body text-[13px] text-text-secondary">
+                    {activeReferral.reason} · {activeReferral.status === "ACKNOWLEDGED" ? "Accepted" : activeReferral.status.replace(/_/g, " ")}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4 flex gap-1.5">
+                {activeReferral.steps.map((step) => (
+                  <div
+                    key={step.label}
+                    className={cn("h-1.5 flex-1 rounded-badge", step.state !== "pending" ? "bg-lilac-dark" : "bg-lilac-light")}
+                  />
+                ))}
+              </div>
+              <div className="mt-1.5 flex gap-1.5">
+                {REFERRAL_STEP_LABELS.map((label, i) => (
+                  <p
+                    key={label}
+                    className={cn(
+                      "flex-1 text-center font-body text-[10px]",
+                      activeReferral.steps[i]?.state !== "pending" ? "font-medium text-lilac-deeper" : "text-text-secondary"
+                    )}
+                  >
+                    {label}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
 
           <SharePartnerCard />
 

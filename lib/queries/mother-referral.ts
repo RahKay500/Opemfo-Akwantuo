@@ -8,6 +8,7 @@ export interface MotherReferralData {
     hospitalName: string;
     hospitalPhone: string | null;
     priority: Priority;
+    reason: string;
     referredByName: string;
     sentAt: Date;
     status: ReferralStatus;
@@ -80,6 +81,7 @@ export async function getMotherReferralData(userId: string): Promise<MotherRefer
           hospitalName: active.toFacility.name,
           hospitalPhone: active.toFacility.phone,
           priority: active.priority,
+          reason: active.reason,
           referredByName: active.initiatedBy.name,
           sentAt: active.sentAt,
           status: active.status,
