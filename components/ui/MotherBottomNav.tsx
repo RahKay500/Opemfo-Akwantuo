@@ -44,15 +44,13 @@ export default function MotherBottomNav() {
           aria-label="Trigger emergency alert"
           className="flex flex-1 flex-col items-center justify-center gap-1"
         >
-          <span className="relative -mt-6 flex size-10 items-center justify-center">
+          <span className="relative flex size-[22px] items-center justify-center">
             <motion.span
-              className="pointer-events-none absolute inset-0 rounded-badge bg-critical/50"
-              animate={{ scale: [1, 1.5, 1.5], opacity: [0.6, 0, 0] }}
+              className="pointer-events-none absolute inset-0 rounded-badge bg-critical/40"
+              animate={{ scale: [1, 1.6, 1.6], opacity: [0.6, 0, 0] }}
               transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
             />
-            <span className="relative flex size-10 items-center justify-center rounded-badge bg-critical shadow-[0px_4px_8px_rgba(220,38,38,0.35)]">
-              <EmergencyBellIcon className="size-[18px] text-white" />
-            </span>
+            <EmergencyBellIcon fill="currentColor" className="relative size-[22px] text-critical" />
           </span>
           <span className="font-body text-[11px] font-medium text-critical">Emergency</span>
         </button>

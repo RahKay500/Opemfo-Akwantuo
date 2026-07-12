@@ -11,7 +11,9 @@ function SetPasswordForm() {
   const token = searchParams.get("token") ?? "";
 
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -19,6 +21,10 @@ function SetPasswordForm() {
     setError(null);
     if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
       setError("Password must be 8+ characters with an uppercase letter and a number.");
+      return;
+    }
+    if (password !== confirmPassword) {
+      setError("Passwords don't match.");
       return;
     }
 
@@ -74,6 +80,27 @@ function SetPasswordForm() {
           </button>
         </div>
         <PasswordStrength password={password} />
+
+        <label className="mb-1.5 mt-5 block font-body text-[13px] font-medium text-text-secondary">
+          Confirm password
+        </label>
+        <div className="relative">
+          <input
+            type={showConfirmPassword ? "text" : "password"}
+            placeholder="Re-enter your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] pr-12 font-body text-[15px] text-text-primary outline-none focus:border-primary"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirmPassword((s) => !s)}
+            className="absolute right-4 top-1/2 -translate-y-1/2 text-text-secondary"
+            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+          >
+            {showConfirmPassword ? <EyeOffIcon className="size-[18px]" /> : <EyeIcon className="size-[18px]" />}
+          </button>
+        </div>
 
         {error && <p className="mt-4 text-sm text-[#DC2626]">{error}</p>}
 
