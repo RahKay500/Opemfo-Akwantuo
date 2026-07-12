@@ -117,7 +117,7 @@ export default function MotherSymptomsPage() {
         {/* Each column is its own independent-height flex stack (not shared grid
             rows) so a short right-column card doesn't inherit empty space from
             a taller left-column card in the same row. */}
-        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[3fr_2fr] lg:items-start lg:gap-6">
+        <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-6">
           <div className="flex flex-col gap-6">
             <div className="lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
               <p className="font-body text-sm font-medium text-text-primary">Select any symptoms you have</p>
