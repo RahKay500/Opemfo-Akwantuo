@@ -261,7 +261,7 @@ export default function SharePartnerForm() {
         type="button"
         onClick={handleSendInvite}
         disabled={busy}
-        className="h-14 w-full rounded-button bg-pink-accent font-heading text-[17px] font-bold text-white disabled:opacity-60 lg:col-span-2 lg:mx-auto lg:w-auto lg:px-16"
+        className="h-14 w-full rounded-button bg-pink-accent font-heading text-[17px] font-bold text-white disabled:opacity-60 lg:col-span-2 lg:mx-auto lg:w-1/2"
       >
         {busy ? "Sending…" : "Send invite"}
       </button>
@@ -269,7 +269,7 @@ export default function SharePartnerForm() {
       <button
         type="button"
         onClick={() => router.back()}
-        className="h-12 w-full rounded-button bg-white font-body text-sm font-medium text-text-secondary lg:col-span-2 lg:mx-auto lg:w-auto lg:px-16"
+        className="h-12 w-full rounded-button bg-white font-body text-sm font-medium text-text-secondary lg:col-span-2 lg:mx-auto lg:w-1/2"
       >
         Cancel
       </button>
