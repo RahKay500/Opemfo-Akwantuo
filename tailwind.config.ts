@@ -10,6 +10,11 @@ import type { Config } from "tailwindcss";
 // (#E4A8F3) to match lilac-dark exactly (the "Get Started" button's color) —
 // every place that paired bg-primary with text-lilac-deeper was swept to
 // text-white to stay readable, since lilac-deeper is now too close in value.
+// lilac-mid brings that original #E4A8F3 back as its own token for "soft CTA"
+// buttons (Call Hospital, Send to my nurse) that pair it with dark
+// lilac-deeper text instead of white — lilac-light read as too faded/washed
+// out for these against the Figma reference (contrast isn't a concern here
+// since the text is dark-on-light, not white-on-light).
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -22,6 +27,7 @@ const config: Config = {
         "lilac-dark": "#AB49D5",
         "lilac-deeper": "#6E2E94",
         "lilac-light": "#F5E0FB",
+        "lilac-mid": "#E4A8F3",
         surface: "#FAF0FD",
         "pink-accent": "#F472B6",
         "pink-light": "#FCE7F3",

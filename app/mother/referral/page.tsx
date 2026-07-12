@@ -70,7 +70,7 @@ export default async function MotherReferralPage() {
               {data.active.hospitalPhone && (
                 <a
                   href={`tel:${data.active.hospitalPhone}`}
-                  className="mt-3.5 flex h-12 items-center justify-center gap-2 rounded-input bg-lilac-light px-6 font-body text-sm font-bold text-lilac-deeper lg:mt-0 lg:shrink-0"
+                  className="mt-3.5 flex h-12 items-center justify-center gap-2 rounded-input bg-lilac-mid px-6 font-body text-sm font-bold text-lilac-deeper lg:mt-0 lg:shrink-0"
                 >
                   <PhoneCallIcon className="size-4" />
                   Call Hospital
