@@ -52,10 +52,10 @@ export default async function MotherDashboardPage() {
       <div className="flex flex-col rounded-b-card bg-gradient-to-br from-[#E6ADF4] to-[#F4DEFB] px-6 pb-5 pt-11 lg:rounded-card">
         <div className="flex items-start justify-between">
           <div>
-            <p className="font-body text-sm text-[#843FA0]">{greeting()}</p>
+            <p className="font-body text-sm font-medium text-[#843FA0]">{greeting()}</p>
             <p className="font-heading text-2xl font-bold text-[#6A1E8A]">{data.name} 👋</p>
             {data.pregnancy && (
-              <p className="mt-1 max-w-xs font-body text-[13px] text-[#843FA0]">
+              <p className="mt-1 max-w-xs font-body text-[13px] font-medium text-[#843FA0]">
                 You&apos;re in your {data.pregnancy.trimester.toLowerCase()} trimester — keep up the great work!
               </p>
             )}
@@ -79,24 +79,24 @@ export default async function MotherDashboardPage() {
         {data.pregnancy && (
           <div className="mt-4 flex items-center justify-between gap-4">
             <div className="flex flex-1 gap-2">
-              <div className="flex-1 rounded-input bg-[#F7E4FB] px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-[#6A1E8A]">{data.pregnancy.week}</p>
-                <p className="font-body text-[10px] text-[#945BAC]">Week</p>
+              <div className="flex-1 rounded-input bg-[#F7E4FB] px-2 py-1.5 text-center">
+                <p className="font-heading text-[13px] font-bold text-[#6A1E8A]">{data.pregnancy.week}</p>
+                <p className="font-body text-[9px] font-medium text-[#945BAC]">Week</p>
               </div>
-              <div className="flex-1 rounded-input bg-[#F7E4FB] px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-[#6A1E8A]">
+              <div className="flex-1 rounded-input bg-[#F7E4FB] px-2 py-1.5 text-center">
+                <p className="font-heading text-[13px] font-bold text-[#6A1E8A]">
                   {TRIMESTER_ORDINAL[data.pregnancy.trimester] ?? data.pregnancy.trimester}
                 </p>
-                <p className="font-body text-[10px] text-[#945BAC]">Trimester</p>
+                <p className="font-body text-[9px] font-medium text-[#945BAC]">Trimester</p>
               </div>
-              <div className="flex-1 rounded-input bg-[#F7E4FB] px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-[#6A1E8A]">
+              <div className="flex-1 rounded-input bg-[#F7E4FB] px-2 py-1.5 text-center">
+                <p className="font-heading text-[13px] font-bold text-[#6A1E8A]">
                   {data.dueDate ? formatDate(data.dueDate) : "—"}
                 </p>
-                <p className="font-body text-[10px] text-[#945BAC]">Due Date</p>
+                <p className="font-body text-[9px] font-medium text-[#945BAC]">Due Date</p>
               </div>
             </div>
-            <ProgressRing percent={data.pregnancy.progressPercent} showCaption />
+            <ProgressRing percent={data.pregnancy.progressPercent} showCaption size="lg" />
           </div>
         )}
       </div>
