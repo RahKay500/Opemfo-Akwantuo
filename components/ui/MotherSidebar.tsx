@@ -100,7 +100,7 @@ export default function MotherSidebar({
                 <Icon className="size-5" />
                 <span className="flex-1">{label}</span>
                 {label === "Alerts" && unreadCount > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-badge bg-pink-deep px-1.5 font-body text-[11px] font-bold text-white">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-badge bg-pink-accent px-1.5 font-body text-[11px] font-bold text-white">
                     {unreadCount}
                   </span>
                 )}

@@ -48,11 +48,31 @@ export default async function MotherRecordsPage({
 
   return (
     <main className="flex flex-col">
-      <div className="border-b border-border-color bg-white px-5 pb-4 pt-14 text-center">
-        <h1 className="font-heading text-xl font-bold text-text-primary">My Health Records</h1>
+      <div className="px-5 pb-4 pt-14 text-center lg:flex lg:items-center lg:justify-between lg:pb-0 lg:pt-8 lg:text-left">
+        <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">My Health Records</h1>
+        <div className="hidden rounded-badge bg-lilac-light p-1 lg:flex">
+          <Link
+            href="/mother/records?type=antenatal"
+            className={cn(
+              "rounded-badge px-5 py-2 text-center font-heading text-sm font-bold",
+              visitType === "ANTENATAL" ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+            )}
+          >
+            Antenatal
+          </Link>
+          <Link
+            href="/mother/records?type=postnatal"
+            className={cn(
+              "rounded-badge px-5 py-2 text-center font-heading text-sm font-bold",
+              visitType === "POSTNATAL" ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+            )}
+          >
+            Postnatal
+          </Link>
+        </div>
       </div>
 
-      <div className="px-5 pt-3">
+      <div className="px-5 pt-3 lg:hidden">
         <div className="flex rounded-badge bg-lilac-light p-1">
           <Link
             href="/mother/records?type=antenatal"
