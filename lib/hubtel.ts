@@ -115,3 +115,14 @@ export async function sendAppointmentConfirmedSms(
 ): Promise<void> {
   await sendSms(motherPhone, `Your appointment on ${date} has been confirmed.`);
 }
+
+export async function sendPartnerInviteSms(
+  partnerPhone: string,
+  motherName: string,
+  url: string
+): Promise<void> {
+  await sendSms(
+    partnerPhone,
+    `${motherName} invited you to follow her pregnancy journey on Ɔpemfoɔ Akwantuo. View it here: ${url}`
+  );
+}

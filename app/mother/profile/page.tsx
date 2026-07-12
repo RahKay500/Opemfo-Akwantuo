@@ -82,6 +82,16 @@ export default async function MotherProfilePage() {
           </div>
         </div>
 
+        <div>
+          <p className="px-1 pb-2 font-body text-xs font-medium text-text-secondary">Pregnancy Info</p>
+          <div className="overflow-hidden rounded-card bg-white shadow-card">
+            <Row label="Gravida" value={data.gravida != null ? String(data.gravida) : "Not recorded"} />
+            <Row label="Para" value={data.para != null ? String(data.para) : "Not recorded"} />
+            <Row label="Midwife" value={data.midwifeName} />
+            <Row label="CHPS" value={data.facilityName} last />
+          </div>
+        </div>
+
         <div className="overflow-hidden rounded-card bg-white shadow-card">
           <LogoutButton variant="row" />
           <DeleteAccountRow />

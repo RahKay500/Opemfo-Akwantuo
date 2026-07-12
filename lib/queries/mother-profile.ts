@@ -16,10 +16,17 @@ export interface MotherProfileData {
   emergencyContactRelation: string | null;
   currentWeek: number;
   visitsCount: number;
+  gravida: number | null;
+  para: number | null;
+  midwifeName: string;
+  facilityName: string;
 }
 
 export async function getMotherProfileData(userId: string): Promise<MotherProfileData | null> {
-  const patient = await prisma.patient.findUnique({ where: { userId } });
+  const patient = await prisma.patient.findUnique({
+    where: { userId },
+    include: { registeredBy: { select: { name: true } }, facility: { select: { name: true } } },
+  });
   if (!patient) return null;
 
   const visitsCount = await prisma.visit.count({ where: { patientId: patient.id } });
@@ -39,5 +46,9 @@ export async function getMotherProfileData(userId: string): Promise<MotherProfil
     emergencyContactRelation: patient.emergencyContactRelation,
     currentWeek: patient.lmp ? calculatePregnancyProgress(patient.lmp).week : 0,
     visitsCount,
+    gravida: patient.gravida,
+    para: patient.para,
+    midwifeName: patient.registeredBy.name,
+    facilityName: patient.facility.name,
   };
 }

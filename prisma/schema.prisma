@@ -222,12 +222,24 @@ model Patient {
 // patient should have revokedAt: null at a time; generating a new link
 // revokes the previous one instead of allowing several simultaneously.
 model PartnerLink {
-  id        String    @id @default(cuid())
-  patientId String
-  patient   Patient   @relation(fields: [patientId], references: [id])
-  token     String    @unique
-  createdAt DateTime  @default(now())
-  revokedAt DateTime?
+  id           String    @id @default(cuid())
+  patientId    String
+  patient      Patient   @relation(fields: [patientId], references: [id])
+  token        String    @unique
+  partnerName  String?
+  partnerPhone String?
+  // Per-category visibility, set by the mother when the invite is created.
+  // Defaults mirror the Figma spec: everyday pregnancy info is shared by
+  // default, more sensitive clinical detail (referral status, medical
+  // history) is opt-in.
+  shareProgress       Boolean   @default(true)
+  shareAppointments   Boolean   @default(true)
+  shareVitals         Boolean   @default(true)
+  shareVisitSummaries Boolean   @default(true)
+  shareReferralStatus Boolean   @default(false)
+  shareMedicalHistory Boolean   @default(false)
+  createdAt    DateTime  @default(now())
+  revokedAt    DateTime?
 
   @@index([patientId])
 }
