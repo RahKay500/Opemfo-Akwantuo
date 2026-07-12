@@ -72,6 +72,18 @@ export async function POST(request: NextRequest) {
         ? normalizeGhanaPhone(parsed.data.emergencyContactPhone) ?? parsed.data.emergencyContactPhone
         : null,
       emergencyContactRelation: parsed.data.emergencyContactRelation || null,
+      nhisNumber: parsed.data.nhisNumber || null,
+      maritalStatus: parsed.data.maritalStatus || null,
+      educationalLevel: parsed.data.educationalLevel || null,
+      occupation: parsed.data.occupation || null,
+      spouseName: parsed.data.spouseName || null,
+      spousePhone: parsed.data.spousePhone
+        ? normalizeGhanaPhone(parsed.data.spousePhone) ?? parsed.data.spousePhone
+        : null,
+      spouseOccupation: parsed.data.spouseOccupation || null,
+      emergencyTransportPhone: parsed.data.emergencyTransportPhone
+        ? normalizeGhanaPhone(parsed.data.emergencyTransportPhone) ?? parsed.data.emergencyTransportPhone
+        : null,
     },
   });
 

@@ -14,6 +14,15 @@ export const createPatientSchema = z.object({
   emergencyContactName: z.string().optional(),
   emergencyContactPhone: z.string().optional(),
   emergencyContactRelation: z.string().optional(),
+  // Ghana MCH Record Book — Family Identification (page 3)
+  nhisNumber: z.string().optional(),
+  maritalStatus: z.string().optional(),
+  educationalLevel: z.string().optional(),
+  occupation: z.string().optional(),
+  spouseName: z.string().optional(),
+  spousePhone: z.string().optional(),
+  spouseOccupation: z.string().optional(),
+  emergencyTransportPhone: z.string().optional(),
 });
 
 export type CreatePatientInput = z.infer<typeof createPatientSchema>;

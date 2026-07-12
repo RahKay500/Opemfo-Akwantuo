@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import DateOfBirthInput from "@/components/ui/DateOfBirthInput";
 
-const STEPS = ["Personal", "Pregnancy", "Emergency"] as const;
+const STEPS = ["Personal", "Family", "Pregnancy", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const RELATIONS = ["Husband", "Mother", "Sister", "Father", "Other"];
+const MARITAL_STATUSES = ["Single", "Married", "Divorced", "Widowed", "Other"];
+const EDUCATIONAL_LEVELS = ["None", "Primary", "JHS", "SHS", "Tertiary"];
 
 export default function RegisterPatientForm({ facilityName }: { facilityName: string }) {
   const router = useRouter();
@@ -19,6 +21,15 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [phone, setPhone] = useState("");
   const [ghanaCardId, setGhanaCardId] = useState("");
+
+  const [nhisNumber, setNhisNumber] = useState("");
+  const [maritalStatus, setMaritalStatus] = useState("");
+  const [educationalLevel, setEducationalLevel] = useState("");
+  const [occupation, setOccupation] = useState("");
+  const [spouseName, setSpouseName] = useState("");
+  const [spousePhone, setSpousePhone] = useState("");
+  const [spouseOccupation, setSpouseOccupation] = useState("");
+  const [emergencyTransportPhone, setEmergencyTransportPhone] = useState("");
 
   const [lmp, setLmp] = useState("");
   const [gravida, setGravida] = useState("");
@@ -63,6 +74,14 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           dateOfBirth,
           phone: phone.trim(),
           ghanaCardId: ghanaCardId.trim() || undefined,
+          nhisNumber: nhisNumber.trim() || undefined,
+          maritalStatus: maritalStatus || undefined,
+          educationalLevel: educationalLevel || undefined,
+          occupation: occupation.trim() || undefined,
+          spouseName: spouseName.trim() || undefined,
+          spousePhone: spousePhone.trim() || undefined,
+          spouseOccupation: spouseOccupation.trim() || undefined,
+          emergencyTransportPhone: emergencyTransportPhone.trim() || undefined,
           lmp: lmp || undefined,
           gravida: gravida ? Number(gravida) : undefined,
           para: para ? Number(para) : undefined,
@@ -157,6 +176,91 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
 
         {step === 1 && (
           <>
+            <Field label="NHIS Number">
+              <input
+                value={nhisNumber}
+                onChange={(e) => setNhisNumber(e.target.value)}
+                placeholder="Optional"
+                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </Field>
+            <div className="flex gap-3">
+              <Field label="Marital Status" className="flex-1">
+                <select
+                  value={maritalStatus}
+                  onChange={(e) => setMaritalStatus(e.target.value)}
+                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+                >
+                  <option value="">Select</option>
+                  {MARITAL_STATUSES.map((m) => (
+                    <option key={m} value={m}>
+                      {m}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="Educational Level" className="flex-1">
+                <select
+                  value={educationalLevel}
+                  onChange={(e) => setEducationalLevel(e.target.value)}
+                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+                >
+                  <option value="">Select</option>
+                  {EDUCATIONAL_LEVELS.map((e) => (
+                    <option key={e} value={e}>
+                      {e}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+            </div>
+            <Field label="Occupation">
+              <input
+                value={occupation}
+                onChange={(e) => setOccupation(e.target.value)}
+                placeholder="Optional"
+                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </Field>
+            <Field label="Spouse's Name">
+              <input
+                value={spouseName}
+                onChange={(e) => setSpouseName(e.target.value)}
+                placeholder="Optional"
+                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </Field>
+            <div className="flex gap-3">
+              <Field label="Spouse's Phone" className="flex-1">
+                <input
+                  value={spousePhone}
+                  onChange={(e) => setSpousePhone(e.target.value)}
+                  placeholder="024 123 4567"
+                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+                />
+              </Field>
+              <Field label="Spouse's Occupation" className="flex-1">
+                <input
+                  value={spouseOccupation}
+                  onChange={(e) => setSpouseOccupation(e.target.value)}
+                  placeholder="Optional"
+                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+                />
+              </Field>
+            </div>
+            <Field label="Emergency Transport Phone">
+              <input
+                value={emergencyTransportPhone}
+                onChange={(e) => setEmergencyTransportPhone(e.target.value)}
+                placeholder="e.g. driver or ambulance contact"
+                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </Field>
+          </>
+        )}
+
+        {step === 2 && (
+          <>
             <Field label="Last Menstrual Period (LMP)">
               <input
                 type="date"
@@ -217,7 +321,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           </>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <>
             <Field label="Emergency Contact Name">
               <input
