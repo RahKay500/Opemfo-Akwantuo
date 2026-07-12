@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
         ? normalizeGhanaPhone(parsed.data.emergencyContactPhone) ?? parsed.data.emergencyContactPhone
         : null,
       emergencyContactRelation: parsed.data.emergencyContactRelation || null,
+      community: parsed.data.community || null,
       nhisNumber: parsed.data.nhisNumber || null,
       maritalStatus: parsed.data.maritalStatus || null,
       educationalLevel: parsed.data.educationalLevel || null,

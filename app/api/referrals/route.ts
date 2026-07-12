@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
     await sendReferralCreatedSms(toFacility.phone, patient.emergencyContactPhone, patient.name);
   }
 
-  if (patient.userId) {
+  if (patient.userId && patient.notifyReferralUpdates) {
     await prisma.notification.create({
       data: {
         userId: patient.userId,

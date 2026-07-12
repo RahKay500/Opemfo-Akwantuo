@@ -22,6 +22,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
   const [phone, setPhone] = useState("");
   const [ghanaCardId, setGhanaCardId] = useState("");
 
+  const [community, setCommunity] = useState("");
   const [nhisNumber, setNhisNumber] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
   const [educationalLevel, setEducationalLevel] = useState("");
@@ -74,6 +75,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           dateOfBirth,
           phone: phone.trim(),
           ghanaCardId: ghanaCardId.trim() || undefined,
+          community: community.trim() || undefined,
           nhisNumber: nhisNumber.trim() || undefined,
           maritalStatus: maritalStatus || undefined,
           educationalLevel: educationalLevel || undefined,
@@ -176,6 +178,14 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
 
         {step === 1 && (
           <>
+            <Field label="Community">
+              <input
+                value={community}
+                onChange={(e) => setCommunity(e.target.value)}
+                placeholder="e.g. Asuom"
+                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </Field>
             <Field label="NHIS Number">
               <input
                 value={nhisNumber}

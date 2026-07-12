@@ -15,6 +15,7 @@ export const createPatientSchema = z.object({
   emergencyContactPhone: z.string().optional(),
   emergencyContactRelation: z.string().optional(),
   // Ghana MCH Record Book — Family Identification (page 3)
+  community: z.string().optional(),
   nhisNumber: z.string().optional(),
   maritalStatus: z.string().optional(),
   educationalLevel: z.string().optional(),

@@ -20,6 +20,11 @@ export interface MotherProfileData {
   para: number | null;
   midwifeName: string;
   facilityName: string;
+  community: string | null;
+  edd: Date | null;
+  notifyAppointments: boolean;
+  notifyReferralUpdates: boolean;
+  notifyEducationalContent: boolean;
 }
 
 export async function getMotherProfileData(userId: string): Promise<MotherProfileData | null> {
@@ -50,5 +55,10 @@ export async function getMotherProfileData(userId: string): Promise<MotherProfil
     para: patient.para,
     midwifeName: patient.registeredBy.name,
     facilityName: patient.facility.name,
+    community: patient.community,
+    edd: patient.edd,
+    notifyAppointments: patient.notifyAppointments,
+    notifyReferralUpdates: patient.notifyReferralUpdates,
+    notifyEducationalContent: patient.notifyEducationalContent,
   };
 }

@@ -166,6 +166,12 @@ model Patient {
   spousePhone             String?
   spouseOccupation        String?
   emergencyTransportPhone String?
+  community               String?
+
+  // Mother's own notification preferences, set from her Profile screen.
+  notifyAppointments       Boolean @default(true)
+  notifyReferralUpdates    Boolean @default(true)
+  notifyEducationalContent Boolean @default(false)
 
   // Obstetric History (page 4) — no. of pregnancies/births already covered
   // by gravida/para above; the document splits abortions into these two.
