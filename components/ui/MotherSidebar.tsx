@@ -53,34 +53,36 @@ export default function MotherSidebar({
           <p className="mt-1 text-xs font-medium text-lilac-dark">Mother</p>
         </div>
 
-        <div className="border-b border-border-color px-6 pb-5">
-          <div className="flex items-center gap-2.5">
-            <div className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-lilac-light">
-              <Image src="/images/logo.png" alt="" width={18} height={18} />
+        <div className="px-4 pb-5">
+          <div className="rounded-card bg-surface p-4">
+            <div className="flex items-center gap-2.5">
+              <div className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-lilac-light">
+                <Image src="/images/logo.png" alt="" width={18} height={18} />
+              </div>
+              <div className="min-w-0">
+                <p className="truncate font-body text-sm font-medium text-text-primary">{name}</p>
+                {week != null && (
+                  <p className="truncate font-body text-xs text-text-secondary">
+                    Week {week}
+                    {dueDate
+                      ? ` · Due ${new Date(dueDate).toLocaleDateString("en-GH", { day: "numeric", month: "short" })}`
+                      : ""}
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="truncate font-body text-sm font-medium text-text-primary">{name}</p>
-              {week != null && (
-                <p className="truncate font-body text-xs text-text-secondary">
-                  Week {week}
-                  {dueDate
-                    ? ` · Due ${new Date(dueDate).toLocaleDateString("en-GH", { day: "numeric", month: "short" })}`
-                    : ""}
-                </p>
-              )}
-            </div>
+            {progressPercent != null && (
+              <div className="mt-3">
+                <div className="flex items-center justify-between">
+                  <p className="font-body text-[11px] text-text-secondary">Pregnancy progress</p>
+                  <p className="font-body text-[11px] font-bold text-text-primary">{progressPercent}%</p>
+                </div>
+                <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-badge bg-lilac-light">
+                  <div className="h-full rounded-badge bg-lilac-dark" style={{ width: `${progressPercent}%` }} />
+                </div>
+              </div>
+            )}
           </div>
-          {progressPercent != null && (
-            <div className="mt-3">
-              <div className="flex items-center justify-between">
-                <p className="font-body text-[11px] text-text-secondary">Pregnancy progress</p>
-                <p className="font-body text-[11px] font-bold text-text-primary">{progressPercent}%</p>
-              </div>
-              <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-badge bg-lilac-light">
-                <div className="h-full rounded-badge bg-lilac-dark" style={{ width: `${progressPercent}%` }} />
-              </div>
-            </div>
-          )}
         </div>
 
         <nav className="flex flex-1 flex-col gap-1 overflow-y-auto px-3 pt-4">

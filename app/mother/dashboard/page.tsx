@@ -48,8 +48,8 @@ export default async function MotherDashboardPage() {
   const REFERRAL_STEP_LABELS = ["Submitted", "Accepted", "En Route", "Arrived"];
 
   return (
-    <main className="flex flex-col">
-      <div className="flex flex-col rounded-b-card bg-gradient-to-br from-[#E6ADF4] to-[#F4DEFB] px-6 pb-5 pt-11">
+    <main className="flex flex-col gap-5 lg:px-5 lg:pt-5">
+      <div className="flex flex-col rounded-b-card bg-gradient-to-br from-[#E6ADF4] to-[#F4DEFB] px-6 pb-5 pt-11 lg:rounded-card">
         <div className="flex items-start justify-between">
           <div>
             <p className="font-body text-sm text-[#843FA0]">{greeting()}</p>
@@ -101,7 +101,7 @@ export default async function MotherDashboardPage() {
         )}
       </div>
 
-      <div className="px-5 pt-5 lg:grid lg:grid-cols-[1fr_320px] lg:items-start lg:gap-6">
+      <div className="px-5 lg:px-0 lg:grid lg:grid-cols-[1fr_320px] lg:items-start lg:gap-6">
         <div className="flex flex-col gap-6">
           <div className="flex gap-3">
             <StatCard
