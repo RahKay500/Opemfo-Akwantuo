@@ -25,7 +25,7 @@ export default async function MotherLayout({
       {/* pb clears the fixed 80px MotherBottomNav so bottom-of-page content
           like a submit button is never covered by it. Disappears at lg:,
           where the sidebar takes over instead. */}
-      <div className="flex flex-1 justify-center overflow-x-hidden pb-28 lg:justify-stretch lg:overflow-x-auto lg:pb-10">
+      <div className="flex flex-1 justify-center overflow-x-hidden pb-28 lg:justify-stretch lg:overflow-x-auto lg:px-[10px] lg:pb-10">
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
       </div>
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] lg:hidden">
