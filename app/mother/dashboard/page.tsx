@@ -49,25 +49,26 @@ export default async function MotherDashboardPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="flex flex-col rounded-b-card bg-gradient-to-r from-lilac-deeper to-primary px-6 pb-5 pt-11">
+      <div className="flex flex-col rounded-b-card bg-gradient-to-br from-[#E6ADF4] to-[#F4DEFB] px-6 pb-5 pt-11">
         <div className="flex items-start justify-between">
           <div>
-            <p className="font-body text-sm text-white">{greeting()}</p>
-            <p className="font-heading text-2xl font-bold text-white">{data.name} 👋</p>
+            <p className="font-body text-sm text-[#843FA0]">{greeting()}</p>
+            <p className="font-heading text-2xl font-bold text-[#6A1E8A]">{data.name} 👋</p>
             {data.pregnancy && (
-              <p className="mt-1 max-w-xs font-body text-[13px] text-white/85">
+              <p className="mt-1 max-w-xs font-body text-[13px] text-[#843FA0]">
                 You&apos;re in your {data.pregnancy.trimester.toLowerCase()} trimester — keep up the great work!
               </p>
             )}
           </div>
-          <div className="flex items-center gap-3">
+          {/* Only needed on mobile, where there's no sidebar with an Alerts/Profile nav item to fall back on. */}
+          <div className="flex items-center gap-3 lg:hidden">
             <Link href="/mother/notifications" className="relative" aria-label="View notifications">
-              <BellIcon className="size-6 text-white" />
+              <BellIcon className="size-6 text-[#6A1E8A]" />
               <span className="absolute -right-0.5 -top-0.5 size-2 rounded-badge bg-pink-accent" />
             </Link>
             <Link
               href="/mother/profile"
-              className="flex size-10 shrink-0 items-center justify-center rounded-badge bg-lilac-light"
+              className="flex size-10 shrink-0 items-center justify-center rounded-badge bg-white"
               aria-label="View profile"
             >
               <Image src="/images/logo.png" alt="" width={22} height={22} />
@@ -78,24 +79,24 @@ export default async function MotherDashboardPage() {
         {data.pregnancy && (
           <div className="mt-4 flex items-center justify-between gap-4">
             <div className="flex flex-1 gap-2">
-              <div className="flex-1 rounded-input bg-white/15 px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-white">{data.pregnancy.week}</p>
-                <p className="font-body text-[10px] text-white/80">Week</p>
+              <div className="flex-1 rounded-input bg-[#F7E4FB] px-3 py-2 text-center">
+                <p className="font-heading text-sm font-bold text-[#6A1E8A]">{data.pregnancy.week}</p>
+                <p className="font-body text-[10px] text-[#945BAC]">Week</p>
               </div>
-              <div className="flex-1 rounded-input bg-white/15 px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-white">
+              <div className="flex-1 rounded-input bg-[#F7E4FB] px-3 py-2 text-center">
+                <p className="font-heading text-sm font-bold text-[#6A1E8A]">
                   {TRIMESTER_ORDINAL[data.pregnancy.trimester] ?? data.pregnancy.trimester}
                 </p>
-                <p className="font-body text-[10px] text-white/80">Trimester</p>
+                <p className="font-body text-[10px] text-[#945BAC]">Trimester</p>
               </div>
-              <div className="flex-1 rounded-input bg-white/15 px-3 py-2 text-center">
-                <p className="font-heading text-sm font-bold text-white">
+              <div className="flex-1 rounded-input bg-[#F7E4FB] px-3 py-2 text-center">
+                <p className="font-heading text-sm font-bold text-[#6A1E8A]">
                   {data.dueDate ? formatDate(data.dueDate) : "—"}
                 </p>
-                <p className="font-body text-[10px] text-white/80">Due Date</p>
+                <p className="font-body text-[10px] text-[#945BAC]">Due Date</p>
               </div>
             </div>
-            <ProgressRing percent={data.pregnancy.progressPercent} onDark showCaption />
+            <ProgressRing percent={data.pregnancy.progressPercent} showCaption />
           </div>
         )}
       </div>
