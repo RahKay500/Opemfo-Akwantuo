@@ -19,14 +19,14 @@ interface StatCardProps {
 
 export default function StatCard({ icon: Icon, iconClassName, label, value, badge }: StatCardProps) {
   return (
-    <div className="flex-1 rounded-card bg-white p-3.5 shadow-card">
-      <Icon className={cn("size-4", iconClassName)} />
-      <p className="mt-1.5 font-body text-[11px] font-medium text-text-secondary">{label}</p>
-      <p className="mt-0.5 font-heading text-lg font-bold text-text-primary">{value}</p>
+    <div className="flex-1 rounded-card bg-white p-2.5 shadow-card">
+      <Icon className={cn("size-3.5", iconClassName)} />
+      <p className="mt-1 font-body text-[10px] font-medium text-text-secondary">{label}</p>
+      <p className="mt-0.5 font-heading text-[15px] font-bold text-text-primary">{value}</p>
       {badge && (
         <span
           className={cn(
-            "mt-1.5 inline-block rounded-badge px-2 py-0.5 font-body text-[10px] font-medium",
+            "mt-1 inline-block rounded-badge px-1.5 py-0.5 font-body text-[9px] font-medium",
             BADGE_TONES[badge.tone]
           )}
         >

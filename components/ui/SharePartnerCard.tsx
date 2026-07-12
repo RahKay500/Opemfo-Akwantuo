@@ -3,18 +3,20 @@ import { PartnerIcon } from "@/components/ui/icons";
 
 export default function SharePartnerCard() {
   return (
-    <Link
-      href="/mother/partner"
-      className="flex items-center gap-4 rounded-card bg-white p-5 text-left shadow-card"
-    >
-      <div className="flex size-12 items-center justify-center rounded-badge bg-pink-light">
-        <PartnerIcon className="size-[22px] text-pink-deep" />
+    <div className="rounded-card bg-pink-light p-5">
+      <div className="flex items-center gap-2">
+        <PartnerIcon className="size-5 text-pink-deep" />
+        <h2 className="font-heading text-[15px] font-bold text-pink-deep">Share with partner</h2>
       </div>
-      <div className="flex-1">
-        <p className="font-heading text-[15px] font-bold text-text-primary">Share with your partner</p>
-        <p className="mt-0.5 font-body text-xs text-text-secondary">Keep them involved in your journey</p>
-      </div>
-      <span className="font-body text-[13px] font-medium text-pink-deep">Set up →</span>
-    </Link>
+      <p className="mt-1.5 font-body text-[13px] text-pink-deep/80">
+        Keep your partner informed about your pregnancy journey.
+      </p>
+      <Link
+        href="/mother/partner"
+        className="mt-4 flex h-11 w-full items-center justify-center rounded-input bg-pink-deep font-heading text-sm font-bold text-white"
+      >
+        Set up →
+      </Link>
+    </div>
   );
 }

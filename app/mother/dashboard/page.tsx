@@ -172,8 +172,6 @@ export default async function MotherDashboardPage() {
             </div>
           )}
 
-          <SharePartnerCard />
-
           <div>
             <div className="flex items-center justify-between">
               <h2 className="font-heading text-[17px] font-bold text-text-primary">Recent visits</h2>
@@ -239,6 +237,8 @@ export default async function MotherDashboardPage() {
               Book another visit
             </Link>
           </div>
+
+          <SharePartnerCard />
 
           <div className="rounded-card bg-white p-5 shadow-card">
             <div className="flex items-center justify-between">
