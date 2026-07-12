@@ -27,7 +27,7 @@ export default async function MotherReferralPage() {
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">Referral Status</h1>
       </div>
 
-      <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
+      <div className="flex flex-col gap-5 px-5 pb-8 pt-5 lg:max-w-2xl">
         {data.active ? (
           <>
             <div className="rounded-card bg-white p-5 shadow-card">
@@ -59,20 +59,22 @@ export default async function MotherReferralPage() {
               </div>
             </div>
 
-            <div className="rounded-card bg-white p-4 shadow-card">
-              <p className="font-body text-xs font-medium text-text-secondary">Hospital contact</p>
-              <p className="mt-1 font-heading text-[15px] font-bold text-text-primary">{data.active.hospitalName}</p>
-              {data.active.hospitalPhone && (
-                <>
+            <div className="rounded-card bg-white p-4 shadow-card lg:flex lg:items-center lg:justify-between lg:gap-4 lg:p-5">
+              <div>
+                <p className="font-body text-xs font-medium text-text-secondary">Hospital contact</p>
+                <p className="mt-1 font-heading text-[15px] font-bold text-text-primary">{data.active.hospitalName}</p>
+                {data.active.hospitalPhone && (
                   <p className="mt-1 font-body text-sm text-text-secondary">{data.active.hospitalPhone}</p>
-                  <a
-                    href={`tel:${data.active.hospitalPhone}`}
-                    className="mt-3.5 flex h-12 items-center justify-center gap-2 rounded-input border-[1.5px] border-primary font-body text-sm font-medium text-lilac-deeper"
-                  >
-                    <PhoneCallIcon className="size-4" />
-                    Call Hospital
-                  </a>
-                </>
+                )}
+              </div>
+              {data.active.hospitalPhone && (
+                <a
+                  href={`tel:${data.active.hospitalPhone}`}
+                  className="mt-3.5 flex h-12 items-center justify-center gap-2 rounded-input bg-lilac-light px-6 font-body text-sm font-bold text-lilac-deeper lg:mt-0 lg:shrink-0"
+                >
+                  <PhoneCallIcon className="size-4" />
+                  Call Hospital
+                </a>
               )}
             </div>
           </>
