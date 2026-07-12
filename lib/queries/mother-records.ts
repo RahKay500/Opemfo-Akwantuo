@@ -20,7 +20,7 @@ export interface MotherRecordsVisit {
 export interface MotherRecordsData {
   patientId: string;
   visits: MotherRecordsVisit[];
-  bpTrend: { date: string; systolic: number; diastolic: number }[];
+  bpTrend: { visit: string; systolic: number; diastolic: number }[];
 }
 
 export async function getMotherRecordsData(
@@ -36,15 +36,20 @@ export async function getMotherRecordsData(
     include: { nurse: { select: { name: true } } },
   });
 
+  // Number chronologically (V1 = earliest visit) across the full history before
+  // slicing to the most recent 5, so labels stay correct even when older
+  // visits are trimmed off — e.g. a patient on visit 8 sees "V4"–"V8", not a
+  // relabeled "V1"–"V5".
   const bpTrend = visits
     .filter((v) => v.systolic != null && v.diastolic != null)
-    .slice(0, 5)
+    .slice()
     .reverse()
-    .map((v) => ({
-      date: v.createdAt.toLocaleDateString("en-GH", { month: "short", day: "numeric" }),
+    .map((v, i) => ({
+      visit: `V${i + 1}`,
       systolic: v.systolic!,
       diastolic: v.diastolic!,
-    }));
+    }))
+    .slice(-5);
 
   return {
     patientId: patient.id,

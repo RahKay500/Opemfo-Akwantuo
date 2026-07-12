@@ -12,7 +12,7 @@ import {
 import { THRESHOLDS } from "@/lib/flagging";
 
 export interface BPGraphPoint {
-  date: string;
+  visit: string;
   systolic: number;
   diastolic: number;
 }
@@ -23,7 +23,7 @@ export default function BPGraph({ data }: { data: BPGraphPoint[] }) {
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
           <XAxis
-            dataKey="date"
+            dataKey="visit"
             tick={{ fontSize: 10, fill: "#9CA3AF" }}
             axisLine={{ stroke: "#EDD5F9" }}
             tickLine={false}
