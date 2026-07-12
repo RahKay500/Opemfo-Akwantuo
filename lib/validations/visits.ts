@@ -9,6 +9,7 @@ export const logVisitSchema = z.object({
   weight: z.number().optional(),
   fundalHeight: z.number().optional(),
   observations: z.string().optional(),
+  nextVisitDate: z.coerce.date().optional(),
 });
 
 export type LogVisitInput = z.infer<typeof logVisitSchema>;

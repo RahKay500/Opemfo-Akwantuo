@@ -264,6 +264,10 @@ model Visit {
   flagReason     String?
   flagPriority   Priority?
   createdAt      DateTime  @default(now())
+  // Midwife-recorded "Date of Next Visit" (MCH Record Book Antenatal
+  // Follow-Up table) — distinct from AppointmentRequest, which is the
+  // mother's own self-service booking.
+  nextVisitDate  DateTime?
 
   // Remaining Antenatal Follow-Up table columns (page 7) not already covered
   // by the fields above.

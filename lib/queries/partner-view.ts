@@ -35,12 +35,15 @@ export async function getPartnerViewData(token: string): Promise<PartnerViewData
     shareMedicalHistory: link.shareMedicalHistory,
   };
 
-  const [nextAppointment, latestVisit, recentVisits, activeReferral] = await Promise.all([
+  const [nextAppointment, midwifeSetVisit, latestVisit, recentVisits, activeReferral] = await Promise.all([
     permissions.shareAppointments
       ? prisma.appointmentRequest.findFirst({
           where: { patientId: link.patientId, status: "CONFIRMED", preferredDate: { gte: new Date() } },
           orderBy: { preferredDate: "asc" },
         })
+      : null,
+    permissions.shareAppointments
+      ? prisma.visit.findFirst({ where: { patientId: link.patientId }, orderBy: { createdAt: "desc" } })
       : null,
     permissions.shareVitals
       ? prisma.visit.findFirst({ where: { patientId: link.patientId }, orderBy: { createdAt: "desc" } })
@@ -64,7 +67,12 @@ export async function getPartnerViewData(token: string): Promise<PartnerViewData
   return {
     patientName: link.patient.name,
     pregnancy: permissions.shareProgress && link.patient.lmp ? calculatePregnancyProgress(link.patient.lmp) : null,
-    nextAppointment: nextAppointment ? { date: nextAppointment.preferredDate } : null,
+    nextAppointment:
+      midwifeSetVisit?.nextVisitDate && midwifeSetVisit.nextVisitDate.getTime() >= Date.now()
+        ? { date: midwifeSetVisit.nextVisitDate }
+        : nextAppointment
+          ? { date: nextAppointment.preferredDate }
+          : null,
     latestVisit: latestVisit
       ? {
           weight: latestVisit.weight,

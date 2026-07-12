@@ -42,7 +42,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ error: "Patient not found." }, { status: 404 });
   }
 
-  const { visitType, systolic, diastolic, fetalHeartRate, temperature, weight, fundalHeight, observations } =
+  const { visitType, systolic, diastolic, fetalHeartRate, temperature, weight, fundalHeight, observations, nextVisitDate } =
     parsed.data;
 
   const gestationalAge =
@@ -68,6 +68,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       weight,
       fundalHeight,
       observations,
+      nextVisitDate,
       flagged: flagResult.flagged,
       flagReason: flagResult.flagged ? flagResult.reason : null,
       flagPriority: flagResult.priority,

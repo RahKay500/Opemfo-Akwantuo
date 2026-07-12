@@ -8,7 +8,7 @@ export interface MotherDashboardData {
   dueDate: Date | null;
   bp: { systolic: number; diastolic: number; isNormal: boolean } | null;
   babyHeartRate: { value: number; isNormal: boolean } | null;
-  nextAppointment: { date: Date; status: string; facilityName: string } | null;
+  nextAppointment: { date: Date; status: string; facilityName: string; setByMidwife: boolean } | null;
   recentVisits: { id: string; date: Date; visitType: string; nurseName: string }[];
   recentNotifications: { id: string; type: string; title: string; message: string; createdAt: Date; isRead: boolean }[];
 }
@@ -41,6 +41,12 @@ export async function getMotherDashboardData(userId: string): Promise<MotherDash
 
   const pregnancy = patient.lmp ? calculatePregnancyProgress(patient.lmp) : null;
 
+  // The midwife's own "Date of Next Visit" (set when logging the latest
+  // visit) takes precedence over the mother's self-service booking, since
+  // it reflects clinical guidance rather than her own guess.
+  const midwifeNextVisit =
+    lastVisit?.nextVisitDate && lastVisit.nextVisitDate.getTime() >= Date.now() ? lastVisit.nextVisitDate : null;
+
   const bp =
     lastVisit?.systolic != null && lastVisit?.diastolic != null
       ? {
@@ -67,9 +73,11 @@ export async function getMotherDashboardData(userId: string): Promise<MotherDash
     dueDate: patient.edd,
     bp,
     babyHeartRate,
-    nextAppointment: nextAppointment
-      ? { date: nextAppointment.preferredDate, status: nextAppointment.status, facilityName: patient.facility.name }
-      : null,
+    nextAppointment: midwifeNextVisit
+      ? { date: midwifeNextVisit, status: "CONFIRMED", facilityName: patient.facility.name, setByMidwife: true }
+      : nextAppointment
+        ? { date: nextAppointment.preferredDate, status: nextAppointment.status, facilityName: patient.facility.name, setByMidwife: false }
+        : null,
     recentVisits: recentVisits.map((visit) => ({
       id: visit.id,
       date: visit.createdAt,

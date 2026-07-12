@@ -22,6 +22,7 @@ export default function LogVitalsForm({
   const [weight, setWeight] = useState("");
   const [fundalHeight, setFundalHeight] = useState("");
   const [observations, setObservations] = useState("");
+  const [nextVisitDate, setNextVisitDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,6 +42,7 @@ export default function LogVitalsForm({
           weight: weight ? Number(weight) : undefined,
           fundalHeight: fundalHeight ? Number(fundalHeight) : undefined,
           observations: observations.trim() || undefined,
+          nextVisitDate: nextVisitDate || undefined,
         }),
       });
       if (!res.ok) {
@@ -133,6 +135,20 @@ export default function LogVitalsForm({
           placeholder="Any additional clinical observations..."
           className="mt-1.5 w-full resize-none rounded-input border-[1.5px] border-border-color bg-white p-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
         />
+      </div>
+
+      <div>
+        <label className="font-body text-[13px] font-medium text-text-secondary">Date of Next Visit</label>
+        <input
+          type="date"
+          value={nextVisitDate}
+          onChange={(e) => setNextVisitDate(e.target.value)}
+          min={new Date().toISOString().slice(0, 10)}
+          className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+        />
+        <p className="mt-1.5 font-body text-[11px] text-text-secondary">
+          Sets when this patient should return — shown on her dashboard.
+        </p>
       </div>
 
       {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
