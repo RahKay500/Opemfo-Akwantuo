@@ -42,8 +42,24 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ error: "Patient not found." }, { status: 404 });
   }
 
-  const { visitType, systolic, diastolic, fetalHeartRate, temperature, weight, fundalHeight, observations, nextVisitDate } =
-    parsed.data;
+  const {
+    visitType,
+    systolic,
+    diastolic,
+    fetalHeartRate,
+    temperature,
+    weight,
+    fundalHeight,
+    observations,
+    nextVisitDate,
+    urineProt,
+    urineSugar,
+    oedema,
+    fetalPresentation,
+    fetalDescent,
+    ifaSupplied,
+    complaints,
+  } = parsed.data;
 
   const gestationalAge =
     visitType === "ANTENATAL" && patient.lmp ? calculatePregnancyProgress(patient.lmp).week : null;
@@ -69,6 +85,13 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       fundalHeight,
       observations,
       nextVisitDate,
+      urineProt,
+      urineSugar,
+      oedema,
+      fetalPresentation,
+      fetalDescent,
+      ifaSupplied,
+      complaints,
       flagged: flagResult.flagged,
       flagReason: flagResult.flagged ? flagResult.reason : null,
       flagPriority: flagResult.priority,

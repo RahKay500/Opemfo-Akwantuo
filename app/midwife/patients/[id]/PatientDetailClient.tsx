@@ -156,7 +156,7 @@ export default function PatientDetailClient({
         {tab === "Vitals" && (
           <div className="flex flex-col gap-2.5">
             <Link
-              href={`/midwife/patients/${patientId}/vitals`}
+              href={`/midwife/log-vitals?patientId=${patientId}`}
               className="flex h-12 items-center justify-center rounded-input bg-primary font-heading text-sm font-bold text-white"
             >
               + Log Vitals

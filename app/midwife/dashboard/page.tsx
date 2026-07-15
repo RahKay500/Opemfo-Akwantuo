@@ -272,7 +272,7 @@ export default async function MidwifeDashboardPage() {
                       <td className="px-6 py-3.5">
                         <div className="flex gap-2">
                           <Link
-                            href={`/midwife/patients/${row.patientId}/vitals`}
+                            href={`/midwife/log-vitals?patientId=${row.patientId}`}
                             className="rounded-input bg-lilac-light px-3 py-1.5 font-body text-xs font-medium text-lilac-deeper"
                           >
                             Log Vitals

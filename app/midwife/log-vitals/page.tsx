@@ -4,11 +4,17 @@ import { getMidwifePatientList } from "@/lib/queries/midwife-patients";
 import { getMidwifeSidebarData } from "@/lib/queries/midwife-sidebar";
 import { initials } from "@/lib/utils";
 import { BellIcon } from "@/components/ui/icons";
-import LogVitalsPatientList from "./LogVitalsPatientList";
+import LogVitalsForm from "./LogVitalsForm";
 
-export default async function MidwifeLogVitalsPage() {
+export default async function MidwifeLogVitalsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ patientId?: string }>;
+}) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
+
+  const { patientId } = await searchParams;
 
   const [patients, sidebarData] = await Promise.all([
     getMidwifePatientList(user.id),
@@ -46,11 +52,12 @@ export default async function MidwifeLogVitalsPage() {
         </div>
       </div>
 
-      <div className="px-5 pb-2 pt-4 lg:px-5 lg:pt-6">
-        <p className="font-body text-sm text-text-secondary">Choose a patient to log vitals for.</p>
+      <div className="px-5 pb-6 pt-5 lg:px-5 lg:pt-6">
+        <LogVitalsForm
+          patients={patients.map((p) => ({ id: p.id, name: p.name, week: p.week }))}
+          initialPatientId={patientId ?? null}
+        />
       </div>
-
-      <LogVitalsPatientList patients={patients} />
     </main>
   );
 }

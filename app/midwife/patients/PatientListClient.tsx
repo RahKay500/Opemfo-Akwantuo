@@ -202,7 +202,7 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
                         View
                       </Link>
                       <Link
-                        href={`/midwife/patients/${patient.id}/vitals`}
+                        href={`/midwife/log-vitals?patientId=${patient.id}`}
                         className="rounded-input bg-low-bg px-3 py-1.5 font-body text-xs font-medium text-low"
                       >
                         Vitals
