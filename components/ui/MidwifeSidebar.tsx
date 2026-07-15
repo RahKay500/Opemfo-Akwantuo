@@ -13,10 +13,16 @@ import {
   AlertTriangleIcon,
 } from "@/components/ui/icons";
 
+// "Compound" makes most CHPS facility names too long to fit next to the
+// role label in the sidebar's identity card, so it's dropped there only.
+function shortFacilityName(facilityName: string): string {
+  return facilityName.replace(/\s+Compound$/i, "");
+}
+
 const NAV_ITEMS = [
   { href: "/midwife/dashboard", label: "Dashboard", icon: NavHomeIcon },
   { href: "/midwife/patients", label: "Patients", icon: NavPatientsIcon },
-  { href: "/midwife/patients", label: "Log Vitals", icon: HeartRateIcon },
+  { href: "/midwife/log-vitals", label: "Log Vitals", icon: HeartRateIcon },
   { href: "/midwife/referral", label: "Referrals", icon: NavReferralsIcon },
   { href: "/midwife/register", label: "Register Patient", icon: PlusIcon },
 ];
@@ -39,19 +45,19 @@ export default function MidwifeSidebar({
         <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">CHPS MANAGEMENT</p>
       </div>
 
-      <div className="mx-4 mb-2 flex items-center gap-2.5 rounded-card bg-[#27273A] px-3 py-3">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-lilac-mid">
+      <div className="mx-3 mb-2 flex items-center gap-2 rounded-card bg-[#27273A] px-2.5 py-3">
+        <div className="flex size-8 shrink-0 items-center justify-center rounded-badge bg-lilac-mid">
           <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(name)}</span>
         </div>
         <div className="min-w-0">
           <p className="truncate font-body text-sm font-medium text-white">{name}</p>
-          <p className="truncate font-body text-xs text-[#8A8AA3]">{facilityName} · Midwife</p>
+          <p className="truncate font-body text-[11px] text-[#8A8AA3]">{shortFacilityName(facilityName)} · Midwife</p>
         </div>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
         {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href && label !== "Log Vitals";
+          const active = pathname === href;
           return (
             <Link
               key={label}
