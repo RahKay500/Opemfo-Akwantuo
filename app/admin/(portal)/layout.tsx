@@ -9,9 +9,7 @@ export default async function AdminPortalLayout({ children }: { children: React.
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F8FAFC] font-body text-[#1A1A2E] lg:flex-row">
-      <div className="hidden lg:block">
-        <Sidebar facilityId={session.facilityId} />
-      </div>
+      <Sidebar facilityId={session.facilityId} />
       <div className="flex-1 overflow-x-hidden pb-16 lg:overflow-x-auto lg:pb-0">{children}</div>
       <div className="fixed inset-x-0 bottom-0 z-30 lg:hidden">
         <AdminBottomNav facilityId={session.facilityId} />

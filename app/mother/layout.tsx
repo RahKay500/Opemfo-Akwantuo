@@ -13,15 +13,13 @@ export default async function MotherLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
-      <div className="hidden lg:block">
-        <MotherSidebar
-          name={sidebarData?.name ?? user?.name ?? ""}
-          week={sidebarData?.week ?? null}
-          dueDate={sidebarData?.dueDate?.toISOString() ?? null}
-          progressPercent={sidebarData?.progressPercent ?? null}
-          unreadCount={sidebarData?.unreadCount ?? 0}
-        />
-      </div>
+      <MotherSidebar
+        name={sidebarData?.name ?? user?.name ?? ""}
+        week={sidebarData?.week ?? null}
+        dueDate={sidebarData?.dueDate?.toISOString() ?? null}
+        progressPercent={sidebarData?.progressPercent ?? null}
+        unreadCount={sidebarData?.unreadCount ?? 0}
+      />
       {/* pb clears the fixed 80px MotherBottomNav so bottom-of-page content
           like a submit button is never covered by it. Disappears at lg:,
           where the sidebar takes over instead. */}

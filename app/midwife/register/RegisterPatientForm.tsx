@@ -378,7 +378,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             <button
               type="button"
               onClick={() => setStep((s) => s - 1)}
-              className="h-14 flex-1 rounded-card border-[1.5px] border-border-color font-heading text-[15px] font-bold text-text-secondary"
+              className="h-12 w-auto rounded-card border-[1.5px] border-border-color px-8 font-heading text-[15px] font-bold text-text-secondary"
             >
               Back
             </button>
@@ -387,7 +387,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             <button
               type="button"
               onClick={handleContinue}
-              className="h-14 flex-1 rounded-card bg-lilac-mid font-heading text-[15px] font-bold text-lilac-deeper"
+              className="h-12 w-auto rounded-card bg-lilac-mid px-8 font-heading text-[15px] font-bold text-lilac-deeper"
             >
               Continue
             </button>
@@ -396,7 +396,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="h-14 flex-1 rounded-card bg-lilac-mid font-heading text-[15px] font-bold text-lilac-deeper disabled:opacity-60"
+              className="h-12 w-auto rounded-card bg-lilac-mid px-8 font-heading text-[15px] font-bold text-lilac-deeper disabled:opacity-60"
             >
               {submitting ? "Registering…" : "Register Patient"}
             </button>

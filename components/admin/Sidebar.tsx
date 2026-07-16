@@ -10,7 +10,7 @@ export default function Sidebar({ facilityId }: { facilityId: string | null }) {
   const navItems = getAdminNavItems(facilityId);
 
   return (
-    <aside className="flex min-h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white">
+    <aside className="hidden min-h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white lg:flex">
       <div className="px-6 pb-6 pt-8">
         <p className="font-semibold leading-tight">Ɔpemfoɔ Akwantuo</p>
         <p className="mt-1 text-xs font-medium text-[#E4A8F3]">Admin Portal</p>
