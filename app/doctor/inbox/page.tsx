@@ -4,7 +4,8 @@ import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorInbox } from "@/lib/queries/doctor-inbox";
 import { getDoctorPatientDetail } from "@/lib/queries/doctor-patient-detail";
 import { getOtherDoctors } from "@/lib/queries/doctor-directory";
-import { cn } from "@/lib/utils";
+import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
+import { cn, initials } from "@/lib/utils";
 import InboxClient from "./InboxClient";
 import PatientRecordPanel from "./PatientRecordPanel";
 
@@ -19,10 +20,12 @@ export default async function DoctorInboxPage({
   const { patientId: requestedPatientId } = await searchParams;
   const shares = await getDoctorInbox(user.id);
   const selectedPatientId = requestedPatientId ?? shares[0]?.patientId ?? null;
+  const pendingCount = shares.filter((s) => s.status === "Active").length;
 
-  const [detail, otherDoctors] = await Promise.all([
+  const [detail, otherDoctors, sidebarData] = await Promise.all([
     selectedPatientId ? getDoctorPatientDetail(selectedPatientId, user.id) : null,
     getOtherDoctors(user.id),
+    getDoctorSidebarData(user.id),
   ]);
 
   return (
@@ -35,7 +38,24 @@ export default async function DoctorInboxPage({
         <InboxClient shares={shares} />
       </div>
 
-      <div className="hidden gap-6 px-5 pb-8 pt-8 lg:flex">
+      <div className="hidden items-center justify-between px-5 pt-8 lg:flex">
+        <div>
+          <h1 className="font-heading text-[28px] font-bold text-text-primary">Patient Records</h1>
+          <p className="mt-1 font-body text-sm text-text-secondary">{sidebarData?.facilityName ?? ""}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {pendingCount > 0 && (
+            <span className="rounded-badge bg-pink-light px-3 py-1.5 font-body text-[13px] font-bold text-pink-deep">
+              {pendingCount} shared record{pendingCount === 1 ? "" : "s"} pending review
+            </span>
+          )}
+          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
+            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(sidebarData?.name ?? "")}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="hidden items-start gap-6 px-5 pb-8 pt-5 lg:flex">
         <div className="w-[340px] shrink-0 rounded-card bg-white p-4 shadow-card">
           <h2 className="px-2 pb-3 font-heading text-lg font-bold text-text-primary">Shared Records</h2>
           <div className="flex flex-col">
@@ -49,7 +69,7 @@ export default async function DoctorInboxPage({
                 className={cn(
                   "flex items-center justify-between gap-2 rounded-input border-l-4 px-3 py-3.5",
                   s.patientId === selectedPatientId
-                    ? "border-lilac-dark bg-lilac-light"
+                    ? "border-lilac-mid bg-lilac-light"
                     : "border-transparent hover:bg-surface/60"
                 )}
               >
