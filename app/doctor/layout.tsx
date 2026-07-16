@@ -13,9 +13,14 @@ export default async function DoctorLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
-      <DoctorSidebar name={sidebarData?.name ?? user?.name ?? ""} facilityName={sidebarData?.facilityName ?? ""} />
-      <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:overflow-x-auto lg:pb-10">
-        <div className="w-full max-w-[430px] lg:max-w-3xl">{children}</div>
+      <DoctorSidebar
+        name={sidebarData?.name ?? user?.name ?? ""}
+        facilityName={sidebarData?.facilityName ?? ""}
+        facilityType={sidebarData?.facilityType ?? null}
+        newSharedRecordsCount={sidebarData?.newSharedRecordsCount ?? 0}
+      />
+      <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:justify-stretch lg:overflow-x-auto lg:pb-10">
+        <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
       </div>
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] lg:hidden">
         <DoctorBottomNav />

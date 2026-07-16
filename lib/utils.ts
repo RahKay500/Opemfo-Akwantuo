@@ -21,6 +21,12 @@ export function normalizeGhanaPhone(input: string): string | null {
   return null;
 }
 
+export function facilityTypeLabel(type: "CHPS" | "DISTRICT_HOSPITAL" | "TEACHING_HOSPITAL"): string {
+  if (type === "DISTRICT_HOSPITAL") return "District Hospital";
+  if (type === "TEACHING_HOSPITAL") return "Teaching Hospital";
+  return "CHPS";
+}
+
 export function initials(name: string): string {
   return name
     .split(" ")

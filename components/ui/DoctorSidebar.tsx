@@ -2,22 +2,47 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn, initials } from "@/lib/utils";
-import { NavHomeIcon, NavRecordsIcon, NavProfileIcon } from "@/components/ui/icons";
+import { cn, facilityTypeLabel, initials } from "@/lib/utils";
+import type { FacilityType } from "@prisma/client";
+import {
+  NavHomeIcon,
+  NavReferralsIcon,
+  NavRecordsIcon,
+  AnalyticsIcon,
+  NavProfileIcon,
+  ShareIcon,
+} from "@/components/ui/icons";
 
 const NAV_ITEMS = [
-  { href: "/doctor/dashboard", label: "Home", icon: NavHomeIcon },
-  { href: "/doctor/inbox", label: "Inbox", icon: NavRecordsIcon },
+  { href: "/doctor/dashboard", label: "Dashboard", icon: NavHomeIcon },
+  { href: "/doctor/referral-queue", label: "Referral Queue", icon: NavReferralsIcon },
+  { href: "/doctor/inbox", label: "Patient Records", icon: NavRecordsIcon, badgeKey: "shares" as const },
+  // No dedicated Analytics screen yet — routes to the dashboard (which already
+  // carries the Monthly Referrals chart) without claiming the "active" state,
+  // since it isn't really the current page.
+  { href: "/doctor/dashboard", label: "Analytics", icon: AnalyticsIcon, neverActive: true as const },
 ];
 
-export default function DoctorSidebar({ name, facilityName }: { name: string; facilityName: string }) {
+export default function DoctorSidebar({
+  name,
+  facilityName,
+  facilityType,
+  newSharedRecordsCount,
+}: {
+  name: string;
+  facilityName: string;
+  facilityType: FacilityType | null;
+  newSharedRecordsCount: number;
+}) {
   const pathname = usePathname();
 
   return (
     <aside className="hidden min-h-screen w-60 shrink-0 flex-col bg-[#1F1F32] lg:flex">
       <div className="px-6 pb-5 pt-8">
         <p className="font-heading text-lg font-bold text-lilac-mid">Ɔpemfoɔ</p>
-        <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">HOSPITAL</p>
+        <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">
+          {facilityType ? facilityTypeLabel(facilityType).toUpperCase() : "HOSPITAL"}
+        </p>
       </div>
 
       <div className="mx-4 mb-2 flex items-center gap-2.5 rounded-card bg-[#27273A] px-3 py-3">
@@ -30,20 +55,37 @@ export default function DoctorSidebar({ name, facilityName }: { name: string; fa
         </div>
       </div>
 
+      {newSharedRecordsCount > 0 && (
+        <Link
+          href="/doctor/inbox"
+          className="mx-4 mb-2 flex items-center gap-2 rounded-card bg-pink-deep/15 px-3 py-2.5 font-body text-[13px] font-medium text-pink-accent"
+        >
+          <ShareIcon className="size-4" />
+          {newSharedRecordsCount} new shared record{newSharedRecordsCount === 1 ? "" : "s"}
+        </Link>
+      )}
+
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
-          const active = pathname === href || pathname.startsWith(href + "/");
+        {NAV_ITEMS.map(({ href, label, icon: Icon, badgeKey, neverActive }) => {
+          const active = !neverActive && (pathname === href || pathname.startsWith(href + "/"));
           return (
             <Link
-              key={href}
+              key={label}
               href={href}
               className={cn(
-                "flex items-center gap-3 rounded-input px-4 py-2.5 font-body text-sm font-medium",
+                "flex items-center justify-between gap-3 rounded-input px-4 py-2.5 font-body text-sm font-medium",
                 active ? "bg-lilac-mid text-lilac-deeper" : "text-[#9494AC] hover:bg-white/5"
               )}
             >
-              <Icon className="size-5" />
-              {label}
+              <span className="flex items-center gap-3">
+                <Icon className="size-5" />
+                {label}
+              </span>
+              {badgeKey === "shares" && newSharedRecordsCount > 0 && (
+                <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
+                  {newSharedRecordsCount}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -58,7 +100,7 @@ export default function DoctorSidebar({ name, facilityName }: { name: string; fa
           )}
         >
           <NavProfileIcon className="size-5" />
-          Profile
+          Profile & Settings
         </Link>
       </div>
     </aside>
