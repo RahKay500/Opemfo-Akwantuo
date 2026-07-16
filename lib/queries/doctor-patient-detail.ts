@@ -16,6 +16,7 @@ export async function getDoctorPatientDetail(patientId: string, doctorId: string
   const patient = await prisma.patient.findUnique({
     where: { id: patientId },
     include: {
+      facility: { select: { name: true } },
       visits: { orderBy: { createdAt: "desc" }, include: { nurse: { select: { name: true } } } },
       referrals: { orderBy: { sentAt: "desc" }, include: { toFacility: { select: { name: true } } } },
     },
@@ -30,7 +31,16 @@ export async function getDoctorPatientDetail(patientId: string, doctorId: string
   if (!share.isActive) status = "Reviewed";
   else if (share.expiresAt <= new Date()) status = "Expired";
 
-  return { patient, latestVisit, share, status };
+  // Chronological V1..V6 across the last 6 visits with a BP reading — same
+  // numbering convention as the mother-facing BP trend (lib/queries/mother-records.ts).
+  const bpTrend = patient.visits
+    .filter((v) => v.systolic != null && v.diastolic != null)
+    .slice()
+    .reverse()
+    .map((v, i) => ({ visit: `V${i + 1}`, systolic: v.systolic!, diastolic: v.diastolic! }))
+    .slice(-6);
+
+  return { patient, latestVisit, share, status, bpTrend };
 }
 
 export type DoctorPatientDetail = NonNullable<Awaited<ReturnType<typeof getDoctorPatientDetail>>>;

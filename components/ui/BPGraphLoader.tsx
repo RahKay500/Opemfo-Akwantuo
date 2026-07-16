@@ -7,6 +7,18 @@ import type { BPGraphPoint } from "@/components/ui/BPGraph";
 // this thin wrapper — the records page itself stays a Server Component.
 const BPGraph = dynamic(() => import("@/components/ui/BPGraph"), { ssr: false });
 
-export default function BPGraphLoader({ data }: { data: BPGraphPoint[] }) {
-  return <BPGraph data={data} />;
+export default function BPGraphLoader({
+  data,
+  showThreshold,
+  systolicColor,
+  diastolicColor,
+}: {
+  data: BPGraphPoint[];
+  showThreshold?: boolean;
+  systolicColor?: string;
+  diastolicColor?: string;
+}) {
+  return (
+    <BPGraph data={data} showThreshold={showThreshold} systolicColor={systolicColor} diastolicColor={diastolicColor} />
+  );
 }

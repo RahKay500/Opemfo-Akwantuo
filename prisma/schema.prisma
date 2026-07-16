@@ -348,6 +348,9 @@ model ReferralShare {
   sharedWithDoctorId String
   sharedWithDoctor   User      @relation("SharedWithDoctor", fields: [sharedWithDoctorId], references: [id])
   reason             String?
+  // The receiving doctor's own clinical note on this share — distinct from
+  // `reason`, which is the referring midwife's note.
+  doctorNotes        String?
   expiresAt          DateTime
   isActive           Boolean   @default(true)
   createdAt          DateTime  @default(now())

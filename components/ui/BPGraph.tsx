@@ -17,7 +17,17 @@ export interface BPGraphPoint {
   diastolic: number;
 }
 
-export default function BPGraph({ data }: { data: BPGraphPoint[] }) {
+export default function BPGraph({
+  data,
+  showThreshold = true,
+  systolicColor = "#DB2777",
+  diastolicColor = "#C178E0",
+}: {
+  data: BPGraphPoint[];
+  showThreshold?: boolean;
+  systolicColor?: string;
+  diastolicColor?: string;
+}) {
   return (
     <div className="h-[180px] w-full">
       <ResponsiveContainer width="100%" height="100%">
@@ -39,14 +49,16 @@ export default function BPGraph({ data }: { data: BPGraphPoint[] }) {
             contentStyle={{ borderRadius: 12, borderColor: "#EDD5F9", fontSize: 12 }}
             labelStyle={{ fontWeight: 600 }}
           />
-          <ReferenceLine
-            y={THRESHOLDS.systolic.high}
-            stroke="#DC2626"
-            strokeDasharray="4 4"
-            label={{ value: "Hypertension threshold", position: "insideTopLeft", fontSize: 10, fill: "#DC2626" }}
-          />
-          <Line type="monotone" dataKey="systolic" stroke="#DB2777" strokeWidth={2} dot={{ r: 3 }} name="Systolic" />
-          <Line type="monotone" dataKey="diastolic" stroke="#C178E0" strokeWidth={2} dot={{ r: 3 }} name="Diastolic" />
+          {showThreshold && (
+            <ReferenceLine
+              y={THRESHOLDS.systolic.high}
+              stroke="#DC2626"
+              strokeDasharray="4 4"
+              label={{ value: "Hypertension threshold", position: "insideTopLeft", fontSize: 10, fill: "#DC2626" }}
+            />
+          )}
+          <Line type="monotone" dataKey="systolic" stroke={systolicColor} strokeWidth={2} dot={{ r: 3 }} name="Systolic" />
+          <Line type="monotone" dataKey="diastolic" stroke={diastolicColor} strokeWidth={2} dot={{ r: 3 }} name="Diastolic" />
         </LineChart>
       </ResponsiveContainer>
     </div>
