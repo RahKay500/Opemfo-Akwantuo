@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { averageDurationLabel } from "@/lib/referral-metrics";
 
 export interface MidwifeProfileData {
   name: string;
@@ -35,7 +36,9 @@ export async function getMidwifeProfileData(userId: string): Promise<MidwifeProf
     }),
   ]);
 
-  const avgResponseTimeLabel = averageResponseTimeLabel(acknowledgedReferrals);
+  const avgResponseTimeLabel = averageDurationLabel(
+    acknowledgedReferrals.map((r) => ({ start: r.sentAt, end: r.acknowledgedAt }))
+  );
 
   const yearsOfService = user.serviceStartDate
     ? Math.max(0, new Date().getFullYear() - user.serviceStartDate.getFullYear())
@@ -59,14 +62,4 @@ export async function getMidwifeProfileData(userId: string): Promise<MidwifeProf
     yearsOfService,
     isVerified: Boolean(user.licenseNumber),
   };
-}
-
-function averageResponseTimeLabel(referrals: { sentAt: Date; acknowledgedAt: Date | null }[]): string | null {
-  if (referrals.length === 0) return null;
-  const totalMs = referrals.reduce((sum, r) => sum + (r.acknowledgedAt!.getTime() - r.sentAt.getTime()), 0);
-  const avgMinutes = Math.round(totalMs / referrals.length / 60000);
-  if (avgMinutes < 60) return `${avgMinutes} min`;
-  const hours = Math.floor(avgMinutes / 60);
-  const minutes = avgMinutes % 60;
-  return minutes === 0 ? `${hours}h` : `${hours}h ${minutes}m`;
 }

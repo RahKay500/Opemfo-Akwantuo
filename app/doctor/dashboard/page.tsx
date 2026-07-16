@@ -4,8 +4,9 @@ import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorDashboardData } from "@/lib/queries/doctor-dashboard";
 import { initials } from "@/lib/utils";
 import { DOCTOR_REFERRAL_STATUS } from "@/lib/referral-status";
-import { BellIcon, DoctorIcon, ShareIcon, CalendarIcon, ReferralArrowIcon, ChevronRightIcon } from "@/components/ui/icons";
+import { BellIcon, DoctorIcon, ShareIcon, CalendarIcon, ReferralArrowIcon } from "@/components/ui/icons";
 import MonthlyReferralsChartLoader from "@/components/ui/MonthlyReferralsChartLoader";
+import ReferralActionButton from "@/components/ui/ReferralActionButton";
 import type { Priority } from "@prisma/client";
 
 const PRIORITY_BORDER: Record<Priority, string> = {
@@ -150,9 +151,8 @@ export default async function DoctorDashboardPage() {
               {data.referralQueue.map((r, i) => {
                 const status = DOCTOR_REFERRAL_STATUS[r.status];
                 return (
-                  <Link
+                  <div
                     key={r.id}
-                    href={`/doctor/patients/${r.patientId}`}
                     className={`flex items-center justify-between gap-3 border-l-4 px-5 py-4 ${PRIORITY_BORDER[r.priority]} ${
                       i === data.referralQueue.length - 1 ? "" : "border-b border-b-border-color"
                     }`}
@@ -173,9 +173,9 @@ export default async function DoctorDashboardPage() {
                       <span className={`rounded-badge px-2.5 py-1 font-body text-xs font-medium ${status.bg} ${status.text}`}>
                         {status.label}
                       </span>
-                      <ChevronRightIcon className="size-3.5 text-[#9CA3AF]" />
+                      <ReferralActionButton referralId={r.id} status={r.status} />
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>

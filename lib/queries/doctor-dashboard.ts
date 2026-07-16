@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { getDoctorReferralQueue, type DoctorReferralQueueItem } from "@/lib/queries/doctor-referral-queue";
+import { lastNMonths, monthKey } from "@/lib/date-buckets";
 
 export interface DoctorDashboardData {
   name: string;
@@ -85,16 +86,11 @@ export async function getDoctorDashboardData(userId: string): Promise<DoctorDash
     : [];
   const seenToday = new Set(seenReferrals.map((r) => r.patientId)).size;
 
-  const months: { key: string; label: string }[] = [];
-  for (let i = 5; i >= 0; i--) {
-    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    months.push({ key: `${d.getFullYear()}-${d.getMonth()}`, label: d.toLocaleDateString("en-GH", { month: "short" }) });
-  }
-  const monthlyReferrals = months.map(({ key, label }) => {
-    const received = monthlyRaw.filter((r) => `${r.sentAt.getFullYear()}-${r.sentAt.getMonth()}` === key).length;
+  const monthlyReferrals = lastNMonths(6, now).map(({ key, label }) => {
+    const received = monthlyRaw.filter((r) => monthKey(r.sentAt) === key).length;
     const seen = monthlyRaw.filter((r) => {
       const t = r.completedAt ?? r.arrivedAt;
-      return t && `${t.getFullYear()}-${t.getMonth()}` === key;
+      return t && monthKey(t) === key;
     }).length;
     return { month: label, received, seen };
   });

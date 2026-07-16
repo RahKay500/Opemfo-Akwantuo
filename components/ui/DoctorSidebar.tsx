@@ -17,10 +17,7 @@ const NAV_ITEMS = [
   { href: "/doctor/dashboard", label: "Dashboard", icon: NavHomeIcon },
   { href: "/doctor/referral-queue", label: "Referral Queue", icon: NavReferralsIcon },
   { href: "/doctor/inbox", label: "Patient Records", icon: NavRecordsIcon, badgeKey: "shares" as const },
-  // No dedicated Analytics screen yet — routes to the dashboard (which already
-  // carries the Monthly Referrals chart) without claiming the "active" state,
-  // since it isn't really the current page.
-  { href: "/doctor/dashboard", label: "Analytics", icon: AnalyticsIcon, neverActive: true as const },
+  { href: "/doctor/analytics", label: "Analytics", icon: AnalyticsIcon },
 ];
 
 export default function DoctorSidebar({
@@ -66,8 +63,8 @@ export default function DoctorSidebar({
       )}
 
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
-        {NAV_ITEMS.map(({ href, label, icon: Icon, badgeKey, neverActive }) => {
-          const active = !neverActive && (pathname === href || pathname.startsWith(href + "/"));
+        {NAV_ITEMS.map(({ href, label, icon: Icon, badgeKey }) => {
+          const active = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
               key={label}

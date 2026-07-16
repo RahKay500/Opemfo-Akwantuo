@@ -15,3 +15,10 @@ export const createReferralSchema = z.object({
 });
 
 export type CreateReferralInput = z.infer<typeof createReferralSchema>;
+
+export const updateReferralStatusSchema = z.object({
+  status: z.enum(["ACKNOWLEDGED", "PATIENT_ARRIVED", "COMPLETED", "CANCELLED"]),
+  outcomeNotes: z.string().optional(),
+});
+
+export type UpdateReferralStatusInput = z.infer<typeof updateReferralStatusSchema>;

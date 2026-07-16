@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { SearchIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
+import ReferralActionButton from "@/components/ui/ReferralActionButton";
 import { DOCTOR_REFERRAL_STATUS } from "@/lib/referral-status";
 import type { DoctorReferralQueueItem } from "@/lib/queries/doctor-referral-queue";
 import type { Priority } from "@prisma/client";
@@ -35,7 +35,6 @@ function sentLabel(iso: string): string {
 }
 
 export default function DoctorReferralQueueClient({ referrals }: { referrals: DoctorReferralQueueItem[] }) {
-  const router = useRouter();
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const [query, setQuery] = useState("");
 
@@ -97,13 +96,7 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
                   </span>
                   <span className="font-body text-[11px] text-[#9CA3AF]">{sentLabel(r.sentAt)}</span>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => router.push(`/doctor/patients/${r.patientId}`)}
-                  className="mt-3 flex h-[38px] w-full items-center justify-center rounded-input border-[1.5px] border-lilac-dark font-body text-[13px] font-medium text-lilac-deeper"
-                >
-                  View details
-                </button>
+                <ReferralActionButton referralId={r.id} status={r.status} className="mt-3 flex h-[38px] w-full items-center justify-center" />
               </div>
             );
           })}
@@ -125,13 +118,14 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
                 <th className="px-3 py-3 font-body text-xs font-medium text-text-secondary">Priority</th>
                 <th className="px-3 py-3 font-body text-xs font-medium text-text-secondary">From</th>
                 <th className="px-3 py-3 font-body text-xs font-medium text-text-secondary">Sent</th>
-                <th className="px-6 py-3 font-body text-xs font-medium text-text-secondary">Status</th>
+                <th className="px-3 py-3 font-body text-xs font-medium text-text-secondary">Status</th>
+                <th className="px-6 py-3 font-body text-xs font-medium text-text-secondary">Action</th>
               </tr>
             </thead>
             <tbody>
               {referrals.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center font-body text-sm text-text-secondary">
+                  <td colSpan={8} className="px-6 py-8 text-center font-body text-sm text-text-secondary">
                     No referrals sent to this facility yet.
                   </td>
                 </tr>
@@ -139,11 +133,7 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
               {referrals.map((r) => {
                 const status = DOCTOR_REFERRAL_STATUS[r.status];
                 return (
-                  <tr
-                    key={r.id}
-                    onClick={() => router.push(`/doctor/patients/${r.patientId}`)}
-                    className="cursor-pointer border-b border-border-color last:border-b-0 hover:bg-surface/60"
-                  >
+                  <tr key={r.id} className="border-b border-border-color last:border-b-0">
                     <td className="whitespace-nowrap px-6 py-3.5 font-body text-sm text-text-secondary">{r.refId}</td>
                     <td className="whitespace-nowrap px-3 py-3.5 font-heading text-sm font-bold text-text-primary">{r.patientName}</td>
                     <td className="px-3 py-3.5 font-body text-sm text-text-primary">{r.reason}</td>
@@ -154,10 +144,13 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
                     </td>
                     <td className="px-3 py-3.5 font-body text-sm text-text-primary">{r.fromFacilityName}</td>
                     <td className="px-3 py-3.5 font-body text-sm text-text-primary">{sentLabel(r.sentAt)}</td>
-                    <td className="px-6 py-3.5">
+                    <td className="px-3 py-3.5">
                       <span className={cn("inline-block rounded-badge px-2.5 py-1 font-body text-xs font-medium", status.bg, status.text)}>
                         {status.label}
                       </span>
+                    </td>
+                    <td className="px-6 py-3.5">
+                      <ReferralActionButton referralId={r.id} status={r.status} />
                     </td>
                   </tr>
                 );
