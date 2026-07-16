@@ -32,7 +32,7 @@ function AccountCreatedContent() {
       <div className="flex flex-col items-center gap-3 pt-7 text-center">
         <h1 className="font-heading text-[26px] font-bold text-text-primary">Account created!</h1>
         <p className="font-body text-[15px] leading-[23px] text-text-secondary">
-          Your Ɔpimfuo account is ready. Let us set up your profile and start caring for mothers.
+          Your Ɔpemfoɔ Akwantuo account is ready. Let us set up your profile and start caring for mothers.
         </p>
       </div>
 

@@ -55,7 +55,7 @@ function SetPasswordForm() {
           <LockIcon className="size-7 text-lilac-deeper" />
         </div>
         <h1 className="mt-4 font-heading text-[26px] font-bold text-text-primary">Create your password</h1>
-        <p className="mt-1 font-body text-sm text-text-secondary">You&apos;ll use this to sign in to Ɔpimfuo</p>
+        <p className="mt-1 font-body text-sm text-text-secondary">You&apos;ll use this to sign in to Ɔpemfoɔ Akwantuo</p>
       </div>
 
       <div className="w-full px-6 pt-10">
