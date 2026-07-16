@@ -13,6 +13,12 @@ enum Role {
   DOCTOR
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
 enum FacilityType {
   CHPS
   DISTRICT_HOSPITAL
@@ -81,22 +87,29 @@ enum PostnatalVisitType {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String
-  phone         String    @unique
-  passwordHash  String?
-  role          Role
-  facilityId    String?
-  facility      Facility? @relation(fields: [facilityId], references: [id])
-  isActive      Boolean   @default(true)
-  otp           String?
-  otpExpiry     DateTime?
+  id               String    @id @default(cuid())
+  name             String
+  phone            String    @unique
+  passwordHash     String?
+  role             Role
+  facilityId       String?
+  facility         Facility? @relation(fields: [facilityId], references: [id])
+  isActive         Boolean   @default(true)
+  otp              String?
+  otpExpiry        DateTime?
   // Professional licence number, captured at provisioning time by the Super
   // Admin portal. Not verified against any registry yet — stored for a
   // future verification step.
-  licenseNumber String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  licenseNumber    String?
+  dateOfBirth      DateTime?
+  gender           Gender?
+  email            String?
+  // Date the staff member began service at GHS, editable via Edit Profile.
+  // Distinct from createdAt (account creation date) since a staff member's
+  // real tenure usually predates their account being provisioned.
+  serviceStartDate DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   patient                 Patient?         @relation("MotherAccount")
   registeredPatients      Patient[]        @relation("RegisteredBy")
@@ -180,11 +193,11 @@ model Patient {
   // Array of {dateOfDeliveryOrLoss, placeOfBirth, problemsDuringPregnancy,
   // gestationalAgeAtBirth, modeOfDelivery, outcome, complications, childSex,
   // birthWeightKg, childPresentHealth}, one entry per prior pregnancy.
-  previousPregnancies Json?
+  previousPregnancies          Json?
   // Free-form values from the document's risk-factor list (e.g. "Previous CS",
   // "Grand multiparty", "Previous PPH", "Previous PIH", "Myomectomy", "Sickle
   // cell disease").
-  majorRiskFactors    String[]
+  majorRiskFactors             String[]
 
   // Medical/Surgical/Social/Family History (page 5-6)
   medicalHistory Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, epilepsy, asthma, allergiesDrugFood, medicationHistory, hivInfection, previousSurgery, other}
@@ -192,11 +205,11 @@ model Patient {
   familyHistory  Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, multiplePregnancies, birthDefects, mentalHealthDisorder, other}
 
   // Investigations (page 6) — bloodGroup already exists above.
-  rhTyping String?
-  hbsAg    String?
-  sickling String?
-  g6pd     String?
-  vdrl     String?
+  rhTyping  String?
+  hbsAg     String?
+  sickling  String?
+  g6pd      String?
+  vdrl      String?
   hivStatus String?
 
   height                      Float?
@@ -228,12 +241,12 @@ model Patient {
 // patient should have revokedAt: null at a time; generating a new link
 // revokes the previous one instead of allowing several simultaneously.
 model PartnerLink {
-  id           String    @id @default(cuid())
-  patientId    String
-  patient      Patient   @relation(fields: [patientId], references: [id])
-  token        String    @unique
-  partnerName  String?
-  partnerPhone String?
+  id                  String    @id @default(cuid())
+  patientId           String
+  patient             Patient   @relation(fields: [patientId], references: [id])
+  token               String    @unique
+  partnerName         String?
+  partnerPhone        String?
   // Per-category visibility, set by the mother when the invite is created.
   // Defaults mirror the Figma spec: everyday pregnancy info is shared by
   // default, more sensitive clinical detail (referral status, medical
@@ -244,8 +257,8 @@ model PartnerLink {
   shareVisitSummaries Boolean   @default(true)
   shareReferralStatus Boolean   @default(false)
   shareMedicalHistory Boolean   @default(false)
-  createdAt    DateTime  @default(now())
-  revokedAt    DateTime?
+  createdAt           DateTime  @default(now())
+  revokedAt           DateTime?
 
   @@index([patientId])
 }
@@ -500,31 +513,31 @@ model DeliveryRecord {
   recordedById String
   recordedBy   User    @relation("DeliveryRecordedBy", fields: [recordedById], references: [id])
 
-  weeksOfPregnancy      Int?
-  dateOfDelivery        DateTime?
-  timeOfDelivery        String?
-  timeOfPlacentaDelivery String?
-  durationOfLabourHours   Int?
-  durationOfLabourMinutes Int?
+  weeksOfPregnancy            Int?
+  dateOfDelivery              DateTime?
+  timeOfDelivery              String?
+  timeOfPlacentaDelivery      String?
+  durationOfLabourHours       Int?
+  durationOfLabourMinutes     Int?
   // Normal / Vacuum / Caesarean Section / Other
-  typeOfDelivery          String?
-  indicationForVacuumOrCs String?
-  anesthesia              String?
-  estimatedBloodLossMl    Int?
-  bloodTransfusion        Boolean?
-  statePlacentaMembranes  String?
-  manualRemovalOfPlacenta Boolean?
+  typeOfDelivery              String?
+  indicationForVacuumOrCs     String?
+  anesthesia                  String?
+  estimatedBloodLossMl        Int?
+  bloodTransfusion            Boolean?
+  statePlacentaMembranes      String?
+  manualRemovalOfPlacenta     Boolean?
   // Intact / Tear / Episiotomy
   statePerineum               String?
   labourDeliveryComplications String?
-  birthAttendant               String?
-  placeOfDelivery               String?
-  breastfedWithin30Min           Boolean?
-  skinToSkinContact               Boolean?
-  babySex                          String?
-  babyBirthWeightKg                Float?
-  babyCondition                     String?
-  createdAt                         DateTime @default(now())
+  birthAttendant              String?
+  placeOfDelivery             String?
+  breastfedWithin30Min        Boolean?
+  skinToSkinContact           Boolean?
+  babySex                     String?
+  babyBirthWeightKg           Float?
+  babyCondition               String?
+  createdAt                   DateTime  @default(now())
 
   @@index([patientId])
 }
@@ -555,7 +568,7 @@ model PostnatalVisit {
   moodChanges             String?
   ifaSupplied             Int?
   complaints              String?
-  createdAt               DateTime @default(now())
+  createdAt               DateTime         @default(now())
 
   @@index([patientId])
 }

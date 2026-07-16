@@ -385,6 +385,32 @@ export function NavReferralsIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export function PencilIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M11.34 2a1.886 1.886 0 1 1 2.667 2.667L5 13.68l-3.667 1 1-3.667L11.34 2z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function LocationPinIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M14 6.667c0 4.667-6 8.667-6 8.667s-6-4-6-8.667a6 6 0 1 1 12 0z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="8" cy="6.667" r="2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function ShieldCheckIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path d="M8 14.667s5.333-2.667 5.333-6.667V3.333L8 1.333l-5.333 2V8c0 4 5.333 6.667 5.333 6.667z" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6 8l1.333 1.333L10 6.667" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 export function EmergencyBellIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
