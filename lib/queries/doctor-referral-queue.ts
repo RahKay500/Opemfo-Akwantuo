@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import type { Priority, ReferralStatus } from "@prisma/client";
+import { calculateAge } from "@/lib/pregnancy";
 
 export interface DoctorReferralQueueItem {
   id: string;
@@ -8,6 +9,7 @@ export interface DoctorReferralQueueItem {
   patientName: string;
   fromFacilityName: string;
   week: number | null;
+  age: number;
   reason: string;
   priority: Priority;
   status: ReferralStatus;
@@ -19,6 +21,13 @@ function weekOf(lmp: Date | null, today: Date): number | null {
   return Math.min(Math.max(Math.floor((today.getTime() - lmp.getTime()) / (7 * 24 * 60 * 60 * 1000)), 0), 40);
 }
 
+// "Asuom CHPS Compound" -> "Asuom CHPS" — matches the shortened form used
+// elsewhere in the staff portal wherever facility names sit next to other
+// dense row data (MidwifeSidebar's identity card does the same trim).
+function shortFacilityName(facilityName: string): string {
+  return facilityName.replace(/\s+Compound$/i, "");
+}
+
 export async function getDoctorReferralQueue(userId: string): Promise<DoctorReferralQueueItem[]> {
   const user = await prisma.user.findUnique({ where: { id: userId } });
   if (!user?.facilityId) return [];
@@ -27,7 +36,7 @@ export async function getDoctorReferralQueue(userId: string): Promise<DoctorRefe
     where: { toFacilityId: user.facilityId },
     orderBy: { sentAt: "desc" },
     include: {
-      patient: { select: { id: true, name: true, lmp: true } },
+      patient: { select: { id: true, name: true, lmp: true, dateOfBirth: true } },
       fromFacility: { select: { name: true } },
     },
   });
@@ -46,8 +55,9 @@ export async function getDoctorReferralQueue(userId: string): Promise<DoctorRefe
     refId: refIdByReferralId.get(r.id)!,
     patientId: r.patient.id,
     patientName: r.patient.name,
-    fromFacilityName: r.fromFacility.name,
+    fromFacilityName: shortFacilityName(r.fromFacility.name),
     week: weekOf(r.patient.lmp, today),
+    age: calculateAge(r.patient.dateOfBirth, today),
     reason: r.reason,
     priority: r.priority,
     status: r.status,

@@ -2,25 +2,15 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorAnalyticsData } from "@/lib/queries/doctor-analytics";
 import { initials } from "@/lib/utils";
+import { DOCTOR_REFERRAL_STATUS } from "@/lib/referral-status";
 import MonthlyReferralsChartLoader from "@/components/ui/MonthlyReferralsChartLoader";
-import type { Priority, ReferralStatus } from "@prisma/client";
+import type { Priority } from "@prisma/client";
 
 const PRIORITY_COLOR: Record<Priority, string> = {
   CRITICAL: "bg-critical",
   HIGH: "bg-high",
   MEDIUM: "bg-medium",
   LOW: "bg-low",
-};
-
-// Distinct per-status labels/colors for the breakdown chart — unlike the
-// referral queue's DOCTOR_REFERRAL_STATUS map, PATIENT_ARRIVED and COMPLETED
-// need their own rows here rather than collapsing to the same "Accepted".
-const STATUS_BREAKDOWN: Record<ReferralStatus, { label: string; bar: string }> = {
-  SENT: { label: "Awaiting", bar: "bg-medium" },
-  ACKNOWLEDGED: { label: "In Review", bar: "bg-lilac-dark" },
-  PATIENT_ARRIVED: { label: "Arrived", bar: "bg-low" },
-  COMPLETED: { label: "Completed", bar: "bg-[#16A34A]" },
-  CANCELLED: { label: "Cancelled", bar: "bg-[#9CA3AF]" },
 };
 
 export default async function DoctorAnalyticsPage() {
@@ -97,13 +87,13 @@ export default async function DoctorAnalyticsPage() {
             <h2 className="font-heading text-base font-bold text-text-primary">By Status</h2>
             <div className="mt-4 flex flex-col gap-3">
               {data.byStatus.map((s) => {
-                const style = STATUS_BREAKDOWN[s.status];
+                const style = DOCTOR_REFERRAL_STATUS[s.status];
                 return (
                   <div key={s.status} className="flex items-center gap-3">
                     <p className="w-24 shrink-0 font-body text-xs text-text-secondary">{style.label}</p>
                     <div className="h-2 flex-1 overflow-hidden rounded-badge bg-[#F3F4F6]">
                       <div
-                        className={`h-full rounded-badge ${style.bar}`}
+                        className={`h-full rounded-badge ${style.text.replace("text-", "bg-")}`}
                         style={{ width: `${(s.count / maxStatus) * 100}%` }}
                       />
                     </div>

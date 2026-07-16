@@ -8,8 +8,12 @@ import { cn } from "@/lib/utils";
 const NEXT_ACTION: Partial<Record<ReferralStatus, { status: ReferralStatus; label: string }>> = {
   SENT: { status: "ACKNOWLEDGED", label: "Acknowledge" },
   ACKNOWLEDGED: { status: "PATIENT_ARRIVED", label: "Mark Arrived" },
-  PATIENT_ARRIVED: { status: "COMPLETED", label: "Mark Completed" },
+  PATIENT_ARRIVED: { status: "COMPLETED", label: "Mark Seen" },
 };
+
+export function hasNextAction(status: ReferralStatus): boolean {
+  return Boolean(NEXT_ACTION[status]);
+}
 
 export default function ReferralActionButton({
   referralId,
