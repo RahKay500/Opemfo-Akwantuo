@@ -1,18 +1,36 @@
 import { prisma } from "@/lib/prisma";
-import type { Priority, ReferralStatus } from "@prisma/client";
 import { lastNMonths, monthKey } from "@/lib/date-buckets";
 import { averageDurationLabel } from "@/lib/referral-metrics";
 
 export interface DoctorAnalyticsData {
   facilityName: string;
-  totalReferrals: number;
+  referralsThisMonth: number;
+  referralsDeltaVsLastMonth: number;
   avgResponseTimeLabel: string | null;
-  avgTimeToArrivalLabel: string | null;
-  completionRate: number | null;
+  criticalCasesThisMonth: number;
+  outcomesRecordedThisMonth: number;
+  outcomesRecordedPercent: number | null;
   monthlyReferrals: { month: string; received: number; seen: number }[];
-  byPriority: { priority: Priority; count: number }[];
-  byStatus: { status: ReferralStatus; count: number }[];
+  reasonBreakdown: { category: string; percent: number; count: number }[];
   byFacility: { facilityName: string; count: number; criticalCount: number }[];
+}
+
+// Referral.reason is free text a midwife types, not a structured field, so
+// "Referral Reasons" is a best-effort keyword classification of that text —
+// grounded in the real clinical terms this app's referrals actually use
+// (per the Ghana MCH Record Book case studies), not a fabricated breakdown.
+const REASON_CATEGORIES: { label: string; match: RegExp }[] = [
+  { label: "Pre-eclampsia", match: /pre-?eclamps|eclamps/i },
+  { label: "Gestational Diabetes", match: /diabet|glucose/i },
+  { label: "Anaemia", match: /an(a)?emia/i },
+  { label: "Preterm Labour", match: /preterm|premature labo(u)?r/i },
+];
+
+function categorizeReason(reason: string): string {
+  for (const c of REASON_CATEGORIES) {
+    if (c.match.test(reason)) return c.label;
+  }
+  return "Other";
 }
 
 export async function getDoctorAnalyticsData(userId: string): Promise<DoctorAnalyticsData | null> {
@@ -21,13 +39,16 @@ export async function getDoctorAnalyticsData(userId: string): Promise<DoctorAnal
 
   const facilityId = user.facilityId;
   const now = new Date();
-  const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 11, 1);
+  const startOfThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
   const referrals = await prisma.referral.findMany({
     where: { toFacilityId: facilityId },
     select: {
       priority: true,
       status: true,
+      reason: true,
       sentAt: true,
       acknowledgedAt: true,
       arrivedAt: true,
@@ -36,25 +57,24 @@ export async function getDoctorAnalyticsData(userId: string): Promise<DoctorAnal
     },
   });
 
-  const totalReferrals = referrals.length;
+  const thisMonthReferrals = referrals.filter((r) => r.sentAt >= startOfThisMonth);
+  const lastMonthReferrals = referrals.filter((r) => r.sentAt >= startOfLastMonth && r.sentAt < startOfThisMonth);
+
+  const referralsThisMonth = thisMonthReferrals.length;
+  const referralsDeltaVsLastMonth = referralsThisMonth - lastMonthReferrals.length;
 
   const avgResponseTimeLabel = averageDurationLabel(
-    referrals.map((r) => ({ start: r.sentAt, end: r.acknowledgedAt }))
-  );
-  const avgTimeToArrivalLabel = averageDurationLabel(
-    referrals
-      .filter((r) => r.acknowledgedAt)
-      .map((r) => ({ start: r.acknowledgedAt!, end: r.arrivedAt }))
+    thisMonthReferrals.map((r) => ({ start: r.sentAt, end: r.acknowledgedAt }))
   );
 
-  const completedOrCancelled = referrals.filter((r) => r.status === "COMPLETED" || r.status === "CANCELLED");
-  const completionRate =
-    completedOrCancelled.length > 0
-      ? Math.round((referrals.filter((r) => r.status === "COMPLETED").length / completedOrCancelled.length) * 100)
-      : null;
+  const criticalCasesThisMonth = thisMonthReferrals.filter((r) => r.priority === "CRITICAL").length;
 
-  const monthlyReferrals = lastNMonths(12, now).map(({ key, label }) => {
-    const received = referrals.filter((r) => r.sentAt >= twelveMonthsAgo && monthKey(r.sentAt) === key).length;
+  const outcomesRecordedThisMonth = thisMonthReferrals.filter((r) => r.status === "COMPLETED").length;
+  const outcomesRecordedPercent =
+    referralsThisMonth > 0 ? Math.round((outcomesRecordedThisMonth / referralsThisMonth) * 100) : null;
+
+  const monthlyReferrals = lastNMonths(6, now).map(({ key, label }) => {
+    const received = referrals.filter((r) => r.sentAt >= sixMonthsAgo && monthKey(r.sentAt) === key).length;
     const seen = referrals.filter((r) => {
       const t = r.completedAt ?? r.arrivedAt;
       return t && monthKey(t) === key;
@@ -62,17 +82,15 @@ export async function getDoctorAnalyticsData(userId: string): Promise<DoctorAnal
     return { month: label, received, seen };
   });
 
-  const priorityOrder: Priority[] = ["CRITICAL", "HIGH", "MEDIUM", "LOW"];
-  const byPriority = priorityOrder.map((priority) => ({
-    priority,
-    count: referrals.filter((r) => r.priority === priority).length,
-  }));
-
-  const statusOrder: ReferralStatus[] = ["SENT", "ACKNOWLEDGED", "PATIENT_ARRIVED", "COMPLETED", "CANCELLED"];
-  const byStatus = statusOrder.map((status) => ({
-    status,
-    count: referrals.filter((r) => r.status === status).length,
-  }));
+  const reasonCounts = new Map<string, number>();
+  for (const r of referrals) {
+    const category = categorizeReason(r.reason);
+    reasonCounts.set(category, (reasonCounts.get(category) ?? 0) + 1);
+  }
+  const total = referrals.length;
+  const reasonBreakdown = [...reasonCounts.entries()]
+    .map(([category, count]) => ({ category, count, percent: total > 0 ? Math.round((count / total) * 100) : 0 }))
+    .sort((a, b) => b.count - a.count);
 
   const facilityTotals = new Map<string, { count: number; criticalCount: number }>();
   for (const r of referrals) {
@@ -89,13 +107,14 @@ export async function getDoctorAnalyticsData(userId: string): Promise<DoctorAnal
 
   return {
     facilityName: user.facility.name,
-    totalReferrals,
+    referralsThisMonth,
+    referralsDeltaVsLastMonth,
     avgResponseTimeLabel,
-    avgTimeToArrivalLabel,
-    completionRate,
+    criticalCasesThisMonth,
+    outcomesRecordedThisMonth,
+    outcomesRecordedPercent,
     monthlyReferrals,
-    byPriority,
-    byStatus,
+    reasonBreakdown,
     byFacility,
   };
 }
