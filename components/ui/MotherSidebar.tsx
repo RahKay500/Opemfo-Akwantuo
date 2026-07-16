@@ -47,7 +47,7 @@ export default function MotherSidebar({
 
   return (
     <>
-      <aside className="flex h-screen w-60 shrink-0 flex-col border-r border-border-color bg-white">
+      <aside className="flex min-h-screen w-60 shrink-0 flex-col border-r border-border-color bg-white">
         <div className="px-6 pb-5 pt-8">
           <p className="font-heading text-lg font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
           <p className="mt-1 text-xs font-medium text-lilac-dark">Mother</p>
