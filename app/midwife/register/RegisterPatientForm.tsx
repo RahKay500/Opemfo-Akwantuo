@@ -110,31 +110,34 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
   }
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="flex items-center gap-1 px-6 pt-5">
-        {STEPS.map((label, i) => (
-          <div key={label} className="flex flex-1 flex-col items-center">
-            <div className="flex w-full items-center">
-              {i > 0 && <div className={cn("h-0.5 flex-1", i <= step ? "bg-primary" : "bg-border-color")} />}
-              <div
-                className={cn(
-                  "rounded-badge border-[1.5px] px-4 py-2 font-body text-xs font-medium",
-                  i === step
-                    ? "border-primary bg-primary text-white"
-                    : i < step
-                      ? "border-primary bg-white text-lilac-deeper"
-                      : "border-border-color bg-white text-text-secondary"
-                )}
-              >
-                {label}
-              </div>
-              {i < STEPS.length - 1 && <div className={cn("h-0.5 flex-1", i < step ? "bg-primary" : "bg-border-color")} />}
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="flex flex-1 flex-col lg:px-5 lg:pb-10 lg:pt-6">
+      <div className="lg:rounded-card lg:bg-white lg:p-8 lg:shadow-card">
+        <h2 className="hidden font-heading text-lg font-bold text-text-primary lg:block">Register New Patient</h2>
 
-      <div className="flex flex-1 flex-col gap-4 px-6 pb-32 pt-6">
+        <div className="flex items-center gap-1 px-6 pt-5 lg:px-0 lg:pt-0 lg:mt-6">
+          {STEPS.map((label, i) => (
+            <div key={label} className="flex flex-1 flex-col items-center">
+              <div className="flex w-full items-center">
+                {i > 0 && <div className={cn("h-0.5 flex-1", i <= step ? "bg-primary" : "bg-border-color")} />}
+                <div
+                  className={cn(
+                    "rounded-badge border-[1.5px] px-4 py-2 font-body text-xs font-medium",
+                    i === step
+                      ? "border-primary bg-primary text-white"
+                      : i < step
+                        ? "border-primary bg-white text-lilac-deeper"
+                        : "border-border-color bg-white text-text-secondary"
+                  )}
+                >
+                  {label}
+                </div>
+                {i < STEPS.length - 1 && <div className={cn("h-0.5 flex-1", i < step ? "bg-primary" : "bg-border-color")} />}
+              </div>
+            </div>
+          ))}
+        </div>
+
+      <div className="flex flex-1 flex-col gap-4 px-6 pb-32 pt-6 lg:px-0 lg:pb-0 lg:pt-6">
         {step === 0 && (
           <>
             <Field label="Full Name">
@@ -369,7 +372,40 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
       </div>
 
-      <div className="fixed inset-x-0 bottom-20 z-20 mx-auto flex w-full max-w-[430px] gap-3 border-t border-border-color bg-white px-6 py-4 lg:inset-x-auto lg:bottom-0 lg:left-60 lg:right-0 lg:max-w-3xl">
+        {/* Desktop: inline action row inside the card, not fixed. */}
+        <div className="mt-8 hidden gap-3 lg:flex">
+          {step > 0 && (
+            <button
+              type="button"
+              onClick={() => setStep((s) => s - 1)}
+              className="h-14 flex-1 rounded-card border-[1.5px] border-border-color font-heading text-[15px] font-bold text-text-secondary"
+            >
+              Back
+            </button>
+          )}
+          {step < STEPS.length - 1 ? (
+            <button
+              type="button"
+              onClick={handleContinue}
+              className="h-14 flex-1 rounded-card bg-lilac-mid font-heading text-[15px] font-bold text-lilac-deeper"
+            >
+              Continue
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={submitting}
+              className="h-14 flex-1 rounded-card bg-lilac-mid font-heading text-[15px] font-bold text-lilac-deeper disabled:opacity-60"
+            >
+              {submitting ? "Registering…" : "Register Patient"}
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Mobile: fixed bottom action bar. */}
+      <div className="fixed inset-x-0 bottom-20 z-20 mx-auto flex w-full max-w-[430px] gap-3 border-t border-border-color bg-white px-6 py-4 lg:hidden">
         {step > 0 && (
           <button
             type="button"
@@ -383,7 +419,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           <button
             type="button"
             onClick={handleContinue}
-            className="h-14 flex-1 rounded-card bg-primary font-heading text-[15px] font-bold text-white"
+            className="h-14 flex-1 rounded-card bg-lilac-mid font-heading text-[15px] font-bold text-lilac-deeper"
           >
             Continue
           </button>
@@ -392,7 +428,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             type="button"
             onClick={handleSubmit}
             disabled={submitting}
-            className="h-14 flex-1 rounded-card bg-primary font-heading text-[15px] font-bold text-white disabled:opacity-60"
+            className="h-14 flex-1 rounded-card bg-lilac-mid font-heading text-[15px] font-bold text-lilac-deeper disabled:opacity-60"
           >
             {submitting ? "Registering…" : "Register Patient"}
           </button>
