@@ -97,7 +97,7 @@ export default function DoctorSidebar({
           )}
         >
           <NavProfileIcon className="size-5" />
-          Profile & Settings
+          Profile
         </Link>
       </div>
     </aside>
