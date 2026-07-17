@@ -104,6 +104,9 @@ model User {
   dateOfBirth      DateTime?
   gender           Gender?
   email            String?
+  // Doctor's professional title, e.g. "Consultant Gynaecologist &
+  // Obstetrician" — free text, shown under their name on Profile.
+  specialty        String?
   // Date the staff member began service at GHS, editable via Edit Profile.
   // Distinct from createdAt (account creation date) since a staff member's
   // real tenure usually predates their account being provisioned.

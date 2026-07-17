@@ -1,15 +1,20 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorProfileData } from "@/lib/queries/doctor-profile";
-import { initials } from "@/lib/utils";
-import { ChevronRightIcon } from "@/components/ui/icons";
+import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
+import { formatDate, initials } from "@/lib/utils";
+import { ChevronRightIcon, LocationPinIcon, PencilIcon, PhoneCallIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import LogoutButton from "@/components/ui/LogoutButton";
 
 export default async function DoctorProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const data = await getDoctorProfileData(user.id);
+  const [data, sidebarData] = await Promise.all([
+    getDoctorProfileData(user.id),
+    getDoctorSidebarData(user.id),
+  ]);
   if (!data) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 p-6 text-center">
@@ -20,61 +25,129 @@ export default async function DoctorProfilePage() {
 
   return (
     <main className="flex flex-col">
-      <div className="flex flex-col items-center rounded-b-3xl bg-primary pb-7 pt-14">
-        <div className="flex size-[88px] items-center justify-center rounded-badge bg-lilac-light">
-          <span className="font-heading text-3xl font-bold text-lilac-deeper">{initials(data.name)}</span>
-        </div>
-        <p className="mt-2.5 font-heading text-2xl font-bold text-white">{data.name}</p>
-        <p className="mt-0.5 font-body text-[13px] text-white">Doctor · {data.facilityName}</p>
+      <div className="relative flex items-center justify-center border-b border-border-color bg-white px-5 pb-4 pt-14 lg:hidden">
+        <h1 className="font-heading text-xl font-bold text-text-primary">My Profile</h1>
       </div>
 
-      <div className="flex flex-col gap-4 px-5 pb-8 pt-4">
-        <div className="flex rounded-card bg-white py-4 shadow-card">
-          <div className="flex-1 text-center">
-            <p className="font-body text-xs text-[#9CA3AF]">Active Shares</p>
-            <p className="mt-0.5 font-heading text-xl font-bold text-text-primary">{data.activeSharesCount}</p>
+      <div className="hidden items-center justify-between px-5 pt-8 lg:flex">
+        <div>
+          <h1 className="font-heading text-[28px] font-bold text-text-primary">My Profile</h1>
+          <p className="mt-1 font-body text-sm text-text-secondary">{data.facilityName}</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {sidebarData && sidebarData.newSharedRecordsCount > 0 && (
+            <span className="rounded-badge bg-pink-light px-3 py-1.5 font-body text-[13px] font-bold text-pink-deep">
+              {sidebarData.newSharedRecordsCount} shared record{sidebarData.newSharedRecordsCount === 1 ? "" : "s"} pending review
+            </span>
+          )}
+          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
+            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(data.name)}</span>
           </div>
-          <div className="w-px bg-lilac-light" />
-          <div className="flex-1 text-center">
-            <p className="font-body text-xs text-[#9CA3AF]">Reviewed</p>
-            <p className="mt-0.5 font-heading text-xl font-bold text-text-primary">{data.reviewedCount}</p>
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4 px-5 pb-8 pt-5 lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-6 lg:px-8">
+        <div className="flex flex-col gap-4 lg:col-start-1">
+          <div className="flex flex-col items-center rounded-card bg-white p-6 text-center shadow-card lg:p-8">
+            <div className="flex size-24 items-center justify-center rounded-badge bg-lilac-light lg:size-28">
+              <span className="font-heading text-3xl font-bold text-lilac-deeper lg:text-4xl">
+                {initials(data.name)}
+              </span>
+            </div>
+            <p className="mt-3 font-heading text-xl font-bold text-text-primary lg:text-2xl">{data.name}</p>
+            <p className="mt-0.5 font-body text-[13px] text-text-secondary lg:text-sm">
+              {data.specialty ?? "Doctor"}
+            </p>
+            {data.isVerified && (
+              <span className="mt-3 flex items-center gap-1.5 rounded-badge bg-[#F0FDF4] px-3 py-1.5 font-body text-[13px] font-bold text-[#16A34A]">
+                <ShieldCheckIcon className="size-4" />
+                GHS Verified
+              </span>
+            )}
+            <Link
+              href="/doctor/profile/edit"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-card border-[1.5px] border-border-color py-3 font-body text-sm font-bold text-text-primary"
+            >
+              <PencilIcon className="size-4" />
+              Edit Profile
+            </Link>
           </div>
-          <div className="w-px bg-lilac-light" />
-          <div className="flex-1 text-center">
-            <p className="font-body text-xs text-[#9CA3AF]">Since</p>
-            <p className="mt-0.5 font-heading text-xl font-bold text-text-primary">{data.memberSince}</p>
+
+          <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+            <p className="font-heading text-base font-bold text-text-primary">Contact & Location</p>
+            <div className="mt-4 flex flex-col gap-3">
+              <div className="flex items-center gap-2.5">
+                <PhoneCallIcon className="size-4 text-text-secondary" />
+                <p className="font-body text-sm text-text-primary">{data.phone}</p>
+              </div>
+              <div className="flex items-center gap-2.5">
+                <LocationPinIcon className="size-4 text-text-secondary" />
+                <p className="font-body text-sm text-text-primary">
+                  {data.facilityName}, {data.facilityRegion}
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div>
-          <p className="px-1 pb-2 font-body text-xs font-medium text-[#9CA3AF]">Personal information</p>
-          <div className="overflow-hidden rounded-card bg-white shadow-card">
-            <Row label="Full Name" value={data.name} />
-            <Row label="Phone" value={data.phone} last />
+        <div className="flex flex-col gap-4 lg:col-start-2">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+            <StatTile label="Referrals Reviewed" value={String(data.referralsReviewedCount)} />
+            <StatTile label="Patients This Month" value={String(data.patientsThisMonthCount)} />
+            <StatTile label="Records Shared" value={String(data.recordsSharedCount)} />
+            <StatTile label="Avg. Review Time" value={data.avgReviewTimeLabel ?? "—"} />
           </div>
-        </div>
 
-        <div>
-          <p className="px-1 pb-2 font-body text-xs font-medium text-[#9CA3AF]">Work</p>
-          <div className="overflow-hidden rounded-card bg-white shadow-card">
-            <Row label="Facility" value={data.facilityName} last />
+          <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+            <p className="font-heading text-base font-bold text-text-primary">Personal Information</p>
+            <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2">
+              <InfoField label="Full Name" value={data.name} />
+              <InfoField label="Medical Lic. No." value={data.staffId ?? "Not set"} />
+              <InfoField label="Date of Birth" value={data.dateOfBirth ? formatDate(data.dateOfBirth) : "Not set"} />
+              <InfoField label="Gender" value={genderLabel(data.gender)} />
+              <InfoField label="Email" value={data.email ?? "Not set"} />
+              <InfoField
+                label="Years of Service"
+                value={data.yearsOfService != null ? `${data.yearsOfService} year${data.yearsOfService === 1 ? "" : "s"}` : "Not set"}
+              />
+            </div>
           </div>
-        </div>
 
-        <div>
-          <p className="px-1 pb-2 font-body text-xs font-medium text-[#9CA3AF]">Account</p>
           <div className="overflow-hidden rounded-card bg-white shadow-card">
             <Row label="Language" value="English" />
             <Row label="Help & Support" value="" last />
           </div>
-        </div>
 
-        <div className="overflow-hidden rounded-card bg-white shadow-card">
-          <LogoutButton variant="row" />
+          <LogoutButton variant="card" />
         </div>
       </div>
     </main>
   );
+}
+
+function StatTile({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-card bg-white py-5 text-center shadow-card">
+      <p className="font-heading text-2xl font-bold text-lilac-deeper lg:text-[28px]">{value}</p>
+      <p className="font-body text-xs text-text-secondary">{label}</p>
+    </div>
+  );
+}
+
+function InfoField({ label, value }: { label: string; value: string }) {
+  return (
+    <div>
+      <p className="font-body text-[11px] font-medium uppercase tracking-[0.06em] text-[#9CA3AF]">{label}</p>
+      <p className="mt-1 font-body text-sm font-bold text-text-primary">{value}</p>
+    </div>
+  );
+}
+
+function genderLabel(gender: string | null): string {
+  if (gender === "FEMALE") return "Female";
+  if (gender === "MALE") return "Male";
+  if (gender === "OTHER") return "Other";
+  return "Not set";
 }
 
 function Row({ label, value, last }: { label: string; value: string; last?: boolean }) {

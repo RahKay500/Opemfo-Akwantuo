@@ -8,6 +8,7 @@ export const updateStaffProfileSchema = z.object({
   gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional(),
   email: z.string().email("Enter a valid email").optional().or(z.literal("")),
   serviceStartDate: z.string().optional(),
+  specialty: z.string().optional(),
 });
 
 export type UpdateStaffProfileInput = z.infer<typeof updateStaffProfileSchema>;

@@ -13,16 +13,19 @@ interface StaffProfileFormData {
   gender: string;
   email: string;
   serviceStartDate: string;
+  specialty?: string;
 }
 
 export default function EditStaffProfileForm({
   initial,
   backHref,
   apiPath,
+  showSpecialty,
 }: {
   initial: StaffProfileFormData;
   backHref: string;
   apiPath: string;
+  showSpecialty?: boolean;
 }) {
   const router = useRouter();
   const [form, setForm] = useState(initial);
@@ -47,6 +50,7 @@ export default function EditStaffProfileForm({
           gender: form.gender || undefined,
           email: form.email || undefined,
           serviceStartDate: form.serviceStartDate || undefined,
+          specialty: showSpecialty ? form.specialty || undefined : undefined,
         }),
       });
       if (!res.ok) {
@@ -96,11 +100,22 @@ export default function EditStaffProfileForm({
             />
           </Field>
 
-          <Field label="Staff ID">
+          {showSpecialty && (
+            <Field label="Specialty / Title">
+              <input
+                value={form.specialty ?? ""}
+                onChange={(e) => update("specialty", e.target.value)}
+                placeholder="e.g. Consultant Gynaecologist & Obstetrician"
+                className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              />
+            </Field>
+          )}
+
+          <Field label={showSpecialty ? "Medical Licence No." : "Staff ID"}>
             <input
               value={form.staffId}
               onChange={(e) => update("staffId", e.target.value)}
-              placeholder="e.g. GHS-MW-2017-0044"
+              placeholder={showSpecialty ? "e.g. GHS-MD-2010-0187" : "e.g. GHS-MW-2017-0044"}
               className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
             />
           </Field>
