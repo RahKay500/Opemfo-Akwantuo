@@ -69,5 +69,5 @@ export const createStaffSchema = z.object({
 export const updateStaffSchema = z.object({
   name: z.string().min(2).optional(),
   isActive: z.boolean().optional(),
-  licenseNumber: z.string().optional(),
+  licenseNumber: z.string().nullable().optional(),
 });

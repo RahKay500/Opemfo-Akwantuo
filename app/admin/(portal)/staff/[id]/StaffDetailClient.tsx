@@ -32,8 +32,10 @@ const ACTION_LABELS: Record<string, string> = {
 export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
   const router = useRouter();
   const [editOpen, setEditOpen] = useState(false);
+  const [editLicenseOpen, setEditLicenseOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
   const [name, setName] = useState(staff.name);
+  const [licenseNumber, setLicenseNumber] = useState(staff.licenseNumber ?? "");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [otpMessage, setOtpMessage] = useState<string | null>(null);
@@ -54,6 +56,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         return;
       }
       setEditOpen(false);
+      setEditLicenseOpen(false);
       setDeactivateOpen(false);
       router.refresh();
     } catch {
@@ -136,6 +139,16 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
           >
             Edit name
           </button>
+          <button
+            type="button"
+            onClick={() => {
+              setLicenseNumber(staff.licenseNumber ?? "");
+              setEditLicenseOpen(true);
+            }}
+            className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]"
+          >
+            Edit licence number
+          </button>
           {status === "Active" && (
             <button
               type="button"
@@ -186,6 +199,33 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
           <button
             type="button"
             onClick={() => handleUpdate({ name })}
+            disabled={submitting}
+            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={editLicenseOpen} onClose={() => setEditLicenseOpen(false)} title="Edit licence number">
+        <FormField label="Licence number">
+          <input
+            value={licenseNumber}
+            onChange={(e) => setLicenseNumber(e.target.value)}
+            placeholder="e.g. GHS-MW-2017-0044"
+            className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+          />
+        </FormField>
+        <p className="mt-2 text-xs text-[#6B7280]">
+          This also controls the &quot;GHS Verified&quot; badge on {staff.name}&apos;s profile.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={() => setEditLicenseOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => handleUpdate({ licenseNumber: licenseNumber.trim() || null })}
             disabled={submitting}
             className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
           >
