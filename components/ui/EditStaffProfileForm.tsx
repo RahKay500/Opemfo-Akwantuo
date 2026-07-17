@@ -45,7 +45,6 @@ export default function EditStaffProfileForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name: form.name,
-          staffId: form.staffId || undefined,
           dateOfBirth: form.dateOfBirth || undefined,
           gender: form.gender || undefined,
           email: form.email || undefined,
@@ -112,12 +111,10 @@ export default function EditStaffProfileForm({
           )}
 
           <Field label={showSpecialty ? "Medical Licence No." : "Staff ID"}>
-            <input
-              value={form.staffId}
-              onChange={(e) => update("staffId", e.target.value)}
-              placeholder={showSpecialty ? "e.g. GHS-MD-2010-0187" : "e.g. GHS-MW-2017-0044"}
-              className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
-            />
+            <div className="flex h-[54px] w-full items-center rounded-input border-[1.5px] border-border-color bg-[#F3F4F6] px-4 font-body text-[15px] text-text-secondary">
+              {form.staffId || "Not set"}
+            </div>
+            <p className="font-body text-xs text-text-secondary">Set by your facility administrator — contact them to update it.</p>
           </Field>
 
           <Field label="Date of birth">

@@ -16,13 +16,12 @@ export async function PATCH(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { name, staffId, dateOfBirth, gender, email, serviceStartDate, specialty } = parsed.data;
+  const { name, dateOfBirth, gender, email, serviceStartDate, specialty } = parsed.data;
 
   await prisma.user.update({
     where: { id: session.userId },
     data: {
       name,
-      licenseNumber: staffId || null,
       dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
       gender: gender || null,
       email: email || null,
