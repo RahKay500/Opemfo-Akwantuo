@@ -462,11 +462,26 @@ model AuditLog {
 // passwordHash null until then).
 model SuperAdmin {
   id                  String    @id @default(cuid())
+  // Optional — existing rows (e.g. the env-var-bootstrapped Platform Super
+  // Admin) predate this field. New Facility Admins get one at creation time;
+  // an admin can also set/edit their own via Settings.
+  name                String?
+  email               String?
   phone               String    @unique
   passwordHash        String?
   facilityId          String?
   facility            Facility? @relation(fields: [facilityId], references: [id])
   isActive            Boolean   @default(true)
+  // Free-text organisational affiliation (e.g. "Kwahu East District Health
+  // Directorate"), shown in the sidebar/header. Self-reported, not tied to
+  // any Facility/District model.
+  orgName             String?
+  // Jurisdiction shown in the sidebar footer (e.g. "Kwahu East District" /
+  // "Eastern Region, Ghana"). Also free text, distinct from orgName and not
+  // tied to any Facility's own district/region.
+  district            String?
+  region              String?
+  lastLoginAt         DateTime?
   // A password change only takes effect once the OTP sent to this admin's
   // own phone is confirmed — otherwise a hijacked-but-unlocked session could
   // silently lock the real admin out with no recovery path.
