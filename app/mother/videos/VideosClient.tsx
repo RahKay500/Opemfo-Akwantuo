@@ -11,7 +11,12 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
 
   return (
     <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
-      <button type="button" className="overflow-hidden rounded-card bg-white text-left shadow-card lg:flex lg:items-stretch">
+      <a
+        href={FEATURED_VIDEO.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="overflow-hidden rounded-card bg-white text-left shadow-card lg:flex lg:items-stretch"
+      >
         <div className="relative flex h-[200px] items-center justify-center bg-lilac-light lg:h-auto lg:w-[30%] lg:shrink-0">
           <div className="flex size-14 items-center justify-center rounded-badge bg-white">
             <PlayIcon className="ml-0.5 size-[22px] text-lilac-deeper" />
@@ -35,7 +40,7 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             Watch now →
           </span>
         </div>
-      </button>
+      </a>
 
       <div className="flex gap-2 overflow-x-auto">
         {CATEGORIES.map((c) => (
@@ -55,7 +60,13 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {videos.map((video) => (
-          <button key={video.id} type="button" className="overflow-hidden rounded-card bg-white text-left shadow-card">
+          <a
+            key={video.id}
+            href={video.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="overflow-hidden rounded-card bg-white text-left shadow-card"
+          >
             <div className="flex h-[120px] items-center justify-center bg-lilac-light">
               <div className="flex size-8 items-center justify-center rounded-badge bg-white">
                 <PlayIcon className="ml-0.5 size-3 text-lilac-deeper" />
@@ -67,7 +78,7 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
                 {video.duration} · {video.source}
               </p>
             </div>
-          </button>
+          </a>
         ))}
         {videos.length === 0 && (
           <p className="col-span-2 font-body text-sm text-text-secondary">No videos in this category yet.</p>
