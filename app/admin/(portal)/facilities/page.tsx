@@ -37,6 +37,7 @@ export default async function AdminFacilitiesPage() {
             staffCount: f._count.users,
             patientCount: f._count.patients,
             adminName: adminByFacility.get(f.id) ?? null,
+            openedAt: f.openedAt ? f.openedAt.toISOString() : null,
           }))}
         />
       </div>

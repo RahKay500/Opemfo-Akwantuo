@@ -19,6 +19,7 @@ export interface FacilityRow {
   staffCount: number;
   patientCount: number;
   adminName: string | null;
+  openedAt: string | null;
 }
 
 const TYPE_LABELS: Record<FacilityRow["type"], string> = {
@@ -33,9 +34,10 @@ interface FormState {
   region: string;
   district: string;
   phone: string;
+  openedAt: string;
 }
 
-const EMPTY_FORM: FormState = { name: "", type: "CHPS", region: "", district: "", phone: "" };
+const EMPTY_FORM: FormState = { name: "", type: "CHPS", region: "", district: "", phone: "", openedAt: "" };
 
 export default function FacilitiesClient({ facilities }: { facilities: FacilityRow[] }) {
   const router = useRouter();
@@ -65,6 +67,7 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
       region: facility.region,
       district: facility.district,
       phone: facility.phone ?? "",
+      openedAt: facility.openedAt ? facility.openedAt.slice(0, 10) : "",
     });
     setEditTarget(facility);
     setError(null);
@@ -323,6 +326,14 @@ function FacilityForm({
           value={form.phone}
           onChange={(e) => setForm({ ...form, phone: e.target.value })}
           placeholder="Optional"
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+      <FormField label="Opened">
+        <input
+          type="date"
+          value={form.openedAt}
+          onChange={(e) => setForm({ ...form, openedAt: e.target.value })}
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         />
       </FormField>

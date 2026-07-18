@@ -24,6 +24,7 @@ export const createFacilitySchema = z.object({
   region: z.string().min(2, "Enter a region"),
   district: z.string().min(2, "Enter a district"),
   phone: z.string().optional(),
+  openedAt: z.string().optional(),
 });
 
 export const updateFacilitySchema = z.object({
@@ -33,6 +34,7 @@ export const updateFacilitySchema = z.object({
   district: z.string().min(2).optional(),
   phone: z.string().optional(),
   isActive: z.boolean().optional(),
+  openedAt: z.string().optional(),
 });
 
 export const createFacilityAdminSchema = z.object({

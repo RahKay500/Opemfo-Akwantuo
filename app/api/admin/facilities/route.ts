@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
       phone: f.phone,
       isActive: f.isActive,
       staffCount: f._count.users,
+      openedAt: f.openedAt,
     })),
   });
 }
@@ -42,7 +43,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const facility = await prisma.facility.create({ data: parsed.data });
+  const facility = await prisma.facility.create({
+    data: { ...parsed.data, openedAt: parsed.data.openedAt ? new Date(parsed.data.openedAt) : undefined },
+  });
 
   await logAudit({
     actorLabel: "Super Admin",

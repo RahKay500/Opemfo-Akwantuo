@@ -21,7 +21,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ success: false, error: "Facility not found." }, { status: 404 });
   }
 
-  const facility = await prisma.facility.update({ where: { id: params.id }, data: parsed.data });
+  const facility = await prisma.facility.update({
+    where: { id: params.id },
+    data: { ...parsed.data, openedAt: parsed.data.openedAt ? new Date(parsed.data.openedAt) : undefined },
+  });
 
   await logAudit({
     actorLabel: "Super Admin",

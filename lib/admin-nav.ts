@@ -19,6 +19,7 @@ export function getAdminNavItems(facilityId: string | null): AdminNavItem[] {
   return [
     { href: "/admin/dashboard", label: "Dashboard" },
     { href: "/admin/staff", label: "Staff" },
+    { href: "/admin/patients", label: "Patients" },
     { href: "/admin/audit", label: "Audit Log" },
     { href: "/admin/settings", label: "Settings" },
   ];

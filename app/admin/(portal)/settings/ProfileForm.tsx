@@ -9,11 +9,13 @@ export default function ProfileForm({
   initialOrgName,
   initialDistrict,
   initialRegion,
+  isPlatform,
 }: {
   initialName: string | null;
   initialOrgName: string | null;
   initialDistrict: string | null;
   initialRegion: string | null;
+  isPlatform: boolean;
 }) {
   const router = useRouter();
   const [name, setName] = useState(initialName ?? "");
@@ -68,32 +70,36 @@ export default function ProfileForm({
         />
       </FormField>
 
-      <FormField label="Organisation">
-        <input
-          value={orgName}
-          onChange={(e) => setOrgName(e.target.value)}
-          placeholder="e.g. Kwahu East District Health Directorate"
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
-      </FormField>
+      {isPlatform && (
+        <>
+          <FormField label="Organisation">
+            <input
+              value={orgName}
+              onChange={(e) => setOrgName(e.target.value)}
+              placeholder="e.g. Kwahu East District Health Directorate"
+              className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+            />
+          </FormField>
 
-      <FormField label="District">
-        <input
-          value={district}
-          onChange={(e) => setDistrict(e.target.value)}
-          placeholder="e.g. Kwahu East District"
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
-      </FormField>
+          <FormField label="District">
+            <input
+              value={district}
+              onChange={(e) => setDistrict(e.target.value)}
+              placeholder="e.g. Kwahu East District"
+              className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+            />
+          </FormField>
 
-      <FormField label="Region">
-        <input
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-          placeholder="e.g. Eastern"
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
-      </FormField>
+          <FormField label="Region">
+            <input
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              placeholder="e.g. Eastern"
+              className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+            />
+          </FormField>
+        </>
+      )}
 
       {error && <p className="text-sm text-[#DC2626]">{error}</p>}
       {success && <p className="text-sm text-[#16A34A]">Profile updated.</p>}

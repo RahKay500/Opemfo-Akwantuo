@@ -18,6 +18,7 @@ export default async function AdminSettingsPage() {
           initialOrgName={identity?.orgName ?? null}
           initialDistrict={identity?.district ?? null}
           initialRegion={identity?.region ?? null}
+          isPlatform={identity?.facilityId === null}
         />
         <ChangePasswordForm />
         <div className="max-w-md overflow-hidden rounded-lg border border-[#E2E8F0] bg-white lg:hidden">

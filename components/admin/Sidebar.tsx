@@ -18,6 +18,7 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
   const navItems = getAdminNavItems(facilityId);
   const isPlatform = facilityId === null;
   const tierLabel = isPlatform ? "Super Admin" : "Facility Admin";
+  const accent = isPlatform ? "#7C3AED" : "#2663EB";
   const displayName = admin.name?.trim() || (isPlatform ? "System Administrator" : "Facility Administrator");
 
   return (
@@ -28,7 +29,10 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
       </div>
 
       <div className="mx-3 flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#7C3AED] text-xs font-bold text-white">
+        <span
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
+          style={{ backgroundColor: accent }}
+        >
           {initials(displayName)}
         </span>
         <div className="min-w-0">
@@ -37,7 +41,10 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
         </div>
       </div>
 
-      <div className="mx-3 mt-3 flex items-center gap-1.5 rounded-md bg-[#E4A8F3]/15 px-3 py-2 text-xs font-medium text-[#E4A8F3]">
+      <div
+        className="mx-3 mt-3 flex items-center gap-1.5 rounded-md px-3 py-2 text-xs font-medium"
+        style={{ backgroundColor: `${accent}26`, color: accent }}
+      >
         <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0">
           <path
             fillRule="evenodd"
@@ -56,8 +63,9 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
               key={item.href}
               href={item.href}
               className={`rounded-md px-4 py-2.5 text-sm font-medium transition-colors ${
-                active ? "bg-[#7C3AED] text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
+                active ? "text-white" : "text-white/70 hover:bg-white/5 hover:text-white"
               }`}
+              style={active ? { backgroundColor: accent } : undefined}
             >
               {item.label}
             </Link>

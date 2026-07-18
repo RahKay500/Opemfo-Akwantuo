@@ -19,14 +19,39 @@ export interface AdminIdentity {
 // Wrapped in React's cache() so the Sidebar (via layout.tsx) and Header
 // (rendered separately per page) share one DB lookup per request instead of
 // each querying the SuperAdmin table on their own.
+//
+// A Facility Admin is always tied to exactly one real facility, so their
+// org/district/region are derived from that Facility row (real data) rather
+// than the free-text fields meant for the Platform Super Admin, who has no
+// single facility to derive them from.
 export const getCurrentAdminIdentity = cache(async (): Promise<AdminIdentity | null> => {
   const session = await getAdminSession();
   if (!session) return null;
 
   const admin = await prisma.superAdmin.findUnique({
     where: { id: session.sub },
-    select: { name: true, orgName: true, district: true, region: true, phone: true, facilityId: true },
+    select: {
+      name: true,
+      orgName: true,
+      district: true,
+      region: true,
+      phone: true,
+      facilityId: true,
+      facility: { select: { name: true, district: true, region: true } },
+    },
   });
+  if (!admin) return null;
+
+  if (admin.facility) {
+    return {
+      name: admin.name,
+      orgName: `${admin.facility.name} · Facility Admin`,
+      district: admin.facility.district,
+      region: admin.facility.region,
+      phone: admin.phone,
+      facilityId: admin.facilityId,
+    };
+  }
   return admin;
 });
 

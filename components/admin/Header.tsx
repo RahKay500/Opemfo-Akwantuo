@@ -14,6 +14,7 @@ export default async function Header({
   const identity = await getCurrentAdminIdentity();
   const isPlatform = identity?.facilityId === null;
   const tierLabel = isPlatform ? "Super Admin" : "Facility Admin";
+  const accent = isPlatform ? "#7C3AED" : "#2663EB";
   const displayName = identity?.name?.trim() || (isPlatform ? "System Administrator" : "Facility Administrator");
 
   return (
@@ -26,7 +27,10 @@ export default async function Header({
         {action}
         {identity && (
           <div className="hidden items-center gap-2 lg:flex">
-            <span className="flex items-center gap-1.5 rounded-full bg-[#F3E8FB] px-3 py-1 text-xs font-medium text-[#7C3AED]">
+            <span
+              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
+              style={{ backgroundColor: `${accent}1A`, color: accent }}
+            >
               <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0">
                 <path
                   fillRule="evenodd"
@@ -36,7 +40,10 @@ export default async function Header({
               </svg>
               {tierLabel}
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#7C3AED] text-xs font-bold text-white">
+            <span
+              className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{ backgroundColor: accent }}
+            >
               {initials(displayName)}
             </span>
           </div>

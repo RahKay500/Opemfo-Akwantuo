@@ -2,25 +2,10 @@ import { prisma } from "@/lib/prisma";
 import type { FacilityType, Role } from "@prisma/client";
 
 export interface AdminDashboardData {
-  // null when facility-scoped — a Facility Admin has no reason to see a
-  // platform-wide facility count, and the facility's own name is shown in
-  // the page header instead.
-  totalFacilities: number | null;
-  facilityName: string | null;
-  totalNurses: number;
-  totalDoctors: number;
-  pendingActivation: number;
-  recentActivity: {
-    id: string;
-    name: string;
-    role: Role;
-    facilityName: string | null;
-    createdAt: Date;
-    isActive: boolean;
-    hasPassword: boolean;
-  }[];
   // Populated for the Platform Super Admin tier only (facilityId: null).
   platform: PlatformDashboardData | null;
+  // Populated for the Facility Admin tier only (facilityId: set).
+  facility: FacilityAdminDashboardData | null;
 }
 
 export interface PlatformDashboardData {
@@ -41,6 +26,18 @@ export interface PlatformDashboardData {
     patientCount: number;
     isActive: boolean;
   }[];
+}
+
+export interface FacilityAdminDashboardData {
+  facilityName: string;
+  totalStaff: number;
+  activeStaff: number;
+  totalPatients: number;
+  patientsThisWeek: number;
+  visitsThisMonth: number;
+  pendingReferrals: number;
+  staff: { id: string; name: string; role: Role; isActive: boolean }[];
+  facilityInfo: { type: FacilityType; district: string; region: string; openedAt: Date | null };
 }
 
 const MONTH_LABELS = [
@@ -113,44 +110,59 @@ async function getPlatformDashboardData(): Promise<PlatformDashboardData> {
   };
 }
 
-// facilityId null = Platform Super Admin (platform-wide stats); set = a
-// Facility Admin, scoped to just their own facility's staff.
-export async function getAdminDashboardData(facilityId: string | null): Promise<AdminDashboardData> {
-  const staffWhere = facilityId ? { facilityId } : {};
+async function getFacilityAdminDashboardData(facilityId: string): Promise<FacilityAdminDashboardData | null> {
+  const now = new Date();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 86_400_000);
+  const staffWhere = { role: { in: ["MIDWIFE", "DOCTOR"] as Role[] }, facilityId };
 
-  const [totalFacilities, facility, totalNurses, totalDoctors, pendingActivation, recent, platform] =
+  const [facility, totalStaff, activeStaff, totalPatients, patientsThisWeek, visitsThisMonth, pendingReferrals, staff] =
     await Promise.all([
-      facilityId ? Promise.resolve(null) : prisma.facility.count(),
-      facilityId ? prisma.facility.findUnique({ where: { id: facilityId }, select: { name: true } }) : null,
-      prisma.user.count({ where: { role: "MIDWIFE", ...staffWhere } }),
-      prisma.user.count({ where: { role: "DOCTOR", ...staffWhere } }),
-      prisma.user.count({
-        where: { role: { in: ["MIDWIFE", "DOCTOR"] }, isActive: false, passwordHash: null, ...staffWhere },
+      prisma.facility.findUnique({
+        where: { id: facilityId },
+        select: { name: true, type: true, district: true, region: true, openedAt: true },
       }),
+      prisma.user.count({ where: staffWhere }),
+      prisma.user.count({ where: { ...staffWhere, isActive: true } }),
+      prisma.patient.count({ where: { facilityId } }),
+      prisma.patient.count({ where: { facilityId, createdAt: { gte: sevenDaysAgo } } }),
+      prisma.visit.count({ where: { patient: { facilityId }, createdAt: { gte: startOfMonth } } }),
+      prisma.referral.count({ where: { fromFacilityId: facilityId, status: "SENT" } }),
       prisma.user.findMany({
-        where: { role: { in: ["MIDWIFE", "DOCTOR"] }, ...staffWhere },
-        orderBy: { createdAt: "desc" },
+        where: staffWhere,
+        orderBy: { name: "asc" },
         take: 10,
-        include: { facility: { select: { name: true } } },
+        select: { id: true, name: true, role: true, isActive: true },
       }),
-      facilityId ? Promise.resolve(null) : getPlatformDashboardData(),
     ]);
 
+  if (!facility) return null;
+
   return {
-    totalFacilities,
-    facilityName: facility?.name ?? null,
-    totalNurses,
-    totalDoctors,
-    pendingActivation,
-    recentActivity: recent.map((u) => ({
-      id: u.id,
-      name: u.name,
-      role: u.role,
-      facilityName: u.facility?.name ?? null,
-      createdAt: u.createdAt,
-      isActive: u.isActive,
-      hasPassword: Boolean(u.passwordHash),
-    })),
-    platform,
+    facilityName: facility.name,
+    totalStaff,
+    activeStaff,
+    totalPatients,
+    patientsThisWeek,
+    visitsThisMonth,
+    pendingReferrals,
+    staff,
+    facilityInfo: {
+      type: facility.type,
+      district: facility.district,
+      region: facility.region,
+      openedAt: facility.openedAt,
+    },
   };
+}
+
+// facilityId null = Platform Super Admin (platform-wide stats); set = a
+// Facility Admin, scoped to just their own facility's staff and patients.
+export async function getAdminDashboardData(facilityId: string | null): Promise<AdminDashboardData> {
+  const [platform, facility] = await Promise.all([
+    facilityId ? Promise.resolve(null) : getPlatformDashboardData(),
+    facilityId ? getFacilityAdminDashboardData(facilityId) : Promise.resolve(null),
+  ]);
+
+  return { platform, facility };
 }

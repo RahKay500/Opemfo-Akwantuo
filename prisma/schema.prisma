@@ -139,6 +139,10 @@ model Facility {
   district  String
   phone     String?
   isActive  Boolean      @default(true)
+  // When the facility historically opened — distinct from createdAt (when
+  // this record was added to the system). Optional, set by a Platform Super
+  // Admin who knows the facility's real history.
+  openedAt  DateTime?
   createdAt DateTime     @default(now())
 
   users         User[]
