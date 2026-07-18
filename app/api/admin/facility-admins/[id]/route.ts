@@ -27,12 +27,15 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     success: true,
     data: {
       id: admin.id,
+      name: admin.name,
+      email: admin.email,
       phone: admin.phone,
       facilityId: admin.facilityId,
       facilityName: admin.facility?.name ?? null,
       isActive: admin.isActive,
       hasPassword: Boolean(admin.passwordHash),
       createdAt: admin.createdAt,
+      lastLoginAt: admin.lastLoginAt,
       auditLogs: auditLogs.map((l) => ({ id: l.id, action: l.action, createdAt: l.createdAt })),
     },
   });
@@ -62,7 +65,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
   }
 
-  const admin = await prisma.superAdmin.update({ where: { id: params.id }, data: parsed.data });
+  const admin = await prisma.superAdmin.update({
+    where: { id: params.id },
+    data: { ...parsed.data, email: parsed.data.email === "" ? null : parsed.data.email },
+  });
 
   const action =
     parsed.data.isActive === false

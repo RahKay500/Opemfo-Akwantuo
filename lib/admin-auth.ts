@@ -69,7 +69,10 @@ export async function checkAdminCredentials(
   if (!admin || !admin.isActive || !admin.passwordHash) return null;
 
   const valid = await bcrypt.compare(password, admin.passwordHash);
-  return valid ? { id: admin.id, facilityId: admin.facilityId } : null;
+  if (!valid) return null;
+
+  await prisma.superAdmin.update({ where: { id: admin.id }, data: { lastLoginAt: new Date() } });
+  return { id: admin.id, facilityId: admin.facilityId };
 }
 
 // Step 1 of 2: verifies the current password and stages the new one, but

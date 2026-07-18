@@ -29,12 +29,15 @@ export default async function AdminFacilityAdminDetailPage({ params }: { params:
         <FacilityAdminDetailClient
           admin={{
             id: admin.id,
+            name: admin.name,
+            email: admin.email,
             phone: admin.phone,
             facilityId: admin.facilityId,
             facilityName: admin.facility?.name ?? null,
             isActive: admin.isActive,
             hasPassword: Boolean(admin.passwordHash),
             createdAt: admin.createdAt.toISOString(),
+            lastLoginAt: admin.lastLoginAt ? admin.lastLoginAt.toISOString() : null,
             auditLogs: auditLogs.map((l) => ({
               id: l.id,
               action: l.action,

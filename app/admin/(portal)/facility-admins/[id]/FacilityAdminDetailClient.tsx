@@ -5,17 +5,20 @@ import { useRouter } from "next/navigation";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
-import { formatDate } from "@/lib/utils";
+import { formatDate, formatLastLogin } from "@/lib/utils";
 import { deriveStaffStatus } from "@/lib/staff-status";
 
 export interface FacilityAdminDetail {
   id: string;
+  name: string | null;
+  email: string | null;
   phone: string;
   facilityId: string | null;
   facilityName: string | null;
   isActive: boolean;
   hasPassword: boolean;
   createdAt: string;
+  lastLoginAt: string | null;
   auditLogs: { id: string; action: string; createdAt: string }[];
 }
 
@@ -37,8 +40,11 @@ export default function FacilityAdminDetailClient({
   facilities: { id: string; name: string }[];
 }) {
   const router = useRouter();
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const [facilityOpen, setFacilityOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
+  const [name, setName] = useState(admin.name ?? "");
+  const [email, setEmail] = useState(admin.email ?? "");
   const [facilityId, setFacilityId] = useState(admin.facilityId ?? "");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -59,6 +65,7 @@ export default function FacilityAdminDetailClient({
         setError(typeof json.error === "string" ? json.error : "Something went wrong.");
         return;
       }
+      setDetailsOpen(false);
       setFacilityOpen(false);
       setDeactivateOpen(false);
       router.refresh();
@@ -93,13 +100,21 @@ export default function FacilityAdminDetailClient({
       <div className="rounded-lg border border-[#E2E8F0] bg-white p-6">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-[#1A1A2E]">{admin.facilityName ?? "Facility Admin"}</h2>
+            <h2 className="text-lg font-semibold text-[#1A1A2E]">{admin.name ?? admin.facilityName ?? "Facility Admin"}</h2>
             <p className="mt-1 text-sm text-[#6B7280]">Facility Admin</p>
           </div>
           <StatusBadge status={status} />
         </div>
 
         <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <dt className="text-[#6B7280]">Name</dt>
+            <dd className="mt-0.5 text-[#1A1A2E]">{admin.name ?? "—"}</dd>
+          </div>
+          <div>
+            <dt className="text-[#6B7280]">Email</dt>
+            <dd className="mt-0.5 text-[#1A1A2E]">{admin.email ?? "—"}</dd>
+          </div>
           <div>
             <dt className="text-[#6B7280]">Phone</dt>
             <dd className="mt-0.5 text-[#1A1A2E]">{admin.phone}</dd>
@@ -111,6 +126,10 @@ export default function FacilityAdminDetailClient({
           <div>
             <dt className="text-[#6B7280]">Created at</dt>
             <dd className="mt-0.5 text-[#1A1A2E]">{formatDate(admin.createdAt)}</dd>
+          </div>
+          <div>
+            <dt className="text-[#6B7280]">Last login</dt>
+            <dd className="mt-0.5 text-[#1A1A2E]">{admin.lastLoginAt ? formatLastLogin(admin.lastLoginAt) : "Never"}</dd>
           </div>
         </dl>
 
@@ -128,6 +147,17 @@ export default function FacilityAdminDetailClient({
               Resend OTP
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => {
+              setName(admin.name ?? "");
+              setEmail(admin.email ?? "");
+              setDetailsOpen(true);
+            }}
+            className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]"
+          >
+            Edit details
+          </button>
           <button
             type="button"
             onClick={() => {
@@ -172,6 +202,38 @@ export default function FacilityAdminDetailClient({
           ))}
         </div>
       </div>
+
+      <Modal open={detailsOpen} onClose={() => setDetailsOpen(false)} title="Edit details">
+        <div className="flex flex-col gap-4">
+          <FormField label="Full name" required>
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+            />
+          </FormField>
+          <FormField label="Email">
+            <input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+            />
+          </FormField>
+        </div>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={() => setDetailsOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => handleUpdate({ name, email: email.trim() || "" })}
+            disabled={submitting || name.trim().length < 2}
+            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Saving…" : "Save"}
+          </button>
+        </div>
+      </Modal>
 
       <Modal open={facilityOpen} onClose={() => setFacilityOpen(false)} title="Change facility">
         <FormField label="Facility" required>

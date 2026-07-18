@@ -36,13 +36,24 @@ export const updateFacilitySchema = z.object({
 });
 
 export const createFacilityAdminSchema = z.object({
+  name: z.string().min(2, "Enter a full name"),
+  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
   phone: localPhoneSchema,
   facilityId: z.string().min(1, "Select a facility"),
 });
 
 export const updateFacilityAdminSchema = z.object({
+  name: z.string().min(2).optional(),
+  email: z.string().email().optional().or(z.literal("")),
   facilityId: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
+});
+
+export const updateAdminProfileSchema = z.object({
+  name: z.string().min(2, "Enter a full name").optional(),
+  orgName: z.string().min(2, "Enter an organisation name").optional(),
+  district: z.string().min(2, "Enter a district").optional(),
+  region: z.string().min(2, "Enter a region").optional(),
 });
 
 export const activateAdminRequestSchema = z.object({

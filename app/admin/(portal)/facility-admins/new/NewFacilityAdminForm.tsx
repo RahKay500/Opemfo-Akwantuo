@@ -6,6 +6,8 @@ import FormField from "@/components/admin/FormField";
 
 export default function NewFacilityAdminForm({ facilities }: { facilities: { id: string; name: string }[] }) {
   const router = useRouter();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [facilityId, setFacilityId] = useState(facilities[0]?.id ?? "");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -19,6 +21,7 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
     setFieldErrors({});
 
     const errors: Record<string, string> = {};
+    if (!name.trim()) errors.name = "Enter a full name.";
     if (!phone.trim()) errors.phone = "Enter a phone number.";
     if (!facilityId) errors.facilityId = "Select a facility.";
     if (Object.keys(errors).length > 0) {
@@ -31,7 +34,7 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
       const res = await fetch("/api/admin/facility-admins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, facilityId }),
+        body: JSON.stringify({ name, email: email.trim() || undefined, phone, facilityId }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -79,6 +82,8 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
             type="button"
             onClick={() => {
               setSuccess(null);
+              setName("");
+              setEmail("");
               setPhone("");
             }}
             className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]"
@@ -92,6 +97,24 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
 
   return (
     <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-4 rounded-lg border border-[#E2E8F0] bg-white p-8">
+      <FormField label="Full name" required error={fieldErrors.name}>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="e.g. Emmanuel Tetteh"
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+
+      <FormField label="Email" error={fieldErrors.email}>
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="e.g. e.tetteh@ghs.gov.gh"
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+        />
+      </FormField>
+
       <FormField label="Phone number" required error={fieldErrors.phone}>
         <input
           value={phone}

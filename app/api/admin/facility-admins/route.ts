@@ -25,12 +25,15 @@ export async function GET(request: NextRequest) {
     success: true,
     data: admins.map((a) => ({
       id: a.id,
+      name: a.name,
+      email: a.email,
       phone: a.phone,
       facilityId: a.facilityId,
       facilityName: a.facility?.name ?? null,
       isActive: a.isActive,
       hasPassword: Boolean(a.passwordHash),
       createdAt: a.createdAt,
+      lastLoginAt: a.lastLoginAt,
     })),
   });
 }
@@ -66,7 +69,15 @@ export async function POST(request: NextRequest) {
   const otpExpiry = new Date(Date.now() + 10 * 60_000);
 
   const admin = await prisma.superAdmin.create({
-    data: { phone, facilityId: facility.id, isActive: false, otp, otpExpiry },
+    data: {
+      name: parsed.data.name,
+      email: parsed.data.email || undefined,
+      phone,
+      facilityId: facility.id,
+      isActive: false,
+      otp,
+      otpExpiry,
+    },
   });
 
   await logAudit({
