@@ -5,9 +5,13 @@ import { logAudit } from "@/lib/audit";
 import { updateStaffSchema } from "@/lib/validations/admin";
 import { countPatientsRegisteredBy, deleteStaffCascade } from "@/lib/staff-cascade-delete";
 
+// A Facility Admin (session.facilityId set) may only act on their own
+// facility's staff. The Platform Super Admin (facilityId: null) has
+// oversight of any facility's staff — needed e.g. right after deleting that
+// facility's only admin, when no one else can reach these routes at all.
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId === null) {
+  if (!session) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
@@ -15,7 +19,11 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     where: { id: params.id },
     include: { facility: { select: { id: true, name: true } } },
   });
-  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") || staff.facilityId !== session.facilityId) {
+  if (
+    !staff ||
+    (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") ||
+    (session.facilityId !== null && staff.facilityId !== session.facilityId)
+  ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
 
@@ -53,7 +61,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId === null) {
+  if (!session) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
@@ -67,7 +75,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   if (
     !existing ||
     (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
-    existing.facilityId !== session.facilityId
+    (session.facilityId !== null && existing.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
@@ -83,7 +91,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
   await logAudit({
     actorLabel: "Super Admin",
-    facilityId: session.facilityId,
+    facilityId: existing.facilityId,
     action,
     entityType: "User",
     entityId: staff.id,
@@ -103,7 +111,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // it's still referenced by an unrelated patient's records.
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId === null) {
+  if (!session) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
@@ -111,7 +119,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   if (
     !existing ||
     (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
-    existing.facilityId !== session.facilityId
+    (session.facilityId !== null && existing.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
@@ -120,7 +128,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
   await logAudit({
     actorLabel: "Super Admin",
-    facilityId: session.facilityId,
+    facilityId: existing.facilityId,
     action: "STAFF_DELETED",
     entityType: "User",
     entityId: params.id,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
@@ -177,6 +178,9 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
       header: "",
       render: (r) => (
         <div className="flex gap-3">
+          <Link href={`/admin/staff?facilityId=${r.id}`} className="text-sm font-medium text-[#7C3AED] underline">
+            Staff
+          </Link>
           <button type="button" onClick={() => openEdit(r)} className="text-sm font-medium text-[#1A1A2E] underline">
             Edit
           </button>

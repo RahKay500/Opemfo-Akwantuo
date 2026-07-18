@@ -4,8 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "@/components/admin/FormField";
 
-export default function NewStaffForm() {
+export default function NewStaffForm({ facilityId }: { facilityId?: string }) {
   const router = useRouter();
+  const staffListHref = facilityId ? `/admin/staff?facilityId=${facilityId}` : "/admin/staff";
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [role, setRole] = useState<"MIDWIFE" | "DOCTOR">("MIDWIFE");
@@ -33,7 +34,7 @@ export default function NewStaffForm() {
       const res = await fetch("/api/admin/staff", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, phone, role, licenseNumber: licenseNumber || undefined }),
+        body: JSON.stringify({ name, phone, role, licenseNumber: licenseNumber || undefined, facilityId }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -72,7 +73,7 @@ export default function NewStaffForm() {
         <div className="mt-6 flex gap-3">
           <button
             type="button"
-            onClick={() => router.push("/admin/staff")}
+            onClick={() => router.push(staffListHref)}
             className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
           >
             Back to Staff

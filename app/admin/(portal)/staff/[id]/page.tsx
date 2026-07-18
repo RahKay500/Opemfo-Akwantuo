@@ -8,14 +8,17 @@ import StaffDetailClient from "./StaffDetailClient";
 export default async function AdminStaffDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  if (session.facilityId === null) redirect("/admin/dashboard");
 
   const { id } = await params;
   const staff = await prisma.user.findUnique({ where: { id }, include: { facility: { select: { name: true } } } });
 
-  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") || staff.facilityId !== session.facilityId) {
-    notFound();
-  }
+  // A Facility Admin only ever sees their own facility's staff; the Platform
+  // Super Admin has oversight of any facility's staff (needed e.g. right
+  // after deleting that facility's only admin, when no one else can reach
+  // this page at all).
+  const isPlatform = session.facilityId === null;
+  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR")) notFound();
+  if (!isPlatform && staff.facilityId !== session.facilityId) notFound();
 
   const [auditLogs, patientCount] = await Promise.all([
     prisma.auditLog.findMany({
@@ -35,6 +38,7 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
             name: staff.name,
             phone: staff.phone,
             role: staff.role as "MIDWIFE" | "DOCTOR",
+            facilityId: staff.facilityId,
             facilityName: staff.facility?.name ?? null,
             licenseNumber: staff.licenseNumber,
             isActive: staff.isActive,

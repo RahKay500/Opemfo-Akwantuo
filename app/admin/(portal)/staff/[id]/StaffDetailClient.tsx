@@ -13,6 +13,7 @@ export interface StaffDetail {
   name: string;
   phone: string;
   role: "MIDWIFE" | "DOCTOR";
+  facilityId: string | null;
   facilityName: string | null;
   licenseNumber: string | null;
   isActive: boolean;
@@ -59,7 +60,10 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         router.refresh();
         return;
       }
-      router.push("/admin/staff");
+      // Always includes facilityId — harmless for a Facility Admin (whose
+      // own session facility matches anyway), and required for the Platform
+      // Super Admin, whose /admin/staff has no implicit facility scope.
+      router.push(`/admin/staff?facilityId=${staff.facilityId}`);
       router.refresh();
     } catch {
       setError("Network error. Please try again.");

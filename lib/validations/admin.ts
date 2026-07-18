@@ -68,15 +68,16 @@ export const activateAdminConfirmSchema = z.object({
   password: strongPassword,
 });
 
-// facilityId is deliberately absent — a Facility Admin can only ever create
-// staff at their own facility, derived from their session, not a client-
-// supplied value. Reassigning staff between facilities is a Platform Admin
-// concern, out of scope for a facility-scoped account.
+// facilityId is optional and only ever honored for the Platform Super Admin
+// tier — a Facility Admin can only ever create staff at their own facility,
+// derived from their session; the route ignores this field entirely for
+// that tier rather than letting a client-supplied value override it.
 export const createStaffSchema = z.object({
   name: z.string().min(2, "Enter a full name"),
   phone: localPhoneSchema,
   role: z.enum(["MIDWIFE", "DOCTOR"]),
   licenseNumber: z.string().optional(),
+  facilityId: z.string().optional(),
 });
 
 export const updateStaffSchema = z.object({
