@@ -49,7 +49,7 @@ export default async function MotherDashboardPage() {
 
   return (
     <main className="flex flex-col gap-5 lg:px-5 lg:pt-5">
-      <div className="flex flex-col rounded-b-card bg-gradient-to-br from-[#E6ADF4] to-[#F4DEFB] px-6 pb-5 pt-11 lg:rounded-card">
+      <div className="flex flex-col rounded-b-card bg-gradient-to-br from-[#E6ADF4] to-[#F4DEFB] px-6 pb-5 pt-11 lg:rounded-card lg:px-5 lg:pb-4 lg:pt-5">
         <div className="flex items-start justify-between">
           <div>
             <p className="font-body text-sm font-medium text-[#843FA0]">{greeting()}</p>
@@ -77,20 +77,20 @@ export default async function MotherDashboardPage() {
         </div>
 
         {data.pregnancy && (
-          <div className="mt-4 flex items-center justify-between gap-4">
-            <div className="flex flex-1 gap-2">
-              <div className="flex-1 rounded-input bg-[#F7E4FB] px-2 py-1.5 text-center">
-                <p className="font-heading text-[13px] font-bold text-[#6A1E8A]">{data.pregnancy.week}</p>
+          <div className="mt-4 flex items-center justify-between gap-4 lg:justify-start">
+            <div className="flex gap-1.5">
+              <div className="w-[76px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1 text-center lg:w-[68px]">
+                <p className="font-heading text-xs font-bold text-[#6A1E8A]">{data.pregnancy.week}</p>
                 <p className="font-body text-[9px] font-medium text-[#945BAC]">Week</p>
               </div>
-              <div className="flex-1 rounded-input bg-[#F7E4FB] px-2 py-1.5 text-center">
-                <p className="font-heading text-[13px] font-bold text-[#6A1E8A]">
+              <div className="w-[76px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1 text-center lg:w-[68px]">
+                <p className="font-heading text-xs font-bold text-[#6A1E8A]">
                   {TRIMESTER_ORDINAL[data.pregnancy.trimester] ?? data.pregnancy.trimester}
                 </p>
                 <p className="font-body text-[9px] font-medium text-[#945BAC]">Trimester</p>
               </div>
-              <div className="flex-1 rounded-input bg-[#F7E4FB] px-2 py-1.5 text-center">
-                <p className="font-heading text-[13px] font-bold text-[#6A1E8A]">
+              <div className="w-[76px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1 text-center lg:w-[68px]">
+                <p className="font-heading text-xs font-bold text-[#6A1E8A]">
                   {data.dueDate ? formatDate(data.dueDate) : "—"}
                 </p>
                 <p className="font-body text-[9px] font-medium text-[#945BAC]">Due Date</p>
