@@ -31,3 +31,8 @@ export const VIDEOS: VideoItem[] = [
 ];
 
 export const CATEGORIES = ["All", "Pregnancy", "Nutrition", "Labour", "Postnatal", "Baby Care"] as const;
+
+export function youtubeThumbnail(url: string): string {
+  const id = new URL(url).searchParams.get("v");
+  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+}

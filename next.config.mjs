@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: {
+    remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com" }],
+  },
   async headers() {
     return [
       {
@@ -19,7 +22,7 @@ const nextConfig = {
               // but nothing responds). Production doesn't need it.
               `script-src 'self' 'unsafe-inline'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""}`,
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob:",
+              "img-src 'self' data: blob: https://i.ytimg.com",
               "font-src 'self' data:",
               "connect-src 'self'",
               "frame-ancestors 'none'",

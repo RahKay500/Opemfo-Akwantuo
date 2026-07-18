@@ -1,9 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { PlayIcon } from "@/components/ui/icons";
-import { FEATURED_VIDEO, VIDEOS, CATEGORIES } from "./videos-data";
+import { FEATURED_VIDEO, VIDEOS, CATEGORIES, youtubeThumbnail } from "./videos-data";
 
 export default function VideosClient({ currentWeek }: { currentWeek: number }) {
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
@@ -18,7 +19,15 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
         className="overflow-hidden rounded-card bg-white text-left shadow-card lg:flex lg:items-stretch"
       >
         <div className="relative flex h-[200px] items-center justify-center bg-lilac-light lg:h-auto lg:w-[30%] lg:shrink-0">
-          <div className="flex size-14 items-center justify-center rounded-badge bg-white">
+          <Image
+            src={youtubeThumbnail(FEATURED_VIDEO.url)}
+            alt=""
+            fill
+            className="object-cover"
+            sizes="(min-width: 1024px) 30vw, 100vw"
+          />
+          <div className="absolute inset-0 bg-black/10" />
+          <div className="relative flex size-14 items-center justify-center rounded-badge bg-white">
             <PlayIcon className="ml-0.5 size-[22px] text-lilac-deeper" />
           </div>
           <span className="absolute left-3 top-3 rounded-badge bg-primary px-2.5 py-1 font-body text-xs font-medium text-white">
@@ -67,8 +76,10 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             rel="noopener noreferrer"
             className="overflow-hidden rounded-card bg-white text-left shadow-card"
           >
-            <div className="flex h-[120px] items-center justify-center bg-lilac-light">
-              <div className="flex size-8 items-center justify-center rounded-badge bg-white">
+            <div className="relative flex h-[120px] items-center justify-center bg-lilac-light">
+              <Image src={youtubeThumbnail(video.url)} alt="" fill className="object-cover" sizes="50vw" />
+              <div className="absolute inset-0 bg-black/10" />
+              <div className="relative flex size-8 items-center justify-center rounded-badge bg-white">
                 <PlayIcon className="ml-0.5 size-3 text-lilac-deeper" />
               </div>
             </div>
