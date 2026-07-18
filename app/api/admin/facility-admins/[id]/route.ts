@@ -90,3 +90,34 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
   return NextResponse.json({ success: true, data: admin });
 }
+
+// Hard delete — distinct from PUT { isActive: false }, which just revokes
+// portal access while keeping the account (and its audit trail) around.
+// Deleting removes the row entirely, e.g. to clean up an account created by
+// mistake or for testing. The audit trail is deleted alongside it since it's
+// keyed to this account's id and would otherwise be orphaned.
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = await getAdminSessionFromRequest(request);
+  if (!session || session.facilityId !== null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
+  }
+
+  const existing = await prisma.superAdmin.findUnique({ where: { id: params.id } });
+  if (!existing || existing.facilityId === null) {
+    return NextResponse.json({ success: false, error: "Facility Admin not found." }, { status: 404 });
+  }
+
+  await prisma.auditLog.deleteMany({ where: { entityType: "SuperAdmin", entityId: params.id } });
+  await prisma.superAdmin.delete({ where: { id: params.id } });
+
+  await logAudit({
+    actorLabel: "Super Admin",
+    action: "FACILITY_ADMIN_DELETED",
+    entityType: "SuperAdmin",
+    entityId: params.id,
+    metadata: { phone: existing.phone, facilityId: existing.facilityId },
+    ipAddress: request.headers.get("x-forwarded-for"),
+  });
+
+  return NextResponse.json({ success: true });
+}

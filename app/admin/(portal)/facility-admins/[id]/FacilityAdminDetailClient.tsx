@@ -43,6 +43,7 @@ export default function FacilityAdminDetailClient({
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [facilityOpen, setFacilityOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [name, setName] = useState(admin.name ?? "");
   const [email, setEmail] = useState(admin.email ?? "");
   const [facilityId, setFacilityId] = useState(admin.facilityId ?? "");
@@ -90,6 +91,25 @@ export default function FacilityAdminDetailClient({
         json.data.devOtp ? `OTP resent. Dev OTP: ${json.data.devOtp}` : `OTP resent to ${json.data.phone}.`
       );
       router.refresh();
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleDelete() {
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin/facility-admins/${admin.id}`, { method: "DELETE" });
+      const json = await res.json();
+      if (!json.success) {
+        setError(typeof json.error === "string" ? json.error : "Something went wrong.");
+        return;
+      }
+      router.push("/admin/facility-admins");
+      router.refresh();
+    } catch {
+      setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -187,6 +207,13 @@ export default function FacilityAdminDetailClient({
               Reactivate account
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="rounded-md border border-[#DC2626] px-4 py-2 text-sm font-medium text-[#DC2626]"
+          >
+            Delete account
+          </button>
         </div>
       </div>
 
@@ -280,6 +307,27 @@ export default function FacilityAdminDetailClient({
             className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
           >
             {submitting ? "Deactivating…" : "Deactivate"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete account">
+        <p className="text-sm text-[#6B7280]">
+          This permanently deletes {admin.name ?? "this Facility Admin"}&apos;s account and its audit history.
+          Unlike deactivating, this <strong>cannot be undone</strong> — you&apos;ll need to create a new account to
+          give this facility an admin again.
+        </p>
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={submitting}
+            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Deleting…" : "Delete Permanently"}
           </button>
         </div>
       </Modal>
