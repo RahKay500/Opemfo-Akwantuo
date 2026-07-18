@@ -107,7 +107,7 @@ export default function MotherSymptomsPage() {
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">How are you feeling?</h1>
       </div>
 
-      <div className="flex flex-col gap-6 px-5 pb-8 pt-5 lg:max-w-2xl">
+      <div className="flex flex-col gap-6 px-5 pb-8 pt-5">
         <div className="rounded-card bg-lilac-light p-4">
           <p className="font-body text-sm text-lilac-deeper">
             Tell your nurse how you&apos;re feeling. This helps them monitor your health between visits.
