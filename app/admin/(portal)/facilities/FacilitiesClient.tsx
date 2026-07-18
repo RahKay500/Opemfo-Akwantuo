@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
+import { deriveFacilityStatus } from "@/lib/staff-status";
 
 export interface FacilityRow {
   id: string;
@@ -16,6 +17,8 @@ export interface FacilityRow {
   phone: string | null;
   isActive: boolean;
   staffCount: number;
+  patientCount: number;
+  adminName: string | null;
 }
 
 const TYPE_LABELS: Record<FacilityRow["type"], string> = {
@@ -36,12 +39,24 @@ const EMPTY_FORM: FormState = { name: "", type: "CHPS", region: "", district: ""
 
 export default function FacilitiesClient({ facilities }: { facilities: FacilityRow[] }) {
   const router = useRouter();
+  const [query, setQuery] = useState("");
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<FacilityRow | null>(null);
   const [deactivateTarget, setDeactivateTarget] = useState<FacilityRow | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  const filtered = useMemo(() => {
+    if (!query) return facilities;
+    const q = query.toLowerCase();
+    return facilities.filter(
+      (f) =>
+        f.name.toLowerCase().includes(q) ||
+        f.region.toLowerCase().includes(q) ||
+        f.district.toLowerCase().includes(q)
+    );
+  }, [facilities, query]);
 
   function openEdit(facility: FacilityRow) {
     setForm({
@@ -130,12 +145,30 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
   }
 
   const columns: DataTableColumn<FacilityRow>[] = [
-    { key: "name", header: "Name", render: (r) => r.name },
-    { key: "type", header: "Type", render: (r) => TYPE_LABELS[r.type] },
-    { key: "region", header: "Region", render: (r) => r.region },
-    { key: "district", header: "District", render: (r) => r.district },
+    { key: "name", header: "Facility", render: (r) => <span className="font-medium text-[#1A1A2E]">{r.name}</span> },
+    {
+      key: "type",
+      header: "Type",
+      render: (r) => (
+        <span className="inline-block rounded-full bg-[#F3E8FB] px-2.5 py-1 text-xs font-medium text-[#7C3AED]">
+          {TYPE_LABELS[r.type]}
+        </span>
+      ),
+    },
+    { key: "location", header: "District / Region", render: (r) => `${r.district}, ${r.region}` },
+    {
+      key: "admin",
+      header: "Facility Admin",
+      render: (r) =>
+        r.adminName ?? <span className="font-medium text-[#EA580C]">Unassigned</span>,
+    },
     { key: "staffCount", header: "Staff", render: (r) => r.staffCount },
-    { key: "status", header: "Status", render: (r) => <StatusBadge status={r.isActive ? "Active" : "Inactive"} /> },
+    { key: "patientCount", header: "Patients", render: (r) => r.patientCount },
+    {
+      key: "status",
+      header: "Status",
+      render: (r) => <StatusBadge status={deriveFacilityStatus(r.isActive, r.staffCount)} />,
+    },
     {
       key: "actions",
       header: "",
@@ -158,7 +191,13 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
 
   return (
     <>
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center">
+        <input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search facilities..."
+          className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-1"
+        />
         <button
           type="button"
           onClick={() => {
@@ -166,13 +205,17 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
             setError(null);
             setAddOpen(true);
           }}
-          className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
+          className="h-10 shrink-0 rounded-md bg-[#7C3AED] px-4 text-sm font-semibold text-white"
         >
-          Add Facility
+          + Add Facility
         </button>
       </div>
 
-      <DataTable columns={columns} rows={facilities} rowKey={(r) => r.id} emptyMessage="No facilities yet." />
+      <p className="mb-3 text-sm font-semibold text-[#1A1A2E]">
+        {filtered.length} {filtered.length === 1 ? "Facility" : "Facilities"}
+      </p>
+
+      <DataTable columns={columns} rows={filtered} rowKey={(r) => r.id} emptyMessage="No facilities match this search." />
 
       <Modal open={addOpen} onClose={closeModals} title="Add Facility">
         <FacilityForm form={form} setForm={setForm} error={error} />
