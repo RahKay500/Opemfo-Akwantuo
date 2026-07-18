@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getAdminSessionFromRequest } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { updateStaffSchema } from "@/lib/validations/admin";
+import { countPatientsRegisteredBy, deleteStaffCascade } from "@/lib/staff-cascade-delete";
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
@@ -18,10 +19,13 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
 
-  const auditLogs = await prisma.auditLog.findMany({
-    where: { entityType: "User", entityId: staff.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const [auditLogs, patientCount] = await Promise.all([
+    prisma.auditLog.findMany({
+      where: { entityType: "User", entityId: staff.id },
+      orderBy: { createdAt: "desc" },
+    }),
+    countPatientsRegisteredBy(staff.id),
+  ]);
 
   return NextResponse.json({
     success: true,
@@ -36,6 +40,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       isActive: staff.isActive,
       hasPassword: Boolean(staff.passwordHash),
       createdAt: staff.createdAt,
+      patientCount,
       auditLogs: auditLogs.map((l) => ({
         id: l.id,
         action: l.action,
@@ -87,4 +92,41 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   });
 
   return NextResponse.json({ success: true, data: staff });
+}
+
+// Hard delete — also permanently deletes every patient this staff member
+// registered, and all of those patients' clinical records (visits,
+// referrals, vaccinations, delivery records, etc.). Distinct from PUT
+// { isActive: false }, which only revokes portal access. Scoped only to data
+// this staff member's own registered patients own; see
+// lib/staff-cascade-delete.ts for why the staff row itself may survive if
+// it's still referenced by an unrelated patient's records.
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+  const session = await getAdminSessionFromRequest(request);
+  if (!session || session.facilityId === null) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
+  }
+
+  const existing = await prisma.user.findUnique({ where: { id: params.id } });
+  if (
+    !existing ||
+    (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
+    existing.facilityId !== session.facilityId
+  ) {
+    return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
+  }
+
+  const result = await deleteStaffCascade(params.id);
+
+  await logAudit({
+    actorLabel: "Super Admin",
+    facilityId: session.facilityId,
+    action: "STAFF_DELETED",
+    entityType: "User",
+    entityId: params.id,
+    metadata: { phone: existing.phone, ...result },
+    ipAddress: request.headers.get("x-forwarded-for"),
+  });
+
+  return NextResponse.json({ success: true, data: result });
 }

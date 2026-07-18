@@ -18,6 +18,7 @@ export interface StaffDetail {
   isActive: boolean;
   hasPassword: boolean;
   createdAt: string;
+  patientCount: number;
   auditLogs: { id: string; action: string; createdAt: string }[];
 }
 
@@ -34,12 +35,38 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
   const [editOpen, setEditOpen] = useState(false);
   const [editLicenseOpen, setEditLicenseOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
   const [name, setName] = useState(staff.name);
   const [licenseNumber, setLicenseNumber] = useState(staff.licenseNumber ?? "");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [otpMessage, setOtpMessage] = useState<string | null>(null);
   const status = deriveStaffStatus(staff.isActive, staff.hasPassword);
+
+  async function handleDelete() {
+    setError(null);
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/admin/staff/${staff.id}`, { method: "DELETE" });
+      const json = await res.json();
+      if (!json.success) {
+        setError(typeof json.error === "string" ? json.error : "Something went wrong.");
+        return;
+      }
+      if (!json.data.staffDeleted) {
+        setDeleteOpen(false);
+        setError(json.data.blockedReason ?? "Registered patients were deleted, but the account itself could not be.");
+        router.refresh();
+        return;
+      }
+      router.push("/admin/staff");
+      router.refresh();
+    } catch {
+      setError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
 
   async function handleUpdate(data: Record<string, unknown>) {
     setError(null);
@@ -168,6 +195,13 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
               Reactivate account
             </button>
           )}
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="rounded-md border border-[#DC2626] px-4 py-2 text-sm font-medium text-[#DC2626]"
+          >
+            Delete account
+          </button>
         </div>
       </div>
 
@@ -250,6 +284,36 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
             className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
           >
             {submitting ? "Deactivating…" : "Deactivate"}
+          </button>
+        </div>
+      </Modal>
+
+      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete account">
+        <p className="text-sm text-[#6B7280]">
+          This permanently deletes {staff.name}&apos;s account
+          {staff.patientCount > 0 ? (
+            <>
+              {" "}
+              and <strong>{staff.patientCount === 1 ? "the 1 patient" : `all ${staff.patientCount} patients`} they registered</strong>,
+              including every visit, referral, vaccination, and delivery record tied to those patients
+            </>
+          ) : (
+            ""
+          )}
+          . This <strong>cannot be undone</strong>.
+        </p>
+        {error && <p className="mt-3 text-sm text-[#DC2626]">{error}</p>}
+        <div className="mt-5 flex justify-end gap-2">
+          <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={submitting}
+            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+          >
+            {submitting ? "Deleting…" : "Delete Permanently"}
           </button>
         </div>
       </Modal>

@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
+import { countPatientsRegisteredBy } from "@/lib/staff-cascade-delete";
 import Header from "@/components/admin/Header";
 import StaffDetailClient from "./StaffDetailClient";
 
@@ -16,10 +17,13 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
     notFound();
   }
 
-  const auditLogs = await prisma.auditLog.findMany({
-    where: { entityType: "User", entityId: staff.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const [auditLogs, patientCount] = await Promise.all([
+    prisma.auditLog.findMany({
+      where: { entityType: "User", entityId: staff.id },
+      orderBy: { createdAt: "desc" },
+    }),
+    countPatientsRegisteredBy(staff.id),
+  ]);
 
   return (
     <>
@@ -36,6 +40,7 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
             isActive: staff.isActive,
             hasPassword: Boolean(staff.passwordHash),
             createdAt: staff.createdAt.toISOString(),
+            patientCount,
             auditLogs: auditLogs.map((l) => ({
               id: l.id,
               action: l.action,
