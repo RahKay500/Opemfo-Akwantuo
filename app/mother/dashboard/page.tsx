@@ -77,19 +77,19 @@ export default async function MotherDashboardPage() {
         </div>
 
         {data.pregnancy && (
-          <div className="mt-4 flex items-center justify-between gap-4 lg:justify-start">
-            <div className="flex gap-1.5">
-              <div className="w-[76px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1 text-center lg:w-[68px]">
+          <div className="mt-4 flex items-center justify-between gap-4">
+            <div className="flex gap-2 lg:gap-3">
+              <div className="w-[70px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1.5 text-center lg:w-[92px] lg:px-2">
                 <p className="font-heading text-xs font-bold text-[#6A1E8A]">{data.pregnancy.week}</p>
                 <p className="font-body text-[9px] font-medium text-[#945BAC]">Week</p>
               </div>
-              <div className="w-[76px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1 text-center lg:w-[68px]">
+              <div className="w-[70px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1.5 text-center lg:w-[92px] lg:px-2">
                 <p className="font-heading text-xs font-bold text-[#6A1E8A]">
                   {TRIMESTER_ORDINAL[data.pregnancy.trimester] ?? data.pregnancy.trimester}
                 </p>
                 <p className="font-body text-[9px] font-medium text-[#945BAC]">Trimester</p>
               </div>
-              <div className="w-[76px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1 text-center lg:w-[68px]">
+              <div className="w-[70px] shrink-0 rounded-input bg-[#F7E4FB] px-1.5 py-1.5 text-center lg:w-[92px] lg:px-2">
                 <p className="font-heading text-xs font-bold text-[#6A1E8A]">
                   {data.dueDate ? formatDate(data.dueDate) : "—"}
                 </p>
