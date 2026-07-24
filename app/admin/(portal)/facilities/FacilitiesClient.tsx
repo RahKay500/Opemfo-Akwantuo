@@ -158,11 +158,9 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
       key: "type",
       header: "Type",
       render: (r) => (
-        <div className="flex justify-center">
-          <span className="inline-block rounded-full bg-[#F3E8FB] px-2.5 py-1 text-xs font-medium text-[#7C3AED]">
-            {facilityTypeLabel(r.type)}
-          </span>
-        </div>
+        <span className="inline-block min-w-[150px] rounded-full bg-[#F3E8FB] px-2.5 py-1 text-center text-xs font-medium text-[#7C3AED]">
+          {facilityTypeLabel(r.type)}
+        </span>
       ),
     },
     { key: "location", header: "District / Region", render: (r) => `${r.district}, ${r.region}` },
