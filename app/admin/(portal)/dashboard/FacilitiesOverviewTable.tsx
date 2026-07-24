@@ -4,11 +4,12 @@ import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
 import { facilityTypeLabel } from "@/lib/utils";
 import { deriveFacilityStatus } from "@/lib/staff-status";
+import type { FacilityType } from "@prisma/client";
 
 export interface FacilityOverviewRow {
   id: string;
   name: string;
-  type: "CHPS" | "DISTRICT_HOSPITAL" | "TEACHING_HOSPITAL";
+  type: FacilityType;
   adminName: string | null;
   staffCount: number;
   patientCount: number;

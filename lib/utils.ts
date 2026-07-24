@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import type { FacilityType } from "@prisma/client";
 
 export function cn(...inputs: ClassValue[]): string {
   return twMerge(clsx(inputs));
@@ -21,10 +22,16 @@ export function normalizeGhanaPhone(input: string): string | null {
   return null;
 }
 
-export function facilityTypeLabel(type: "CHPS" | "DISTRICT_HOSPITAL" | "TEACHING_HOSPITAL"): string {
-  if (type === "DISTRICT_HOSPITAL") return "District Hospital";
-  if (type === "TEACHING_HOSPITAL") return "Teaching Hospital";
-  return "CHPS";
+const FACILITY_TYPE_LABELS: Record<FacilityType, string> = {
+  CHPS: "CHPS",
+  HEALTH_CENTRE: "Health Centre",
+  DISTRICT_HOSPITAL: "District Hospital",
+  REGIONAL_HOSPITAL: "Regional Hospital",
+  TEACHING_HOSPITAL: "Teaching Hospital",
+};
+
+export function facilityTypeLabel(type: FacilityType): string {
+  return FACILITY_TYPE_LABELS[type];
 }
 
 export function initials(name: string): string {

@@ -20,7 +20,7 @@ export const recoverAdminSchema = z.object({
 
 export const createFacilitySchema = z.object({
   name: z.string().min(2, "Enter a facility name"),
-  type: z.enum(["CHPS", "DISTRICT_HOSPITAL", "TEACHING_HOSPITAL"]),
+  type: z.enum(["CHPS", "HEALTH_CENTRE", "DISTRICT_HOSPITAL", "REGIONAL_HOSPITAL", "TEACHING_HOSPITAL"]),
   region: z.string().min(2, "Enter a region"),
   district: z.string().min(2, "Enter a district"),
   phone: z.string().optional(),
@@ -29,7 +29,7 @@ export const createFacilitySchema = z.object({
 
 export const updateFacilitySchema = z.object({
   name: z.string().min(2).optional(),
-  type: z.enum(["CHPS", "DISTRICT_HOSPITAL", "TEACHING_HOSPITAL"]).optional(),
+  type: z.enum(["CHPS", "HEALTH_CENTRE", "DISTRICT_HOSPITAL", "REGIONAL_HOSPITAL", "TEACHING_HOSPITAL"]).optional(),
   region: z.string().min(2).optional(),
   district: z.string().min(2).optional(),
   phone: z.string().optional(),

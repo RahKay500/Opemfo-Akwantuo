@@ -21,7 +21,9 @@ enum Gender {
 
 enum FacilityType {
   CHPS
+  HEALTH_CENTRE
   DISTRICT_HOSPITAL
+  REGIONAL_HOSPITAL
   TEACHING_HOSPITAL
 }
 

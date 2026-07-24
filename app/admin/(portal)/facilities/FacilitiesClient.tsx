@@ -8,11 +8,13 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
 import { deriveFacilityStatus } from "@/lib/staff-status";
+import { facilityTypeLabel } from "@/lib/utils";
+import type { FacilityType } from "@prisma/client";
 
 export interface FacilityRow {
   id: string;
   name: string;
-  type: "CHPS" | "DISTRICT_HOSPITAL" | "TEACHING_HOSPITAL";
+  type: FacilityType;
   region: string;
   district: string;
   phone: string | null;
@@ -23,11 +25,13 @@ export interface FacilityRow {
   openedAt: string | null;
 }
 
-const TYPE_LABELS: Record<FacilityRow["type"], string> = {
-  CHPS: "CHPS",
-  DISTRICT_HOSPITAL: "District Hospital",
-  TEACHING_HOSPITAL: "Teaching Hospital",
-};
+const FACILITY_TYPE_OPTIONS: FacilityType[] = [
+  "CHPS",
+  "HEALTH_CENTRE",
+  "DISTRICT_HOSPITAL",
+  "REGIONAL_HOSPITAL",
+  "TEACHING_HOSPITAL",
+];
 
 interface FormState {
   name: string;
@@ -155,7 +159,7 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
       header: "Type",
       render: (r) => (
         <span className="inline-block rounded-full bg-[#F3E8FB] px-2.5 py-1 text-xs font-medium text-[#7C3AED]">
-          {TYPE_LABELS[r.type]}
+          {facilityTypeLabel(r.type)}
         </span>
       ),
     },
@@ -306,9 +310,11 @@ function FacilityForm({
           onChange={(e) => setForm({ ...form, type: e.target.value as FormState["type"] })}
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         >
-          <option value="CHPS">CHPS</option>
-          <option value="DISTRICT_HOSPITAL">District Hospital</option>
-          <option value="TEACHING_HOSPITAL">Teaching Hospital</option>
+          {FACILITY_TYPE_OPTIONS.map((type) => (
+            <option key={type} value={type}>
+              {facilityTypeLabel(type)}
+            </option>
+          ))}
         </select>
       </FormField>
       <FormField label="Region" required>

@@ -25,16 +25,6 @@ export default async function AdminDashboardPage() {
       <Header
         title="Dashboard"
         subtitle={isFacilityAdmin ? data.facility?.facilityName : identity?.orgName}
-        action={
-          !isFacilityAdmin ? (
-            <Link
-              href="/admin/facility-admins/new"
-              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
-            >
-              Add Facility Admin
-            </Link>
-          ) : undefined
-        }
       />
 
       <div className="px-4 py-6 lg:px-8">
