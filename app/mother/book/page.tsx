@@ -11,28 +11,27 @@ const REQUEST_TYPES = [
     icon: CalendarIcon,
     iconBg: "bg-lilac-light",
     iconColor: "text-lilac-deeper",
-    title: "Book an appointment",
-    blurb: "Schedule your next antenatal or postnatal visit with your nurse",
+    title: "Routine Appointment",
+    blurb: "Regular antenatal or postnatal check-up with your midwife",
   },
   {
     value: "GYNAECOLOGIST" as const,
     icon: PartnerIcon,
     iconBg: "bg-pink-light",
     iconColor: "text-pink-deep",
-    title: "See a gynaecologist",
-    blurb: "Request a specialist consultation for concerns beyond routine care",
+    title: "Gynaecologist Referral",
+    blurb: "Request a specialist review from a doctor at the district hospital",
   },
 ];
 
-const REASONS = ["Routine checkup", "Follow-up", "Concern"];
 const TIMES = ["Morning", "Afternoon", "Evening"];
 
 export default function MotherBookPage() {
   const router = useRouter();
   const [requestType, setRequestType] = useState<"ROUTINE" | "GYNAECOLOGIST">("ROUTINE");
   const [preferredDate, setPreferredDate] = useState("");
-  const [preferredTime, setPreferredTime] = useState<string | null>(null);
-  const [reason, setReason] = useState<string | null>(null);
+  const [preferredTime, setPreferredTime] = useState("");
+  const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -53,8 +52,8 @@ export default function MotherBookPage() {
         body: JSON.stringify({
           requestType,
           preferredDate,
-          preferredTime: preferredTime ?? undefined,
-          reason: reason ?? undefined,
+          preferredTime: preferredTime || undefined,
+          reason: reason.trim() || undefined,
           notes: notes.trim() || undefined,
         }),
       });
@@ -117,7 +116,11 @@ export default function MotherBookPage() {
                 </div>
                 <p className="mt-2 font-heading text-base font-bold text-text-primary">{type.title}</p>
                 <p className="mt-1 font-body text-[13px] text-text-secondary">{type.blurb}</p>
-                <p className="mt-2 self-end font-body text-[13px] font-medium text-pink-deep">Request →</p>
+                {requestType === type.value && (
+                  <span className="mt-2 flex size-5 items-center justify-center rounded-badge bg-primary">
+                    <CheckIcon className="size-3 text-white" />
+                  </span>
+                )}
               </button>
             ))}
           </div>
@@ -138,53 +141,38 @@ export default function MotherBookPage() {
 
             <div>
               <label className="font-body text-[13px] font-medium text-text-secondary">Preferred time</label>
-              <div className="mt-1.5 flex gap-2">
+              <select
+                value={preferredTime}
+                onChange={(e) => setPreferredTime(e.target.value)}
+                className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              >
+                <option value="">Any time</option>
                 {TIMES.map((time) => (
-                  <button
-                    key={time}
-                    type="button"
-                    onClick={() => setPreferredTime(time)}
-                    className={cn(
-                      "flex-1 rounded-input border-[1.5px] py-3 text-center font-body text-sm font-medium",
-                      preferredTime === time
-                        ? "border-primary bg-lilac-light text-lilac-deeper"
-                        : "border-border-color bg-white text-text-secondary"
-                    )}
-                  >
+                  <option key={time} value={time}>
                     {time}
-                  </button>
+                  </option>
                 ))}
-              </div>
+              </select>
             </div>
           </div>
 
           <div>
             <label className="font-body text-[13px] font-medium text-text-secondary">Reason for visit</label>
-            <div className="mt-1.5 flex gap-2">
-              {REASONS.map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setReason(r)}
-                  className={cn(
-                    "flex-1 rounded-input border-[1.5px] py-3 text-center font-body text-xs font-medium",
-                    reason === r
-                      ? "border-primary bg-lilac-light text-lilac-deeper"
-                      : "border-border-color bg-white text-text-secondary"
-                  )}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
+            <input
+              type="text"
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="e.g. Regular check-up"
+              className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+            />
           </div>
 
           <div>
-            <label className="font-body text-[13px] font-medium text-text-secondary">Additional notes</label>
+            <label className="font-body text-[13px] font-medium text-text-secondary">Additional notes (optional)</label>
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Optional"
+              placeholder="Any concerns to mention?"
               rows={3}
               className="mt-1.5 w-full resize-none rounded-input border-[1.5px] border-border-color bg-white p-4 font-body text-sm text-text-primary outline-none focus:border-primary"
             />
@@ -200,7 +188,7 @@ export default function MotherBookPage() {
             disabled={submitting}
             className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60 lg:mx-auto lg:w-auto lg:px-16"
           >
-            {submitting ? "Sending…" : "Send Request"}
+            {submitting ? "Sending…" : "Request Appointment"}
           </button>
           <p className="mt-2.5 text-center font-body text-xs text-[#9CA3AF]">
             Your nurse will confirm your appointment via SMS.

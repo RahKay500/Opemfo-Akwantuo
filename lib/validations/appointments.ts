@@ -9,3 +9,9 @@ export const appointmentRequestSchema = z.object({
 });
 
 export type AppointmentRequestInput = z.infer<typeof appointmentRequestSchema>;
+
+export const updateAppointmentStatusSchema = z.object({
+  status: z.enum(["CONFIRMED", "DECLINED"]),
+});
+
+export type UpdateAppointmentStatusInput = z.infer<typeof updateAppointmentStatusSchema>;

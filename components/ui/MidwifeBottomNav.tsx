@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { NavHomeIcon, NavPatientsIcon, PlusIcon, NavReferralsIcon, NavProfileIcon } from "@/components/ui/icons";
+import { NavHomeIcon, NavPatientsIcon, PlusIcon, NavReferralsIcon, CalendarIcon, NavProfileIcon } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
   { href: "/midwife/dashboard", label: "Home", icon: NavHomeIcon, isFab: false },
   { href: "/midwife/patients", label: "Patients", icon: NavPatientsIcon, isFab: false },
-  { href: "/midwife/register", label: "Register", icon: PlusIcon, isFab: true },
   { href: "/midwife/referral", label: "Referrals", icon: NavReferralsIcon, isFab: false },
+  { href: "/midwife/register", label: "Register", icon: PlusIcon, isFab: true },
+  { href: "/midwife/appointments", label: "Appts", icon: CalendarIcon, isFab: false },
   { href: "/midwife/profile", label: "Profile", icon: NavProfileIcon, isFab: false },
 ] as const;
 

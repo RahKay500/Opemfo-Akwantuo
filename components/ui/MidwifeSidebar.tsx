@@ -8,6 +8,7 @@ import {
   NavPatientsIcon,
   HeartRateIcon,
   NavReferralsIcon,
+  CalendarIcon,
   PlusIcon,
   NavProfileIcon,
   AlertTriangleIcon,
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { href: "/midwife/patients", label: "Patients", icon: NavPatientsIcon },
   { href: "/midwife/log-vitals", label: "Log Vitals", icon: HeartRateIcon },
   { href: "/midwife/referral", label: "Referrals", icon: NavReferralsIcon },
+  { href: "/midwife/appointments", label: "Appointments", icon: CalendarIcon },
   { href: "/midwife/register", label: "Register Patient", icon: PlusIcon },
 ];
 
