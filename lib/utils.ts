@@ -24,7 +24,7 @@ export function normalizeGhanaPhone(input: string): string | null {
 
 const FACILITY_TYPE_LABELS: Record<FacilityType, string> = {
   CHPS: "CHPS",
-  HEALTH_CENTRE: "Health Centre",
+  HEALTH_CENTRE: "Health Centre / Clinic",
   DISTRICT_HOSPITAL: "District Hospital",
   REGIONAL_HOSPITAL: "Regional Hospital",
   TEACHING_HOSPITAL: "Teaching Hospital",
