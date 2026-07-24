@@ -9,6 +9,7 @@ import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
 import { deriveFacilityStatus } from "@/lib/staff-status";
 import { facilityTypeLabel } from "@/lib/utils";
+import { GHANA_REGIONS, GHANA_REGION_NAMES } from "@/lib/ghana-regions";
 import type { FacilityType } from "@prisma/client";
 
 export interface FacilityRow {
@@ -318,18 +319,33 @@ function FacilityForm({
         </select>
       </FormField>
       <FormField label="Region" required>
-        <input
+        <select
           value={form.region}
-          onChange={(e) => setForm({ ...form, region: e.target.value })}
+          onChange={(e) => setForm({ ...form, region: e.target.value, district: "" })}
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
+        >
+          <option value="">Select a region</option>
+          {GHANA_REGION_NAMES.map((region) => (
+            <option key={region} value={region}>
+              {region}
+            </option>
+          ))}
+        </select>
       </FormField>
       <FormField label="District" required>
-        <input
+        <select
           value={form.district}
           onChange={(e) => setForm({ ...form, district: e.target.value })}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
+          disabled={!form.region}
+          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] disabled:bg-[#F8FAFC] disabled:text-[#9CA3AF]"
+        >
+          <option value="">{form.region ? "Select a district" : "Select a region first"}</option>
+          {(GHANA_REGIONS[form.region] ?? []).map((district) => (
+            <option key={district} value={district}>
+              {district}
+            </option>
+          ))}
+        </select>
       </FormField>
       <FormField label="Phone">
         <input

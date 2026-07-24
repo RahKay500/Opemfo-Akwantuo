@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "@/components/admin/FormField";
+import { GHANA_REGIONS, GHANA_REGION_NAMES } from "@/lib/ghana-regions";
 
 export default function ProfileForm({
   initialName,
@@ -81,22 +82,38 @@ export default function ProfileForm({
             />
           </FormField>
 
-          <FormField label="District">
-            <input
-              value={district}
-              onChange={(e) => setDistrict(e.target.value)}
-              placeholder="e.g. Kwahu East District"
+          <FormField label="Region">
+            <select
+              value={region}
+              onChange={(e) => {
+                setRegion(e.target.value);
+                setDistrict("");
+              }}
               className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-            />
+            >
+              <option value="">Select a region</option>
+              {GHANA_REGION_NAMES.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
           </FormField>
 
-          <FormField label="Region">
-            <input
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
-              placeholder="e.g. Eastern"
-              className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-            />
+          <FormField label="District">
+            <select
+              value={district}
+              onChange={(e) => setDistrict(e.target.value)}
+              disabled={!region}
+              className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] disabled:bg-[#F8FAFC] disabled:text-[#9CA3AF]"
+            >
+              <option value="">{region ? "Select a district" : "Select a region first"}</option>
+              {(GHANA_REGIONS[region] ?? []).map((d) => (
+                <option key={d} value={d}>
+                  {d}
+                </option>
+              ))}
+            </select>
           </FormField>
         </>
       )}
