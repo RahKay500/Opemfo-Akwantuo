@@ -201,7 +201,26 @@ const config: Config = {
         badge: "999px", // = radius-full
       },
       boxShadow: {
-        card: "0px 12px 16px -4px rgba(10,13,18,0.08), 0px 4px 6px -2px rgba(10,13,18,0.03), 0px 2px 2px -1px rgba(10,13,18,0.04)", // Shadows/shadow-lg
+        // Shadows/shadow-xs..3xl, straight from Figma's Effect styles page.
+        xs: "0px 1px 2px 0px rgba(10,13,18,0.05)",
+        sm: "0px 1px 3px 0px rgba(10,13,18,0.10), 0px 1px 2px -1px rgba(10,13,18,0.10)",
+        md: "0px 4px 6px -1px rgba(10,13,18,0.10), 0px 2px 4px -2px rgba(10,13,18,0.06)",
+        lg: "0px 12px 16px -4px rgba(10,13,18,0.08), 0px 4px 6px -2px rgba(10,13,18,0.03), 0px 2px 2px -1px rgba(10,13,18,0.04)",
+        card: "0px 12px 16px -4px rgba(10,13,18,0.08), 0px 4px 6px -2px rgba(10,13,18,0.03), 0px 2px 2px -1px rgba(10,13,18,0.04)", // = shadow-lg, kept as its own name (used everywhere for cards)
+        xl: "0px 20px 24px -4px rgba(10,13,18,0.08), 0px 8px 8px -4px rgba(10,13,18,0.03), 0px 3px 3px -1.5px rgba(10,13,18,0.04)",
+        "2xl": "0px 24px 48px -12px rgba(10,13,18,0.18), 0px 4px 4px -2px rgba(10,13,18,0.04)",
+        "3xl": "0px 32px 64px -12px rgba(10,13,18,0.14), 0px 5px 5px -2.5px rgba(10,13,18,0.04)",
+        // Focus rings/focus-ring — a 2px background gap + 4px colored ring.
+        // Uses our brand fuchsia (brand-500), not the system's green.
+        "focus-ring": "0px 0px 0px 2px #ffffff, 0px 0px 0px 6px #d444f1",
+      },
+      backdropBlur: {
+        // Backdrop blurs/backdrop-blur-*, straight from Figma — overrides
+        // Tailwind's own defaults (4/12/16/24px) with the system's values.
+        sm: "8px",
+        md: "16px",
+        lg: "24px",
+        xl: "40px",
       },
       fontFamily: {
         heading: ["var(--font-nunito)", "sans-serif"],
