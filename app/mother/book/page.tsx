@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { CalendarIcon, PartnerIcon, CheckIcon } from "@/components/ui/icons";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 
 const REQUEST_TYPES = [
   {
@@ -130,40 +132,38 @@ export default function MotherBookPage() {
           <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
             <div>
               <label className="font-body text-[13px] font-medium text-text-secondary">Preferred date</label>
-              <input
+              <Input
+                inputSize="lg"
                 type="date"
                 value={preferredDate}
                 onChange={(e) => setPreferredDate(e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
-                className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+                className="mt-1.5"
               />
             </div>
 
             <div>
               <label className="font-body text-[13px] font-medium text-text-secondary">Preferred time</label>
-              <select
-                value={preferredTime}
-                onChange={(e) => setPreferredTime(e.target.value)}
-                className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              >
+              <Select selectSize="lg" value={preferredTime} onChange={(e) => setPreferredTime(e.target.value)} className="mt-1.5">
                 <option value="">Any time</option>
                 {TIMES.map((time) => (
                   <option key={time} value={time}>
                     {time}
                   </option>
                 ))}
-              </select>
+              </Select>
             </div>
           </div>
 
           <div>
             <label className="font-body text-[13px] font-medium text-text-secondary">Reason for visit</label>
-            <input
+            <Input
+              inputSize="lg"
               type="text"
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               placeholder="e.g. Regular check-up"
-              className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              className="mt-1.5"
             />
           </div>
 

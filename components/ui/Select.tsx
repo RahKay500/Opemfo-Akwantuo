@@ -11,22 +11,26 @@ import { ChevronRightIcon } from "@/components/ui/icons";
 // every existing usage in this app needs. Label/required/hint/error text
 // aren't part of this component — the app already has FormField for that,
 // used the same way around this as it was around the old raw <select>s.
-export type SelectSize = "sm" | "md";
+export type SelectSize = "sm" | "md" | "lg";
 
 export interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   selectSize?: SelectSize;
 }
 
+// "lg" matches this app's mobile-first 56px touch-target convention
+// (h-14 / rounded-input / border-[1.5px] / font-normal) rather than Figma's
+// own sizing — see the app's hand-rolled form selects this size replaces.
 const SIZE_STYLES: Record<SelectSize, string> = {
-  sm: "h-10 px-3 text-sm",
-  md: "h-11 px-3.5 text-base",
+  sm: "h-10 rounded-md border px-3 text-sm shadow-xs font-medium",
+  md: "h-11 rounded-md border px-3.5 text-base shadow-xs font-medium",
+  lg: "h-14 rounded-input border-[1.5px] px-[17.5px] text-[15px] font-normal",
 };
 
 export default function Select({ selectSize = "sm", className, children, ...props }: SelectProps) {
   return (
     <div className="relative">
       <select
-        className={`w-full appearance-none rounded-md border border-border-color bg-white py-2 pr-9 font-body font-medium text-text-primary shadow-xs outline-none focus:border-primary disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 ${
+        className={`w-full appearance-none border-border-color bg-white pr-9 font-body text-text-primary outline-none focus:border-primary disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 ${
           SIZE_STYLES[selectSize]
         } ${className ?? ""}`}
         {...props}

@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 
 export interface LogVitalsPatientOption {
   id: string;
@@ -104,11 +106,7 @@ export default function LogVitalsForm({
 
       <div className="mt-5">
         <label className="font-body text-[13px] font-medium text-text-secondary">Select Patient</label>
-        <select
-          value={patientId}
-          onChange={(e) => setPatientId(e.target.value)}
-          className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-        >
+        <Select selectSize="lg" value={patientId} onChange={(e) => setPatientId(e.target.value)} className="mt-1.5">
           {patients.length === 0 && <option value="">No patients</option>}
           {patients.map((p) => (
             <option key={p.id} value={p.id}>
@@ -116,7 +114,7 @@ export default function LogVitalsForm({
               {p.week != null ? ` — Wk ${p.week}` : ""}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
 
       <div className="mt-5">
@@ -192,11 +190,12 @@ export default function LogVitalsForm({
             />
             <div>
               <label className="font-body text-[13px] font-medium text-text-secondary">Fetal Descent</label>
-              <input
+              <Input
+                inputSize="lg"
                 value={fetalDescent}
                 onChange={(e) => setFetalDescent(e.target.value)}
                 placeholder="e.g. 4/5th"
-                className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+                className="mt-1.5"
               />
             </div>
             <NumberField label="IFA Supplied (tablets)" value={ifaSupplied} onChange={setIfaSupplied} placeholder="e.g. 30" />
@@ -228,12 +227,13 @@ export default function LogVitalsForm({
 
       <div className="mt-5">
         <label className="font-body text-[13px] font-medium text-text-secondary">Date of Next Visit</label>
-        <input
+        <Input
+          inputSize="lg"
           type="date"
           value={nextVisitDate}
           onChange={(e) => setNextVisitDate(e.target.value)}
           min={new Date().toISOString().slice(0, 10)}
-          className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary lg:max-w-xs"
+          className="mt-1.5 lg:max-w-xs"
         />
       </div>
 
@@ -265,12 +265,13 @@ function NumberField({
   return (
     <div>
       <label className="font-body text-[13px] font-medium text-text-secondary">{label}</label>
-      <input
+      <Input
+        inputSize="lg"
         type="number"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+        className="mt-1.5"
       />
     </div>
   );
@@ -290,18 +291,14 @@ function SelectField({
   return (
     <div>
       <label className="font-body text-[13px] font-medium text-text-secondary">{label}</label>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-      >
+      <Select selectSize="lg" value={value} onChange={(e) => onChange(e.target.value)} className="mt-1.5">
         <option value="">Not recorded</option>
         {options.map((o) => (
           <option key={o.value} value={o.value}>
             {o.label}
           </option>
         ))}
-      </select>
+      </Select>
     </div>
   );
 }

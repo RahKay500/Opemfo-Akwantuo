@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { initials } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 
 interface ProfileFormData {
   name: string;
@@ -81,11 +83,7 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
 
       <div className="flex flex-1 flex-col gap-4 px-6 pb-6 pt-3">
         <Field label="Full name">
-          <input
-            value={form.name}
-            onChange={(e) => update("name", e.target.value)}
-            className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          />
+          <Input inputSize="lg" value={form.name} onChange={(e) => update("name", e.target.value)} />
         </Field>
 
         <Field label="Phone number">
@@ -95,42 +93,33 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
         </Field>
 
         <Field label="Date of birth">
-          <input
-            type="date"
-            value={form.dateOfBirth}
-            onChange={(e) => update("dateOfBirth", e.target.value)}
-            className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          />
+          <Input inputSize="lg" type="date" value={form.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} />
         </Field>
 
         <Field label="Blood group">
-          <select
-            value={form.bloodGroup}
-            onChange={(e) => update("bloodGroup", e.target.value)}
-            className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          >
+          <Select selectSize="lg" value={form.bloodGroup} onChange={(e) => update("bloodGroup", e.target.value)}>
             <option value="">Not recorded</option>
             {BLOOD_GROUPS.map((bg) => (
               <option key={bg} value={bg}>
                 {bg}
               </option>
             ))}
-          </select>
+          </Select>
         </Field>
 
         <Field label="Emergency contact name">
-          <input
+          <Input
+            inputSize="lg"
             value={form.emergencyContactName}
             onChange={(e) => update("emergencyContactName", e.target.value)}
-            className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
           />
         </Field>
 
         <Field label="Emergency contact phone">
-          <input
+          <Input
+            inputSize="lg"
             value={form.emergencyContactPhone}
             onChange={(e) => update("emergencyContactPhone", e.target.value)}
-            className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
           />
         </Field>
 

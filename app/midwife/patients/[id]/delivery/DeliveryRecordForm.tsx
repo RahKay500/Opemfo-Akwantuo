@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 
 const STEPS = ["Delivery Details", "Baby & Discharge"] as const;
 const DELIVERY_TYPES = ["Normal", "Vacuum", "Caesarean Section", "Other"];
@@ -154,124 +156,105 @@ export default function DeliveryRecordForm({
         {step === 0 && (
           <>
             <Field label="Weeks of Pregnancy">
-              <input
+              <Input
+                inputSize="lg"
                 type="number"
                 value={weeksOfPregnancy}
                 onChange={(e) => setWeeksOfPregnancy(e.target.value)}
                 placeholder="e.g. 39"
-                className={inputClass}
               />
             </Field>
             <Field label="Date of Delivery">
-              <input
-                type="date"
-                value={dateOfDelivery}
-                onChange={(e) => setDateOfDelivery(e.target.value)}
-                className={inputClass}
-              />
+              <Input inputSize="lg" type="date" value={dateOfDelivery} onChange={(e) => setDateOfDelivery(e.target.value)} />
             </Field>
             <div className="flex gap-3">
               <Field label="Time of Delivery" className="flex-1">
-                <input
-                  type="time"
-                  value={timeOfDelivery}
-                  onChange={(e) => setTimeOfDelivery(e.target.value)}
-                  className={inputClass}
-                />
+                <Input inputSize="lg" type="time" value={timeOfDelivery} onChange={(e) => setTimeOfDelivery(e.target.value)} />
               </Field>
               <Field label="Time of Placenta Delivery" className="flex-1">
-                <input
+                <Input
+                  inputSize="lg"
                   type="time"
                   value={timeOfPlacentaDelivery}
                   onChange={(e) => setTimeOfPlacentaDelivery(e.target.value)}
-                  className={inputClass}
                 />
               </Field>
             </div>
             <div className="flex gap-3">
               <Field label="Duration of Labour (hrs)" className="flex-1">
-                <input
+                <Input
+                  inputSize="lg"
                   type="number"
                   value={durationOfLabourHours}
                   onChange={(e) => setDurationOfLabourHours(e.target.value)}
                   placeholder="e.g. 8"
-                  className={inputClass}
                 />
               </Field>
               <Field label="Duration of Labour (min)" className="flex-1">
-                <input
+                <Input
+                  inputSize="lg"
                   type="number"
                   value={durationOfLabourMinutes}
                   onChange={(e) => setDurationOfLabourMinutes(e.target.value)}
                   placeholder="e.g. 30"
-                  className={inputClass}
                 />
               </Field>
             </div>
             <Field label="Type of Delivery">
-              <select
-                value={typeOfDelivery}
-                onChange={(e) => setTypeOfDelivery(e.target.value)}
-                className={inputClass}
-              >
+              <Select selectSize="lg" value={typeOfDelivery} onChange={(e) => setTypeOfDelivery(e.target.value)}>
                 <option value="">Select type</option>
                 {DELIVERY_TYPES.map((t) => (
                   <option key={t} value={t}>
                     {t}
                   </option>
                 ))}
-              </select>
+              </Select>
             </Field>
             {typeOfDelivery && typeOfDelivery !== "Normal" && (
               <Field label="Indication for Vacuum/CS">
-                <input
+                <Input
+                  inputSize="lg"
                   value={indicationForVacuumOrCs}
                   onChange={(e) => setIndicationForVacuumOrCs(e.target.value)}
                   placeholder="Optional"
-                  className={inputClass}
                 />
               </Field>
             )}
             <Field label="Anesthesia">
-              <input
-                value={anesthesia}
-                onChange={(e) => setAnesthesia(e.target.value)}
-                placeholder="Optional"
-                className={inputClass}
-              />
+              <Input inputSize="lg" value={anesthesia} onChange={(e) => setAnesthesia(e.target.value)} placeholder="Optional" />
             </Field>
             <Field label="Estimated Blood Loss (ml)">
-              <input
+              <Input
+                inputSize="lg"
                 type="number"
                 value={estimatedBloodLossMl}
                 onChange={(e) => setEstimatedBloodLossMl(e.target.value)}
                 placeholder="e.g. 250"
-                className={inputClass}
               />
             </Field>
             <Field label="Blood Transfusion">
               <YesNoToggle value={bloodTransfusion} onChange={setBloodTransfusion} />
             </Field>
             <Field label="State of Placenta/Membranes">
-              <input
+              <Input
+                inputSize="lg"
                 value={statePlacentaMembranes}
                 onChange={(e) => setStatePlacentaMembranes(e.target.value)}
                 placeholder="Optional"
-                className={inputClass}
               />
             </Field>
             <Field label="Manual Removal of Placenta">
               <YesNoToggle value={manualRemovalOfPlacenta} onChange={setManualRemovalOfPlacenta} />
             </Field>
             <Field label="State of Perineum">
-              <select value={statePerineum} onChange={(e) => setStatePerineum(e.target.value)} className={inputClass}>
+              <Select selectSize="lg" value={statePerineum} onChange={(e) => setStatePerineum(e.target.value)}>
                 <option value="">Select</option>
                 {PERINEUM_STATES.map((s) => (
                   <option key={s} value={s}>
                     {s}
                   </option>
                 ))}
-              </select>
+              </Select>
             </Field>
             <Field label="Labour/Delivery Complications">
               <textarea
@@ -283,20 +266,10 @@ export default function DeliveryRecordForm({
               />
             </Field>
             <Field label="Birth Attendant">
-              <input
-                value={birthAttendant}
-                onChange={(e) => setBirthAttendant(e.target.value)}
-                placeholder="Optional"
-                className={inputClass}
-              />
+              <Input inputSize="lg" value={birthAttendant} onChange={(e) => setBirthAttendant(e.target.value)} placeholder="Optional" />
             </Field>
             <Field label="Place of Delivery">
-              <input
-                value={placeOfDelivery}
-                onChange={(e) => setPlaceOfDelivery(e.target.value)}
-                placeholder="Optional"
-                className={inputClass}
-              />
+              <Input inputSize="lg" value={placeOfDelivery} onChange={(e) => setPlaceOfDelivery(e.target.value)} placeholder="Optional" />
             </Field>
           </>
         )}
@@ -304,28 +277,28 @@ export default function DeliveryRecordForm({
         {step === 1 && (
           <>
             <Field label="Baby Sex">
-              <select value={babySex} onChange={(e) => setBabySex(e.target.value)} className={inputClass}>
+              <Select selectSize="lg" value={babySex} onChange={(e) => setBabySex(e.target.value)}>
                 <option value="">Select</option>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
-              </select>
+              </Select>
             </Field>
             <Field label="Baby Birth Weight (kg)">
-              <input
+              <Input
+                inputSize="lg"
                 type="number"
                 step="0.1"
                 value={babyBirthWeightKg}
                 onChange={(e) => setBabyBirthWeightKg(e.target.value)}
                 placeholder="e.g. 3.2"
-                className={inputClass}
               />
             </Field>
             <Field label="Baby Condition">
-              <input
+              <Input
+                inputSize="lg"
                 value={babyCondition}
                 onChange={(e) => setBabyCondition(e.target.value)}
                 placeholder="e.g. Alive and well"
-                className={inputClass}
               />
             </Field>
             <Field label="Breastfed within 30 minutes">
@@ -372,9 +345,6 @@ export default function DeliveryRecordForm({
     </div>
   );
 }
-
-const inputClass =
-  "h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary";
 
 function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
   return (

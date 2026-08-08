@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import DateOfBirthInput from "@/components/ui/DateOfBirthInput";
+import Input from "@/components/ui/Input";
+import Select from "@/components/ui/Select";
 
 const STEPS = ["Personal", "Family", "Pregnancy", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -141,12 +143,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {step === 0 && (
           <>
             <Field label="Full Name">
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter full name"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              />
+              <Input inputSize="lg" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter full name" />
             </Field>
             <Field label="Date of Birth">
               <DateOfBirthInput
@@ -156,19 +153,14 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               />
             </Field>
             <Field label="Phone Number">
-              <input
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="024 123 4567"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              />
+              <Input inputSize="lg" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="024 123 4567" />
             </Field>
             <Field label="Ghana Card ID">
-              <input
+              <Input
+                inputSize="lg"
                 value={ghanaCardId}
                 onChange={(e) => setGhanaCardId(e.target.value)}
                 placeholder="GHA-XXXXXXXXX-X"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               />
             </Field>
             <Field label="CHPS Zone">
@@ -182,91 +174,63 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {step === 1 && (
           <>
             <Field label="Community">
-              <input
-                value={community}
-                onChange={(e) => setCommunity(e.target.value)}
-                placeholder="e.g. Asuom"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              />
+              <Input inputSize="lg" value={community} onChange={(e) => setCommunity(e.target.value)} placeholder="e.g. Asuom" />
             </Field>
             <Field label="NHIS Number">
-              <input
-                value={nhisNumber}
-                onChange={(e) => setNhisNumber(e.target.value)}
-                placeholder="Optional"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              />
+              <Input inputSize="lg" value={nhisNumber} onChange={(e) => setNhisNumber(e.target.value)} placeholder="Optional" />
             </Field>
             <div className="flex gap-3">
               <Field label="Marital Status" className="flex-1">
-                <select
-                  value={maritalStatus}
-                  onChange={(e) => setMaritalStatus(e.target.value)}
-                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-                >
+                <Select selectSize="lg" value={maritalStatus} onChange={(e) => setMaritalStatus(e.target.value)}>
                   <option value="">Select</option>
                   {MARITAL_STATUSES.map((m) => (
                     <option key={m} value={m}>
                       {m}
                     </option>
                   ))}
-                </select>
+                </Select>
               </Field>
               <Field label="Educational Level" className="flex-1">
-                <select
-                  value={educationalLevel}
-                  onChange={(e) => setEducationalLevel(e.target.value)}
-                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-                >
+                <Select selectSize="lg" value={educationalLevel} onChange={(e) => setEducationalLevel(e.target.value)}>
                   <option value="">Select</option>
                   {EDUCATIONAL_LEVELS.map((e) => (
                     <option key={e} value={e}>
                       {e}
                     </option>
                   ))}
-                </select>
+                </Select>
               </Field>
             </div>
             <Field label="Occupation">
-              <input
-                value={occupation}
-                onChange={(e) => setOccupation(e.target.value)}
-                placeholder="Optional"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              />
+              <Input inputSize="lg" value={occupation} onChange={(e) => setOccupation(e.target.value)} placeholder="Optional" />
             </Field>
             <Field label="Spouse's Name">
-              <input
-                value={spouseName}
-                onChange={(e) => setSpouseName(e.target.value)}
-                placeholder="Optional"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              />
+              <Input inputSize="lg" value={spouseName} onChange={(e) => setSpouseName(e.target.value)} placeholder="Optional" />
             </Field>
             <div className="flex gap-3">
               <Field label="Spouse's Phone" className="flex-1">
-                <input
+                <Input
+                  inputSize="lg"
                   value={spousePhone}
                   onChange={(e) => setSpousePhone(e.target.value)}
                   placeholder="024 123 4567"
-                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
                 />
               </Field>
               <Field label="Spouse's Occupation" className="flex-1">
-                <input
+                <Input
+                  inputSize="lg"
                   value={spouseOccupation}
                   onChange={(e) => setSpouseOccupation(e.target.value)}
                   placeholder="Optional"
-                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
                 />
               </Field>
             </div>
             <Field label="Emergency Transport Phone">
-              <input
+              <Input
+                inputSize="lg"
                 value={emergencyTransportPhone}
                 onChange={(e) => setEmergencyTransportPhone(e.target.value)}
                 placeholder="e.g. driver or ambulance contact"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               />
             </Field>
           </>
@@ -275,12 +239,12 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {step === 2 && (
           <>
             <Field label="Last Menstrual Period (LMP)">
-              <input
+              <Input
+                inputSize="lg"
                 type="date"
                 value={lmp}
                 onChange={(e) => setLmp(e.target.value)}
                 max={new Date().toISOString().split("T")[0]}
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               />
             </Field>
             <Field label="Estimated Due Date (EDD)">
@@ -290,37 +254,21 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             </Field>
             <div className="flex gap-3">
               <Field label="Gravida" className="flex-1">
-                <input
-                  type="number"
-                  value={gravida}
-                  onChange={(e) => setGravida(e.target.value)}
-                  placeholder="e.g. 2"
-                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-                />
+                <Input inputSize="lg" type="number" value={gravida} onChange={(e) => setGravida(e.target.value)} placeholder="e.g. 2" />
               </Field>
               <Field label="Para" className="flex-1">
-                <input
-                  type="number"
-                  value={para}
-                  onChange={(e) => setPara(e.target.value)}
-                  placeholder="e.g. 1"
-                  className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-                />
+                <Input inputSize="lg" type="number" value={para} onChange={(e) => setPara(e.target.value)} placeholder="e.g. 1" />
               </Field>
             </div>
             <Field label="Blood Group">
-              <select
-                value={bloodGroup}
-                onChange={(e) => setBloodGroup(e.target.value)}
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              >
+              <Select selectSize="lg" value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}>
                 <option value="">Select blood group</option>
                 {BLOOD_GROUPS.map((bg) => (
                   <option key={bg} value={bg}>
                     {bg}
                   </option>
                 ))}
-              </select>
+              </Select>
             </Field>
             <Field label="Known Conditions">
               <textarea
@@ -337,34 +285,30 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {step === 3 && (
           <>
             <Field label="Emergency Contact Name">
-              <input
+              <Input
+                inputSize="lg"
                 value={emergencyContactName}
                 onChange={(e) => setEmergencyContactName(e.target.value)}
                 placeholder="Enter full name"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               />
             </Field>
             <Field label="Emergency Contact Phone">
-              <input
+              <Input
+                inputSize="lg"
                 value={emergencyContactPhone}
                 onChange={(e) => setEmergencyContactPhone(e.target.value)}
                 placeholder="024 123 4567"
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
               />
             </Field>
             <Field label="Relationship">
-              <select
-                value={emergencyContactRelation}
-                onChange={(e) => setEmergencyContactRelation(e.target.value)}
-                className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-              >
+              <Select selectSize="lg" value={emergencyContactRelation} onChange={(e) => setEmergencyContactRelation(e.target.value)}>
                 <option value="">Select relationship</option>
                 {RELATIONS.map((r) => (
                   <option key={r} value={r}>
                     {r}
                   </option>
                 ))}
-              </select>
+              </Select>
             </Field>
           </>
         )}

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { PartnerIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import Toggle from "@/components/ui/Toggle";
+import Input from "@/components/ui/Input";
 
 type LinkState = "loading" | "inactive" | "active";
 
@@ -181,11 +182,12 @@ export default function SharePartnerForm() {
 
         <div className="mt-5">
           <label className="font-body text-[13px] font-medium text-text-secondary">Partner&apos;s name</label>
-          <input
+          <Input
+            inputSize="lg"
             value={partnerName}
             onChange={(e) => setPartnerName(e.target.value)}
             placeholder="e.g. Kofi Mensah"
-            className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+            className="mt-1.5"
           />
         </div>
 
@@ -207,11 +209,12 @@ export default function SharePartnerForm() {
 
         <div className="mt-4">
           <label className="font-body text-[13px] font-medium text-text-secondary">Partner&apos;s phone number</label>
-          <input
+          <Input
+            inputSize="lg"
             value={partnerPhone}
             onChange={(e) => setPartnerPhone(e.target.value)}
             placeholder="024 XXX XXXX"
-            className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+            className="mt-1.5"
           />
         </div>
       </div>

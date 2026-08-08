@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { AlertTriangleIcon, ChevronRightIcon } from "@/components/ui/icons";
+import Select from "@/components/ui/Select";
 import type { Priority } from "@prisma/client";
 
 const PRIORITY_STYLES: Record<Priority, { border: string; bg: string; text: string; label: string }> = {
@@ -152,18 +153,14 @@ export default function ReferralCreationForm({
       <div className="flex flex-col gap-4">
         <div>
           <label className="font-body text-[13px] font-medium text-text-secondary">Refer to facility</label>
-          <select
-            value={toFacilityId}
-            onChange={(e) => setToFacilityId(e.target.value)}
-            className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          >
+          <Select selectSize="lg" value={toFacilityId} onChange={(e) => setToFacilityId(e.target.value)} className="mt-1.5">
             {facilities.length === 0 && <option value="">No facilities available</option>}
             {facilities.map((f) => (
               <option key={f.id} value={f.id}>
                 {f.name}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
 
         <div>
@@ -190,16 +187,12 @@ export default function ReferralCreationForm({
 
         <div>
           <label className="font-body text-[13px] font-medium text-text-secondary">Transport</label>
-          <select
-            value={transportMethod}
-            onChange={(e) => setTransportMethod(e.target.value)}
-            className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          >
+          <Select selectSize="lg" value={transportMethod} onChange={(e) => setTransportMethod(e.target.value)} className="mt-1.5">
             <option value="">Select transport urgency</option>
             <option value="Ambulance">Ambulance</option>
             <option value="Private vehicle">Private vehicle</option>
             <option value="Public transport">Public transport</option>
-          </select>
+          </Select>
         </div>
       </div>
 

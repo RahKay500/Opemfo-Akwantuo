@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
+import Input from "@/components/ui/Input";
 
 const CATEGORIES = ["TD", "IPTP", "DEWORMING"] as const;
 const CATEGORY_LABEL: Record<(typeof CATEGORIES)[number], string> = {
@@ -77,47 +78,45 @@ export default function LogVaccinationForm({ patientId, week }: { patientId: str
 
       <div>
         <label className="font-body text-[13px] font-medium text-text-secondary">Dose number</label>
-        <input
+        <Input
+          inputSize="lg"
           type="number"
           min={1}
           value={doseNumber}
           onChange={(e) => setDoseNumber(e.target.value)}
           placeholder="e.g. 1"
-          className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+          className="mt-1.5"
         />
       </div>
 
       <div>
         <label className="font-body text-[13px] font-medium text-text-secondary">Date given</label>
-        <input
-          type="date"
-          value={dateGiven}
-          onChange={(e) => setDateGiven(e.target.value)}
-          className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-        />
+        <Input inputSize="lg" type="date" value={dateGiven} onChange={(e) => setDateGiven(e.target.value)} className="mt-1.5" />
       </div>
 
       {category === "TD" && (
         <div>
           <label className="font-body text-[13px] font-medium text-text-secondary">Batch number</label>
-          <input
+          <Input
+            inputSize="lg"
             type="text"
             value={batchNumber}
             onChange={(e) => setBatchNumber(e.target.value)}
             placeholder="Optional"
-            className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+            className="mt-1.5"
           />
         </div>
       )}
 
       <div>
         <label className="font-body text-[13px] font-medium text-text-secondary">Gestational age (weeks)</label>
-        <input
+        <Input
+          inputSize="lg"
           type="number"
           value={gestationalAge}
           onChange={(e) => setGestationalAge(e.target.value)}
           placeholder="Optional"
-          className="mt-1.5 h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+          className="mt-1.5"
         />
       </div>
 
