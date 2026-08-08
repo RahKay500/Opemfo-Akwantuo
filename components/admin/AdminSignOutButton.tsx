@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function AdminSignOutButton({ variant = "sidebar" }: { variant?: "sidebar" | "row" }) {
+export default function AdminSignOutButton({ variant = "sidebar" }: { variant?: "sidebar" | "row" | "menu" }) {
   const router = useRouter();
   const [signingOut, setSigningOut] = useState(false);
 
@@ -26,6 +26,19 @@ export default function AdminSignOutButton({ variant = "sidebar" }: { variant?: 
         className="flex h-14 w-full items-center justify-center text-sm font-medium text-[#DC2626] disabled:opacity-60"
       >
         {signingOut ? "Signing out…" : "Sign Out"}
+      </button>
+    );
+  }
+
+  if (variant === "menu") {
+    return (
+      <button
+        type="button"
+        onClick={handleSignOut}
+        disabled={signingOut}
+        className="block w-full px-3.5 py-2 text-left text-sm font-medium text-[#DC2626] hover:bg-[#F8FAFC] disabled:opacity-60"
+      >
+        {signingOut ? "Signing out…" : "Sign out"}
       </button>
     );
   }

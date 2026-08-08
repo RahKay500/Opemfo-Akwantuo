@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { getCurrentAdminIdentity } from "@/lib/current-admin";
-import { initials } from "@/lib/utils";
+import HeaderIdentityMenu from "@/components/admin/HeaderIdentityMenu";
 
 export default async function Header({
   title,
@@ -40,18 +40,7 @@ export default async function Header({
               </svg>
               {tierLabel}
             </span>
-            <div className="flex items-center gap-3 rounded-lg border border-[#E2E8F0] bg-white/60 px-3 py-2 backdrop-blur-md">
-              <div className="text-right leading-tight">
-                <p className="text-sm font-semibold text-[#1A1A2E]">{displayName}</p>
-                {identity.orgName && <p className="text-xs text-[#6B7280]">{identity.orgName}</p>}
-              </div>
-              <span
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                style={{ backgroundColor: accent }}
-              >
-                {initials(displayName)}
-              </span>
-            </div>
+            <HeaderIdentityMenu displayName={displayName} orgName={identity.orgName} accent={accent} />
           </div>
         )}
       </div>
