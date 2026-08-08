@@ -3,7 +3,8 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import { CheckIcon, CalendarIcon, AlertTriangleIcon, MessageIcon } from "@/components/ui/icons";
+import { CheckIcon, CalendarIcon, AlertTriangleIcon, MessageIcon, BellIcon } from "@/components/ui/icons";
+import EmptyState from "@/components/ui/EmptyState";
 
 export interface NotificationListItem {
   id: string;
@@ -84,7 +85,9 @@ export default function NotificationsClient({ notifications }: { notifications: 
 
       <div className="flex flex-col gap-2 px-5 pb-8 pt-4 lg:grid lg:grid-cols-2 lg:gap-3">
         {filtered.length === 0 && (
-          <p className="py-8 text-center font-body text-sm text-text-secondary lg:col-span-2">No notifications here.</p>
+          <div className="py-8 lg:col-span-2">
+            <EmptyState icon={<BellIcon className="size-6" />} title="No notifications here" />
+          </div>
         )}
         {filtered.map((n) => {
           const { bg, color, Icon } = styleFor(n.type);
