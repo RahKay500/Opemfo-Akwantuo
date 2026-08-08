@@ -12,15 +12,27 @@ export interface PatientRow {
   dateOfBirth: string;
   edd: string | null;
   createdAt: string;
+  facilityName?: string | null;
 }
 
-export default function PatientsClient({ patients }: { patients: PatientRow[] }) {
+export default function PatientsClient({
+  patients,
+  showFacility = false,
+}: {
+  patients: PatientRow[];
+  showFacility?: boolean;
+}) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     if (!query) return patients;
     const q = query.toLowerCase();
-    return patients.filter((p) => p.name.toLowerCase().includes(q) || p.phone.includes(query));
+    return patients.filter(
+      (p) =>
+        p.name.toLowerCase().includes(q) ||
+        p.phone.includes(query) ||
+        (p.facilityName?.toLowerCase().includes(q) ?? false)
+    );
   }, [patients, query]);
 
   const columns: DataTableColumn<PatientRow>[] = [
@@ -37,6 +49,9 @@ export default function PatientsClient({ patients }: { patients: PatientRow[] })
       ),
     },
     { key: "phone", header: "Phone", render: (r) => r.phone },
+    ...(showFacility
+      ? [{ key: "facility", header: "Facility", render: (r: PatientRow) => r.facilityName ?? "—" } as DataTableColumn<PatientRow>]
+      : []),
     { key: "age", header: "Age", render: (r) => calculateAge(new Date(r.dateOfBirth)) },
     { key: "edd", header: "Due Date", render: (r) => (r.edd ? formatDate(r.edd) : "—") },
     { key: "registered", header: "Registered", render: (r) => formatDate(r.createdAt) },
@@ -48,7 +63,7 @@ export default function PatientsClient({ patients }: { patients: PatientRow[] })
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search patients by name or phone..."
+          placeholder={showFacility ? "Search patients by name, phone, or facility..." : "Search patients by name or phone..."}
           className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-1"
         />
       </div>

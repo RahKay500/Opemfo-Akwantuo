@@ -6,6 +6,7 @@ export interface DataTableColumn<T> {
   key: string;
   header: string;
   render: (row: T) => ReactNode;
+  width?: string;
 }
 
 interface DataTableProps<T> {
@@ -35,7 +36,7 @@ export default function DataTable<T>({
         <thead>
           <tr className="border-b border-[#E2E8F0] text-xs font-medium uppercase tracking-wide text-[#6B7280]">
             {columns.map((col) => (
-              <th key={col.key} className="px-5 py-3">
+              <th key={col.key} className="px-5 py-3" style={col.width ? { width: col.width } : undefined}>
                 {col.header}
               </th>
             ))}

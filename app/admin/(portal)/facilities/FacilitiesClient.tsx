@@ -1,9 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
+import RowActionsMenu, { RowActionItem } from "@/components/admin/RowActionsMenu";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
@@ -158,6 +158,7 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
     {
       key: "type",
       header: "Type",
+      width: "220px",
       render: (r) => (
         <span className="inline-block rounded-full bg-[#F3E8FB] px-2.5 py-1 text-center text-xs font-medium text-[#7C3AED]">
           {facilityTypeLabel(r.type)}
@@ -181,22 +182,18 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
     {
       key: "actions",
       header: "",
+      width: "56px",
       render: (r) => (
-        <div className="flex gap-3">
-          <Link href={`/admin/staff?facilityId=${r.id}`} className="text-sm font-medium text-[#7C3AED] underline">
-            Staff
-          </Link>
-          <button type="button" onClick={() => openEdit(r)} className="text-sm font-medium text-[#1A1A2E] underline">
-            Edit
-          </button>
-          <button
-            type="button"
+        <RowActionsMenu>
+          <RowActionItem href={`/admin/staff?facilityId=${r.id}`}>Staff</RowActionItem>
+          <RowActionItem onClick={() => openEdit(r)}>Edit</RowActionItem>
+          <RowActionItem
             onClick={() => (r.isActive ? setDeactivateTarget(r) : handleToggleActive(r))}
-            className="text-sm font-medium text-[#DC2626] underline"
+            tone="danger"
           >
             {r.isActive ? "Deactivate" : "Reactivate"}
-          </button>
-        </div>
+          </RowActionItem>
+        </RowActionsMenu>
       ),
     },
   ];

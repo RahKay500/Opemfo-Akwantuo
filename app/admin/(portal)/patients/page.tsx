@@ -7,19 +7,20 @@ import PatientsClient from "./PatientsClient";
 export default async function AdminPatientsPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  if (session.facilityId === null) redirect("/admin/dashboard");
+  const isPlatform = session.facilityId === null;
 
   const [patients, identity] = await Promise.all([
     prisma.patient.findMany({
-      where: { facilityId: session.facilityId },
+      where: isPlatform ? {} : { facilityId: session.facilityId as string },
       orderBy: { createdAt: "desc" },
+      include: isPlatform ? { facility: { select: { name: true } } } : undefined,
     }),
     getCurrentAdminIdentity(),
   ]);
 
   return (
     <>
-      <Header title="Patients" subtitle={identity?.orgName} />
+      <Header title="Patients" subtitle={isPlatform ? "All facilities" : identity?.orgName} />
       <div className="px-4 py-6 lg:px-8">
         <PatientsClient
           patients={patients.map((p) => ({
@@ -29,7 +30,9 @@ export default async function AdminPatientsPage() {
             dateOfBirth: p.dateOfBirth.toISOString(),
             edd: p.edd ? p.edd.toISOString() : null,
             createdAt: p.createdAt.toISOString(),
+            facilityName: isPlatform ? ((p as { facility?: { name: string } }).facility?.name ?? null) : null,
           }))}
+          showFacility={isPlatform}
         />
       </div>
     </>
