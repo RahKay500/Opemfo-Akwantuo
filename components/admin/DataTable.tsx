@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
+import Pagination from "@/components/ui/Pagination";
 
 export interface DataTableColumn<T> {
   key: string;
@@ -91,28 +92,11 @@ export default function DataTable<T>({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-between border-t border-[#E2E8F0] px-5 py-3">
-          <p className="text-xs text-[#6B7280]">
+        <div className="border-t border-[#E2E8F0] px-5 py-3">
+          <p className="mb-2 text-xs text-[#6B7280]">
             Page {page} of {totalPages} · {rows.length} total
           </p>
-          <div className="flex gap-2">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="rounded-md border border-[#E2E8F0] px-3 py-1.5 text-xs font-medium text-[#1A1A2E] disabled:opacity-40"
-            >
-              Previous
-            </button>
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="rounded-md border border-[#E2E8F0] px-3 py-1.5 text-xs font-medium text-[#1A1A2E] disabled:opacity-40"
-            >
-              Next
-            </button>
-          </div>
+          <Pagination page={page} totalPages={totalPages} onPageChange={setPage} className="border-0 pt-0" />
         </div>
       )}
     </div>
