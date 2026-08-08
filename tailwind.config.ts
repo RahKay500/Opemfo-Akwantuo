@@ -193,8 +193,18 @@ const config: Config = {
         "display-xl": ["60px", { lineHeight: "72px", letterSpacing: "-2px" }],
       },
       borderRadius: {
+        // radius-none..4xl, straight from Spacing, radius & grids.
+        none: "0px",
+        xxs: "2px",
         xs: "4px",
         sm: "6px",
+        md: "8px",
+        lg: "10px",
+        xl: "12px",
+        "2xl": "16px",
+        "3xl": "20px",
+        "4xl": "24px",
+        full: "9999px",
         card: "20px", // = radius-3xl, kept as its own name (used everywhere for cards)
         button: "14px", // component-specific value from Base Components → Buttons, not a Foundations token — revisit in that batch
         input: "12px", // = radius-xl
