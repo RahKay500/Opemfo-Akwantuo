@@ -1,11 +1,20 @@
 import type { Metadata } from "next";
-import { Nunito, Inter } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import "@/lib/zod-config";
 
-const nunito = Nunito({
+// Both CSS vars now load Inter — the Figma design system ("gfgfg") specifies
+// "Inter Display" for every text/display style, headings included. Google
+// Fonts has no separate "Inter Display" family, so this is the same Inter
+// family the system actually ships (the "display" cut only affects optical
+// sizing at very large sizes, which next/font's variable Inter already
+// handles). Two instances, kept bound to the existing --font-nunito/--font-
+// inter variable names so tailwind.config.ts's `heading`/`body` keys (used
+// throughout the app) don't need touching — this is a Foundations-level
+// token swap, not a rename.
+const heading = Inter({
   subsets: ["latin"],
-  weight: ["600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-nunito",
   display: "swap",
 });
@@ -31,7 +40,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${nunito.variable} ${inter.variable} font-body antialiased bg-surface`}
+        className={`${heading.variable} ${inter.variable} font-body antialiased bg-surface`}
       >
         {children}
       </body>

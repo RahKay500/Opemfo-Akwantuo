@@ -1,20 +1,20 @@
 import type { Config } from "tailwindcss";
 
-// Colors, radii, and shadow verified against the Figma Style Guide page (node 2:12).
-// lilac-deeper is #9B4DC8 per the Figma swatch, not the #6A1F8A originally drafted.
-// lilac-dark/lilac-deeper/pink-deep were darkened slightly from their original Figma
-// values to pass WCAG AA contrast (4.5:1) against bg-primary/light backgrounds —
-// a real Lighthouse accessibility failure, not a stylistic change. text-secondary
-// was already passing (4.34:1) but nudged up to clear 4.5:1 with margin.
-// primary was later changed by request from the original light Figma lilac
-// (#E4A8F3) to match lilac-dark exactly (the "Get Started" button's color) —
-// every place that paired bg-primary with text-lilac-deeper was swept to
-// text-white to stay readable, since lilac-deeper is now too close in value.
-// lilac-mid brings that original #E4A8F3 back as its own token for "soft CTA"
-// buttons (Call Hospital, Send to my nurse) that pair it with dark
-// lilac-deeper text instead of white — lilac-light read as too faded/washed
-// out for these against the Figma reference (contrast isn't a concern here
-// since the text is dark-on-light, not white-on-light).
+// Foundations pulled from the Figma design system file ("gfgfg" in the
+// Figma MCP), page ❖ FOUNDATIONS → Colors/Typography/Spacing, radius & grids
+// (node 1023:36350). This is a large generic SaaS kit (Untitled-UI-style).
+// Its own "Brand" ramp is green — that's just the kit's generic template
+// color, not this app's identity, so `brand` here is NOT that green scale.
+// Instead `brand` uses this same system's own Purple utility ramp (a real,
+// separately-defined scale in the file), since purple/lilac is this app's
+// actual brand hue — every other scale (gray, success/warning/error/etc.)
+// is taken as-is since those are legitimately system-defined neutrals/
+// semantics, not a brand choice. This is Batch 1 (Foundations): the
+// semantic names already used across every screen (primary, text-primary,
+// border-color, critical/high/medium/low, etc.) are remapped to their
+// nearest equivalent so the whole app re-themes immediately — no per-screen
+// edits yet. Raw scales are also exposed under their own names for later
+// batches (Base Components, Application Components) to build from directly.
 const config: Config = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
@@ -23,31 +23,169 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#AB49D5",
-        "lilac-dark": "#AB49D5",
-        "lilac-deeper": "#6E2E94",
-        "lilac-light": "#F5E0FB",
-        "lilac-mid": "#E4A8F3",
-        surface: "#FAF0FD",
-        "pink-accent": "#F472B6",
-        "pink-light": "#FCE7F3",
-        "pink-deep": "#D12371",
-        "text-primary": "#1A1A2E",
-        "text-secondary": "#696F7D",
-        "border-color": "#EDD5F9",
-        critical: { DEFAULT: "#DC2626", bg: "#FEF2F2" },
-        high: { DEFAULT: "#EA580C", bg: "#FFF7ED" },
-        medium: { DEFAULT: "#CA8A04", bg: "#FEFCE8" },
-        low: { DEFAULT: "#16A34A", bg: "#F0FDF4" },
+        // --- Raw scales, straight from Figma variables ---
+        // `brand` = the system's own Purple utility ramp (Colors/Purple/*),
+        // used as this app's brand color — NOT the kit's demo green.
+        brand: {
+          25: "#fafaff",
+          50: "#f4f3ff",
+          100: "#ebe9fe",
+          200: "#d9d6fe",
+          300: "#bdb4fe",
+          400: "#9b8afb",
+          500: "#7a5af8",
+          600: "#6938ef",
+          700: "#5925dc",
+          800: "#4a1fb8",
+          900: "#3e1c96",
+          950: "#27115f",
+        },
+        gray: {
+          25: "#fdfdfd",
+          50: "#fafafa",
+          100: "#f5f5f5",
+          200: "#e9eaeb",
+          300: "#d5d7da",
+          400: "#a4a7ae",
+          500: "#717680",
+          600: "#535862",
+          700: "#414651",
+          800: "#252b37",
+          900: "#181d27",
+          950: "#0a0d12",
+        },
+        success: {
+          25: "#f6fef9",
+          50: "#ecfdf3",
+          100: "#dcfae6",
+          300: "#75e0a7",
+          400: "#47cd89",
+          500: "#17b26a",
+          600: "#079455",
+          700: "#067647",
+          800: "#085d3a",
+          900: "#074d31",
+        },
+        warning: {
+          25: "#fffcf5",
+          50: "#fffaeb",
+          100: "#fef0c7",
+          200: "#fedf89",
+          300: "#fec84b",
+          400: "#fdb022",
+          500: "#f79009",
+          600: "#dc6803",
+          700: "#b54708",
+          800: "#93370d",
+          900: "#7a2e0e",
+        },
+        error: {
+          25: "#fffbfa",
+          50: "#fef3f2",
+          100: "#fee4e2",
+          200: "#fecdca",
+          300: "#fda29b",
+          400: "#f97066",
+          500: "#f04438",
+          600: "#d92d20",
+          700: "#b42318",
+          800: "#912018",
+          900: "#7a271a",
+        },
+        yellow: {
+          25: "#fefdf0",
+          50: "#fefbe8",
+          100: "#fef7c3",
+          200: "#feee95",
+          300: "#fde272",
+          400: "#fac515",
+          500: "#eaaa08",
+          600: "#ca8504",
+          700: "#a15c07",
+          800: "#854a0e",
+          900: "#713b12",
+        },
+        blue: {
+          25: "#f5faff",
+          50: "#eff8ff",
+          100: "#d1e9ff",
+          200: "#b2ddff",
+          300: "#84caff",
+          400: "#53b1fd",
+          500: "#2e90fa",
+          600: "#1570ef",
+          700: "#175cd3",
+          800: "#1849a9",
+          900: "#194185",
+        },
+        purple: {
+          25: "#fafaff",
+          50: "#f4f3ff",
+          100: "#ebe9fe",
+          200: "#d9d6fe",
+          300: "#bdb4fe",
+          400: "#9b8afb",
+          500: "#7a5af8",
+          600: "#6938ef",
+          700: "#5925dc",
+          800: "#4a1fb8",
+          900: "#3e1c96",
+          950: "#27115f",
+        },
+        pink: {
+          25: "#fef6fb",
+          50: "#fdf2fa",
+          100: "#fce7f6",
+          200: "#fcceee",
+          300: "#faa7e0",
+          400: "#f670c7",
+          500: "#ee46bc",
+          600: "#dd2590",
+          700: "#c11574",
+          800: "#9e165f",
+          900: "#851651",
+        },
+
+        // --- Semantic aliases, remapped from the app's old lilac/pink
+        // names to their nearest equivalent in the new system, so every
+        // existing screen re-themes without per-file edits. ---
+        primary: "#6938ef", // brand-600 (system Purple/600) — was #AB49D5
+        "lilac-dark": "#6938ef", // brand-600
+        "lilac-deeper": "#4a1fb8", // brand-800
+        "lilac-light": "#f4f3ff", // brand-50
+        "lilac-mid": "#bdb4fe", // brand-300
+        surface: "#fafaff", // brand-25
+        "pink-accent": "#ee46bc", // pink-500 (no brand-pink in the new system; nearest accent pop)
+        "pink-light": "#fdf2fa", // pink-50
+        "pink-deep": "#c11574", // pink-700
+        "text-primary": "#181d27", // gray-900 / text-primary
+        "text-secondary": "#414651", // gray-700 / text-secondary
+        "border-color": "#d5d7da", // gray-300 / border-primary
+        critical: { DEFAULT: "#d92d20", bg: "#fef3f2" }, // error-600 / error-50
+        high: { DEFAULT: "#dc6803", bg: "#fffaeb" }, // warning-600 / warning-50
+        medium: { DEFAULT: "#ca8504", bg: "#fefbe8" }, // yellow-600 / yellow-50
+        low: { DEFAULT: "#079455", bg: "#ecfdf3" }, // success-600 / success-50
+      },
+      fontSize: {
+        xs: ["12px", { lineHeight: "18px" }],
+        sm: ["14px", { lineHeight: "20px" }],
+        base: ["16px", { lineHeight: "24px" }],
+        lg: ["18px", { lineHeight: "28px" }],
+        xl: ["20px", { lineHeight: "30px" }],
+        "display-xs": ["24px", { lineHeight: "32px" }],
+        "display-sm": ["30px", { lineHeight: "38px" }],
+        "display-xl": ["60px", { lineHeight: "72px", letterSpacing: "-2px" }],
       },
       borderRadius: {
-        card: "20px",
-        button: "14px",
-        input: "12px",
-        badge: "999px",
+        xs: "4px",
+        sm: "6px",
+        card: "20px", // = radius-3xl, kept as its own name (used everywhere for cards)
+        button: "14px", // component-specific value from Base Components → Buttons, not a Foundations token — revisit in that batch
+        input: "12px", // = radius-xl
+        badge: "999px", // = radius-full
       },
       boxShadow: {
-        card: "0px 2px 12px rgba(228, 168, 243, 0.15)",
+        card: "0px 12px 16px -4px rgba(10,13,18,0.08), 0px 4px 6px -2px rgba(10,13,18,0.03), 0px 2px 2px -1px rgba(10,13,18,0.04)", // Shadows/shadow-lg
       },
       fontFamily: {
         heading: ["var(--font-nunito)", "sans-serif"],
