@@ -38,11 +38,12 @@ export default function AdminLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-[#1A1A2E]">Email or phone number</label>
+        <label className="text-sm font-medium text-[#1A1A2E]">Email</label>
         <input
+          type="email"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
-          placeholder="you@company.com or 024 123 4567"
+          placeholder="you@company.com"
           className="h-11 rounded-md border border-[#E2E8F0] px-3.5 text-sm text-[#1A1A2E] outline-none focus:border-[#E4A8F3]"
           autoFocus
         />
