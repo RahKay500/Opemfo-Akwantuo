@@ -15,7 +15,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     where: { id: params.id },
     include: { facility: { select: { name: true } } },
   });
-  if (!admin || admin.facilityId === null) {
+  if (!admin || admin.facilityId === null || !admin.phone) {
     return NextResponse.json({ success: false, error: "Facility Admin not found." }, { status: 404 });
   }
   if (admin.isActive) {

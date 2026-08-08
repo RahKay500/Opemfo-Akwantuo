@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export default function AdminLoginForm() {
   const router = useRouter();
-  const [phone, setPhone] = useState("");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -19,7 +19,7 @@ export default function AdminLoginForm() {
       const res = await fetch("/api/admin/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, password }),
+        body: JSON.stringify({ identifier, password }),
       });
       const data = await res.json();
       if (!res.ok || !data.success) {
@@ -38,11 +38,11 @@ export default function AdminLoginForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-[#1A1A2E]">Phone number</label>
+        <label className="text-sm font-medium text-[#1A1A2E]">Email or phone number</label>
         <input
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="024 123 4567"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+          placeholder="you@company.com or 024 123 4567"
           className="h-11 rounded-md border border-[#E2E8F0] px-3.5 text-sm text-[#1A1A2E] outline-none focus:border-[#E4A8F3]"
           autoFocus
         />

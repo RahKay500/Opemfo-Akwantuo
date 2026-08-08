@@ -4,6 +4,7 @@ import type { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateOtp } from "@/lib/auth";
 import { sendOtpSms } from "@/lib/hubtel";
+import { normalizeGhanaPhone } from "@/lib/utils";
 
 // Entirely separate from lib/auth.ts (mother/midwife/doctor sessions): its
 // own secret, its own cookie, its own token shape, and its own SuperAdmin
@@ -45,27 +46,39 @@ export async function verifyAdminToken(token: string): Promise<AdminSessionPaylo
 // very first time this app talks to a fresh database, the SuperAdmin table
 // is empty, so this seeds exactly one Platform Super Admin row from the
 // bootstrap env vars and never touches them again afterwards. Updating
-// SUPER_ADMIN_PHONE/PASSWORD later has no effect once that row exists —
+// SUPER_ADMIN_EMAIL/PASSWORD later has no effect once that row exists —
 // password changes from then on go through requestPasswordChange, not env vars.
 async function ensureSuperAdminBootstrapped(): Promise<void> {
   const count = await prisma.superAdmin.count();
   if (count > 0) return;
 
-  const phone = process.env.SUPER_ADMIN_PHONE;
+  const email = process.env.SUPER_ADMIN_EMAIL;
   const password = process.env.SUPER_ADMIN_PASSWORD;
-  if (!phone || !password) return;
+  if (!email || !password) return;
 
   const passwordHash = await bcrypt.hash(password, 12);
-  await prisma.superAdmin.create({ data: { phone, passwordHash, facilityId: null, isActive: true } });
+  await prisma.superAdmin.create({
+    data: { email: email.toLowerCase(), passwordHash, facilityId: null, isActive: true },
+  });
 }
 
+// The admin login form takes a single "identifier" field shared by both
+// tiers: the Platform Super Admin (facilityId: null) signs in with their
+// company email, Facility Admins sign in with the phone number they
+// activated with. An "@" in the input picks the branch.
 export async function checkAdminCredentials(
-  phone: string,
+  identifier: string,
   password: string
 ): Promise<{ id: string; facilityId: string | null } | null> {
   await ensureSuperAdminBootstrapped();
 
-  const admin = await prisma.superAdmin.findUnique({ where: { phone } });
+  const admin = identifier.includes("@")
+    ? await prisma.superAdmin.findUnique({ where: { email: identifier.trim().toLowerCase() } })
+    : await (async () => {
+        const phone = normalizeGhanaPhone(identifier);
+        return phone ? prisma.superAdmin.findUnique({ where: { phone } }) : null;
+      })();
+
   if (!admin || !admin.isActive || !admin.passwordHash) return null;
 
   const valid = await bcrypt.compare(password, admin.passwordHash);
@@ -84,7 +97,7 @@ export async function requestPasswordChange(
   adminId: string,
   currentPassword: string,
   newPassword: string
-): Promise<{ success: boolean; error?: string; phone?: string; otp?: string }> {
+): Promise<{ success: boolean; error?: string; phone?: string | null; otp?: string }> {
   const admin = await prisma.superAdmin.findUnique({ where: { id: adminId } });
   if (!admin || !admin.passwordHash) return { success: false, error: "Account not found." };
 
@@ -100,7 +113,10 @@ export async function requestPasswordChange(
     data: { pendingPasswordHash, otp, otpExpiry },
   });
 
-  await sendOtpSms(admin.phone, otp);
+  // The Platform Super Admin has no phone (email-based login) — nothing to
+  // text, the code is shown on screen instead (see the devOtp handling in
+  // the route, which forces that display whenever there's no phone).
+  if (admin.phone) await sendOtpSms(admin.phone, otp);
   return { success: true, phone: admin.phone, otp };
 }
 
@@ -135,40 +151,49 @@ export async function confirmPasswordChange(
 // without also compromising the server config, which is a different, higher
 // trust boundary.
 //
-// An optional newPhone also covers succession: when the person holding this
+// Targets the platform row by facilityId: null rather than matching on the
+// submitted email — there's exactly one such row, and this way recovery
+// still works even if that row's email doesn't match the env var yet (e.g.
+// the very first rollout of email-based login, or an out-of-band change).
+//
+// An optional newEmail also covers succession: when the person holding this
 // role leaves, whoever controls the env vars can hand the account to a
-// replacement's phone number in the same step, rather than being stuck
-// resetting a password for a number the outgoing admin still controls.
+// replacement's email in the same step, rather than being stuck resetting a
+// password for an inbox the outgoing admin still controls.
 export async function recoverSuperAdminPassword(
-  phone: string,
+  email: string,
   envPassword: string,
   newPassword: string,
-  newPhone?: string
+  newEmail?: string
 ): Promise<{ success: boolean; error?: string }> {
-  const expectedPhone = process.env.SUPER_ADMIN_PHONE;
+  const expectedEmail = process.env.SUPER_ADMIN_EMAIL;
   const expectedPassword = process.env.SUPER_ADMIN_PASSWORD;
-  if (!expectedPhone || !expectedPassword) {
+  if (!expectedEmail || !expectedPassword) {
     return { success: false, error: "Recovery is not configured on this server." };
   }
-  if (phone !== expectedPhone || envPassword !== expectedPassword) {
+  if (email.toLowerCase() !== expectedEmail.toLowerCase() || envPassword !== expectedPassword) {
     return { success: false, error: "Invalid recovery credentials." };
   }
 
   const passwordHash = await bcrypt.hash(newPassword, 12);
-  const targetPhone = newPhone || phone;
-  await prisma.superAdmin.upsert({
-    where: { phone },
-    update: {
-      phone: targetPhone,
-      passwordHash,
-      facilityId: null,
-      isActive: true,
-      pendingPasswordHash: null,
-      otp: null,
-      otpExpiry: null,
-    },
-    create: { phone: targetPhone, passwordHash, facilityId: null, isActive: true },
-  });
+  const targetEmail = (newEmail || email).toLowerCase();
+  const existing = await prisma.superAdmin.findFirst({ where: { facilityId: null } });
+
+  if (existing) {
+    await prisma.superAdmin.update({
+      where: { id: existing.id },
+      data: {
+        email: targetEmail,
+        passwordHash,
+        isActive: true,
+        pendingPasswordHash: null,
+        otp: null,
+        otpExpiry: null,
+      },
+    });
+  } else {
+    await prisma.superAdmin.create({ data: { email: targetEmail, passwordHash, facilityId: null, isActive: true } });
+  }
   return { success: true };
 }
 

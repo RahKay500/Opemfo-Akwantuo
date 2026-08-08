@@ -34,6 +34,6 @@ export async function PUT(request: NextRequest) {
 
   return NextResponse.json({
     success: true,
-    data: { phone: result.phone, ...(isSmsUnconfigured() ? { devOtp: result.otp } : {}) },
+    data: { phone: result.phone, ...(isSmsUnconfigured() || !result.phone ? { devOtp: result.otp } : {}) },
   });
 }

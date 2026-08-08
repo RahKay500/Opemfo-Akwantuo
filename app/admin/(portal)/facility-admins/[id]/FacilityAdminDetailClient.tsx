@@ -12,7 +12,7 @@ export interface FacilityAdminDetail {
   id: string;
   name: string | null;
   email: string | null;
-  phone: string;
+  phone: string | null;
   facilityId: string | null;
   facilityName: string | null;
   isActive: boolean;
@@ -137,7 +137,7 @@ export default function FacilityAdminDetailClient({
           </div>
           <div>
             <dt className="text-[#6B7280]">Phone</dt>
-            <dd className="mt-0.5 text-[#1A1A2E]">{admin.phone}</dd>
+            <dd className="mt-0.5 text-[#1A1A2E]">{admin.phone ?? "—"}</dd>
           </div>
           <div>
             <dt className="text-[#6B7280]">Facility</dt>

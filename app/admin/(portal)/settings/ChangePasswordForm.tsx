@@ -9,7 +9,7 @@ export default function ChangePasswordForm() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [otp, setOtp] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -40,7 +40,7 @@ export default function ChangePasswordForm() {
         );
         return;
       }
-      setPhone(data.data.phone);
+      setPhone(data.data.phone ?? null);
       setDevOtp(data.data.devOtp ?? null);
       setStep("confirm");
     } catch {
@@ -84,7 +84,9 @@ export default function ChangePasswordForm() {
       <form onSubmit={handleConfirm} className="flex max-w-md flex-col gap-4 rounded-lg border border-[#E2E8F0] bg-white p-8">
         <h2 className="text-base font-semibold text-[#1A1A2E]">Confirm password change</h2>
         <p className="text-sm text-[#6B7280]">
-          We sent a 6-digit code to {phone}. Enter it below to finish changing your password.
+          {phone
+            ? `We sent a 6-digit code to ${phone}. Enter it below to finish changing your password.`
+            : "Enter the 6-digit confirmation code below to finish changing your password."}
         </p>
 
         <FormField label="Confirmation code" required>
@@ -132,7 +134,7 @@ export default function ChangePasswordForm() {
     <form onSubmit={handleRequest} className="flex max-w-md flex-col gap-4 rounded-lg border border-[#E2E8F0] bg-white p-8">
       <h2 className="text-base font-semibold text-[#1A1A2E]">Change password</h2>
       <p className="text-sm text-[#6B7280]">
-        For security, a confirmation code will be sent to your phone before this change takes effect.
+        For security, a confirmation code is required before this change takes effect.
       </p>
 
       <FormField label="Current password" required>

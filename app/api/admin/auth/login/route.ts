@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { checkAdminCredentials, signAdminToken, setAdminCookie } from "@/lib/admin-auth";
-import { normalizeGhanaPhone } from "@/lib/utils";
 import { adminLoginSchema } from "@/lib/validations/admin";
 import { logAudit } from "@/lib/audit";
 
@@ -11,14 +10,9 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid input." }, { status: 400 });
   }
 
-  const phone = normalizeGhanaPhone(parsed.data.phone);
-  if (!phone) {
-    return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
-  }
-
-  const admin = await checkAdminCredentials(phone, parsed.data.password);
+  const admin = await checkAdminCredentials(parsed.data.identifier, parsed.data.password);
   if (!admin) {
-    return NextResponse.json({ success: false, error: "Invalid phone number or password." }, { status: 401 });
+    return NextResponse.json({ success: false, error: "Invalid email/phone or password." }, { status: 401 });
   }
 
   const token = await signAdminToken(admin.id, admin.facilityId);

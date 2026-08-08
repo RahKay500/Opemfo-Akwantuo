@@ -7,7 +7,7 @@ export default function AdminRecoverPage() {
         <p className="text-center text-sm font-medium text-[#6B7280]">Ɔpemfoɔ Akwantuo</p>
         <h1 className="mt-1 text-center text-xl font-semibold text-[#1A1A2E]">Recover Admin Access</h1>
         <p className="mt-2 text-center text-sm text-[#6B7280]">
-          Only works with the server&apos;s own SUPER_ADMIN_PHONE/SUPER_ADMIN_PASSWORD config — for whoever controls
+          Only works with the server&apos;s own SUPER_ADMIN_EMAIL/SUPER_ADMIN_PASSWORD config — for whoever controls
           deployment, not day-to-day sign-in.
         </p>
         <div className="mt-6">

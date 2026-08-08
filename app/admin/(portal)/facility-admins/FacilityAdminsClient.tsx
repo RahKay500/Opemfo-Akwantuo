@@ -13,7 +13,7 @@ export interface FacilityAdminRow {
   id: string;
   name: string | null;
   email: string | null;
-  phone: string;
+  phone: string | null;
   facilityId: string | null;
   facilityName: string | null;
   isActive: boolean;
@@ -41,7 +41,7 @@ export default function FacilityAdminsClient({
         (a.name ?? "").toLowerCase().includes(q) ||
         (a.facilityName ?? "").toLowerCase().includes(q) ||
         (a.email ?? "").toLowerCase().includes(q) ||
-        a.phone.includes(query)
+        (a.phone ?? "").includes(query)
       );
     });
   }, [admins, query]);
@@ -60,7 +60,7 @@ export default function FacilityAdminsClient({
       ),
     },
     { key: "email", header: "Email", render: (r) => r.email ?? "—" },
-    { key: "phone", header: "Phone", render: (r) => r.phone },
+    { key: "phone", header: "Phone", render: (r) => r.phone ?? "—" },
     { key: "facility", header: "Assigned Facility", render: (r) => r.facilityName ?? "—" },
     {
       key: "status",

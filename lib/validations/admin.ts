@@ -2,7 +2,7 @@ import { z } from "zod";
 import { localPhoneSchema, strongPassword } from "@/lib/validations/auth";
 
 export const adminLoginSchema = z.object({
-  phone: localPhoneSchema,
+  identifier: z.string().min(1, "Enter your email or phone number"),
   password: z.string().min(1, "Enter your password"),
 });
 
@@ -12,10 +12,10 @@ export const changeAdminPasswordSchema = z.object({
 });
 
 export const recoverAdminSchema = z.object({
-  phone: localPhoneSchema,
+  email: z.string().email("Enter a valid email address"),
   envPassword: z.string().min(1, "Enter the server recovery password"),
   newPassword: strongPassword,
-  newPhone: localPhoneSchema.optional().or(z.literal("")),
+  newEmail: z.string().email().optional().or(z.literal("")),
 });
 
 export const createFacilitySchema = z.object({

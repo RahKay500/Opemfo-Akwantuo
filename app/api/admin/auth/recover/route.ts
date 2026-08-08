@@ -1,6 +1,5 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { recoverSuperAdminPassword } from "@/lib/admin-auth";
-import { normalizeGhanaPhone } from "@/lib/utils";
 import { recoverAdminSchema } from "@/lib/validations/admin";
 import { logAudit } from "@/lib/audit";
 
@@ -11,14 +10,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid input." }, { status: 400 });
   }
 
-  const phone = normalizeGhanaPhone(parsed.data.phone);
-  if (!phone) {
-    return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
-  }
+  const newEmail = parsed.data.newEmail || undefined;
 
-  const newPhone = parsed.data.newPhone ? normalizeGhanaPhone(parsed.data.newPhone) ?? undefined : undefined;
-
-  const result = await recoverSuperAdminPassword(phone, parsed.data.envPassword, parsed.data.newPassword, newPhone);
+  const result = await recoverSuperAdminPassword(
+    parsed.data.email,
+    parsed.data.envPassword,
+    parsed.data.newPassword,
+    newEmail
+  );
   if (!result.success) {
     return NextResponse.json({ success: false, error: result.error }, { status: 401 });
   }
@@ -27,7 +26,7 @@ export async function POST(request: NextRequest) {
     actorLabel: "Super Admin (recovery)",
     action: "ADMIN_PASSWORD_RECOVERED",
     entityType: "SuperAdmin",
-    entityId: phone,
+    entityId: parsed.data.email,
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 

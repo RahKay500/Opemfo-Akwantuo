@@ -12,7 +12,7 @@ export interface AdminIdentity {
   orgName: string | null;
   district: string | null;
   region: string | null;
-  phone: string;
+  phone: string | null;
   facilityId: string | null;
 }
 

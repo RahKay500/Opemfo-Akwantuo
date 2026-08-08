@@ -472,8 +472,13 @@ model SuperAdmin {
   // Admin) predate this field. New Facility Admins get one at creation time;
   // an admin can also set/edit their own via Settings.
   name                String?
-  email               String?
-  phone               String    @unique
+  // Login identifier for the Platform Super Admin (facilityId: null) — that
+  // account uses email + password. Optional/unique so it stays nullable for
+  // Facility Admins, who don't log in with it.
+  email               String?   @unique
+  // Login identifier for Facility Admins (phone + OTP self-activation).
+  // Optional/unique since the Platform Super Admin no longer has one.
+  phone               String?   @unique
   passwordHash        String?
   facilityId          String?
   facility            Facility? @relation(fields: [facilityId], references: [id])
