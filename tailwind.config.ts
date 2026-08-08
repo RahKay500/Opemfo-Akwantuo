@@ -5,9 +5,11 @@ import type { Config } from "tailwindcss";
 // (node 1023:36350). This is a large generic SaaS kit (Untitled-UI-style).
 // Its own "Brand" ramp is green — that's just the kit's generic template
 // color, not this app's identity, so `brand` here is NOT that green scale.
-// Instead `brand` uses this same system's own Purple utility ramp (a real,
-// separately-defined scale in the file), since purple/lilac is this app's
-// actual brand hue — every other scale (gray, success/warning/error/etc.)
+// Instead `brand` uses this same system's own Fuchsia utility ramp (a real,
+// separately-defined scale in the file): the app's old lilac (#AB49D5, hue
+// 282°) sits ~9° from Fuchsia-600 (#BA24D5, hue 291°) vs. ~26° from the
+// Purple ramp tried first (#6938EF, hue 256° — noticeably bluer) — every
+// other scale (gray, success/warning/error/etc.)
 // is taken as-is since those are legitimately system-defined neutrals/
 // semantics, not a brand choice. This is Batch 1 (Foundations): the
 // semantic names already used across every screen (primary, text-primary,
@@ -24,21 +26,21 @@ const config: Config = {
     extend: {
       colors: {
         // --- Raw scales, straight from Figma variables ---
-        // `brand` = the system's own Purple utility ramp (Colors/Purple/*),
+        // `brand` = the system's own Fuchsia utility ramp (Colors/Fuchsia/*),
         // used as this app's brand color — NOT the kit's demo green.
         brand: {
-          25: "#fafaff",
-          50: "#f4f3ff",
-          100: "#ebe9fe",
-          200: "#d9d6fe",
-          300: "#bdb4fe",
-          400: "#9b8afb",
-          500: "#7a5af8",
-          600: "#6938ef",
-          700: "#5925dc",
-          800: "#4a1fb8",
-          900: "#3e1c96",
-          950: "#27115f",
+          25: "#fefaff",
+          50: "#fdf4ff",
+          100: "#fbe8ff",
+          200: "#f6d0fe",
+          300: "#eeaafd",
+          400: "#e478fa",
+          500: "#d444f1",
+          600: "#ba24d5",
+          700: "#9f1ab1",
+          800: "#821890",
+          900: "#6f1877",
+          950: "#47104c",
         },
         gray: {
           25: "#fdfdfd",
@@ -145,16 +147,30 @@ const config: Config = {
           800: "#9e165f",
           900: "#851651",
         },
+        fuchsia: {
+          25: "#fefaff",
+          50: "#fdf4ff",
+          100: "#fbe8ff",
+          200: "#f6d0fe",
+          300: "#eeaafd",
+          400: "#e478fa",
+          500: "#d444f1",
+          600: "#ba24d5",
+          700: "#9f1ab1",
+          800: "#821890",
+          900: "#6f1877",
+          950: "#47104c",
+        },
 
         // --- Semantic aliases, remapped from the app's old lilac/pink
         // names to their nearest equivalent in the new system, so every
         // existing screen re-themes without per-file edits. ---
-        primary: "#6938ef", // brand-600 (system Purple/600) — was #AB49D5
-        "lilac-dark": "#6938ef", // brand-600
-        "lilac-deeper": "#4a1fb8", // brand-800
-        "lilac-light": "#f4f3ff", // brand-50
-        "lilac-mid": "#bdb4fe", // brand-300
-        surface: "#fafaff", // brand-25
+        primary: "#ba24d5", // brand-600 (system Fuchsia/600) — was #AB49D5
+        "lilac-dark": "#ba24d5", // brand-600
+        "lilac-deeper": "#821890", // brand-800
+        "lilac-light": "#fdf4ff", // brand-50
+        "lilac-mid": "#eeaafd", // brand-300
+        surface: "#fefaff", // brand-25
         "pink-accent": "#ee46bc", // pink-500 (no brand-pink in the new system; nearest accent pop)
         "pink-light": "#fdf2fa", // pink-50
         "pink-deep": "#c11574", // pink-700
