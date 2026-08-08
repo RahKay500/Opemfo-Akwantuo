@@ -51,6 +51,7 @@ import {
   VolumeMuteIcon as HugeVolumeMuteIcon,
   Maximize01Icon as HugeMaximize01Icon,
   Minimize01Icon as HugeMinimize01Icon,
+  MoreVerticalIcon as HugeMoreVerticalIcon,
 } from "@hugeicons/core-free-icons";
 
 function makeIcon(glyph: IconSvgElement) {
@@ -109,3 +110,4 @@ export const VolumeHighIcon = makeIcon(HugeVolumeHighIcon);
 export const VolumeMuteIcon = makeIcon(HugeVolumeMuteIcon);
 export const Maximize01Icon = makeIcon(HugeMaximize01Icon);
 export const Minimize01Icon = makeIcon(HugeMinimize01Icon);
+export const DotsVerticalIcon = makeIcon(HugeMoreVerticalIcon);
