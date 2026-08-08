@@ -14,7 +14,6 @@ export function getAdminNavItems(facilityId: string | null): AdminNavItem[] {
       { href: "/admin/facility-admins", label: "Facility Admins" },
       { href: "/admin/patients", label: "Patients" },
       { href: "/admin/audit", label: "Audit Log" },
-      { href: "/admin/settings", label: "Settings" },
     ];
   }
   return [
@@ -22,6 +21,5 @@ export function getAdminNavItems(facilityId: string | null): AdminNavItem[] {
     { href: "/admin/staff", label: "Staff" },
     { href: "/admin/patients", label: "Patients" },
     { href: "/admin/audit", label: "Audit Log" },
-    { href: "/admin/settings", label: "Settings" },
   ];
 }

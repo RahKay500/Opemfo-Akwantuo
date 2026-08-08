@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
 import { getAdminNavItems } from "@/lib/admin-nav";
 
 export interface SidebarAdmin {
@@ -48,10 +47,6 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
           {admin.region && <p>{admin.region}, Ghana</p>}
         </div>
       )}
-
-      <div className="border-t border-white/10 px-3 py-4">
-        <AdminSignOutButton />
-      </div>
     </aside>
   );
 }

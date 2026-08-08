@@ -26,9 +26,9 @@ export default async function Header({
       <div className="flex shrink-0 items-center gap-3">
         {action}
         {identity && (
-          <div className="hidden items-center gap-3 lg:flex">
+          <div className="flex items-center gap-3">
             <span
-              className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
+              className="hidden items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium lg:flex"
               style={{ backgroundColor: `${accent}1A`, color: accent }}
             >
               <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0">

@@ -78,7 +78,7 @@ function PlatformDashboard({ platform }: { platform: PlatformDashboardData }) {
                 + Add New Facility
               </Link>
               <Link
-                href="/admin/facility-admins/new"
+                href="/admin/facility-admins"
                 className="rounded-md border border-dashed border-[#D8B4FE] bg-[#FAF5FF] px-4 py-2.5 text-sm font-medium text-[#7C3AED]"
               >
                 + Add Facility Admin
@@ -97,7 +97,7 @@ function PlatformDashboard({ platform }: { platform: PlatformDashboardData }) {
                 to ensure proper oversight.
               </p>
               <Link
-                href="/admin/facility-admins/new"
+                href="/admin/facility-admins"
                 className="mt-3 inline-block rounded-md bg-[#EA580C] px-4 py-2 text-sm font-semibold text-white"
               >
                 Assign Now

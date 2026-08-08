@@ -33,7 +33,7 @@ export default function HeaderIdentityMenu({
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-3 rounded-lg border border-[#E2E8F0] bg-white/60 px-3 py-2 backdrop-blur-md transition-colors hover:bg-white/80"
       >
-        <div className="text-right leading-tight">
+        <div className="hidden text-right leading-tight lg:block">
           <p className="text-sm font-semibold text-[#1A1A2E]">{displayName}</p>
           {orgName && <p className="text-xs text-[#6B7280]">{orgName}</p>}
         </div>
@@ -56,7 +56,7 @@ export default function HeaderIdentityMenu({
           >
             Profile Settings
           </Link>
-          <AdminSignOutButton variant="menu" />
+          <AdminSignOutButton />
         </div>
       )}
     </div>

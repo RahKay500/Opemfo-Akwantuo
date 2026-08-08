@@ -9,12 +9,13 @@ export default async function AdminFacilityAdminsPage() {
   if (!session) redirect("/admin/login");
   if (session.facilityId !== null) redirect("/admin/dashboard");
 
-  const [admins, identity] = await Promise.all([
+  const [admins, facilities, identity] = await Promise.all([
     prisma.superAdmin.findMany({
       where: { facilityId: { not: null } },
       orderBy: { createdAt: "desc" },
       include: { facility: { select: { name: true } } },
     }),
+    prisma.facility.findMany({ where: { isActive: true }, orderBy: { name: "asc" } }),
     getCurrentAdminIdentity(),
   ]);
 
@@ -35,6 +36,7 @@ export default async function AdminFacilityAdminsPage() {
             createdAt: a.createdAt.toISOString(),
             lastLoginAt: a.lastLoginAt ? a.lastLoginAt.toISOString() : null,
           }))}
+          facilities={facilities.map((f) => ({ id: f.id, name: f.name }))}
         />
       </div>
     </>

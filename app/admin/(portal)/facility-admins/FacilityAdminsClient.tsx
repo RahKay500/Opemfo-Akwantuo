@@ -2,11 +2,12 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
+import Modal from "@/components/admin/Modal";
 import { formatLastLogin, initials } from "@/lib/utils";
 import { deriveStaffStatus } from "@/lib/staff-status";
+import NewFacilityAdminForm from "./NewFacilityAdminForm";
 
 export interface FacilityAdminRow {
   id: string;
@@ -21,9 +22,16 @@ export interface FacilityAdminRow {
   lastLoginAt: string | null;
 }
 
-export default function FacilityAdminsClient({ admins }: { admins: FacilityAdminRow[] }) {
+export default function FacilityAdminsClient({
+  admins,
+  facilities,
+}: {
+  admins: FacilityAdminRow[];
+  facilities: { id: string; name: string }[];
+}) {
   const router = useRouter();
   const [query, setQuery] = useState("");
+  const [addOpen, setAddOpen] = useState(false);
 
   const filtered = useMemo(() => {
     return admins.filter((a) => {
@@ -71,12 +79,13 @@ export default function FacilityAdminsClient({ admins }: { admins: FacilityAdmin
           placeholder="Search admins or facilities..."
           className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-1"
         />
-        <Link
-          href="/admin/facility-admins/new"
+        <button
+          type="button"
+          onClick={() => setAddOpen(true)}
           className="flex h-10 shrink-0 items-center justify-center rounded-md bg-[#7C3AED] px-4 text-sm font-semibold text-white"
         >
           + Add Facility Admin
-        </Link>
+        </button>
       </div>
 
       <p className="mb-3 text-sm font-semibold text-[#1A1A2E]">
@@ -90,6 +99,14 @@ export default function FacilityAdminsClient({ admins }: { admins: FacilityAdmin
         emptyMessage="No Facility Admins match this search."
         onRowClick={(r) => router.push(`/admin/facility-admins/${r.id}`)}
       />
+
+      <Modal open={addOpen} onClose={() => setAddOpen(false)} title="Add Facility Admin">
+        <NewFacilityAdminForm
+          facilities={facilities}
+          onCreated={() => router.refresh()}
+          onClose={() => setAddOpen(false)}
+        />
+      </Modal>
     </>
   );
 }

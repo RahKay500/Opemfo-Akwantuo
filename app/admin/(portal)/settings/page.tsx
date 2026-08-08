@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { isSuperAdmin, getCurrentAdminIdentity } from "@/lib/current-admin";
 import Header from "@/components/admin/Header";
-import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
 import ChangePasswordForm from "./ChangePasswordForm";
 import ProfileForm from "./ProfileForm";
 import SettingsTabs from "./SettingsTabs";
@@ -28,9 +27,6 @@ export default async function AdminSettingsPage() {
           }
           password={<ChangePasswordForm />}
         />
-        <div className="max-w-md overflow-hidden rounded-lg border border-[#E2E8F0] bg-white lg:hidden">
-          <AdminSignOutButton variant="row" />
-        </div>
       </div>
     </>
   );

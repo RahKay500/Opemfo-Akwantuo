@@ -1,11 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import FormField from "@/components/admin/FormField";
 
-export default function NewFacilityAdminForm({ facilities }: { facilities: { id: string; name: string }[] }) {
-  const router = useRouter();
+export default function NewFacilityAdminForm({
+  facilities,
+  onCreated,
+  onClose,
+}: {
+  facilities: { id: string; name: string }[];
+  onCreated?: () => void;
+  onClose?: () => void;
+}) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -50,6 +56,7 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
         return;
       }
       setSuccess({ phone: data.data.phone, devOtp: data.data.devOtp });
+      onCreated?.();
     } catch {
       setError("Network error. Please try again.");
     } finally {
@@ -59,7 +66,7 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
 
   if (success) {
     return (
-      <div className="max-w-md rounded-lg border border-[#E2E8F0] bg-white p-8">
+      <div>
         <p className="text-sm font-medium text-[#16A34A]">Account created</p>
         <p className="mt-2 text-lg font-semibold text-[#1A1A2E]">OTP sent to {success.phone}</p>
         <p className="mt-2 text-sm text-[#6B7280]">
@@ -73,10 +80,10 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
         <div className="mt-6 flex gap-3">
           <button
             type="button"
-            onClick={() => router.push("/admin/facility-admins")}
+            onClick={onClose}
             className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white"
           >
-            Back to Facility Admins
+            Done
           </button>
           <button
             type="button"
@@ -96,7 +103,7 @@ export default function NewFacilityAdminForm({ facilities }: { facilities: { id:
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex max-w-md flex-col gap-4 rounded-lg border border-[#E2E8F0] bg-white p-8">
+    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <FormField label="Full name" required error={fieldErrors.name}>
         <input
           value={name}
