@@ -26,7 +26,7 @@ export default async function Header({
       <div className="flex shrink-0 items-center gap-3">
         {action}
         {identity && (
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden items-center gap-3 lg:flex">
             <span
               className="flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium"
               style={{ backgroundColor: `${accent}1A`, color: accent }}
@@ -40,8 +40,12 @@ export default async function Header({
               </svg>
               {tierLabel}
             </span>
+            <div className="text-right leading-tight">
+              <p className="text-sm font-semibold text-[#1A1A2E]">{displayName}</p>
+              {identity.orgName && <p className="text-xs text-[#6B7280]">{identity.orgName}</p>}
+            </div>
             <span
-              className="flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold text-white"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
               style={{ backgroundColor: accent }}
             >
               {initials(displayName)}

@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
 import { getAdminNavItems } from "@/lib/admin-nav";
-import { initials } from "@/lib/utils";
 
 export interface SidebarAdmin {
   name: string | null;
@@ -18,25 +17,11 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
   const navItems = getAdminNavItems(facilityId);
   const isPlatform = facilityId === null;
   const accent = isPlatform ? "#7C3AED" : "#2663EB";
-  const displayName = admin.name?.trim() || (isPlatform ? "System Administrator" : "Facility Administrator");
 
   return (
     <aside className="hidden min-h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white lg:flex">
       <div className="px-6 pb-4 pt-8">
         <p className="font-semibold leading-tight">Ɔpemfoɔ Akwantuo</p>
-      </div>
-
-      <div className="mx-3 flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3">
-        <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-          style={{ backgroundColor: accent }}
-        >
-          {initials(displayName)}
-        </span>
-        <div className="min-w-0">
-          <p className="text-sm font-semibold leading-tight text-white">{displayName}</p>
-          {admin.orgName && <p className="mt-0.5 line-clamp-2 text-xs leading-snug text-white/60">{admin.orgName}</p>}
-        </div>
       </div>
 
       <nav className="mt-4 flex flex-1 flex-col gap-1 px-3">
