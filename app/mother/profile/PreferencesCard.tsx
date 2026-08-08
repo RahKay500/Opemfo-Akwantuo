@@ -2,26 +2,12 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import Toggle from "@/components/ui/Toggle";
 
 interface Preferences {
   notifyAppointments: boolean;
   notifyReferralUpdates: boolean;
   notifyEducationalContent: boolean;
-}
-
-function Toggle({ on, onClick }: { on: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex h-6 w-11 shrink-0 items-center rounded-badge px-0.5 transition-colors",
-        on ? "justify-end bg-lilac-mid" : "justify-start bg-lilac-light"
-      )}
-    >
-      <span className={cn("size-5 rounded-badge", on ? "bg-[#6A1F8A]" : "bg-[#9CA3AF]")} />
-    </button>
-  );
 }
 
 export default function PreferencesCard({ initial }: { initial: Preferences }) {
@@ -53,7 +39,12 @@ export default function PreferencesCard({ initial }: { initial: Preferences }) {
             className={cn("flex h-14 items-center justify-between", i < ROWS.length - 1 && "border-b border-border-color")}
           >
             <p className="font-body text-sm text-text-primary">{row.label}</p>
-            <Toggle on={prefs[row.key]} onClick={() => update(row.key)} />
+            <Toggle
+              checked={prefs[row.key]}
+              onChange={() => update(row.key)}
+              size="md"
+              aria-label={row.label}
+            />
           </div>
         ))}
       </div>

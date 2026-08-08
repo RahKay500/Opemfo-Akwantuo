@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PartnerIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
+import Toggle from "@/components/ui/Toggle";
 
 type LinkState = "loading" | "inactive" | "active";
 
@@ -33,21 +34,6 @@ const PERMISSION_LABELS: { key: keyof Permissions; label: string }[] = [
   { key: "shareReferralStatus", label: "Referral status" },
   { key: "shareMedicalHistory", label: "Medical history & flags" },
 ];
-
-function Toggle({ on, onClick }: { on: boolean; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "flex h-6 w-11 shrink-0 items-center rounded-badge px-0.5 transition-colors",
-        on ? "justify-end bg-[#E4A8F3]" : "justify-start bg-border-color"
-      )}
-    >
-      <span className={cn("size-5 rounded-badge", on ? "bg-[#6A1F8A]" : "bg-[#9CA3AF]")} />
-    </button>
-  );
-}
 
 export default function SharePartnerForm() {
   const router = useRouter();
@@ -242,7 +228,12 @@ export default function SharePartnerForm() {
               )}
             >
               <p className="font-body text-sm text-text-primary">{label}</p>
-              <Toggle on={permissions[key]} onClick={() => setPermissions((p) => ({ ...p, [key]: !p[key] }))} />
+              <Toggle
+                checked={permissions[key]}
+                onChange={() => setPermissions((p) => ({ ...p, [key]: !p[key] }))}
+                size="md"
+                aria-label={label}
+              />
             </div>
           ))}
         </div>
