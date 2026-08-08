@@ -46,6 +46,11 @@ import {
   SecurityCheckIcon,
   Cancel01Icon,
   Notification03Icon,
+  PauseIcon as HugePauseIcon,
+  VolumeHighIcon as HugeVolumeHighIcon,
+  VolumeMuteIcon as HugeVolumeMuteIcon,
+  Maximize01Icon as HugeMaximize01Icon,
+  Minimize01Icon as HugeMinimize01Icon,
 } from "@hugeicons/core-free-icons";
 
 function makeIcon(glyph: IconSvgElement) {
@@ -99,3 +104,8 @@ export const LocationPinIcon = makeIcon(Location01Icon);
 export const ShieldCheckIcon = makeIcon(SecurityCheckIcon);
 export const XIcon = makeIcon(Cancel01Icon);
 export const EmergencyBellIcon = makeIcon(Notification03Icon);
+export const PauseIcon = makeIcon(HugePauseIcon);
+export const VolumeHighIcon = makeIcon(HugeVolumeHighIcon);
+export const VolumeMuteIcon = makeIcon(HugeVolumeMuteIcon);
+export const Maximize01Icon = makeIcon(HugeMaximize01Icon);
+export const Minimize01Icon = makeIcon(HugeMinimize01Icon);
