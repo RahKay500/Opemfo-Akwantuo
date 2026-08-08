@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
 
 export interface LogVitalsPatientOption {
   id: string;
@@ -239,14 +240,16 @@ export default function LogVitalsForm({
 
       {error && <p className="mt-4 font-body text-sm text-[#DC2626]">{error}</p>}
 
-      <button
-        type="button"
+      <Button
+        size="cta"
+        shape="rect"
+        hierarchy="soft"
         onClick={handleSubmit}
         disabled={submitting || !patientId}
-        className="mt-6 h-14 w-full rounded-button bg-lilac-mid px-8 font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60 lg:w-auto"
+        className="mt-6 px-8 lg:w-auto"
       >
         {submitting ? "Saving…" : "Save Vitals"}
-      </button>
+      </Button>
     </div>
   );
 }

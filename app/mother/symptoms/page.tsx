@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import SymptomChip from "@/components/ui/SymptomChip";
+import Button from "@/components/ui/Button";
 
 const SYMPTOMS = [
   "Fever",
@@ -90,13 +91,9 @@ export default function MotherSymptomsPage() {
         <p className="font-body text-sm text-text-secondary">
           Your nurse will review this and reach out if needed.
         </p>
-        <button
-          type="button"
-          onClick={() => router.push("/mother/dashboard")}
-          className="mt-2 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white"
-        >
+        <Button size="cta" shape="rect" onClick={() => router.push("/mother/dashboard")} className="mt-2">
           Back to Dashboard
-        </button>
+        </Button>
       </main>
     );
   }

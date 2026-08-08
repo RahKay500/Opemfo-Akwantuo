@@ -7,6 +7,7 @@ import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
 import { formatDate } from "@/lib/utils";
 import { deriveStaffStatus } from "@/lib/staff-status";
+import Button from "@/components/ui/Button";
 
 export interface StaffDetail {
   id: string;
@@ -281,14 +282,9 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
           <button type="button" onClick={() => setDeactivateOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
             Cancel
           </button>
-          <button
-            type="button"
-            onClick={() => handleUpdate({ isActive: false })}
-            disabled={submitting}
-            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
+          <Button size="admin-sm" hierarchy="danger" onClick={() => handleUpdate({ isActive: false })} disabled={submitting}>
             {submitting ? "Deactivating…" : "Deactivate"}
-          </button>
+          </Button>
         </div>
       </Modal>
 
@@ -311,14 +307,9 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
           <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
             Cancel
           </button>
-          <button
-            type="button"
-            onClick={handleDelete}
-            disabled={submitting}
-            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
+          <Button size="admin-sm" hierarchy="danger" onClick={handleDelete} disabled={submitting}>
             {submitting ? "Deleting…" : "Delete Permanently"}
-          </button>
+          </Button>
         </div>
       </Modal>
     </div>

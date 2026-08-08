@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { CalendarIcon, PartnerIcon, CheckIcon } from "@/components/ui/icons";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import Button from "@/components/ui/Button";
 
 const REQUEST_TYPES = [
   {
@@ -82,13 +83,9 @@ export default function MotherBookPage() {
         <p className="font-body text-sm text-text-secondary">
           Your nurse will confirm your appointment via SMS.
         </p>
-        <button
-          type="button"
-          onClick={() => router.push("/mother/dashboard")}
-          className="mt-2 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white"
-        >
+        <Button size="cta" shape="rect" onClick={() => router.push("/mother/dashboard")} className="mt-2">
           Back to Dashboard
-        </button>
+        </Button>
       </main>
     );
   }
@@ -182,14 +179,15 @@ export default function MotherBookPage() {
         {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
 
         <div className="lg:text-center">
-          <button
-            type="button"
+          <Button
+            size="cta"
+            shape="rect"
             onClick={handleSubmit}
             disabled={submitting}
-            className="h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60 lg:mx-auto lg:w-auto lg:px-16"
+            className="lg:mx-auto lg:w-auto lg:px-16"
           >
             {submitting ? "Sending…" : "Request Appointment"}
-          </button>
+          </Button>
           <p className="mt-2.5 text-center font-body text-xs text-[#9CA3AF]">
             Your nurse will confirm your appointment via SMS.
           </p>

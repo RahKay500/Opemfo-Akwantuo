@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import Modal from "@/components/admin/Modal";
 import { formatDate } from "@/lib/utils";
+import Button from "@/components/ui/Button";
 
 export interface AuditRow {
   id: string;
@@ -116,14 +117,9 @@ export default function AuditClient({ logs, actions }: { logs: AuditRow[]; actio
           <button type="button" onClick={() => setClearOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
             Cancel
           </button>
-          <button
-            type="button"
-            onClick={handleClearAll}
-            disabled={clearing}
-            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
+          <Button size="admin-sm" hierarchy="danger" onClick={handleClearAll} disabled={clearing}>
             {clearing ? "Clearing…" : "Clear All Permanently"}
-          </button>
+          </Button>
         </div>
       </Modal>
     </>

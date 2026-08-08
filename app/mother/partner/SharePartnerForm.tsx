@@ -6,6 +6,7 @@ import { PartnerIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 import Toggle from "@/components/ui/Toggle";
 import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
 
 type LinkState = "loading" | "inactive" | "active";
 
@@ -146,13 +147,9 @@ export default function SharePartnerForm() {
         <div className="w-full max-w-md break-all rounded-input border-[1.5px] border-border-color bg-white p-3.5 font-body text-xs text-text-secondary">
           {url}
         </div>
-        <button
-          type="button"
-          onClick={handleShare}
-          className="h-14 w-full max-w-md rounded-button bg-primary font-heading text-[17px] font-bold text-white"
-        >
+        <Button size="cta" shape="rect" onClick={handleShare} className="max-w-md">
           {copied ? "Copied!" : "Share link"}
-        </button>
+        </Button>
         <button
           type="button"
           onClick={handleRevoke}

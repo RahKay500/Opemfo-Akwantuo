@@ -11,6 +11,7 @@ import { deriveFacilityStatus } from "@/lib/staff-status";
 import { facilityTypeLabel } from "@/lib/utils";
 import { GHANA_REGIONS, GHANA_REGION_NAMES } from "@/lib/ghana-regions";
 import type { FacilityType } from "@prisma/client";
+import Button from "@/components/ui/Button";
 
 export interface FacilityRow {
   id: string;
@@ -269,14 +270,14 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
           <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
             Cancel
           </button>
-          <button
-            type="button"
+          <Button
+            size="admin-sm"
+            hierarchy="danger"
             onClick={() => deactivateTarget && handleToggleActive(deactivateTarget)}
             disabled={submitting}
-            className="rounded-md bg-[#DC2626] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
           >
             {submitting ? "Deactivating…" : "Deactivate"}
-          </button>
+          </Button>
         </div>
       </Modal>
 
