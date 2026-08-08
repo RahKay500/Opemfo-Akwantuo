@@ -57,6 +57,8 @@ import {
   ArrowUpRightIcon as HugeArrowUpRightIcon,
   ArrowRight01Icon as HugeArrowRight01Icon,
   InformationCircleIcon as HugeInformationCircleIcon,
+  CloudUploadIcon as HugeCloudUploadIcon,
+  Delete01Icon as HugeDelete01Icon,
 } from "@hugeicons/core-free-icons";
 
 function makeIcon(glyph: IconSvgElement) {
@@ -121,3 +123,5 @@ export const CheckCircleIcon = makeIcon(HugeCheckmarkCircle02Icon);
 export const ArrowUpRightIcon = makeIcon(HugeArrowUpRightIcon);
 export const ArrowRightIcon = makeIcon(HugeArrowRight01Icon);
 export const InfoIcon = makeIcon(HugeInformationCircleIcon);
+export const CloudUploadIcon = makeIcon(HugeCloudUploadIcon);
+export const TrashIcon = makeIcon(HugeDelete01Icon);
