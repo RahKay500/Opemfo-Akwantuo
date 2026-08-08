@@ -1,5 +1,5 @@
+import Image from "next/image";
 import Link from "next/link";
-import { HeartIcon } from "@/components/ui/icons";
 
 export default function OnboardingWelcomePage() {
   return (
@@ -8,7 +8,7 @@ export default function OnboardingWelcomePage() {
           same branding on desktop — showing it again here would duplicate it. */}
       <div className="flex h-[360px] w-full flex-col items-center justify-center gap-4 rounded-card bg-primary lg:hidden">
         <div className="flex size-24 items-center justify-center rounded-[32px] bg-white">
-          <HeartIcon className="size-10 text-primary" />
+          <Image src="/images/logo.png" alt="" width={56} height={56} />
         </div>
         <p className="font-heading text-[32px] font-bold tracking-[-0.5px] text-white">
           Ɔpemfoɔ Akwantuo
