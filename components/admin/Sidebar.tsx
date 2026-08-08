@@ -25,7 +25,6 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
     <aside className="hidden min-h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white lg:flex">
       <div className="px-6 pb-4 pt-8">
         <p className="font-semibold leading-tight">Ɔpemfoɔ Akwantuo</p>
-        <p className="mt-1 text-xs font-medium uppercase tracking-wide text-[#E4A8F3]">{tierLabel}</p>
       </div>
 
       <div className="mx-3 flex items-center gap-3 rounded-lg bg-white/5 px-3 py-3">
