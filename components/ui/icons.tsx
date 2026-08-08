@@ -54,6 +54,7 @@ import {
   MoreVerticalIcon as HugeMoreVerticalIcon,
   HelpCircleIcon as HugeHelpCircleIcon,
   CheckmarkCircle02Icon as HugeCheckmarkCircle02Icon,
+  ArrowUpRightIcon as HugeArrowUpRightIcon,
 } from "@hugeicons/core-free-icons";
 
 function makeIcon(glyph: IconSvgElement) {
@@ -115,3 +116,4 @@ export const Minimize01Icon = makeIcon(HugeMinimize01Icon);
 export const DotsVerticalIcon = makeIcon(HugeMoreVerticalIcon);
 export const HelpCircleIcon = makeIcon(HugeHelpCircleIcon);
 export const CheckCircleIcon = makeIcon(HugeCheckmarkCircle02Icon);
+export const ArrowUpRightIcon = makeIcon(HugeArrowUpRightIcon);
