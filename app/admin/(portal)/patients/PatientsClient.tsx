@@ -2,8 +2,9 @@
 
 import { useMemo, useState } from "react";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
-import { formatDate, initials } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { calculateAge } from "@/lib/pregnancy";
+import Avatar from "@/components/ui/Avatar";
 
 export interface PatientRow {
   id: string;
@@ -41,9 +42,13 @@ export default function PatientsClient({
       header: "Name",
       render: (r) => (
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#DBEAFE] text-xs font-bold text-[#2663EB]">
-            {initials(r.name)}
-          </span>
+          <Avatar
+            name={r.name}
+            size="sm"
+            background="#DBEAFE"
+            textColor="#2663EB"
+            textClassName="text-xs font-bold"
+          />
           <span className="font-medium text-[#1A1A2E]">{r.name}</span>
         </div>
       ),

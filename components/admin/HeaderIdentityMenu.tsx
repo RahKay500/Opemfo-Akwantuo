@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
-import { initials } from "@/lib/utils";
+import Avatar from "@/components/ui/Avatar";
 
 export default function HeaderIdentityMenu({
   displayName,
@@ -37,12 +37,13 @@ export default function HeaderIdentityMenu({
           <p className="text-sm font-semibold text-[#1A1A2E]">{displayName}</p>
           {orgName && <p className="text-xs text-[#6B7280]">{orgName}</p>}
         </div>
-        <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-          style={{ backgroundColor: accent }}
-        >
-          {initials(displayName)}
-        </span>
+        <Avatar
+          name={displayName}
+          size="md"
+          background={accent}
+          textColor="white"
+          textClassName="text-xs font-bold"
+        />
       </button>
 
       {open && (

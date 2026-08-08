@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { SearchIcon, PlusIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
+import Avatar from "@/components/ui/Avatar";
 import type { MidwifePatientListItem, PatientStatus } from "@/lib/queries/midwife-patients";
 
 const FILTERS = ["All", "Normal", "Flagged", "Critical"] as const;
@@ -107,9 +108,13 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
             )}
           >
             <div className="flex items-center gap-3">
-              <div className="flex size-11 shrink-0 items-center justify-center rounded-badge bg-lilac-light">
-                <span className="font-heading text-sm font-bold text-lilac-deeper">{patient.initials}</span>
-              </div>
+              <Avatar
+                name={patient.name}
+                size="lg"
+                background="#fdf4ff"
+                textColor="#821890"
+                textClassName="text-sm font-bold"
+              />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center justify-between gap-2">
                   <p className="font-heading text-[15px] font-bold text-text-primary">{patient.name}</p>
@@ -170,9 +175,13 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
                 <tr key={patient.id} className="border-b border-border-color last:border-b-0">
                   <td className="px-6 py-3.5">
                     <div className="flex items-center gap-3">
-                      <div className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-lilac-light">
-                        <span className="font-heading text-xs font-bold text-lilac-deeper">{patient.initials}</span>
-                      </div>
+                      <Avatar
+                        name={patient.name}
+                        size="md"
+                        background="#fdf4ff"
+                        textColor="#821890"
+                        textClassName="text-xs font-bold"
+                      />
                       <p className="font-heading text-sm font-bold text-text-primary">{patient.name}</p>
                     </div>
                   </td>

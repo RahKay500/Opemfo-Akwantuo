@@ -21,6 +21,10 @@ export interface AvatarProps {
   background?: string;
   textColor?: string;
   className?: string;
+  // Overrides the size-linked initials text class (TEXT_SIZE) — some
+  // consumers (portal sidebars/lists) keep a fixed small bold label
+  // regardless of circle size rather than scaling text with it.
+  textClassName?: string;
 }
 
 const SIZE_PX: Record<AvatarSize, number> = { xs: 24, sm: 32, md: 40, lg: 48, xl: 56, "2xl": 64 };
@@ -49,6 +53,7 @@ export default function Avatar({
   background = "#F5F5F5",
   textColor = "#717680",
   className,
+  textClassName,
 }: AvatarProps) {
   const px = SIZE_PX[size];
   return (
@@ -67,7 +72,7 @@ export default function Avatar({
         />
       ) : (
         <span
-          className={`flex size-full items-center justify-center rounded-full border border-gray-200 font-heading font-semibold ${TEXT_SIZE[size]}`}
+          className={`flex size-full items-center justify-center rounded-full border border-gray-200 font-heading font-semibold ${textClassName ?? TEXT_SIZE[size]}`}
           style={{ backgroundColor: background, color: textColor }}
         >
           {initials(name)}

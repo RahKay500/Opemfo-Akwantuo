@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import Avatar from "@/components/ui/Avatar";
 import {
   NavHomeIcon,
   NavPatientsIcon,
@@ -48,9 +49,13 @@ export default function MidwifeSidebar({
       </div>
 
       <div className="mx-3 mb-2 flex items-center gap-2 rounded-card bg-[#27273A] px-2.5 py-3">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-badge bg-lilac-mid">
-          <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(name)}</span>
-        </div>
+        <Avatar
+          name={name}
+          size="sm"
+          background="#eeaafd"
+          textColor="#821890"
+          textClassName="text-xs font-bold"
+        />
         <div className="min-w-0">
           <p className="truncate font-body text-sm font-medium text-white">{name}</p>
           <p className="truncate font-body text-[11px] text-[#8A8AA3]">{shortFacilityName(facilityName)} · Midwife</p>

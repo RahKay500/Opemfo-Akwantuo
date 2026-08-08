@@ -2,11 +2,12 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getAdminSession, getCurrentAdminIdentity } from "@/lib/current-admin";
 import { getAdminDashboardData } from "@/lib/queries/admin-dashboard";
-import { facilityTypeLabel, formatDate, initials } from "@/lib/utils";
+import { facilityTypeLabel, formatDate } from "@/lib/utils";
 import Header from "@/components/admin/Header";
 import StatsCard from "@/components/admin/StatsCard";
 import StatusBadge from "@/components/admin/StatusBadge";
 import PatientGrowthChart from "@/components/admin/PatientGrowthChart";
+import Avatar from "@/components/ui/Avatar";
 import FacilitiesOverviewTable from "./FacilitiesOverviewTable";
 import type { PlatformDashboardData, FacilityAdminDashboardData } from "@/lib/queries/admin-dashboard";
 
@@ -163,9 +164,13 @@ function FacilityAdminDashboard({ facility }: { facility: FacilityAdminDashboard
             {facility.staff.map((s) => (
               <div key={s.id} className="flex items-center justify-between gap-3 py-3">
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#DBEAFE] text-xs font-bold text-[#2663EB]">
-                    {initials(s.name)}
-                  </span>
+                  <Avatar
+                    name={s.name}
+                    size="md"
+                    background="#DBEAFE"
+                    textColor="#2663EB"
+                    textClassName="text-xs font-bold"
+                  />
                   <div className="min-w-0">
                     <p className="truncate text-sm font-medium text-[#1A1A2E]">{s.name}</p>
                     <p className="text-xs text-[#6B7280]">{ROLE_LABELS[s.role] ?? s.role}</p>

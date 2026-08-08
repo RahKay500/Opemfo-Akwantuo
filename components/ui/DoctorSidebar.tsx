@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn, facilityTypeLabel, initials } from "@/lib/utils";
+import { cn, facilityTypeLabel } from "@/lib/utils";
 import type { FacilityType } from "@prisma/client";
+import Avatar from "@/components/ui/Avatar";
 import {
   NavHomeIcon,
   NavReferralsIcon,
@@ -43,9 +44,13 @@ export default function DoctorSidebar({
       </div>
 
       <div className="mx-4 mb-2 flex items-center gap-2.5 rounded-card bg-[#27273A] px-3 py-3">
-        <div className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-lilac-mid">
-          <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(name)}</span>
-        </div>
+        <Avatar
+          name={name}
+          size="md"
+          background="#eeaafd"
+          textColor="#821890"
+          textClassName="text-xs font-bold"
+        />
         <div className="min-w-0">
           <p className="truncate font-body text-sm font-medium text-white">{name}</p>
           <p className="truncate font-body text-xs text-[#8A8AA3]">{facilityName} · Doctor</p>

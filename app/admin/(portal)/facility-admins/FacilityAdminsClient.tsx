@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
-import { formatLastLogin, initials } from "@/lib/utils";
+import { formatLastLogin } from "@/lib/utils";
 import { deriveStaffStatus } from "@/lib/staff-status";
+import Avatar from "@/components/ui/Avatar";
 import NewFacilityAdminForm from "./NewFacilityAdminForm";
 
 export interface FacilityAdminRow {
@@ -52,9 +53,13 @@ export default function FacilityAdminsClient({
       header: "Name",
       render: (r) => (
         <div className="flex items-center gap-2.5">
-          <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#F3E8FB] text-xs font-bold text-[#7C3AED]">
-            {initials(r.name ?? r.facilityName ?? "?")}
-          </span>
+          <Avatar
+            name={r.name ?? r.facilityName ?? "?"}
+            size="sm"
+            background="#F3E8FB"
+            textColor="#7C3AED"
+            textClassName="text-xs font-bold"
+          />
           <span className="font-medium text-[#1A1A2E]">{r.name ?? "—"}</span>
         </div>
       ),
