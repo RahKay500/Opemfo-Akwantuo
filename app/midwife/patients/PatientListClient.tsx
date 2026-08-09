@@ -7,6 +7,7 @@ import { SearchIcon, PlusIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import Avatar from "@/components/ui/Avatar";
 import Badge, { type BadgeColor } from "@/components/ui/Badge";
+import Tabs from "@/components/ui/Tabs";
 import type { MidwifePatientListItem, PatientStatus } from "@/lib/queries/midwife-patients";
 
 const FILTERS = ["All", "Normal", "Flagged", "Critical"] as const;
@@ -59,23 +60,14 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
               className="flex-1 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-[#9CA3AF]"
             />
           </div>
-          <div className="mt-3 flex gap-2 overflow-x-auto pb-1 lg:mt-0 lg:pb-0">
-            {FILTERS.map((f) => (
-              <button
-                key={f}
-                type="button"
-                onClick={() => setFilter(f)}
-                className={cn(
-                  "shrink-0 rounded-badge border-[1.5px] px-4 py-1.5 font-body text-[13px] font-medium",
-                  filter === f
-                    ? "border-lilac-mid bg-lilac-light text-lilac-deeper"
-                    : "border-border-color bg-white text-text-secondary"
-                )}
-              >
-                {f}
-              </button>
-            ))}
-          </div>
+          <Tabs
+            style="pill"
+            className="mt-3 pb-1 lg:mt-0 lg:pb-0"
+            tabs={FILTERS.map((f) => ({ key: f, label: f }))}
+            activeKey={filter}
+            onChange={(key) => setFilter(key as (typeof FILTERS)[number])}
+            pillActiveClassName="border-lilac-mid bg-lilac-light text-lilac-deeper"
+          />
         </div>
 
         <Link

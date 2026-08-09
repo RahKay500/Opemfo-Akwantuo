@@ -5,6 +5,7 @@ import { useState } from "react";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { CheckIcon, CalendarIcon, AlertTriangleIcon, MessageIcon, BellIcon } from "@/components/ui/icons";
 import EmptyState from "@/components/ui/EmptyState";
+import Tabs from "@/components/ui/Tabs";
 
 export interface NotificationListItem {
   id: string;
@@ -67,21 +68,13 @@ export default function NotificationsClient({ notifications }: { notifications: 
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto px-5 pt-4">
-        {TABS.map((t) => (
-          <button
-            key={t}
-            type="button"
-            onClick={() => setTab(t)}
-            className={cn(
-              "shrink-0 rounded-badge border-[1.5px] px-4 py-2 font-body text-[13px] font-medium",
-              tab === t ? "border-primary bg-primary text-white" : "border-border-color bg-white text-text-secondary"
-            )}
-          >
-            {t}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        style="pill"
+        className="px-5 pt-4"
+        tabs={TABS.map((t) => ({ key: t, label: t }))}
+        activeKey={tab}
+        onChange={(key) => setTab(key as (typeof TABS)[number])}
+      />
 
       <div className="flex flex-col gap-2 px-5 pb-8 pt-4 lg:grid lg:grid-cols-2 lg:gap-3">
         {filtered.length === 0 && (

@@ -17,14 +17,62 @@ export interface TabItem {
   badge?: string;
 }
 
+// "underline" is this primitive's native Figma pattern. "pill" matches this
+// app's own established filter-bar convention instead — individual
+// rounded-badge/border-[1.5px] segments, filled primary when active — used
+// consistently across every hand-rolled filter bar in the app (none of them
+// actually use an underline indicator, despite this primitive's original
+// header comment claiming otherwise).
+export type TabsStyle = "underline" | "pill";
+
 export interface TabsProps {
   tabs: TabItem[];
   activeKey: string;
   onChange: (key: string) => void;
+  style?: TabsStyle;
+  // "pill" style only — this app has three different active-segment color
+  // treatments across its hand-rolled filter bars (solid primary fill,
+  // lilac-mid soft fill, lilac-dark soft fill); rather than pick one,
+  // callers pass their own exact classes to match what was there before.
+  pillActiveClassName?: string;
+  pillInactiveClassName?: string;
   className?: string;
 }
 
-export default function Tabs({ tabs, activeKey, onChange, className }: TabsProps) {
+export default function Tabs({
+  tabs,
+  activeKey,
+  onChange,
+  style = "underline",
+  pillActiveClassName,
+  pillInactiveClassName,
+  className,
+}: TabsProps) {
+  if (style === "pill") {
+    const activeCls = pillActiveClassName ?? "border-primary bg-primary text-white";
+    const inactiveCls = pillInactiveClassName ?? "border-border-color bg-white text-text-secondary";
+    return (
+      <div className={`flex gap-2 overflow-x-auto ${className ?? ""}`}>
+        {tabs.map((tab) => {
+          const isActive = tab.key === activeKey;
+          return (
+            <button
+              key={tab.key}
+              type="button"
+              onClick={() => onChange(tab.key)}
+              aria-current={isActive ? "true" : undefined}
+              className={`shrink-0 rounded-badge border-[1.5px] px-4 py-2 font-body text-[13px] font-medium ${
+                isActive ? activeCls : inactiveCls
+              }`}
+            >
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <div className={`flex w-full items-start gap-3 border-b border-gray-200 ${className ?? ""}`}>
       {tabs.map((tab) => {

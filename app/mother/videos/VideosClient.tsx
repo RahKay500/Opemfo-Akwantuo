@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import { PlayIcon } from "@/components/ui/icons";
+import Tabs from "@/components/ui/Tabs";
 import { FEATURED_VIDEO, VIDEOS, CATEGORIES, youtubeThumbnail } from "./videos-data";
 
 export default function VideosClient({ currentWeek }: { currentWeek: number }) {
@@ -51,21 +51,12 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
         </div>
       </a>
 
-      <div className="flex gap-2 overflow-x-auto">
-        {CATEGORIES.map((c) => (
-          <button
-            key={c}
-            type="button"
-            onClick={() => setCategory(c)}
-            className={cn(
-              "shrink-0 rounded-badge border-[1.5px] px-4 py-1.5 font-body text-xs font-medium",
-              category === c ? "border-primary bg-primary text-white" : "border-border-color bg-white text-text-secondary"
-            )}
-          >
-            {c}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        style="pill"
+        tabs={CATEGORIES.map((c) => ({ key: c, label: c }))}
+        activeKey={category}
+        onChange={(key) => setCategory(key as (typeof CATEGORIES)[number])}
+      />
 
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {videos.map((video) => (

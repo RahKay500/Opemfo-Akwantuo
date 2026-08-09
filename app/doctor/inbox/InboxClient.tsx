@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn, formatRelativeTime } from "@/lib/utils";
 import { SearchIcon } from "@/components/ui/icons";
+import Tabs from "@/components/ui/Tabs";
 import type { DoctorInboxItem } from "@/lib/queries/doctor-inbox";
 
 const FILTERS = ["All", "Active", "Expired"] as const;
@@ -33,21 +34,13 @@ export default function InboxClient({ shares }: { shares: DoctorInboxItem[] }) {
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto px-5 pb-1 pt-5">
-        {FILTERS.map((f) => (
-          <button
-            key={f}
-            type="button"
-            onClick={() => setFilter(f)}
-            className={cn(
-              "shrink-0 rounded-badge border-[1.5px] px-4 py-2 font-body text-[13px] font-medium",
-              filter === f ? "border-primary bg-primary text-white" : "border-border-color bg-white text-text-secondary"
-            )}
-          >
-            {f}
-          </button>
-        ))}
-      </div>
+      <Tabs
+        style="pill"
+        className="px-5 pb-1 pt-5"
+        tabs={FILTERS.map((f) => ({ key: f, label: f }))}
+        activeKey={filter}
+        onChange={(key) => setFilter(key as (typeof FILTERS)[number])}
+      />
 
       <div className="flex flex-col gap-3 px-5 pb-8 pt-5 lg:grid lg:grid-cols-2 lg:gap-4">
         {filtered.length === 0 && (
