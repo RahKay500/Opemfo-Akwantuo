@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifePatientList } from "@/lib/queries/midwife-patients";
 import { getMidwifeSidebarData } from "@/lib/queries/midwife-sidebar";
-import { initials } from "@/lib/utils";
 import { BellIcon } from "@/components/ui/icons";
 import LogVitalsForm from "./LogVitalsForm";
 
@@ -46,9 +45,6 @@ export default async function MidwifeLogVitalsPage({
               <span className="size-1.5 rounded-badge bg-critical" />1 Emergency
             </span>
           )}
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(sidebarData?.name ?? "")}</span>
-          </div>
         </div>
       </div>
 

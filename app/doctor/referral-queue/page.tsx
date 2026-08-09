@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorReferralQueue } from "@/lib/queries/doctor-referral-queue";
 import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
-import { initials } from "@/lib/utils";
 import DoctorReferralQueueClient from "./DoctorReferralQueueClient";
 
 export default async function DoctorReferralQueuePage() {
@@ -27,9 +26,6 @@ export default async function DoctorReferralQueuePage() {
           <p className="mt-1 font-body text-sm text-text-secondary">{sidebarData?.facilityName ?? ""}</p>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(sidebarData?.name ?? "")}</span>
-          </div>
         </div>
       </div>
 

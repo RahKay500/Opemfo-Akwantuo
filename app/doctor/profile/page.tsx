@@ -40,9 +40,6 @@ export default async function DoctorProfilePage() {
               {sidebarData.newSharedRecordsCount} shared record{sidebarData.newSharedRecordsCount === 1 ? "" : "s"} pending review
             </span>
           )}
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(data.name)}</span>
-          </div>
         </div>
       </div>
 

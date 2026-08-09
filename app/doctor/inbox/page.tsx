@@ -5,7 +5,7 @@ import { getDoctorInbox } from "@/lib/queries/doctor-inbox";
 import { getDoctorPatientDetail } from "@/lib/queries/doctor-patient-detail";
 import { getOtherDoctors } from "@/lib/queries/doctor-directory";
 import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
-import { cn, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import InboxClient from "./InboxClient";
 import PatientRecordPanel from "./PatientRecordPanel";
 
@@ -49,9 +49,6 @@ export default async function DoctorInboxPage({
               {pendingCount} shared record{pendingCount === 1 ? "" : "s"} pending review
             </span>
           )}
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(sidebarData?.name ?? "")}</span>
-          </div>
         </div>
       </div>
 

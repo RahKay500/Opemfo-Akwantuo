@@ -2,7 +2,6 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorDashboardData } from "@/lib/queries/doctor-dashboard";
-import { initials } from "@/lib/utils";
 import { DOCTOR_REFERRAL_STATUS } from "@/lib/referral-status";
 import { BellIcon, DoctorIcon, ShareIcon, CalendarIcon, ReferralArrowIcon } from "@/components/ui/icons";
 import MonthlyReferralsChartLoader from "@/components/ui/MonthlyReferralsChartLoader";
@@ -77,9 +76,6 @@ export default async function DoctorDashboardPage() {
               {data.stats.recordsShared} shared record{data.stats.recordsShared === 1 ? "" : "s"} pending review
             </span>
           )}
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(data.name)}</span>
-          </div>
         </div>
       </div>
 

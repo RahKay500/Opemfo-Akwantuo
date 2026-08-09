@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifeDashboardData } from "@/lib/queries/midwife-dashboard";
 import type { QueueStatus, FlaggedStatus } from "@/lib/queries/midwife-dashboard";
-import { formatRelativeTime, initials, cn } from "@/lib/utils";
+import { formatRelativeTime, cn } from "@/lib/utils";
 import {
   BellIcon,
   MidwifeIcon,
@@ -79,9 +79,6 @@ export default async function MidwifeDashboardPage() {
               <span className="size-1.5 rounded-badge bg-critical" />1 Emergency
             </span>
           )}
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(data.name)}</span>
-          </div>
         </div>
       </div>
 

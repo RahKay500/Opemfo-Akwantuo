@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorAnalyticsData } from "@/lib/queries/doctor-analytics";
 import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
-import { initials } from "@/lib/utils";
 import MonthlyReferralsChartLoader from "@/components/ui/MonthlyReferralsChartLoader";
 
 const REASON_COLOR: Record<string, string> = {
@@ -52,9 +51,6 @@ export default async function DoctorAnalyticsPage() {
               {sidebarData.newSharedRecordsCount} shared record{sidebarData.newSharedRecordsCount === 1 ? "" : "s"} pending review
             </span>
           )}
-          <div className="flex size-10 items-center justify-center rounded-badge bg-lilac-light">
-            <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(sidebarData?.name ?? "")}</span>
-          </div>
         </div>
       </div>
 
