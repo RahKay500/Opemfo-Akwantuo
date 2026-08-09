@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import AdminSignOutButton from "@/components/admin/AdminSignOutButton";
 import Avatar from "@/components/ui/Avatar";
+import { SettingsIcon } from "@/components/ui/icons";
 
 export default function HeaderIdentityMenu({
   displayName,
@@ -53,8 +54,9 @@ export default function HeaderIdentityMenu({
         >
           <Link
             href="/admin/settings"
-            className="block w-full px-3.5 py-2 text-left text-sm font-medium text-[#1A1A2E] hover:bg-[#F8FAFC]"
+            className="flex w-full items-center gap-2 px-3.5 py-2 text-left text-sm font-medium text-[#1A1A2E] hover:bg-[#F8FAFC]"
           >
+            <SettingsIcon className="size-4" />
             Profile Settings
           </Link>
           <AdminSignOutButton />

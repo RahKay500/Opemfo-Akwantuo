@@ -1,6 +1,16 @@
+import type { ComponentType, SVGProps } from "react";
+import {
+  NavHomeIcon,
+  NavFacilitiesIcon,
+  NavShieldUserIcon,
+  NavPatientsIcon,
+  NavAuditLogIcon,
+} from "@/components/ui/icons";
+
 export interface AdminNavItem {
   href: string;
   label: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
 }
 
 // facilityId null = Platform Super Admin (manages facilities + facility
@@ -9,17 +19,17 @@ export interface AdminNavItem {
 export function getAdminNavItems(facilityId: string | null): AdminNavItem[] {
   if (facilityId === null) {
     return [
-      { href: "/admin/dashboard", label: "Dashboard" },
-      { href: "/admin/facilities", label: "Facilities" },
-      { href: "/admin/facility-admins", label: "Facility Admins" },
-      { href: "/admin/patients", label: "Patients" },
-      { href: "/admin/audit", label: "Audit Log" },
+      { href: "/admin/dashboard", label: "Dashboard", icon: NavHomeIcon },
+      { href: "/admin/facilities", label: "Facilities", icon: NavFacilitiesIcon },
+      { href: "/admin/facility-admins", label: "Facility Admins", icon: NavShieldUserIcon },
+      { href: "/admin/patients", label: "Patients", icon: NavPatientsIcon },
+      { href: "/admin/audit", label: "Audit Log", icon: NavAuditLogIcon },
     ];
   }
   return [
-    { href: "/admin/dashboard", label: "Dashboard" },
-    { href: "/admin/staff", label: "Staff" },
-    { href: "/admin/patients", label: "Patients" },
-    { href: "/admin/audit", label: "Audit Log" },
+    { href: "/admin/dashboard", label: "Dashboard", icon: NavHomeIcon },
+    { href: "/admin/staff", label: "Staff", icon: NavShieldUserIcon },
+    { href: "/admin/patients", label: "Patients", icon: NavPatientsIcon },
+    { href: "/admin/audit", label: "Audit Log", icon: NavAuditLogIcon },
   ];
 }

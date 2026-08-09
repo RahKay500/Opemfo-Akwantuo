@@ -59,6 +59,11 @@ import {
   InformationCircleIcon as HugeInformationCircleIcon,
   CloudUploadIcon as HugeCloudUploadIcon,
   Delete01Icon as HugeDelete01Icon,
+  Building01Icon,
+  ClipboardListIcon,
+  UserShield01Icon,
+  Settings01Icon,
+  Logout01Icon,
 } from "@hugeicons/core-free-icons";
 
 function makeIcon(glyph: IconSvgElement) {
@@ -125,3 +130,11 @@ export const ArrowRightIcon = makeIcon(HugeArrowRight01Icon);
 export const InfoIcon = makeIcon(HugeInformationCircleIcon);
 export const CloudUploadIcon = makeIcon(HugeCloudUploadIcon);
 export const TrashIcon = makeIcon(HugeDelete01Icon);
+// Admin Sidebar/AdminBottomNav nav icons — Facilities, Audit Log, and the
+// Facility Admins/Staff (shield = administrative role) items, none of which
+// had an existing icon to reuse.
+export const NavFacilitiesIcon = makeIcon(Building01Icon);
+export const NavAuditLogIcon = makeIcon(ClipboardListIcon);
+export const NavShieldUserIcon = makeIcon(UserShield01Icon);
+export const SettingsIcon = makeIcon(Settings01Icon);
+export const LogoutIcon = makeIcon(Logout01Icon);

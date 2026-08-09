@@ -13,12 +13,14 @@ export default function AdminBottomNav({ facilityId }: { facilityId: string | nu
     <nav className="flex h-16 w-full border-t border-[#E2E8F0] bg-white">
       {navItems.map((item) => {
         const active = pathname === item.href || pathname.startsWith(item.href + "/");
+        const Icon = item.icon;
         return (
           <Link
             key={item.href}
             href={item.href}
-            className="flex flex-1 flex-col items-center justify-center gap-1 px-1"
+            className="flex flex-1 flex-col items-center justify-center gap-0.5 px-1"
           >
+            <Icon className={cn("size-5", active ? "text-[#1A1A2E]" : "text-[#9CA3AF]")} />
             <span className={cn("text-[11px] font-medium", active ? "text-[#1A1A2E]" : "text-[#9CA3AF]")}>
               {item.label}
             </span>

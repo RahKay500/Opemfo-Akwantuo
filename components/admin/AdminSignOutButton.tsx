@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { LogoutIcon } from "@/components/ui/icons";
 
 export default function AdminSignOutButton() {
   const router = useRouter();
@@ -22,8 +23,9 @@ export default function AdminSignOutButton() {
       type="button"
       onClick={handleSignOut}
       disabled={signingOut}
-      className="block w-full px-3.5 py-2 text-left text-sm font-medium text-[#DC2626] hover:bg-[#F8FAFC] disabled:opacity-60"
+      className="flex w-full items-center gap-2 px-3.5 py-2 text-left text-sm font-medium text-[#DC2626] hover:bg-[#F8FAFC] disabled:opacity-60"
     >
+      <LogoutIcon className="size-4" />
       {signingOut ? "Signing out…" : "Sign out"}
     </button>
   );
