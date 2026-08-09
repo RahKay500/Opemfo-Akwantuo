@@ -32,7 +32,18 @@ export const VIDEOS: VideoItem[] = [
 
 export const CATEGORIES = ["All", "Pregnancy", "Nutrition", "Labour", "Postnatal", "Baby Care"] as const;
 
+export function youtubeVideoId(url: string): string | null {
+  return new URL(url).searchParams.get("v");
+}
+
 export function youtubeThumbnail(url: string): string {
-  const id = new URL(url).searchParams.get("v");
-  return `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+  return `https://i.ytimg.com/vi/${youtubeVideoId(url)}/hqdefault.jpg`;
+}
+
+// autoplay=1 starts playback the moment the player opens (a click already
+// expressed clear intent, so there's no need to also make her press Play);
+// rel=0 keeps YouTube's "related videos" end-screen restricted to this
+// channel instead of surfacing unrelated content.
+export function youtubeEmbedUrl(url: string): string {
+  return `https://www.youtube.com/embed/${youtubeVideoId(url)}?autoplay=1&rel=0`;
 }
