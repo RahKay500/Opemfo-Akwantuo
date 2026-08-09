@@ -28,8 +28,12 @@ export default async function Header({
         <h1 className="text-xl font-semibold text-[#1A1A2E]">{title}</h1>
         {subtitle && <p className="mt-0.5 truncate text-sm text-[#6B7280]">{subtitle}</p>}
       </div>
+      {identity && isPlatform && (
+        <div className="hidden flex-1 justify-center lg:flex">
+          <HeaderSearch />
+        </div>
+      )}
       <div className="flex shrink-0 items-center gap-3">
-        {identity && isPlatform && <HeaderSearch />}
         {action}
         {identity && !isPlatform && <NotificationBell />}
         {identity && (

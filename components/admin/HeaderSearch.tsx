@@ -58,7 +58,7 @@ export default function HeaderSearch() {
   const hasResults = results.facilities.length + results.staff.length + results.patients.length > 0;
 
   return (
-    <div ref={ref} className="relative hidden w-64 lg:block">
+    <div ref={ref} className="relative w-full max-w-md">
       <SearchIcon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
       <input
         type="text"
