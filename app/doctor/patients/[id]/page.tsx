@@ -80,7 +80,7 @@ export default async function DoctorPatientDetailPage({ params }: { params: Prom
         }))}
         referrals={patient.referrals.map((r) => ({
           id: r.id,
-          hospitalName: r.toFacility.name,
+          hospitalName: r.toFacility?.name ?? `${r.externalHospitalName} (external)`,
           status: r.status,
           priority: r.priority,
           sentAt: r.sentAt.toISOString(),

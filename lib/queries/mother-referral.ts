@@ -78,8 +78,8 @@ export async function getMotherReferralData(userId: string): Promise<MotherRefer
     active: active
       ? {
           id: active.id,
-          hospitalName: active.toFacility.name,
-          hospitalPhone: active.toFacility.phone,
+          hospitalName: active.toFacility?.name ?? active.externalHospitalName ?? "",
+          hospitalPhone: active.toFacility?.phone ?? active.externalHospitalPhone ?? null,
           priority: active.priority,
           reason: active.reason,
           referredByName: active.initiatedBy.name,
@@ -90,7 +90,7 @@ export async function getMotherReferralData(userId: string): Promise<MotherRefer
       : null,
     past: past.map((r) => ({
       id: r.id,
-      hospitalName: r.toFacility.name,
+      hospitalName: r.toFacility?.name ?? r.externalHospitalName ?? "",
       date: r.completedAt ?? r.sentAt,
       status: r.status,
     })),

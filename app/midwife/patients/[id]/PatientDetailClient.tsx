@@ -294,9 +294,14 @@ export default function PatientDetailClient({
                   <p className="font-heading text-[15px] font-bold text-text-primary">{r.hospitalName}</p>
                   <PriorityBadge priority={r.priority} className="px-2.5 py-0.5 text-[11px]" />
                 </div>
-                <p className="mt-1 font-body text-xs text-text-secondary">
-                  {formatDate(r.sentAt)} · {r.status.replace(/_/g, " ")}
-                </p>
+                <div className="mt-1 flex items-center justify-between">
+                  <p className="font-body text-xs text-text-secondary">
+                    {formatDate(r.sentAt)} · {r.status.replace(/_/g, " ")}
+                  </p>
+                  <Link href={`/referrals/${r.id}/print`} target="_blank" className="font-body text-xs font-medium text-pink-deep">
+                    Download
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

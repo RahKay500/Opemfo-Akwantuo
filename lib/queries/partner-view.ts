@@ -88,7 +88,11 @@ export async function getPartnerViewData(token: string): Promise<PartnerViewData
       observations: v.observations,
     })),
     activeReferral: activeReferral
-      ? { hospitalName: activeReferral.toFacility.name, status: activeReferral.status, priority: activeReferral.priority }
+      ? {
+          hospitalName: activeReferral.toFacility?.name ?? activeReferral.externalHospitalName ?? "",
+          status: activeReferral.status,
+          priority: activeReferral.priority,
+        }
       : null,
     medicalHistory: permissions.shareMedicalHistory
       ? {

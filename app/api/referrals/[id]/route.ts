@@ -102,7 +102,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   });
 
   if (referral.patient.userId && referral.patient.notifyReferralUpdates) {
-    const message = statusMessage(parsed.data.status, referral.toFacility.name);
+    const message = statusMessage(parsed.data.status, referral.toFacility?.name ?? "the facility");
     if (message) {
       await prisma.notification.create({
         data: {

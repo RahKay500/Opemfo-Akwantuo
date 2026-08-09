@@ -22,16 +22,25 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Patient not found." }, { status: 404 });
   }
 
-  const toFacility = await prisma.facility.findUnique({ where: { id: parsed.data.toFacilityId } });
-  if (!toFacility) {
-    return NextResponse.json({ error: "Destination facility not found." }, { status: 404 });
+  let toFacility: { id: string; name: string; phone: string | null } | null = null;
+  if (parsed.data.toFacilityId) {
+    toFacility = await prisma.facility.findUnique({
+      where: { id: parsed.data.toFacilityId },
+      select: { id: true, name: true, phone: true },
+    });
+    if (!toFacility) {
+      return NextResponse.json({ error: "Destination facility not found." }, { status: 404 });
+    }
   }
+  const destinationName = toFacility?.name ?? parsed.data.externalHospitalName?.trim() ?? "";
 
   const referral = await prisma.referral.create({
     data: {
       patientId: patient.id,
       fromFacilityId: session.facilityId,
-      toFacilityId: toFacility.id,
+      toFacilityId: toFacility?.id,
+      externalHospitalName: toFacility ? null : destinationName,
+      externalHospitalPhone: toFacility ? null : parsed.data.externalHospitalPhone?.trim() || null,
       initiatedById: session.userId,
       priority: parsed.data.priority,
       systemSuggestedPriority: parsed.data.systemSuggestedPriority,
@@ -50,11 +59,11 @@ export async function POST(request: NextRequest) {
     action: "REFERRAL_CREATED",
     entityType: "Referral",
     entityId: referral.id,
-    metadata: { priority: referral.priority, toFacilityId: toFacility.id },
+    metadata: { priority: referral.priority, toFacilityId: toFacility?.id ?? null, externalHospitalName: toFacility ? null : destinationName },
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 
-  if (toFacility.phone) {
+  if (toFacility?.phone) {
     await sendReferralCreatedSms(toFacility.phone, patient.emergencyContactPhone, patient.name);
   }
 
@@ -63,8 +72,10 @@ export async function POST(request: NextRequest) {
       data: {
         userId: patient.userId,
         type: "REFERRAL",
-        title: `You've been referred to ${toFacility.name}`,
-        message: `Your midwife has referred you for further care. You'll be notified as your referral progresses.`,
+        title: `You've been referred to ${destinationName}`,
+        message: toFacility
+          ? "Your midwife has referred you for further care. You'll be notified as your referral progresses."
+          : "Your midwife has referred you to a hospital outside our network. Download your referral letter to bring with you.",
         relatedId: referral.id,
         relatedType: "Referral",
       },

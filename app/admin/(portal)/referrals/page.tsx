@@ -29,7 +29,7 @@ export default async function AdminReferralsPage() {
             id: r.id,
             patientName: r.patient.name,
             fromFacilityName: r.fromFacility.name,
-            toFacilityName: r.toFacility.name,
+            toFacilityName: r.toFacility?.name ?? `${r.externalHospitalName} (external)`,
             priority: r.priority,
             status: r.status,
             sentAt: r.sentAt.toISOString(),

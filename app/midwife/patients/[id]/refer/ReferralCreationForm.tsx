@@ -5,7 +5,10 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { AlertTriangleIcon, ChevronRightIcon } from "@/components/ui/icons";
 import Select from "@/components/ui/Select";
+import Input from "@/components/ui/Input";
 import type { Priority } from "@prisma/client";
+
+const OTHER_HOSPITAL = "__other__";
 
 const PRIORITY_STYLES: Record<Priority, { border: string; bg: string; text: string; label: string }> = {
   CRITICAL: { border: "border-critical", bg: "bg-critical-bg", text: "text-critical", label: "Critical Priority" },
@@ -43,6 +46,8 @@ export default function ReferralCreationForm({
   const [priority, setPriority] = useState<Priority>(systemSuggestedPriority);
   const [overrideReason, setOverrideReason] = useState("");
   const [toFacilityId, setToFacilityId] = useState(facilities[0]?.id ?? "");
+  const [externalHospitalName, setExternalHospitalName] = useState("");
+  const [externalHospitalPhone, setExternalHospitalPhone] = useState("");
   const [reason, setReason] = useState("");
   const [notes, setNotes] = useState("");
   const [transportMethod, setTransportMethod] = useState("");
@@ -52,10 +57,16 @@ export default function ReferralCreationForm({
 
   const style = PRIORITY_STYLES[priority];
 
+  const isExternal = toFacilityId === OTHER_HOSPITAL;
+
   async function handleSubmit() {
     setError(null);
     if (!toFacilityId) {
       setError("Choose a facility to refer to.");
+      return;
+    }
+    if (isExternal && !externalHospitalName.trim()) {
+      setError("Enter the name of the hospital you're referring to.");
       return;
     }
     if (!reason.trim()) {
@@ -70,7 +81,9 @@ export default function ReferralCreationForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           patientId,
-          toFacilityId,
+          toFacilityId: isExternal ? undefined : toFacilityId,
+          externalHospitalName: isExternal ? externalHospitalName.trim() : undefined,
+          externalHospitalPhone: isExternal ? externalHospitalPhone.trim() || undefined : undefined,
           priority,
           systemSuggestedPriority,
           nurseOverrideReason: priority !== systemSuggestedPriority ? overrideReason.trim() || undefined : undefined,
@@ -160,7 +173,37 @@ export default function ReferralCreationForm({
                 {f.name}
               </option>
             ))}
+            <option value={OTHER_HOSPITAL}>Other hospital (not listed)...</option>
           </Select>
+
+          {isExternal && (
+            <div className="mt-3 flex flex-col gap-3 rounded-input bg-lilac-light p-3.5">
+              <p className="font-body text-[12px] text-lilac-deeper">
+                This hospital isn&apos;t on our network, so it won&apos;t receive this referral electronically.
+                You&apos;ll be able to download a referral letter to send or hand over yourself.
+              </p>
+              <div>
+                <label className="font-body text-xs font-medium text-text-secondary">Hospital name</label>
+                <Input
+                  inputSize="lg"
+                  value={externalHospitalName}
+                  onChange={(e) => setExternalHospitalName(e.target.value)}
+                  placeholder="e.g. St. Martin's Hospital"
+                  className="mt-1.5"
+                />
+              </div>
+              <div>
+                <label className="font-body text-xs font-medium text-text-secondary">Hospital phone (optional)</label>
+                <Input
+                  inputSize="lg"
+                  value={externalHospitalPhone}
+                  onChange={(e) => setExternalHospitalPhone(e.target.value)}
+                  placeholder="024 123 4567"
+                  className="mt-1.5"
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <div>

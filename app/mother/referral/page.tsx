@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherReferralData } from "@/lib/queries/mother-referral";
@@ -35,8 +36,15 @@ export default async function MotherReferralPage() {
                 ACTIVE REFERRAL
               </p>
               <p className="mt-2 font-heading text-xl font-bold text-text-primary">{data.active.hospitalName}</p>
-              <div className="mt-4">
+              <div className="mt-4 flex items-center gap-3">
                 <PriorityBadge priority={data.active.priority} />
+                <Link
+                  href={`/referrals/${data.active.id}/print`}
+                  target="_blank"
+                  className="font-body text-[13px] font-medium text-pink-deep underline"
+                >
+                  Download Referral
+                </Link>
               </div>
               <div className="mt-4 border-t border-border-color pt-4">
                 <div className="flex gap-4">
@@ -97,9 +105,18 @@ export default async function MotherReferralPage() {
                     <p className="font-heading text-sm font-bold text-text-primary">{referral.hospitalName}</p>
                     <p className="mt-0.5 font-body text-xs text-text-secondary">{formatDate(referral.date)}</p>
                   </div>
-                  <span className="rounded-badge bg-[#F0FDF4] px-2.5 py-1 font-body text-xs font-medium text-[#16A34A]">
-                    {referral.status === "COMPLETED" ? "Completed" : "Cancelled"}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    <Link
+                      href={`/referrals/${referral.id}/print`}
+                      target="_blank"
+                      className="font-body text-xs font-medium text-pink-deep underline"
+                    >
+                      Download
+                    </Link>
+                    <span className="rounded-badge bg-[#F0FDF4] px-2.5 py-1 font-body text-xs font-medium text-[#16A34A]">
+                      {referral.status === "COMPLETED" ? "Completed" : "Cancelled"}
+                    </span>
+                  </div>
                 </div>
               ))}
             </div>

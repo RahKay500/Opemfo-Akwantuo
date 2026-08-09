@@ -326,8 +326,13 @@ model Referral {
   patient                 Patient        @relation(fields: [patientId], references: [id])
   fromFacilityId          String
   fromFacility            Facility       @relation("ReferralFromFacility", fields: [fromFacilityId], references: [id])
-  toFacilityId            String
-  toFacility              Facility       @relation("ReferralToFacility", fields: [toFacilityId], references: [id])
+  toFacilityId            String?
+  toFacility              Facility?      @relation("ReferralToFacility", fields: [toFacilityId], references: [id])
+  // Set instead of toFacility when the destination hospital isn't registered
+  // in the system — there's no staff account there to receive/act on the
+  // referral electronically, so the midwife/mother carry a printed copy.
+  externalHospitalName    String?
+  externalHospitalPhone   String?
   initiatedById           String
   initiatedBy             User           @relation("ReferralInitiator", fields: [initiatedById], references: [id])
   priority                Priority

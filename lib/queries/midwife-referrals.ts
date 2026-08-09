@@ -33,7 +33,7 @@ export async function getMidwifeReferrals(userId: string): Promise<MidwifeReferr
     refId: refIdByReferralId.get(r.id)!,
     patientId: r.patient.id,
     patientName: r.patient.name,
-    toFacilityName: r.toFacility.name,
+    toFacilityName: r.toFacility?.name ?? `${r.externalHospitalName} (external)`,
     reason: r.reason,
     priority: r.priority,
     status: r.status,
