@@ -3,9 +3,10 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifeProfileData } from "@/lib/queries/midwife-profile";
 import { getMidwifeSidebarData } from "@/lib/queries/midwife-sidebar";
-import { formatDate, initials } from "@/lib/utils";
+import { formatDate, initials, shortFacilityName } from "@/lib/utils";
 import { ChevronRightIcon, LocationPinIcon, PencilIcon, PhoneCallIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import LogoutButton from "@/components/ui/LogoutButton";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 
 export default async function MidwifeProfilePage() {
   const user = await getCurrentUser();
@@ -40,6 +41,12 @@ export default async function MidwifeProfilePage() {
               <span className="size-1.5 rounded-badge bg-critical" />1 Emergency
             </span>
           )}
+          <IdentityMenu
+            name={data.name}
+            subtitle={`${shortFacilityName(data.facilityName)} · Midwife`}
+            profileHref="/midwife/profile"
+            avatarSize="sm"
+          />
         </div>
       </div>
 

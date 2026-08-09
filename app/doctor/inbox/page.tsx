@@ -6,6 +6,7 @@ import { getDoctorPatientDetail } from "@/lib/queries/doctor-patient-detail";
 import { getOtherDoctors } from "@/lib/queries/doctor-directory";
 import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
 import { cn } from "@/lib/utils";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 import InboxClient from "./InboxClient";
 import PatientRecordPanel from "./PatientRecordPanel";
 
@@ -48,6 +49,9 @@ export default async function DoctorInboxPage({
             <span className="rounded-badge bg-pink-light px-3 py-1.5 font-body text-[13px] font-bold text-pink-deep">
               {pendingCount} shared record{pendingCount === 1 ? "" : "s"} pending review
             </span>
+          )}
+          {sidebarData?.name && (
+            <IdentityMenu name={sidebarData.name} subtitle={`${sidebarData.facilityName} · Doctor`} profileHref="/doctor/profile" />
           )}
         </div>
       </div>

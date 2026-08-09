@@ -1,16 +1,20 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { prisma } from "@/lib/prisma";
+import { getMotherSidebarData } from "@/lib/queries/mother-sidebar";
 import NotificationsClient from "./NotificationsClient";
 
 export default async function MotherNotificationsPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const notifications = await prisma.notification.findMany({
-    where: { userId: user.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const [notifications, sidebarData] = await Promise.all([
+    prisma.notification.findMany({
+      where: { userId: user.id },
+      orderBy: { createdAt: "desc" },
+    }),
+    getMotherSidebarData(user.id),
+  ]);
 
   return (
     <main className="flex flex-col">
@@ -23,6 +27,11 @@ export default async function MotherNotificationsPage() {
           isRead: n.isRead,
           createdAt: n.createdAt.toISOString(),
         }))}
+        identity={{
+          name: sidebarData?.name ?? user.name ?? "",
+          week: sidebarData?.week ?? null,
+          dueDate: sidebarData?.dueDate?.toISOString() ?? null,
+        }}
       />
     </main>
   );

@@ -6,6 +6,7 @@ import { DOCTOR_REFERRAL_STATUS } from "@/lib/referral-status";
 import { BellIcon, DoctorIcon, ShareIcon, CalendarIcon, ReferralArrowIcon } from "@/components/ui/icons";
 import MonthlyReferralsChartLoader from "@/components/ui/MonthlyReferralsChartLoader";
 import ReferralActionButton from "@/components/ui/ReferralActionButton";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 import type { Priority } from "@prisma/client";
 
 const PRIORITY_BORDER: Record<Priority, string> = {
@@ -76,6 +77,7 @@ export default async function DoctorDashboardPage() {
               {data.stats.recordsShared} shared record{data.stats.recordsShared === 1 ? "" : "s"} pending review
             </span>
           )}
+          <IdentityMenu name={data.name} subtitle={`${data.facilityName} · Doctor`} profileHref="/doctor/profile" />
         </div>
       </div>
 

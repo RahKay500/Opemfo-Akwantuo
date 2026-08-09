@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorAnalyticsData } from "@/lib/queries/doctor-analytics";
 import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
 import MonthlyReferralsChartLoader from "@/components/ui/MonthlyReferralsChartLoader";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 
 const REASON_COLOR: Record<string, string> = {
   "Pre-eclampsia": "bg-critical",
@@ -50,6 +51,9 @@ export default async function DoctorAnalyticsPage() {
             <span className="rounded-badge bg-pink-light px-3 py-1.5 font-body text-[13px] font-bold text-pink-deep">
               {sidebarData.newSharedRecordsCount} shared record{sidebarData.newSharedRecordsCount === 1 ? "" : "s"} pending review
             </span>
+          )}
+          {sidebarData?.name && (
+            <IdentityMenu name={sidebarData.name} subtitle={`${data.facilityName} · Doctor`} profileHref="/doctor/profile" />
           )}
         </div>
       </div>

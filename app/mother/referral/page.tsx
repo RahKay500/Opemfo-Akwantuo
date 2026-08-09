@@ -1,16 +1,21 @@
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherReferralData } from "@/lib/queries/mother-referral";
+import { getMotherSidebarData } from "@/lib/queries/mother-sidebar";
 import { formatDate } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import LifecycleTracker from "@/components/ui/LifecycleTracker";
 import { PhoneCallIcon } from "@/components/ui/icons";
+import MotherIdentityCard from "@/components/ui/MotherIdentityCard";
 
 export default async function MotherReferralPage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const data = await getMotherReferralData(user.id);
+  const [data, sidebarData] = await Promise.all([
+    getMotherReferralData(user.id),
+    getMotherSidebarData(user.id),
+  ]);
   if (!data) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 p-6 text-center">
@@ -23,8 +28,15 @@ export default async function MotherReferralPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:pb-0 lg:pt-8 lg:text-left">
+      <div className="px-5 pb-4 pt-14 text-center lg:flex lg:items-center lg:justify-between lg:pb-0 lg:pt-8 lg:text-left">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">Referral Status</h1>
+        <div className="hidden lg:block">
+          <MotherIdentityCard
+            name={sidebarData?.name ?? user.name ?? ""}
+            week={sidebarData?.week ?? null}
+            dueDate={sidebarData?.dueDate?.toISOString() ?? null}
+          />
+        </div>
       </div>
 
       <div className="flex flex-col gap-5 px-5 pb-8 pt-5 lg:max-w-2xl">

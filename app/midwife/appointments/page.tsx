@@ -2,6 +2,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifeAppointments } from "@/lib/queries/midwife-appointments";
 import { getMidwifeSidebarData } from "@/lib/queries/midwife-sidebar";
+import { shortFacilityName } from "@/lib/utils";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 import AppointmentQueueClient from "./AppointmentQueueClient";
 
 export default async function MidwifeAppointmentsPage() {
@@ -30,6 +32,14 @@ export default async function MidwifeAppointmentsPage() {
             <span className="flex items-center gap-1.5 rounded-badge bg-critical-bg px-3 py-1.5 font-body text-[13px] font-bold text-critical">
               <span className="size-1.5 rounded-badge bg-critical" />1 Emergency
             </span>
+          )}
+          {sidebarData?.name && (
+            <IdentityMenu
+              name={sidebarData.name}
+              subtitle={sidebarData.facilityName ? `${shortFacilityName(sidebarData.facilityName)} · Midwife` : null}
+              profileHref="/midwife/profile"
+              avatarSize="sm"
+            />
           )}
         </div>
       </div>

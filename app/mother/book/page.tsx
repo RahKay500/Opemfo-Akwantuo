@@ -8,6 +8,7 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import DateSelectInput from "@/components/ui/DateSelectInput";
+import MotherIdentityCardAuto from "@/components/ui/MotherIdentityCardAuto";
 
 const REQUEST_TYPES = [
   {
@@ -93,8 +94,11 @@ export default function MotherBookPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:pb-0 lg:pt-8 lg:text-left">
+      <div className="px-5 pb-4 pt-14 text-center lg:flex lg:items-center lg:justify-between lg:pb-0 lg:pt-8 lg:text-left">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">Book a Visit</h1>
+        <div className="hidden lg:block">
+          <MotherIdentityCardAuto />
+        </div>
       </div>
 
       <div className="flex flex-col gap-5 px-5 pb-8 pt-5">

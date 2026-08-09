@@ -6,6 +6,7 @@ import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
 import { formatDate, initials } from "@/lib/utils";
 import { ChevronRightIcon, LocationPinIcon, PencilIcon, PhoneCallIcon, ShieldCheckIcon } from "@/components/ui/icons";
 import LogoutButton from "@/components/ui/LogoutButton";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 
 export default async function DoctorProfilePage() {
   const user = await getCurrentUser();
@@ -40,6 +41,7 @@ export default async function DoctorProfilePage() {
               {sidebarData.newSharedRecordsCount} shared record{sidebarData.newSharedRecordsCount === 1 ? "" : "s"} pending review
             </span>
           )}
+          <IdentityMenu name={data.name} subtitle={`${data.facilityName} · Doctor`} profileHref="/doctor/profile" />
         </div>
       </div>
 

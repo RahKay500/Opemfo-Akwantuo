@@ -3,7 +3,8 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifeDashboardData } from "@/lib/queries/midwife-dashboard";
 import type { QueueStatus, FlaggedStatus } from "@/lib/queries/midwife-dashboard";
-import { formatRelativeTime, cn } from "@/lib/utils";
+import { formatRelativeTime, cn, shortFacilityName } from "@/lib/utils";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 import {
   BellIcon,
   MidwifeIcon,
@@ -79,6 +80,12 @@ export default async function MidwifeDashboardPage() {
               <span className="size-1.5 rounded-badge bg-critical" />1 Emergency
             </span>
           )}
+          <IdentityMenu
+            name={data.name}
+            subtitle={`${shortFacilityName(data.facilityName)} · Midwife`}
+            profileHref="/midwife/profile"
+            avatarSize="sm"
+          />
         </div>
       </div>
 

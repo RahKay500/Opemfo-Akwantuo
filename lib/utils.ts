@@ -85,3 +85,9 @@ const EMOJI_PATTERN = /[\p{Extended_Pictographic}\u200D\uFE0F]/gu;
 export function stripEmoji(text: string): string {
   return text.replace(EMOJI_PATTERN, "").replace(/\s+/g, " ").trimStart();
 }
+
+// "Compound" makes most CHPS facility names too long to fit next to the role
+// label in the top-right identity card, so it's dropped there only.
+export function shortFacilityName(facilityName: string): string {
+  return facilityName.replace(/\s+Compound$/i, "");
+}

@@ -1,15 +1,8 @@
 import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
 import MidwifeBottomNav from "@/components/ui/MidwifeBottomNav";
 import MidwifeSidebar from "@/components/ui/MidwifeSidebar";
-import IdentityMenu from "@/components/ui/IdentityMenu";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifeSidebarData } from "@/lib/queries/midwife-sidebar";
-
-// "Compound" makes most CHPS facility names too long to fit next to the
-// role label in the top-right identity card — dropped there only.
-function shortFacilityName(facilityName: string): string {
-  return facilityName.replace(/\s+Compound$/i, "");
-}
 
 export default async function MidwifeLayout({
   children,
@@ -21,15 +14,7 @@ export default async function MidwifeLayout({
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
       <MidwifeSidebar activeEmergency={sidebarData?.activeEmergency ?? null} />
-      <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:flex-col lg:justify-stretch lg:overflow-x-auto lg:px-[10px] lg:pb-10">
-        <div className="hidden justify-end px-8 pt-6 lg:flex">
-          <IdentityMenu
-            name={sidebarData?.name ?? user?.name ?? ""}
-            subtitle={sidebarData?.facilityName ? `${shortFacilityName(sidebarData.facilityName)} · Midwife` : null}
-            profileHref="/midwife/profile"
-            avatarSize="sm"
-          />
-        </div>
+      <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:justify-stretch lg:overflow-x-auto lg:px-[10px] lg:pb-10">
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
       </div>
       <div className="fixed inset-x-0 bottom-0 z-30 mx-auto w-full max-w-[430px] lg:hidden">

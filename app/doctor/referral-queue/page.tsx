@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getDoctorReferralQueue } from "@/lib/queries/doctor-referral-queue";
 import { getDoctorSidebarData } from "@/lib/queries/doctor-sidebar";
+import IdentityMenu from "@/components/ui/IdentityMenu";
 import DoctorReferralQueueClient from "./DoctorReferralQueueClient";
 
 export default async function DoctorReferralQueuePage() {
@@ -26,6 +27,9 @@ export default async function DoctorReferralQueuePage() {
           <p className="mt-1 font-body text-sm text-text-secondary">{sidebarData?.facilityName ?? ""}</p>
         </div>
         <div className="flex items-center gap-3">
+          {sidebarData?.name && (
+            <IdentityMenu name={sidebarData.name} subtitle={`${sidebarData.facilityName} · Doctor`} profileHref="/doctor/profile" />
+          )}
         </div>
       </div>
 

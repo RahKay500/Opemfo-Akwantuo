@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import SymptomChip from "@/components/ui/SymptomChip";
 import Button from "@/components/ui/Button";
+import MotherIdentityCardAuto from "@/components/ui/MotherIdentityCardAuto";
 
 const SYMPTOMS = [
   "Fever",
@@ -100,8 +101,11 @@ export default function MotherSymptomsPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:pb-0 lg:pt-8 lg:text-left">
+      <div className="px-5 pb-4 pt-14 text-center lg:flex lg:items-center lg:justify-between lg:pb-0 lg:pt-8 lg:text-left">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">How are you feeling?</h1>
+        <div className="hidden lg:block">
+          <MotherIdentityCardAuto />
+        </div>
       </div>
 
       <div className="flex flex-col gap-6 px-5 pb-8 pt-5">
