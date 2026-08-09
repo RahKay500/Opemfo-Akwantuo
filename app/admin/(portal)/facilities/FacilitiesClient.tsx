@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import RowActionsMenu, { RowActionItem } from "@/components/admin/RowActionsMenu";
 import StatusBadge from "@/components/admin/StatusBadge";
@@ -49,7 +49,8 @@ const EMPTY_FORM: FormState = { name: "", type: "CHPS", region: "", district: ""
 
 export default function FacilitiesClient({ facilities }: { facilities: FacilityRow[] }) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [addOpen, setAddOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<FacilityRow | null>(null);
   const [deactivateTarget, setDeactivateTarget] = useState<FacilityRow | null>(null);

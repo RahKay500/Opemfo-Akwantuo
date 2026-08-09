@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import { formatDate } from "@/lib/utils";
 import { calculateAge } from "@/lib/pregnancy";
@@ -23,7 +24,8 @@ export default function PatientsClient({
   patients: PatientRow[];
   showFacility?: boolean;
 }) {
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
 
   const filtered = useMemo(() => {
     if (!query) return patients;

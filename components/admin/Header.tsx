@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { getCurrentAdminIdentity } from "@/lib/current-admin";
 import HeaderIdentityMenu from "@/components/admin/HeaderIdentityMenu";
+import HeaderSearch from "@/components/admin/HeaderSearch";
 import NotificationBell from "@/components/admin/NotificationBell";
 
 export default async function Header({
@@ -28,6 +29,7 @@ export default async function Header({
         {subtitle && <p className="mt-0.5 truncate text-sm text-[#6B7280]">{subtitle}</p>}
       </div>
       <div className="flex shrink-0 items-center gap-3">
+        {identity && isPlatform && <HeaderSearch />}
         {action}
         {identity && !isPlatform && <NotificationBell />}
         {identity && (

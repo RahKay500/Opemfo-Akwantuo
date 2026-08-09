@@ -8,6 +8,14 @@ import StatsCard from "@/components/admin/StatsCard";
 import StatusBadge from "@/components/admin/StatusBadge";
 import PatientGrowthChart from "@/components/admin/PatientGrowthChart";
 import Avatar from "@/components/ui/Avatar";
+import {
+  NavFacilitiesIcon,
+  PatientsIcon,
+  MidwifeIcon,
+  NavShieldUserIcon,
+  CalendarIcon,
+  ReferralArrowIcon,
+} from "@/components/ui/icons";
 import FacilitiesOverviewTable from "./FacilitiesOverviewTable";
 import type { PlatformDashboardData, FacilityAdminDashboardData } from "@/lib/queries/admin-dashboard";
 
@@ -40,19 +48,28 @@ function PlatformDashboard({ platform }: { platform: PlatformDashboardData }) {
           value={platform.totalFacilities}
           caption={`+${platform.facilitiesThisQuarter} this quarter`}
           color="purple"
+          icon={NavFacilitiesIcon}
         />
         <StatsCard
           label="Registered Patients"
           value={platform.registeredPatients}
           caption={`+${platform.registeredPatientsThisMonth} this month`}
           color="pink"
+          icon={PatientsIcon}
         />
-        <StatsCard label="Active Staff" value={platform.activeStaff} caption="Across all facilities" color="green" />
+        <StatsCard
+          label="Active Staff"
+          value={platform.activeStaff}
+          caption="Across all facilities"
+          color="green"
+          icon={MidwifeIcon}
+        />
         <StatsCard
           label="Facility Admins"
           value={platform.facilityAdminsCount}
           caption={`${platform.unassignedFacilities.length} facilities unassigned`}
           color="orange"
+          icon={NavShieldUserIcon}
         />
       </div>
 
@@ -124,24 +141,33 @@ function FacilityAdminDashboard({ facility }: { facility: FacilityAdminDashboard
   return (
     <>
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatsCard label="Total Staff" value={facility.totalStaff} caption={`${facility.activeStaff} active`} color="blue" />
+        <StatsCard
+          label="Total Staff"
+          value={facility.totalStaff}
+          caption={`${facility.activeStaff} active`}
+          color="blue"
+          icon={MidwifeIcon}
+        />
         <StatsCard
           label="Total Patients"
           value={facility.totalPatients}
           caption={`+${facility.patientsThisWeek} this week`}
           color="pink"
+          icon={PatientsIcon}
         />
         <StatsCard
           label="Visits This Month"
           value={facility.visitsThisMonth}
           caption="Antenatal & postnatal"
           color="green"
+          icon={CalendarIcon}
         />
         <StatsCard
           label="Pending Referrals"
           value={facility.pendingReferrals}
           caption="Awaiting doctor review"
           color="orange"
+          icon={ReferralArrowIcon}
         />
       </div>
 

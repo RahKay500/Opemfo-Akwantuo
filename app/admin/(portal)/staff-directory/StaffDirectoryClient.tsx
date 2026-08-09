@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
 import { deriveStaffStatus } from "@/lib/staff-status";
@@ -21,7 +21,8 @@ const ROLE_LABELS: Record<StaffDirectoryRow["role"], string> = { MIDWIFE: "Midwi
 
 export default function StaffDirectoryClient({ staff }: { staff: StaffDirectoryRow[] }) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
 
   const filtered = useMemo(() => {
     return staff.filter((s) => {
