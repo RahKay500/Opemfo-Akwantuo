@@ -223,7 +223,26 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         </div>
       </div>
 
-      <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit name">
+      <Modal
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        title="Edit name"
+        actions={
+          <>
+            <button type="button" onClick={() => setEditOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => handleUpdate({ name })}
+              disabled={submitting}
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {submitting ? "Saving…" : "Save"}
+            </button>
+          </>
+        }
+      >
         <FormField label="Full name" required>
           <input
             value={name}
@@ -231,22 +250,28 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
             className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
           />
         </FormField>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setEditOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => handleUpdate({ name })}
-            disabled={submitting}
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {submitting ? "Saving…" : "Save"}
-          </button>
-        </div>
       </Modal>
 
-      <Modal open={editLicenseOpen} onClose={() => setEditLicenseOpen(false)} title="Edit licence number">
+      <Modal
+        open={editLicenseOpen}
+        onClose={() => setEditLicenseOpen(false)}
+        title="Edit licence number"
+        actions={
+          <>
+            <button type="button" onClick={() => setEditLicenseOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => handleUpdate({ licenseNumber: licenseNumber.trim() || null })}
+              disabled={submitting}
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {submitting ? "Saving…" : "Save"}
+            </button>
+          </>
+        }
+      >
         <FormField label="Licence number">
           <input
             value={licenseNumber}
@@ -258,37 +283,44 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         <p className="mt-2 text-xs text-[#6B7280]">
           This also controls the &quot;GHS Verified&quot; badge on {staff.name}&apos;s profile.
         </p>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setEditLicenseOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => handleUpdate({ licenseNumber: licenseNumber.trim() || null })}
-            disabled={submitting}
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {submitting ? "Saving…" : "Save"}
-          </button>
-        </div>
       </Modal>
 
-      <Modal open={deactivateOpen} onClose={() => setDeactivateOpen(false)} title="Deactivate account">
+      <Modal
+        open={deactivateOpen}
+        onClose={() => setDeactivateOpen(false)}
+        title="Deactivate account"
+        actions={
+          <>
+            <button type="button" onClick={() => setDeactivateOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <Button size="admin-sm" hierarchy="danger" onClick={() => handleUpdate({ isActive: false })} disabled={submitting}>
+              {submitting ? "Deactivating…" : "Deactivate"}
+            </Button>
+          </>
+        }
+      >
         <p className="text-sm text-[#6B7280]">
           Are you sure you want to deactivate <strong>{staff.name}</strong>&apos;s account? They will immediately lose
           access to the app.
         </p>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setDeactivateOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <Button size="admin-sm" hierarchy="danger" onClick={() => handleUpdate({ isActive: false })} disabled={submitting}>
-            {submitting ? "Deactivating…" : "Deactivate"}
-          </Button>
-        </div>
       </Modal>
 
-      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete account">
+      <Modal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        title="Delete account"
+        actions={
+          <>
+            <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <Button size="admin-sm" hierarchy="danger" onClick={handleDelete} disabled={submitting}>
+              {submitting ? "Deleting…" : "Delete Permanently"}
+            </Button>
+          </>
+        }
+      >
         <p className="text-sm text-[#6B7280]">
           This permanently deletes {staff.name}&apos;s account
           {staff.patientCount > 0 ? (
@@ -303,14 +335,6 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
           . This <strong>cannot be undone</strong>.
         </p>
         {error && <p className="mt-3 text-sm text-[#DC2626]">{error}</p>}
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <Button size="admin-sm" hierarchy="danger" onClick={handleDelete} disabled={submitting}>
-            {submitting ? "Deleting…" : "Delete Permanently"}
-          </Button>
-        </div>
       </Modal>
     </div>
   );

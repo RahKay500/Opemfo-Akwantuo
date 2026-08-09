@@ -106,21 +106,27 @@ export default function AuditClient({ logs, actions }: { logs: AuditRow[]; actio
 
       <DataTable columns={columns} rows={filtered} rowKey={(r) => r.id} emptyMessage="No audit entries match this filter." />
 
-      <Modal open={clearOpen} onClose={() => setClearOpen(false)} title="Clear all audit logs">
+      <Modal
+        open={clearOpen}
+        onClose={() => setClearOpen(false)}
+        title="Clear all audit logs"
+        actions={
+          <>
+            <button type="button" onClick={() => setClearOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <Button size="admin-sm" hierarchy="danger" onClick={handleClearAll} disabled={clearing}>
+              {clearing ? "Clearing…" : "Clear All Permanently"}
+            </Button>
+          </>
+        }
+      >
         <p className="text-sm text-[#6B7280]">
           This permanently deletes every audit log entry you have access to — not just the ones matching your
           current filter. This <strong>cannot be undone</strong>. A single new entry will be logged noting that the
           log was cleared.
         </p>
         {error && <p className="mt-3 text-sm text-[#DC2626]">{error}</p>}
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setClearOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <Button size="admin-sm" hierarchy="danger" onClick={handleClearAll} disabled={clearing}>
-            {clearing ? "Clearing…" : "Clear All Permanently"}
-          </Button>
-        </div>
       </Modal>
     </>
   );

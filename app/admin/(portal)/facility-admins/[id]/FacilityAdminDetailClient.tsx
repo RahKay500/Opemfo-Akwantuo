@@ -231,7 +231,26 @@ export default function FacilityAdminDetailClient({
         </div>
       </div>
 
-      <Modal open={detailsOpen} onClose={() => setDetailsOpen(false)} title="Edit details">
+      <Modal
+        open={detailsOpen}
+        onClose={() => setDetailsOpen(false)}
+        title="Edit details"
+        actions={
+          <>
+            <button type="button" onClick={() => setDetailsOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => handleUpdate({ name, email: email.trim() || "" })}
+              disabled={submitting || name.trim().length < 2}
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {submitting ? "Saving…" : "Save"}
+            </button>
+          </>
+        }
+      >
         <div className="flex flex-col gap-4">
           <FormField label="Full name" required>
             <input
@@ -248,22 +267,28 @@ export default function FacilityAdminDetailClient({
             />
           </FormField>
         </div>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setDetailsOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => handleUpdate({ name, email: email.trim() || "" })}
-            disabled={submitting || name.trim().length < 2}
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {submitting ? "Saving…" : "Save"}
-          </button>
-        </div>
       </Modal>
 
-      <Modal open={facilityOpen} onClose={() => setFacilityOpen(false)} title="Change facility">
+      <Modal
+        open={facilityOpen}
+        onClose={() => setFacilityOpen(false)}
+        title="Change facility"
+        actions={
+          <>
+            <button type="button" onClick={() => setFacilityOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={() => handleUpdate({ facilityId })}
+              disabled={submitting}
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {submitting ? "Saving…" : "Save"}
+            </button>
+          </>
+        }
+      >
         <FormField label="Facility" required>
           <select
             value={facilityId}
@@ -277,50 +302,49 @@ export default function FacilityAdminDetailClient({
             ))}
           </select>
         </FormField>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setFacilityOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={() => handleUpdate({ facilityId })}
-            disabled={submitting}
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {submitting ? "Saving…" : "Save"}
-          </button>
-        </div>
       </Modal>
 
-      <Modal open={deactivateOpen} onClose={() => setDeactivateOpen(false)} title="Deactivate account">
+      <Modal
+        open={deactivateOpen}
+        onClose={() => setDeactivateOpen(false)}
+        title="Deactivate account"
+        actions={
+          <>
+            <button type="button" onClick={() => setDeactivateOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <Button size="admin-sm" hierarchy="danger" onClick={() => handleUpdate({ isActive: false })} disabled={submitting}>
+              {submitting ? "Deactivating…" : "Deactivate"}
+            </Button>
+          </>
+        }
+      >
         <p className="text-sm text-[#6B7280]">
           Are you sure you want to deactivate this Facility Admin&apos;s account? They will immediately lose access
           to the admin portal.
         </p>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setDeactivateOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <Button size="admin-sm" hierarchy="danger" onClick={() => handleUpdate({ isActive: false })} disabled={submitting}>
-            {submitting ? "Deactivating…" : "Deactivate"}
-          </Button>
-        </div>
       </Modal>
 
-      <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete account">
+      <Modal
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        title="Delete account"
+        actions={
+          <>
+            <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <Button size="admin-sm" hierarchy="danger" onClick={handleDelete} disabled={submitting}>
+              {submitting ? "Deleting…" : "Delete Permanently"}
+            </Button>
+          </>
+        }
+      >
         <p className="text-sm text-[#6B7280]">
           This permanently deletes {admin.name ?? "this Facility Admin"}&apos;s account and its audit history.
           Unlike deactivating, this <strong>cannot be undone</strong> — you&apos;ll need to create a new account to
           give this facility an admin again.
         </p>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={() => setDeleteOpen(false)} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <Button size="admin-sm" hierarchy="danger" onClick={handleDelete} disabled={submitting}>
-            {submitting ? "Deleting…" : "Delete Permanently"}
-          </Button>
-        </div>
       </Modal>
     </div>
   );

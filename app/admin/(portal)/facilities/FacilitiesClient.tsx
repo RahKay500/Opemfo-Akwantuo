@@ -227,58 +227,76 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
 
       <DataTable columns={columns} rows={filtered} rowKey={(r) => r.id} emptyMessage="No facilities match this search." />
 
-      <Modal open={addOpen} onClose={closeModals} title="Add Facility">
+      <Modal
+        open={addOpen}
+        onClose={closeModals}
+        title="Add Facility"
+        actions={
+          <>
+            <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleCreate}
+              disabled={submitting}
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {submitting ? "Creating…" : "Create Facility"}
+            </button>
+          </>
+        }
+      >
         <FacilityForm form={form} setForm={setForm} error={error} />
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleCreate}
-            disabled={submitting}
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {submitting ? "Creating…" : "Create Facility"}
-          </button>
-        </div>
       </Modal>
 
-      <Modal open={editTarget !== null} onClose={closeModals} title="Edit Facility">
+      <Modal
+        open={editTarget !== null}
+        onClose={closeModals}
+        title="Edit Facility"
+        actions={
+          <>
+            <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleUpdate}
+              disabled={submitting}
+              className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
+            >
+              {submitting ? "Saving…" : "Save Changes"}
+            </button>
+          </>
+        }
+      >
         <FacilityForm form={form} setForm={setForm} error={error} />
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <button
-            type="button"
-            onClick={handleUpdate}
-            disabled={submitting}
-            className="rounded-md bg-[#1A1A2E] px-4 py-2 text-sm font-semibold text-white disabled:opacity-60"
-          >
-            {submitting ? "Saving…" : "Save Changes"}
-          </button>
-        </div>
       </Modal>
 
-      <Modal open={deactivateTarget !== null} onClose={closeModals} title="Deactivate Facility">
+      <Modal
+        open={deactivateTarget !== null}
+        onClose={closeModals}
+        title="Deactivate Facility"
+        actions={
+          <>
+            <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
+              Cancel
+            </button>
+            <Button
+              size="admin-sm"
+              hierarchy="danger"
+              onClick={() => deactivateTarget && handleToggleActive(deactivateTarget)}
+              disabled={submitting}
+            >
+              {submitting ? "Deactivating…" : "Deactivate"}
+            </Button>
+          </>
+        }
+      >
         <p className="text-sm text-[#6B7280]">
           Are you sure you want to deactivate <strong>{deactivateTarget?.name}</strong>? Staff at this facility will
           remain assigned, but the facility won&apos;t be selectable for new registrations.
         </p>
-        <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={closeModals} className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E]">
-            Cancel
-          </button>
-          <Button
-            size="admin-sm"
-            hierarchy="danger"
-            onClick={() => deactivateTarget && handleToggleActive(deactivateTarget)}
-            disabled={submitting}
-          >
-            {submitting ? "Deactivating…" : "Deactivate"}
-          </Button>
-        </div>
       </Modal>
 
     </>

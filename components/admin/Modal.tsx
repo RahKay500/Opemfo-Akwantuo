@@ -7,11 +7,16 @@ export default function Modal({
   onClose,
   title,
   children,
+  actions,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   children: ReactNode;
+  // Optional footer button row — keeps confirm/cancel markup out of each
+  // caller's children instead of every delete/deactivate dialog hand-rolling
+  // its own "mt-5 flex justify-end gap-2" footer.
+  actions?: ReactNode;
 }) {
   if (!open) return null;
 
@@ -29,7 +34,10 @@ export default function Modal({
             ×
           </button>
         </div>
-        <div className="px-6 py-5">{children}</div>
+        <div className="px-6 py-5">
+          {children}
+          {actions && <div className="mt-5 flex justify-end gap-2">{actions}</div>}
+        </div>
       </div>
     </div>
   );
