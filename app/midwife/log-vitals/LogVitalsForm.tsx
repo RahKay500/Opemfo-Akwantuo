@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import DateSelectInput from "@/components/ui/DateSelectInput";
 import Button from "@/components/ui/Button";
+import { suggestNextVisitDate } from "@/lib/pregnancy";
 
 export interface LogVitalsPatientOption {
   id: string;
@@ -57,6 +58,15 @@ export default function LogVitalsForm({
   const [error, setError] = useState<string | null>(null);
 
   const selectedPatient = patients.find((p) => p.id === patientId) ?? null;
+
+  // Pre-fills a suggested next-visit date whenever the patient/visit type
+  // changes — a default, not a lock, matching this app's other
+  // system-suggests-midwife-can-override fields (e.g. referral priority).
+  useEffect(() => {
+    if (visitType === "ANTENATAL" && selectedPatient?.week != null) {
+      setNextVisitDate(suggestNextVisitDate(selectedPatient.week).toISOString().slice(0, 10));
+    }
+  }, [patientId, visitType, selectedPatient?.week]);
 
   async function handleSubmit() {
     if (!patientId) {
@@ -236,6 +246,11 @@ export default function LogVitalsForm({
           className="mt-1.5 lg:max-w-xs"
           aria-label="Date of next visit"
         />
+        {visitType === "ANTENATAL" && (
+          <p className="mt-1.5 font-body text-[11px] text-text-secondary">
+            Suggested based on gestational age — monthly until 28 weeks, then every 2 weeks. You can change this.
+          </p>
+        )}
       </div>
 
       {error && <p className="mt-4 font-body text-sm text-[#DC2626]">{error}</p>}

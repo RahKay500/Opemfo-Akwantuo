@@ -171,6 +171,14 @@ model Patient {
   para                     Int?
   lmp                      DateTime?
   edd                      DateTime?
+  // How lmp/edd were established. LMP dating is unreliable for mothers with
+  // irregular cycles — when dated by ultrasound instead, lmp still holds a
+  // back-calculated "effective LMP" (scanDate minus gestational age at scan)
+  // so every existing week/EDD calculation elsewhere keeps working unchanged;
+  // datingMethod/scanDate exist purely so the chart shows how dating was
+  // actually established, not that it was guessed.
+  datingMethod             String?
+  scanDate                 DateTime?
   knownConditions          String?
   emergencyContactName     String?
   emergencyContactPhone    String?

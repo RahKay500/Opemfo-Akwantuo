@@ -1,5 +1,7 @@
 const GESTATION_WEEKS = 40;
 const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const GESTATION_DAYS = GESTATION_WEEKS * 7;
 
 export interface PregnancyProgress {
   week: number;
@@ -24,4 +26,29 @@ export function calculatePregnancyProgress(lmp: Date, asOf: Date = new Date()): 
   const progressPercent = Math.round((week / GESTATION_WEEKS) * 100);
   const weeksToGo = Math.max(GESTATION_WEEKS - week, 0);
   return { week, trimester, progressPercent, weeksToGo };
+}
+
+export function calculateEdd(lmp: Date): Date {
+  return new Date(lmp.getTime() + GESTATION_DAYS * MS_PER_DAY);
+}
+
+// LMP is unreliable for mothers with irregular cycles — when dated by an
+// early ultrasound instead, this back-calculates the "effective LMP" a scan
+// implies (scanDate minus gestational age at the scan), so calculateEdd and
+// calculatePregnancyProgress keep working unchanged from that point on.
+export function calculateEffectiveLmpFromScan(
+  scanDate: Date,
+  gestationalAgeWeeks: number,
+  gestationalAgeDays = 0
+): Date {
+  const totalDays = gestationalAgeWeeks * 7 + gestationalAgeDays;
+  return new Date(scanDate.getTime() - totalDays * MS_PER_DAY);
+}
+
+// Standard ANC cadence: monthly through the first two trimesters, then every
+// 2 weeks once the mother reaches the third trimester (week >= 28, matching
+// this file's own trimester boundary above).
+export function suggestNextVisitDate(currentWeek: number, from: Date = new Date()): Date {
+  const intervalDays = currentWeek >= 28 ? 14 : 28;
+  return new Date(from.getTime() + intervalDays * MS_PER_DAY);
 }

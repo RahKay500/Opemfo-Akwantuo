@@ -6,7 +6,6 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { CheckIcon, CalendarIcon, AlertTriangleIcon, MessageIcon, BellIcon } from "@/components/ui/icons";
 import EmptyState from "@/components/ui/EmptyState";
 import Tabs from "@/components/ui/Tabs";
-import MotherIdentityCard from "@/components/ui/MotherIdentityCard";
 
 export interface NotificationListItem {
   id: string;
@@ -37,10 +36,8 @@ function matchesTab(type: string, tab: (typeof TABS)[number]) {
 
 export default function NotificationsClient({
   notifications,
-  identity,
 }: {
   notifications: NotificationListItem[];
-  identity: { name: string; week: number | null; dueDate: string | null };
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>("All");
@@ -61,28 +58,17 @@ export default function NotificationsClient({
 
   return (
     <div className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 lg:flex lg:items-center lg:justify-between lg:pb-0 lg:pt-8">
+      <div className="px-5 pb-4 pt-14 lg:pb-0 lg:pt-8">
         <div className="relative flex items-center justify-center lg:justify-start">
           <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">Notifications</h1>
           <button
             type="button"
             onClick={markAllRead}
             disabled={marking}
-            className="absolute right-0 font-body text-[13px] font-medium text-pink-deep disabled:opacity-60 lg:hidden"
+            className="absolute right-0 font-body text-[13px] font-medium text-pink-deep disabled:opacity-60"
           >
             Mark all read
           </button>
-        </div>
-        <div className="hidden items-center gap-3 lg:flex">
-          <button
-            type="button"
-            onClick={markAllRead}
-            disabled={marking}
-            className="font-body text-[13px] font-medium text-pink-deep disabled:opacity-60"
-          >
-            Mark all read
-          </button>
-          <MotherIdentityCard name={identity.name} week={identity.week} dueDate={identity.dueDate} />
         </div>
       </div>
 

@@ -9,7 +9,6 @@ import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, ChevronRightIcon } from 
 import StatCard from "@/components/ui/StatCard";
 import ProgressRing from "@/components/ui/ProgressRing";
 import SharePartnerCard from "@/components/ui/SharePartnerCard";
-import MotherIdentityCard from "@/components/ui/MotherIdentityCard";
 
 function greeting(): string {
   const hour = new Date().getHours();
@@ -74,13 +73,6 @@ export default async function MotherDashboardPage() {
             >
               <Image src="/images/logo.png" alt="" width={22} height={22} />
             </Link>
-          </div>
-          <div className="hidden lg:block">
-            <MotherIdentityCard
-              name={data.name}
-              week={data.pregnancy?.week ?? null}
-              dueDate={data.dueDate?.toISOString() ?? null}
-            />
           </div>
         </div>
 

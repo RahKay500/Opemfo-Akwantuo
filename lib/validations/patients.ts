@@ -7,6 +7,13 @@ export const createPatientSchema = z.object({
   phone: localPhoneSchema,
   ghanaCardId: z.string().optional(),
   lmp: z.string().optional(),
+  // Alternative to lmp for mothers with irregular cycles — a scan date +
+  // gestational age at that scan, used to back-calculate an effective LMP
+  // server-side instead. See app/api/patients/route.ts.
+  datingMethod: z.enum(["LMP", "ULTRASOUND"]).optional(),
+  scanDate: z.string().optional(),
+  gestationalAgeAtScanWeeks: z.number().optional(),
+  gestationalAgeAtScanDays: z.number().optional(),
   gravida: z.number().optional(),
   para: z.number().optional(),
   bloodGroup: z.string().optional(),

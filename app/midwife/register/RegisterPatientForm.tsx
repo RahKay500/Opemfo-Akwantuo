@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import DateSelectInput from "@/components/ui/DateSelectInput";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
 
 const STEPS = ["Personal", "Family", "Pregnancy", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -34,7 +35,11 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
   const [spouseOccupation, setSpouseOccupation] = useState("");
   const [emergencyTransportPhone, setEmergencyTransportPhone] = useState("");
 
+  const [datingMethod, setDatingMethod] = useState<"LMP" | "ULTRASOUND">("LMP");
   const [lmp, setLmp] = useState("");
+  const [scanDate, setScanDate] = useState("");
+  const [scanWeeks, setScanWeeks] = useState("");
+  const [scanDays, setScanDays] = useState("");
   const [gravida, setGravida] = useState("");
   const [para, setPara] = useState("");
   const [bloodGroup, setBloodGroup] = useState("");
@@ -44,7 +49,13 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
   const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
   const [emergencyContactRelation, setEmergencyContactRelation] = useState("");
 
-  const edd = lmp ? new Date(new Date(lmp).getTime() + 280 * 24 * 60 * 60 * 1000) : null;
+  const effectiveLmp =
+    datingMethod === "ULTRASOUND" && scanDate
+      ? calculateEffectiveLmpFromScan(new Date(scanDate), Number(scanWeeks) || 0, Number(scanDays) || 0)
+      : lmp
+        ? new Date(lmp)
+        : null;
+  const edd = effectiveLmp ? calculateEdd(effectiveLmp) : null;
 
   function validateStep(): string | null {
     if (step === 0) {
@@ -87,6 +98,10 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           spouseOccupation: spouseOccupation.trim() || undefined,
           emergencyTransportPhone: emergencyTransportPhone.trim() || undefined,
           lmp: lmp || undefined,
+          datingMethod,
+          scanDate: datingMethod === "ULTRASOUND" ? scanDate || undefined : undefined,
+          gestationalAgeAtScanWeeks: datingMethod === "ULTRASOUND" ? Number(scanWeeks) || 0 : undefined,
+          gestationalAgeAtScanDays: datingMethod === "ULTRASOUND" ? Number(scanDays) || 0 : undefined,
           gravida: gravida ? Number(gravida) : undefined,
           para: para ? Number(para) : undefined,
           bloodGroup: bloodGroup || undefined,
@@ -239,14 +254,65 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
 
         {step === 2 && (
           <>
-            <Field label="Last Menstrual Period (LMP)">
-              <DateSelectInput
-                value={lmp}
-                onChange={setLmp}
-                max={new Date().toISOString().split("T")[0]}
-                aria-label="Last Menstrual Period"
-              />
+            <Field label="Pregnancy Dating Method">
+              <div className="flex gap-1 rounded-input border-[1.5px] border-border-color bg-white p-1">
+                {(["LMP", "ULTRASOUND"] as const).map((method) => (
+                  <button
+                    key={method}
+                    type="button"
+                    onClick={() => setDatingMethod(method)}
+                    className={cn(
+                      "h-10 flex-1 rounded-badge font-body text-[13px] font-medium",
+                      datingMethod === method ? "bg-lilac-mid text-lilac-deeper" : "text-text-secondary"
+                    )}
+                  >
+                    {method === "LMP" ? "Last Menstrual Period" : "Ultrasound Scan"}
+                  </button>
+                ))}
+              </div>
             </Field>
+
+            {datingMethod === "LMP" ? (
+              <Field label="Last Menstrual Period (LMP)">
+                <DateSelectInput
+                  value={lmp}
+                  onChange={setLmp}
+                  max={new Date().toISOString().split("T")[0]}
+                  aria-label="Last Menstrual Period"
+                />
+              </Field>
+            ) : (
+              <>
+                <Field label="Scan Date">
+                  <DateSelectInput
+                    value={scanDate}
+                    onChange={setScanDate}
+                    max={new Date().toISOString().split("T")[0]}
+                    aria-label="Scan Date"
+                  />
+                </Field>
+                <div className="flex gap-3">
+                  <Field label="Gestational Age — Weeks" className="flex-1">
+                    <Input
+                      inputSize="lg"
+                      type="number"
+                      value={scanWeeks}
+                      onChange={(e) => setScanWeeks(e.target.value)}
+                      placeholder="e.g. 12"
+                    />
+                  </Field>
+                  <Field label="Gestational Age — Days" className="flex-1">
+                    <Input
+                      inputSize="lg"
+                      type="number"
+                      value={scanDays}
+                      onChange={(e) => setScanDays(e.target.value)}
+                      placeholder="e.g. 3"
+                    />
+                  </Field>
+                </div>
+              </>
+            )}
             <Field label="Estimated Due Date (EDD)">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
                 {edd ? edd.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" }) : "Enter LMP to calculate"}

@@ -2,10 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherProfileData } from "@/lib/queries/mother-profile";
-import { getMotherSidebarData } from "@/lib/queries/mother-sidebar";
 import { formatDate, initials } from "@/lib/utils";
 import LogoutButton from "@/components/ui/LogoutButton";
-import MotherIdentityCard from "@/components/ui/MotherIdentityCard";
 import PreferencesCard from "./PreferencesCard";
 import DeleteAccountRow from "./DeleteAccountRow";
 
@@ -13,10 +11,7 @@ export default async function MotherProfilePage() {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const [data, sidebarData] = await Promise.all([
-    getMotherProfileData(user.id),
-    getMotherSidebarData(user.id),
-  ]);
+  const data = await getMotherProfileData(user.id);
   if (!data) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center gap-2 p-6 text-center">
@@ -29,15 +24,8 @@ export default async function MotherProfilePage() {
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:flex lg:items-center lg:justify-between lg:pb-0 lg:pt-8 lg:text-left">
+      <div className="px-5 pb-4 pt-14 text-center lg:pb-0 lg:pt-8 lg:text-left">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">My Profile</h1>
-        <div className="hidden lg:block">
-          <MotherIdentityCard
-            name={sidebarData?.name ?? data.name}
-            week={sidebarData?.week ?? null}
-            dueDate={sidebarData?.dueDate?.toISOString() ?? null}
-          />
-        </div>
       </div>
 
       <div className="flex flex-col gap-4 px-5 pb-8 pt-5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">

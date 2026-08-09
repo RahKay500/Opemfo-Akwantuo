@@ -3,27 +3,6 @@ import { prisma } from "@/lib/prisma";
 import { getSessionFromRequest } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { updateProfileSchema } from "@/lib/validations/profile";
-import { getMotherSidebarData } from "@/lib/queries/mother-sidebar";
-
-// Used by client-component pages (e.g. Symptoms, Book a Visit) that have no
-// server-side data fetch of their own to feed the top-right identity card.
-export async function GET(request: NextRequest) {
-  const session = await getSessionFromRequest(request);
-  if (!session || session.role !== "MOTHER") {
-    return NextResponse.json({ error: "Not authenticated." }, { status: 401 });
-  }
-
-  const sidebarData = await getMotherSidebarData(session.userId);
-  if (!sidebarData) {
-    return NextResponse.json({ error: "Patient record not found." }, { status: 404 });
-  }
-
-  return NextResponse.json({
-    name: sidebarData.name,
-    week: sidebarData.week,
-    dueDate: sidebarData.dueDate ? sidebarData.dueDate.toISOString() : null,
-  });
-}
 
 export async function PATCH(request: NextRequest) {
   const session = await getSessionFromRequest(request);

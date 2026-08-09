@@ -5,6 +5,7 @@ import { logAudit } from "@/lib/audit";
 import { normalizeGhanaPhone } from "@/lib/utils";
 import { createPatientSchema } from "@/lib/validations/patients";
 import { sendMotherActivationSms } from "@/lib/hubtel";
+import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
 
 export async function GET(request: NextRequest) {
   const session = await getSessionFromRequest(request);
@@ -37,8 +38,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Invalid phone number." }, { status: 400 });
   }
 
-  const lmp = parsed.data.lmp ? new Date(parsed.data.lmp) : null;
-  const edd = lmp ? new Date(lmp.getTime() + 280 * 24 * 60 * 60 * 1000) : null;
+  const scanDate = parsed.data.scanDate ? new Date(parsed.data.scanDate) : null;
+  const lmp =
+    parsed.data.datingMethod === "ULTRASOUND" && scanDate
+      ? calculateEffectiveLmpFromScan(
+          scanDate,
+          parsed.data.gestationalAgeAtScanWeeks ?? 0,
+          parsed.data.gestationalAgeAtScanDays ?? 0
+        )
+      : parsed.data.lmp
+        ? new Date(parsed.data.lmp)
+        : null;
+  const edd = lmp ? calculateEdd(lmp) : null;
+  const datingMethod = lmp ? (parsed.data.datingMethod ?? "LMP") : null;
 
   // Mirrors how the Super Admin provisions staff: registering a patient here
   // is also what creates (or links) her own login account — she never
@@ -63,6 +75,8 @@ export async function POST(request: NextRequest) {
       userId: linkedUserId,
       lmp,
       edd,
+      datingMethod,
+      scanDate: parsed.data.datingMethod === "ULTRASOUND" ? scanDate : null,
       gravida: parsed.data.gravida,
       para: parsed.data.para,
       bloodGroup: parsed.data.bloodGroup || null,
