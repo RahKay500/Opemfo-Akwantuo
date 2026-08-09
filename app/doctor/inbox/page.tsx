@@ -39,7 +39,7 @@ export default async function DoctorInboxPage({
         <InboxClient shares={shares} />
       </div>
 
-      <div className="hidden items-center justify-between px-5 pt-8 lg:flex">
+      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 shadow-card lg:mx-5 lg:mt-8 lg:flex">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-text-primary">Patient Records</h1>
           <p className="mt-1 font-body text-sm text-text-secondary">{sidebarData?.facilityName ?? ""}</p>
