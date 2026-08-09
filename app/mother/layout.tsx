@@ -1,7 +1,7 @@
 import SessionKeepAlive from "@/app/_components/SessionKeepAlive";
 import MotherBottomNav from "@/components/ui/MotherBottomNav";
 import MotherSidebar from "@/components/ui/MotherSidebar";
-import IdentityMenu from "@/components/ui/IdentityMenu";
+import MotherIdentityCard from "@/components/ui/MotherIdentityCard";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherSidebarData } from "@/lib/queries/mother-sidebar";
 
@@ -14,23 +14,17 @@ export default async function MotherLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
-      <MotherSidebar
-        name={sidebarData?.name ?? user?.name ?? ""}
-        week={sidebarData?.week ?? null}
-        dueDate={sidebarData?.dueDate?.toISOString() ?? null}
-        progressPercent={sidebarData?.progressPercent ?? null}
-        unreadCount={sidebarData?.unreadCount ?? 0}
-      />
+      <MotherSidebar unreadCount={sidebarData?.unreadCount ?? 0} />
       {/* pb clears the fixed 80px MotherBottomNav so bottom-of-page content
           like a submit button is never covered by it. Disappears at lg:,
           where the sidebar takes over instead. */}
       <div className="flex flex-1 justify-center overflow-x-hidden pb-28 lg:flex-col lg:justify-stretch lg:overflow-x-auto lg:px-[10px] lg:pb-10">
         <div className="hidden justify-end px-8 pt-6 lg:flex">
-          <IdentityMenu
+          <MotherIdentityCard
             name={sidebarData?.name ?? user?.name ?? ""}
-            subtitle="Mother"
-            profileHref="/mother/profile"
-            variant="light"
+            week={sidebarData?.week ?? null}
+            dueDate={sidebarData?.dueDate?.toISOString() ?? null}
+            progressPercent={sidebarData?.progressPercent ?? null}
           />
         </div>
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
