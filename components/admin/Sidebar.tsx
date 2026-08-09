@@ -15,7 +15,10 @@ export default function Sidebar({ facilityId, admin }: { facilityId: string | nu
   const pathname = usePathname();
   const navItems = getAdminNavItems(facilityId);
   const isPlatform = facilityId === null;
-  const accent = isPlatform ? "#7C3AED" : "#2663EB";
+  // Platform Super Admin's accent is pulled from the shared design system's
+  // own brand ramp (brand-700) rather than an unrelated raw hex, so it reads
+  // as a deliberate variation on this app's identity, not a bolted-on tool.
+  const accent = isPlatform ? "#9F1AB1" : "#2663EB";
 
   return (
     <aside className="hidden min-h-screen w-[240px] shrink-0 flex-col bg-[#1A1A2E] text-white lg:flex">

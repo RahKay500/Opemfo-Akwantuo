@@ -15,7 +15,7 @@ export default async function AdminSettingsPage() {
       <Header title="Settings" />
       <div className="flex flex-col gap-4 px-4 py-6 lg:px-8">
         <SettingsTabs
-          accent={isPlatform ? "#7C3AED" : "#2663EB"}
+          accent={isPlatform ? "#9F1AB1" : "#2663EB"}
           profile={
             <ProfileForm
               initialName={identity?.name ?? null}

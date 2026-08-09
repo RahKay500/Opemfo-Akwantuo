@@ -162,7 +162,7 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
       header: "Type",
       width: "220px",
       render: (r) => (
-        <span className="inline-block rounded-full bg-[#F3E8FB] px-2.5 py-1 text-center text-xs font-medium text-[#7C3AED]">
+        <span className="inline-block rounded-full bg-[#FBE8FF] px-2.5 py-1 text-center text-xs font-medium text-[#9F1AB1]">
           {facilityTypeLabel(r.type)}
         </span>
       ),
@@ -216,7 +216,7 @@ export default function FacilitiesClient({ facilities }: { facilities: FacilityR
             setError(null);
             setAddOpen(true);
           }}
-          className="h-10 shrink-0 rounded-md bg-[#7C3AED] px-4 text-sm font-semibold text-white"
+          className="h-10 shrink-0 rounded-md bg-[#9F1AB1] px-4 text-sm font-semibold text-white"
         >
           + Add Facility
         </button>

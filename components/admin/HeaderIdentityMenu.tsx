@@ -9,10 +9,12 @@ import { SettingsIcon } from "@/components/ui/icons";
 export default function HeaderIdentityMenu({
   displayName,
   orgName,
+  tierLabel,
   accent,
 }: {
   displayName: string;
   orgName: string | null;
+  tierLabel: string;
   accent: string;
 }) {
   const [open, setOpen] = useState(false);
@@ -36,7 +38,20 @@ export default function HeaderIdentityMenu({
       >
         <div className="hidden text-right leading-tight lg:block">
           <p className="text-sm font-semibold text-[#1A1A2E]">{displayName}</p>
-          {orgName && <p className="text-xs text-[#6B7280]">{orgName}</p>}
+          <span
+            className="mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
+            style={{ backgroundColor: `${accent}1A`, color: accent }}
+          >
+            <svg viewBox="0 0 20 20" fill="currentColor" className="size-3 shrink-0">
+              <path
+                fillRule="evenodd"
+                d="M10 1.75a1 1 0 01.447.106l6 3A1 1 0 0117 5.75v4.5c0 4.03-2.611 7.437-6.435 8.61a1 1 0 01-.63 0C6.111 17.687 3.5 14.28 3.5 10.25v-4.5a1 1 0 01.553-.894l6-3A1 1 0 0110 1.75z"
+                clipRule="evenodd"
+              />
+            </svg>
+            {tierLabel}
+          </span>
+          {orgName && <p className="mt-1 text-xs text-[#6B7280]">{orgName}</p>}
         </div>
         <Avatar
           name={displayName}

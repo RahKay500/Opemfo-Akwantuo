@@ -14,7 +14,10 @@ export default async function Header({
   const identity = await getCurrentAdminIdentity();
   const isPlatform = identity?.facilityId === null;
   const tierLabel = isPlatform ? "Super Admin" : "Facility Admin";
-  const accent = isPlatform ? "#7C3AED" : "#2663EB";
+  // Platform Super Admin's accent is pulled from the shared design system's
+  // own brand ramp (brand-700) rather than an unrelated raw hex, so it reads
+  // as a deliberate variation on this app's identity, not a bolted-on tool.
+  const accent = isPlatform ? "#9F1AB1" : "#2663EB";
   const displayName = identity?.name?.trim() || (isPlatform ? "System Administrator" : "Facility Administrator");
 
   return (
@@ -26,22 +29,7 @@ export default async function Header({
       <div className="flex shrink-0 items-center gap-3">
         {action}
         {identity && (
-          <div className="flex items-center gap-3">
-            <span
-              className="hidden items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium lg:flex"
-              style={{ backgroundColor: `${accent}1A`, color: accent }}
-            >
-              <svg viewBox="0 0 20 20" fill="currentColor" className="h-3.5 w-3.5 shrink-0">
-                <path
-                  fillRule="evenodd"
-                  d="M10 1.75a1 1 0 01.447.106l6 3A1 1 0 0117 5.75v4.5c0 4.03-2.611 7.437-6.435 8.61a1 1 0 01-.63 0C6.111 17.687 3.5 14.28 3.5 10.25v-4.5a1 1 0 01.553-.894l6-3A1 1 0 0110 1.75z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              {tierLabel}
-            </span>
-            <HeaderIdentityMenu displayName={displayName} orgName={identity.orgName} accent={accent} />
-          </div>
+          <HeaderIdentityMenu displayName={displayName} orgName={identity.orgName} tierLabel={tierLabel} accent={accent} />
         )}
       </div>
     </div>

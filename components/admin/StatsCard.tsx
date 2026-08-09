@@ -1,6 +1,6 @@
 const VALUE_COLORS = {
   default: "#1A1A2E",
-  purple: "#7C3AED",
+  purple: "#9F1AB1",
   blue: "#2663EB",
   pink: "#DB2777",
   green: "#16A34A",

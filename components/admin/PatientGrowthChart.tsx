@@ -14,8 +14,8 @@ export default function PatientGrowthChart({ data }: { data: PatientGrowthPoint[
         <AreaChart data={data} margin={{ top: 8, right: 8, bottom: 0, left: -20 }}>
           <defs>
             <linearGradient id="patientGrowthFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="#7C3AED" stopOpacity={0.16} />
-              <stop offset="100%" stopColor="#7C3AED" stopOpacity={0} />
+              <stop offset="0%" stopColor="#9F1AB1" stopOpacity={0.16} />
+              <stop offset="100%" stopColor="#9F1AB1" stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
@@ -26,9 +26,9 @@ export default function PatientGrowthChart({ data }: { data: PatientGrowthPoint[
           <Line
             type="monotone"
             dataKey="count"
-            stroke="#7C3AED"
+            stroke="#9F1AB1"
             strokeWidth={2.5}
-            dot={{ r: 4, fill: "#7C3AED", strokeWidth: 0 }}
+            dot={{ r: 4, fill: "#9F1AB1", strokeWidth: 0 }}
             activeDot={{ r: 5 }}
             name="Patients"
           />

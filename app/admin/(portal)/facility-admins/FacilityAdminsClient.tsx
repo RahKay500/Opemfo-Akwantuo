@@ -56,8 +56,8 @@ export default function FacilityAdminsClient({
           <Avatar
             name={r.name ?? r.facilityName ?? "?"}
             size="sm"
-            background="#F3E8FB"
-            textColor="#7C3AED"
+            background="#FBE8FF"
+            textColor="#9F1AB1"
             textClassName="text-xs font-bold"
           />
           <span className="font-medium text-[#1A1A2E]">{r.name ?? "—"}</span>
@@ -87,7 +87,7 @@ export default function FacilityAdminsClient({
         <button
           type="button"
           onClick={() => setAddOpen(true)}
-          className="flex h-10 shrink-0 items-center justify-center rounded-md bg-[#7C3AED] px-4 text-sm font-semibold text-white"
+          className="flex h-10 shrink-0 items-center justify-center rounded-md bg-[#9F1AB1] px-4 text-sm font-semibold text-white"
         >
           + Add Facility Admin
         </button>
