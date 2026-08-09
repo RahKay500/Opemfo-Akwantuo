@@ -8,7 +8,7 @@ import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
 import { deriveFacilityStatus } from "@/lib/staff-status";
-import { facilityTypeLabel } from "@/lib/utils";
+import { facilityTypeLabel, digitsOnly } from "@/lib/utils";
 import { GHANA_REGIONS, GHANA_REGION_NAMES } from "@/lib/ghana-regions";
 import type { FacilityType } from "@prisma/client";
 import Button from "@/components/ui/Button";
@@ -368,8 +368,9 @@ function FacilityForm({
       <FormField label="Phone">
         <input
           value={form.phone}
-          onChange={(e) => setForm({ ...form, phone: e.target.value })}
+          onChange={(e) => setForm({ ...form, phone: digitsOnly(e.target.value) })}
           placeholder="Optional"
+          inputMode="numeric"
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         />
       </FormField>

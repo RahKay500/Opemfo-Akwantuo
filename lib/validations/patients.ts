@@ -5,7 +5,11 @@ export const createPatientSchema = z.object({
   name: personName,
   dateOfBirth: z.string().min(1, "Date of birth is required"),
   phone: localPhoneSchema,
-  ghanaCardId: z.string().optional(),
+  ghanaCardId: z
+    .string()
+    .regex(/^GHA-\d{9}-\d$/, "Enter a complete Ghana Card ID")
+    .optional()
+    .or(z.literal("")),
   lmp: z.string().optional(),
   // Alternative to lmp for mothers with irregular cycles — a scan date +
   // gestational age at that scan, used to back-calculate an effective LMP

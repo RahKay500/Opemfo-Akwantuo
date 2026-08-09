@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PartnerIcon } from "@/components/ui/icons";
-import { cn } from "@/lib/utils";
+import { PartnerIcon, CopyIcon, CheckIcon } from "@/components/ui/icons";
+import { cn, digitsOnly } from "@/lib/utils";
 import Toggle from "@/components/ui/Toggle";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -112,6 +112,13 @@ export default function SharePartnerForm() {
     }
   }
 
+  async function handleCopy() {
+    if (!url) return;
+    await navigator.clipboard.writeText(url);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }
+
   async function handleShare() {
     if (!url) return;
     if (navigator.share) {
@@ -144,8 +151,16 @@ export default function SharePartnerForm() {
             "Your partner can view your pregnancy tracker from this link until you revoke it."
           )}
         </p>
-        <div className="w-full max-w-md break-all rounded-input border-[1.5px] border-border-color bg-white p-3.5 font-body text-xs text-text-secondary">
-          {url}
+        <div className="flex w-full max-w-md items-center gap-2 rounded-input border-[1.5px] border-border-color bg-white p-3.5">
+          <p className="flex-1 break-all text-left font-body text-xs text-text-secondary">{url}</p>
+          <button
+            type="button"
+            onClick={handleCopy}
+            aria-label="Copy link"
+            className="flex size-8 shrink-0 items-center justify-center rounded-badge bg-lilac-light text-lilac-deeper"
+          >
+            {copied ? <CheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
+          </button>
         </div>
         <Button size="cta" shape="rect" onClick={handleShare} className="max-w-md">
           {copied ? "Copied!" : "Share link"}
@@ -209,9 +224,10 @@ export default function SharePartnerForm() {
           <Input
             inputSize="lg"
             value={partnerPhone}
-            onChange={(e) => setPartnerPhone(e.target.value)}
+            onChange={(e) => setPartnerPhone(digitsOnly(e.target.value))}
             placeholder="024 XXX XXXX"
             className="mt-1.5"
+            inputMode="numeric"
           />
         </div>
       </div>

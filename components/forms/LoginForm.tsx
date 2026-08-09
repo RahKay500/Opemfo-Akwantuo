@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
-import { normalizeGhanaPhone } from "@/lib/utils";
+import { normalizeGhanaPhone, digitsOnly } from "@/lib/utils";
 import { localPhoneSchema } from "@/lib/validations/auth";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icons";
 import { setLastRole } from "@/lib/last-role";
@@ -73,10 +73,11 @@ export default function LoginForm() {
         </label>
         <input
           type="tel"
+          inputMode="numeric"
           placeholder="024 123 4567"
-          maxLength={12}
+          maxLength={10}
           className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          {...register("phone")}
+          {...register("phone", { onChange: (e) => { e.target.value = digitsOnly(e.target.value); } })}
         />
         {errors.phone && <p className="mt-1 text-xs text-[#DC2626]">{errors.phone.message}</p>}
       </div>

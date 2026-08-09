@@ -22,6 +22,13 @@ export function normalizeGhanaPhone(input: string): string | null {
   return null;
 }
 
+// Ghana local phone numbers are always exactly 10 digits (e.g. 0241234567).
+// Used to strip anything a user pastes/types into a phone field down to
+// just that, so the field itself always holds a valid shape.
+export function digitsOnly(value: string, maxLength = 10): string {
+  return value.replace(/\D/g, "").slice(0, maxLength);
+}
+
 const FACILITY_TYPE_LABELS: Record<FacilityType, string> = {
   CHPS: "CHPS",
   HEALTH_CENTRE: "Health Centre / Clinic",

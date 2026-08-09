@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { initials } from "@/lib/utils";
+import { initials, digitsOnly } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
@@ -125,7 +125,8 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
           <Input
             inputSize="lg"
             value={form.emergencyContactPhone}
-            onChange={(e) => update("emergencyContactPhone", e.target.value)}
+            onChange={(e) => update("emergencyContactPhone", digitsOnly(e.target.value))}
+            inputMode="numeric"
           />
         </Field>
 

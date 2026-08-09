@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "@/components/admin/FormField";
+import { digitsOnly } from "@/lib/utils";
 
 export default function ActivateAdminForm() {
   const router = useRouter();
@@ -140,8 +141,9 @@ export default function ActivateAdminForm() {
       <FormField label="Phone number" required>
         <input
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone(digitsOnly(e.target.value))}
           placeholder="024 123 4567"
+          inputMode="numeric"
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         />
       </FormField>

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, digitsOnly } from "@/lib/utils";
 import { AlertTriangleIcon, ChevronRightIcon } from "@/components/ui/icons";
 import Select from "@/components/ui/Select";
 import Input from "@/components/ui/Input";
@@ -197,9 +197,10 @@ export default function ReferralCreationForm({
                 <Input
                   inputSize="lg"
                   value={externalHospitalPhone}
-                  onChange={(e) => setExternalHospitalPhone(e.target.value)}
+                  onChange={(e) => setExternalHospitalPhone(digitsOnly(e.target.value))}
                   placeholder="024 123 4567"
                   className="mt-1.5"
+                  inputMode="numeric"
                 />
               </div>
             </div>

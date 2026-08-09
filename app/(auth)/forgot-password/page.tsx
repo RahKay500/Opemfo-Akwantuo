@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeftIcon, LockIcon } from "@/components/ui/icons";
-import { normalizeGhanaPhone } from "@/lib/utils";
+import { normalizeGhanaPhone, digitsOnly } from "@/lib/utils";
 
 export default function ForgotPasswordPage() {
   const router = useRouter();
@@ -62,10 +62,11 @@ export default function ForgotPasswordPage() {
         <label className="mb-2 block font-body text-sm font-medium text-[#374151]">Phone number</label>
         <input
           type="tel"
+          inputMode="numeric"
           placeholder="024 123 4567"
-          maxLength={12}
+          maxLength={10}
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
+          onChange={(e) => setPhone(digitsOnly(e.target.value))}
           className="h-14 w-full rounded-[14px] border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
         />
       </div>

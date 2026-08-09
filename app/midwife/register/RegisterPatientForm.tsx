@@ -6,7 +6,9 @@ import { cn } from "@/lib/utils";
 import DateSelectInput from "@/components/ui/DateSelectInput";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import GhanaCardInput from "@/components/ui/GhanaCardInput";
 import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
+import { digitsOnly } from "@/lib/utils";
 
 const STEPS = ["Personal", "Family", "Pregnancy", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -169,15 +171,16 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               />
             </Field>
             <Field label="Phone Number">
-              <Input inputSize="lg" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="024 123 4567" />
-            </Field>
-            <Field label="Ghana Card ID">
               <Input
                 inputSize="lg"
-                value={ghanaCardId}
-                onChange={(e) => setGhanaCardId(e.target.value)}
-                placeholder="GHA-XXXXXXXXX-X"
+                value={phone}
+                onChange={(e) => setPhone(digitsOnly(e.target.value))}
+                placeholder="024 123 4567"
+                inputMode="numeric"
               />
+            </Field>
+            <Field label="Ghana Card ID">
+              <GhanaCardInput value={ghanaCardId} onChange={setGhanaCardId} />
             </Field>
             <Field label="CHPS Zone">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
@@ -230,8 +233,9 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                     <Input
                       inputSize="lg"
                       value={spousePhone}
-                      onChange={(e) => setSpousePhone(e.target.value)}
+                      onChange={(e) => setSpousePhone(digitsOnly(e.target.value))}
                       placeholder="024 123 4567"
+                      inputMode="numeric"
                     />
                   </Field>
                   <Field label="Spouse's Occupation" className="flex-1">
@@ -366,8 +370,9 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               <Input
                 inputSize="lg"
                 value={emergencyContactPhone}
-                onChange={(e) => setEmergencyContactPhone(e.target.value)}
+                onChange={(e) => setEmergencyContactPhone(digitsOnly(e.target.value))}
                 placeholder="024 123 4567"
+                inputMode="numeric"
               />
             </Field>
             <Field label="Relationship">
