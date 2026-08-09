@@ -156,7 +156,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           ))}
         </div>
 
-      <div className="flex flex-1 flex-col gap-4 px-6 pb-32 pt-6 lg:px-0 lg:pb-0 lg:pt-6">
+      <div className="flex flex-1 flex-col gap-4 px-6 pb-32 pt-6 lg:grid lg:grid-cols-2 lg:gap-x-4 lg:gap-y-4 lg:px-0 lg:pb-0 lg:pt-6">
         {step === 0 && (
           <>
             <Field label="Full Name">
@@ -182,7 +182,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             <Field label="Ghana Card ID">
               <GhanaCardInput value={ghanaCardId} onChange={setGhanaCardId} />
             </Field>
-            <Field label="CHPS Zone">
+            <Field label="CHPS Zone" className="lg:col-span-2">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
                 {facilityName}
               </div>
@@ -198,7 +198,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             <Field label="NHIS Number">
               <Input inputSize="lg" value={nhisNumber} onChange={(e) => setNhisNumber(e.target.value)} placeholder="Optional" />
             </Field>
-            <div className="flex gap-3">
+            <div className="flex gap-3 lg:col-span-2">
               <Field label="Marital Status" className="flex-1">
                 <Select selectSize="lg" value={maritalStatus} onChange={(e) => setMaritalStatus(e.target.value)}>
                   <option value="">Select</option>
@@ -228,7 +228,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 <Field label="Spouse's Name">
                   <Input inputSize="lg" value={spouseName} onChange={(e) => setSpouseName(e.target.value)} placeholder="Optional" />
                 </Field>
-                <div className="flex gap-3">
+                <div className="flex gap-3 lg:col-span-2">
                   <Field label="Spouse's Phone" className="flex-1">
                     <Input
                       inputSize="lg"
@@ -249,7 +249,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 </div>
               </>
             )}
-            <Field label="Emergency Transport Phone">
+            <Field label="Emergency Transport Phone" className="lg:col-span-2">
               <Input
                 inputSize="lg"
                 value={emergencyTransportPhone}
@@ -262,7 +262,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
 
         {step === 2 && (
           <>
-            <Field label="Pregnancy Dating Method">
+            <Field label="Pregnancy Dating Method" className="lg:col-span-2">
               <div className="flex gap-1 rounded-input border-[1.5px] border-border-color bg-white p-1">
                 {(["LMP", "ULTRASOUND"] as const).map((method) => (
                   <button
@@ -290,43 +290,43 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 />
               </Field>
             ) : (
-              <>
-                <Field label="Scan Date">
-                  <DateSelectInput
-                    value={scanDate}
-                    onChange={setScanDate}
-                    max={new Date().toISOString().split("T")[0]}
-                    aria-label="Scan Date"
-                  />
-                </Field>
-                <div className="flex gap-3">
-                  <Field label="Gestational Age — Weeks" className="flex-1">
-                    <Input
-                      inputSize="lg"
-                      type="number"
-                      value={scanWeeks}
-                      onChange={(e) => setScanWeeks(e.target.value)}
-                      placeholder="e.g. 12"
-                    />
-                  </Field>
-                  <Field label="Gestational Age — Days" className="flex-1">
-                    <Input
-                      inputSize="lg"
-                      type="number"
-                      value={scanDays}
-                      onChange={(e) => setScanDays(e.target.value)}
-                      placeholder="e.g. 3"
-                    />
-                  </Field>
-                </div>
-              </>
+              <Field label="Scan Date">
+                <DateSelectInput
+                  value={scanDate}
+                  onChange={setScanDate}
+                  max={new Date().toISOString().split("T")[0]}
+                  aria-label="Scan Date"
+                />
+              </Field>
             )}
             <Field label="Estimated Due Date (EDD)">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
                 {edd ? edd.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" }) : "Enter LMP to calculate"}
               </div>
             </Field>
-            <div className="flex gap-3">
+            {datingMethod === "ULTRASOUND" && (
+              <div className="flex gap-3 lg:col-span-2">
+                <Field label="Gestational Age — Weeks" className="flex-1">
+                  <Input
+                    inputSize="lg"
+                    type="number"
+                    value={scanWeeks}
+                    onChange={(e) => setScanWeeks(e.target.value)}
+                    placeholder="e.g. 12"
+                  />
+                </Field>
+                <Field label="Gestational Age — Days" className="flex-1">
+                  <Input
+                    inputSize="lg"
+                    type="number"
+                    value={scanDays}
+                    onChange={(e) => setScanDays(e.target.value)}
+                    placeholder="e.g. 3"
+                  />
+                </Field>
+              </div>
+            )}
+            <div className="flex gap-3 lg:col-span-2">
               <Field label="Gravida" className="flex-1">
                 <Input inputSize="lg" type="number" value={gravida} onChange={(e) => setGravida(e.target.value)} placeholder="e.g. 2" />
               </Field>
@@ -344,7 +344,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 ))}
               </Select>
             </Field>
-            <Field label="Known Conditions">
+            <Field label="Known Conditions" className="lg:col-span-2">
               <textarea
                 value={knownConditions}
                 onChange={(e) => setKnownConditions(e.target.value)}
