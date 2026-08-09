@@ -7,7 +7,7 @@ import PriorityBadge from "@/components/ui/PriorityBadge";
 import type { DoctorInboxStatus } from "@/lib/queries/doctor-inbox";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
-const TABS = ["Overview", "Vitals", "Vaccinations", "Delivery", "Visits", "Referrals"] as const;
+const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
 
 // formatRelativeTime assumes a past date ("2 hours ago") — expiresAt is in
 // the future, so it needs its own countdown phrasing.

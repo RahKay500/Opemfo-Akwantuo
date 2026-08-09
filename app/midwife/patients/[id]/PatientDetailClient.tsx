@@ -8,7 +8,7 @@ import ShareRecordSheet from "@/components/ui/ShareRecordSheet";
 import { ShareIcon } from "@/components/ui/icons";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
-const TABS = ["Overview", "Vitals", "Vaccinations", "Delivery", "Visits", "Referrals"] as const;
+const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
 
 export interface PatientDetailVisit {
   id: string;
