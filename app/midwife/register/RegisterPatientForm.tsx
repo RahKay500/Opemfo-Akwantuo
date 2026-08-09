@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import DateOfBirthInput from "@/components/ui/DateOfBirthInput";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 
@@ -146,10 +146,11 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               <Input inputSize="lg" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter full name" />
             </Field>
             <Field label="Date of Birth">
-              <DateOfBirthInput
+              <DateSelectInput
                 value={dateOfBirth}
                 onChange={setDateOfBirth}
                 max={new Date().toISOString().split("T")[0]}
+                aria-label="Date of birth"
               />
             </Field>
             <Field label="Phone Number">
@@ -239,12 +240,11 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {step === 2 && (
           <>
             <Field label="Last Menstrual Period (LMP)">
-              <Input
-                inputSize="lg"
-                type="date"
+              <DateSelectInput
                 value={lmp}
-                onChange={(e) => setLmp(e.target.value)}
+                onChange={setLmp}
                 max={new Date().toISOString().split("T")[0]}
+                aria-label="Last Menstrual Period"
               />
             </Field>
             <Field label="Estimated Due Date (EDD)">

@@ -7,6 +7,7 @@ import { initials } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 interface ProfileFormData {
   name: string;
@@ -93,7 +94,12 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
         </Field>
 
         <Field label="Date of birth">
-          <Input inputSize="lg" type="date" value={form.dateOfBirth} onChange={(e) => update("dateOfBirth", e.target.value)} />
+          <DateSelectInput
+            value={form.dateOfBirth}
+            onChange={(v) => update("dateOfBirth", v)}
+            max={new Date().toISOString().split("T")[0]}
+            aria-label="Date of birth"
+          />
         </Field>
 
         <Field label="Blood group">

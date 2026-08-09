@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 const STEPS = ["Delivery Details", "Baby & Discharge"] as const;
 const DELIVERY_TYPES = ["Normal", "Vacuum", "Caesarean Section", "Other"];
@@ -165,7 +166,7 @@ export default function DeliveryRecordForm({
               />
             </Field>
             <Field label="Date of Delivery">
-              <Input inputSize="lg" type="date" value={dateOfDelivery} onChange={(e) => setDateOfDelivery(e.target.value)} />
+              <DateSelectInput value={dateOfDelivery} onChange={setDateOfDelivery} aria-label="Date of delivery" />
             </Field>
             <div className="flex gap-3">
               <Field label="Time of Delivery" className="flex-1">

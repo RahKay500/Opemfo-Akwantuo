@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Input from "@/components/ui/Input";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 const CATEGORIES = ["TD", "IPTP", "DEWORMING"] as const;
 const CATEGORY_LABEL: Record<(typeof CATEGORIES)[number], string> = {
@@ -91,7 +92,7 @@ export default function LogVaccinationForm({ patientId, week }: { patientId: str
 
       <div>
         <label className="font-body text-[13px] font-medium text-text-secondary">Date given</label>
-        <Input inputSize="lg" type="date" value={dateGiven} onChange={(e) => setDateGiven(e.target.value)} className="mt-1.5" />
+        <DateSelectInput value={dateGiven} onChange={setDateGiven} className="mt-1.5" aria-label="Date given" />
       </div>
 
       {category === "TD" && (

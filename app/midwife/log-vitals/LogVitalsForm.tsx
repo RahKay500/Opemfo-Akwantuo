@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 import Button from "@/components/ui/Button";
 
 export interface LogVitalsPatientOption {
@@ -228,13 +229,12 @@ export default function LogVitalsForm({
 
       <div className="mt-5">
         <label className="font-body text-[13px] font-medium text-text-secondary">Date of Next Visit</label>
-        <Input
-          inputSize="lg"
-          type="date"
+        <DateSelectInput
           value={nextVisitDate}
-          onChange={(e) => setNextVisitDate(e.target.value)}
+          onChange={setNextVisitDate}
           min={new Date().toISOString().slice(0, 10)}
           className="mt-1.5 lg:max-w-xs"
+          aria-label="Date of next visit"
         />
       </div>
 

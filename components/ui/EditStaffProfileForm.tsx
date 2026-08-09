@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { initials } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 interface StaffProfileFormData {
   name: string;
@@ -118,11 +119,11 @@ export default function EditStaffProfileForm({
           </Field>
 
           <Field label="Date of birth">
-            <input
-              type="date"
+            <DateSelectInput
               value={form.dateOfBirth}
-              onChange={(e) => update("dateOfBirth", e.target.value)}
-              className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              onChange={(v) => update("dateOfBirth", v)}
+              max={new Date().toISOString().split("T")[0]}
+              aria-label="Date of birth"
             />
           </Field>
 
@@ -150,11 +151,11 @@ export default function EditStaffProfileForm({
           </Field>
 
           <Field label="Service start date">
-            <input
-              type="date"
+            <DateSelectInput
               value={form.serviceStartDate}
-              onChange={(e) => update("serviceStartDate", e.target.value)}
-              className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
+              onChange={(v) => update("serviceStartDate", v)}
+              max={new Date().toISOString().split("T")[0]}
+              aria-label="Service start date"
             />
           </Field>
 

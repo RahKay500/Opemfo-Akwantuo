@@ -12,6 +12,7 @@ import { facilityTypeLabel } from "@/lib/utils";
 import { GHANA_REGIONS, GHANA_REGION_NAMES } from "@/lib/ghana-regions";
 import type { FacilityType } from "@prisma/client";
 import Button from "@/components/ui/Button";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 export interface FacilityRow {
   id: string;
@@ -372,11 +373,12 @@ function FacilityForm({
         />
       </FormField>
       <FormField label="Opened">
-        <input
-          type="date"
+        <DateSelectInput
           value={form.openedAt}
-          onChange={(e) => setForm({ ...form, openedAt: e.target.value })}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+          onChange={(v) => setForm({ ...form, openedAt: v })}
+          size="sm"
+          max={new Date().toISOString().split("T")[0]}
+          aria-label="Opened date"
         />
       </FormField>
       {error && <p className="text-sm text-[#DC2626]">{error}</p>}

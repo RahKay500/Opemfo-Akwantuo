@@ -6,6 +6,7 @@ import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import Modal from "@/components/admin/Modal";
 import { formatDate } from "@/lib/utils";
 import Button from "@/components/ui/Button";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 export interface AuditRow {
   id: string;
@@ -78,19 +79,9 @@ export default function AuditClient({ logs, actions }: { logs: AuditRow[]; actio
             ))}
           </select>
           <div className="flex items-center gap-3">
-            <input
-              type="date"
-              value={from}
-              onChange={(e) => setFrom(e.target.value)}
-              className="h-10 min-w-0 flex-1 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-none"
-            />
+            <DateSelectInput value={from} onChange={setFrom} size="sm" max={to || undefined} aria-label="From date" />
             <span className="shrink-0 text-sm text-[#6B7280]">to</span>
-            <input
-              type="date"
-              value={to}
-              onChange={(e) => setTo(e.target.value)}
-              className="h-10 min-w-0 flex-1 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3] lg:flex-none"
-            />
+            <DateSelectInput value={to} onChange={setTo} size="sm" min={from || undefined} aria-label="To date" />
           </div>
         </div>
         {logs.length > 0 && (

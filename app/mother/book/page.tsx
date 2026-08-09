@@ -7,6 +7,7 @@ import { CalendarIcon, PartnerIcon, CheckIcon } from "@/components/ui/icons";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
+import DateSelectInput from "@/components/ui/DateSelectInput";
 
 const REQUEST_TYPES = [
   {
@@ -129,13 +130,12 @@ export default function MotherBookPage() {
           <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
             <div>
               <label className="font-body text-[13px] font-medium text-text-secondary">Preferred date</label>
-              <Input
-                inputSize="lg"
-                type="date"
+              <DateSelectInput
                 value={preferredDate}
-                onChange={(e) => setPreferredDate(e.target.value)}
+                onChange={setPreferredDate}
                 min={new Date().toISOString().split("T")[0]}
                 className="mt-1.5"
+                aria-label="Preferred date"
               />
             </div>
 
