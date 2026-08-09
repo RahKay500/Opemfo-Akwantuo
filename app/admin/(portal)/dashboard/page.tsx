@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { getAdminSession, getCurrentAdminIdentity } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { getAdminDashboardData } from "@/lib/queries/admin-dashboard";
 import { facilityTypeLabel, formatDate } from "@/lib/utils";
 import Header from "@/components/admin/Header";
@@ -15,18 +15,12 @@ export default async function AdminDashboardPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
 
-  const [data, identity] = await Promise.all([
-    getAdminDashboardData(session.facilityId),
-    getCurrentAdminIdentity(),
-  ]);
+  const data = await getAdminDashboardData(session.facilityId);
   const isFacilityAdmin = session.facilityId !== null;
 
   return (
     <>
-      <Header
-        title="Dashboard"
-        subtitle={isFacilityAdmin ? data.facility?.facilityName : identity?.orgName}
-      />
+      <Header title="Dashboard" />
 
       <div className="px-4 py-6 lg:px-8">
         {isFacilityAdmin

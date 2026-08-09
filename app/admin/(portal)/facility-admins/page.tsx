@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAdminSession, getCurrentAdminIdentity } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import FacilityAdminsClient from "./FacilityAdminsClient";
@@ -9,19 +9,18 @@ export default async function AdminFacilityAdminsPage() {
   if (!session) redirect("/admin/login");
   if (session.facilityId !== null) redirect("/admin/dashboard");
 
-  const [admins, facilities, identity] = await Promise.all([
+  const [admins, facilities] = await Promise.all([
     prisma.superAdmin.findMany({
       where: { facilityId: { not: null } },
       orderBy: { createdAt: "desc" },
       include: { facility: { select: { name: true } } },
     }),
     prisma.facility.findMany({ where: { isActive: true }, orderBy: { name: "asc" } }),
-    getCurrentAdminIdentity(),
   ]);
 
   return (
     <>
-      <Header title="Facility Admins" subtitle={identity?.orgName} />
+      <Header title="Facility Admins" />
       <div className="px-4 py-6 lg:px-8">
         <FacilityAdminsClient
           admins={admins.map((a) => ({

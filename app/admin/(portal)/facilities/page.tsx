@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAdminSession, getCurrentAdminIdentity } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import FacilitiesClient from "./FacilitiesClient";
@@ -23,7 +23,7 @@ export default async function AdminFacilitiesPage() {
 
   return (
     <>
-      <Header title="Facilities" subtitle={(await getCurrentAdminIdentity())?.orgName} />
+      <Header title="Facilities" />
       <div className="px-4 py-6 lg:px-8">
         <FacilitiesClient
           facilities={facilities.map((f) => ({

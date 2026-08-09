@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAdminSession, getCurrentAdminIdentity } from "@/lib/current-admin";
+import { getAdminSession } from "@/lib/current-admin";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import PatientsClient from "./PatientsClient";
@@ -9,18 +9,15 @@ export default async function AdminPatientsPage() {
   if (!session) redirect("/admin/login");
   const isPlatform = session.facilityId === null;
 
-  const [patients, identity] = await Promise.all([
-    prisma.patient.findMany({
-      where: isPlatform ? {} : { facilityId: session.facilityId as string },
-      orderBy: { createdAt: "desc" },
-      include: isPlatform ? { facility: { select: { name: true } } } : undefined,
-    }),
-    getCurrentAdminIdentity(),
-  ]);
+  const patients = await prisma.patient.findMany({
+    where: isPlatform ? {} : { facilityId: session.facilityId as string },
+    orderBy: { createdAt: "desc" },
+    include: isPlatform ? { facility: { select: { name: true } } } : undefined,
+  });
 
   return (
     <>
-      <Header title="Patients" subtitle={isPlatform ? "All facilities" : identity?.orgName} />
+      <Header title="Patients" subtitle={isPlatform ? "All facilities" : undefined} />
       <div className="px-4 py-6 lg:px-8">
         <PatientsClient
           patients={patients.map((p) => ({

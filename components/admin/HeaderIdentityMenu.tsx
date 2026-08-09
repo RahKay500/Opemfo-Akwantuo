@@ -36,8 +36,16 @@ export default function HeaderIdentityMenu({
         onClick={() => setOpen((o) => !o)}
         className="flex items-center gap-3 rounded-lg border border-[#E2E8F0] bg-white/60 px-3 py-2 backdrop-blur-md transition-colors hover:bg-white/80"
       >
-        <div className="hidden text-right leading-tight lg:block">
+        <Avatar
+          name={displayName}
+          size="md"
+          background={accent}
+          textColor="white"
+          textClassName="text-xs font-bold"
+        />
+        <div className="hidden text-left leading-tight lg:block">
           <p className="text-sm font-semibold text-[#1A1A2E]">{displayName}</p>
+          {orgName && <p className="mt-0.5 text-xs text-[#6B7280]">{orgName}</p>}
           <span
             className="mt-1 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium"
             style={{ backgroundColor: `${accent}1A`, color: accent }}
@@ -51,15 +59,7 @@ export default function HeaderIdentityMenu({
             </svg>
             {tierLabel}
           </span>
-          {orgName && <p className="mt-1 text-xs text-[#6B7280]">{orgName}</p>}
         </div>
-        <Avatar
-          name={displayName}
-          size="md"
-          background={accent}
-          textColor="white"
-          textClassName="text-xs font-bold"
-        />
       </button>
 
       {open && (
