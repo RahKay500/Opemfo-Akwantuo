@@ -34,7 +34,7 @@ export default function MidwifeSidebar({
     <aside className="hidden min-h-screen w-60 shrink-0 flex-col bg-[#1F1F32] lg:flex">
       <div className="px-6 pb-5 pt-8">
         <p className="font-heading text-lg font-bold leading-tight text-lilac-mid">Ɔpemfoɔ Akwantuo</p>
-        <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">CHPS MANAGEMENT</p>
+        <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">MIDWIFE</p>
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">

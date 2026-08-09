@@ -12,12 +12,10 @@ export default function MotherIdentityCard({
   name,
   week,
   dueDate,
-  progressPercent,
 }: {
   name: string;
   week: number | null;
   dueDate: string | null;
-  progressPercent: number | null;
 }) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -54,17 +52,6 @@ export default function MotherIdentityCard({
             )}
           </div>
         </div>
-        {progressPercent != null && (
-          <div className="mt-3">
-            <div className="flex items-center justify-between">
-              <p className="font-body text-[11px] text-text-secondary">Pregnancy progress</p>
-              <p className="font-body text-[11px] font-bold text-text-primary">{progressPercent}%</p>
-            </div>
-            <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-badge bg-lilac-light">
-              <div className="h-full rounded-badge bg-lilac-dark" style={{ width: `${progressPercent}%` }} />
-            </div>
-          </div>
-        )}
       </button>
 
       {open && (

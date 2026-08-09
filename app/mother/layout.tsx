@@ -24,7 +24,6 @@ export default async function MotherLayout({
             name={sidebarData?.name ?? user?.name ?? ""}
             week={sidebarData?.week ?? null}
             dueDate={sidebarData?.dueDate?.toISOString() ?? null}
-            progressPercent={sidebarData?.progressPercent ?? null}
           />
         </div>
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>

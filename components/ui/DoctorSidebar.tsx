@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { cn, facilityTypeLabel } from "@/lib/utils";
-import type { FacilityType } from "@prisma/client";
+import { cn } from "@/lib/utils";
 import {
   NavHomeIcon,
   NavReferralsIcon,
@@ -21,10 +20,8 @@ const NAV_ITEMS = [
 ];
 
 export default function DoctorSidebar({
-  facilityType,
   newSharedRecordsCount,
 }: {
-  facilityType: FacilityType | null;
   newSharedRecordsCount: number;
 }) {
   const pathname = usePathname();
@@ -33,9 +30,7 @@ export default function DoctorSidebar({
     <aside className="hidden min-h-screen w-60 shrink-0 flex-col bg-[#1F1F32] lg:flex">
       <div className="px-6 pb-5 pt-8">
         <p className="font-heading text-lg font-bold leading-tight text-lilac-mid">Ɔpemfoɔ Akwantuo</p>
-        <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">
-          {facilityType ? facilityTypeLabel(facilityType).toUpperCase() : "HOSPITAL"}
-        </p>
+        <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">DOCTOR</p>
       </div>
 
       {newSharedRecordsCount > 0 && (

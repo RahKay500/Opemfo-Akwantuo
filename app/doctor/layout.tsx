@@ -14,10 +14,7 @@ export default async function DoctorLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
-      <DoctorSidebar
-        facilityType={sidebarData?.facilityType ?? null}
-        newSharedRecordsCount={sidebarData?.newSharedRecordsCount ?? 0}
-      />
+      <DoctorSidebar newSharedRecordsCount={sidebarData?.newSharedRecordsCount ?? 0} />
       <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:flex-col lg:justify-stretch lg:overflow-x-auto lg:pb-10">
         <div className="hidden justify-end px-8 pt-6 lg:flex">
           <IdentityMenu
