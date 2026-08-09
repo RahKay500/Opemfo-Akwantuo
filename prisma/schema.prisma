@@ -395,6 +395,10 @@ model Symptom {
   createdAt         DateTime        @default(now())
   reviewedByNurseId String?
   reviewedByNurse   User?           @relation("SymptomReviewer", fields: [reviewedByNurseId], references: [id])
+  // A mother can retract a report she sent by mistake — kept as a soft
+  // cancel (not deleted) since a notification already went out to her
+  // nurse and the record should stay auditable.
+  cancelledAt       DateTime?
 
   @@index([patientId])
 }

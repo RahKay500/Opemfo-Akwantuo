@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, formatRelativeTime } from "@/lib/utils";
 import SymptomChip from "@/components/ui/SymptomChip";
 import Button from "@/components/ui/Button";
+import BottomSheet from "@/components/ui/BottomSheet";
 
 const SYMPTOMS = [
   "Fever",
@@ -29,6 +30,19 @@ const SEVERITIES = [
 
 const STARTED_WHEN_OPTIONS = ["Today", "2–3 days ago", "A week ago"];
 
+interface SymptomReport {
+  id: string;
+  symptoms: string[];
+  severity: "MILD" | "MODERATE" | "SEVERE";
+  notes: string | null;
+  startedWhen: string | null;
+  createdAt: string;
+  reviewedByNurseId: string | null;
+  cancelledAt: string | null;
+}
+
+const SEVERITY_LABEL: Record<SymptomReport["severity"], string> = { MILD: "Mild", MODERATE: "Moderate", SEVERE: "Severe" };
+
 export default function MotherSymptomsPage() {
   const router = useRouter();
   const [selectedSymptoms, setSelectedSymptoms] = useState<string[]>([]);
@@ -38,6 +52,39 @@ export default function MotherSymptomsPage() {
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
+
+  const [reports, setReports] = useState<SymptomReport[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [cancelTarget, setCancelTarget] = useState<SymptomReport | null>(null);
+  const [cancelling, setCancelling] = useState(false);
+
+  function loadReports() {
+    fetch("/api/symptoms")
+      .then((res) => res.json())
+      .then((data) => setReports(data.symptoms ?? []))
+      .catch(() => {});
+  }
+
+  useEffect(loadReports, []);
+
+  function resetForm() {
+    setSelectedSymptoms([]);
+    setSeverity(null);
+    setNotes("");
+    setStartedWhen(null);
+    setEditingId(null);
+    setError(null);
+  }
+
+  function startEdit(report: SymptomReport) {
+    setSelectedSymptoms(report.symptoms);
+    setSeverity(report.severity);
+    setNotes(report.notes ?? "");
+    setStartedWhen(report.startedWhen);
+    setEditingId(report.id);
+    setError(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
   function toggleSymptom(symptom: string) {
     setSelectedSymptoms((prev) =>
@@ -58,8 +105,8 @@ export default function MotherSymptomsPage() {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/symptoms", {
-        method: "POST",
+      const res = await fetch(editingId ? `/api/symptoms/${editingId}` : "/api/symptoms", {
+        method: editingId ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           symptoms: selectedSymptoms,
@@ -73,11 +120,30 @@ export default function MotherSymptomsPage() {
         setError(typeof data.error === "string" ? data.error : "Something went wrong. Please try again.");
         return;
       }
-      setSent(true);
+      if (editingId) {
+        resetForm();
+        loadReports();
+      } else {
+        setSent(true);
+      }
     } catch {
       setError("Network error. Please try again.");
     } finally {
       setSubmitting(false);
+    }
+  }
+
+  async function handleConfirmCancel() {
+    if (!cancelTarget) return;
+    setCancelling(true);
+    try {
+      const res = await fetch(`/api/symptoms/${cancelTarget.id}`, { method: "DELETE" });
+      if (res.ok) {
+        setCancelTarget(null);
+        loadReports();
+      }
+    } finally {
+      setCancelling(false);
     }
   }
 
@@ -107,7 +173,9 @@ export default function MotherSymptomsPage() {
       <div className="flex flex-col gap-6 px-5 pb-8 pt-5">
         <div className="rounded-card bg-lilac-light p-4">
           <p className="font-body text-sm text-lilac-deeper">
-            Tell your nurse how you&apos;re feeling. This helps them monitor your health between visits.
+            {editingId
+              ? "Editing a report you already sent — your nurse will see the updated version."
+              : "Tell your nurse how you're feeling. This helps them monitor your health between visits."}
           </p>
         </div>
 
@@ -188,21 +256,111 @@ export default function MotherSymptomsPage() {
             {error && <p className="font-body text-sm text-[#DC2626]">{error}</p>}
 
             <div>
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={submitting}
-                className="h-14 w-full rounded-button bg-lilac-mid font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
-              >
-                {submitting ? "Sending…" : "Send to my nurse"}
-              </button>
+              <div className="flex gap-3">
+                {editingId && (
+                  <button
+                    type="button"
+                    onClick={resetForm}
+                    className="h-14 w-1/3 rounded-button border-[1.5px] border-border-color font-heading text-[15px] font-bold text-text-secondary"
+                  >
+                    Cancel edit
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={submitting}
+                  className="h-14 flex-1 rounded-button bg-lilac-mid font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
+                >
+                  {submitting ? "Saving…" : editingId ? "Update report" : "Send to my nurse"}
+                </button>
+              </div>
               <p className="mt-2.5 text-center font-body text-xs text-[#9CA3AF]">
                 Your nurse will review this and reach out if needed.
               </p>
             </div>
           </div>
         </div>
+
+        {reports.length > 0 && (
+          <div>
+            <h2 className="font-heading text-[17px] font-bold text-text-primary">My Reports</h2>
+            <div className="mt-3 flex flex-col gap-2.5">
+              {reports.map((report) => {
+                const editable = !report.cancelledAt && !report.reviewedByNurseId;
+                const status = report.cancelledAt ? "Cancelled" : report.reviewedByNurseId ? "Reviewed" : "Pending review";
+                return (
+                  <div key={report.id} className="rounded-card bg-white p-4 shadow-card">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="font-heading text-sm font-bold text-text-primary">
+                          {SEVERITY_LABEL[report.severity]} · {report.symptoms.join(", ") || "No symptoms selected"}
+                        </p>
+                        <p className="mt-1 font-body text-xs text-text-secondary">{formatRelativeTime(report.createdAt)}</p>
+                      </div>
+                      <span
+                        className={cn(
+                          "shrink-0 rounded-badge px-2.5 py-1 font-body text-[11px] font-medium",
+                          report.cancelledAt
+                            ? "bg-[#F3F4F6] text-[#6B7280]"
+                            : report.reviewedByNurseId
+                              ? "bg-[#F0FDF4] text-[#16A34A]"
+                              : "bg-lilac-light text-lilac-deeper"
+                        )}
+                      >
+                        {status}
+                      </span>
+                    </div>
+                    {report.notes && <p className="mt-2 font-body text-xs text-text-secondary">{report.notes}</p>}
+                    {editable && (
+                      <div className="mt-3 flex gap-3">
+                        <button
+                          type="button"
+                          onClick={() => startEdit(report)}
+                          className="font-body text-xs font-medium text-pink-deep"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCancelTarget(report)}
+                          className="font-body text-xs font-medium text-[#DC2626]"
+                        >
+                          Cancel report
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
       </div>
+
+      <BottomSheet open={cancelTarget != null} onClose={() => setCancelTarget(null)}>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <h2 className="font-heading text-xl font-bold text-text-primary">Cancel this report?</h2>
+          <p className="font-body text-sm text-text-secondary">
+            Your nurse will be notified that this report was cancelled.
+          </p>
+          <button
+            type="button"
+            onClick={handleConfirmCancel}
+            disabled={cancelling}
+            className="h-14 w-full rounded-button bg-[#DC2626] font-heading text-[17px] font-bold text-white disabled:opacity-60"
+          >
+            {cancelling ? "Cancelling…" : "Yes, cancel report"}
+          </button>
+          <button
+            type="button"
+            onClick={() => setCancelTarget(null)}
+            className="h-14 w-full rounded-button bg-white font-body text-sm font-medium text-text-secondary"
+          >
+            Keep report
+          </button>
+        </div>
+      </BottomSheet>
     </main>
   );
 }
