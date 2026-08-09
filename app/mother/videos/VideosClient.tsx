@@ -110,6 +110,12 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             <p className="mt-1 font-body text-xs text-white/70">
               {playing.duration} · {playing.source}
             </p>
+            <p className="mt-2 font-body text-xs text-white/50">
+              Video not loading?{" "}
+              <a href={playing.url} target="_blank" rel="noopener noreferrer" className="underline">
+                Watch on YouTube ↗
+              </a>
+            </p>
           </div>
         </div>
       )}

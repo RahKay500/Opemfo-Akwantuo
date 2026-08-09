@@ -25,6 +25,10 @@ const nextConfig = {
               "img-src 'self' data: blob: https://i.ytimg.com",
               "font-src 'self' data:",
               "connect-src 'self'",
+              // Learn & Prepare plays videos in an in-app YouTube iframe —
+              // without this, frame-src falls back to default-src 'self'
+              // and the browser silently blocks the embed.
+              "frame-src https://www.youtube.com",
               "frame-ancestors 'none'",
             ].join("; "),
           },
