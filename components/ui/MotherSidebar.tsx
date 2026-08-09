@@ -12,11 +12,12 @@ import {
   CalendarIcon,
   PlayIcon,
   NavAlertsIcon,
-  NavProfileIcon,
   PartnerIcon,
 } from "@/components/ui/icons";
 import EmergencyConfirmSheet from "@/components/ui/EmergencyConfirmSheet";
 
+// Profile is reachable via the top-right identity card's dropdown now, so
+// it's no longer duplicated as a sidebar nav item.
 const NAV_ITEMS = [
   { href: "/mother/dashboard", label: "Home", icon: NavHomeIcon },
   { href: "/mother/records", label: "My Records", icon: NavRecordsIcon },
@@ -25,7 +26,6 @@ const NAV_ITEMS = [
   { href: "/mother/book", label: "Book a Visit", icon: CalendarIcon },
   { href: "/mother/videos", label: "Learn & Prepare", icon: PlayIcon },
   { href: "/mother/notifications", label: "Alerts", icon: NavAlertsIcon },
-  { href: "/mother/profile", label: "Profile", icon: NavProfileIcon },
 ];
 
 export default function MotherSidebar({
