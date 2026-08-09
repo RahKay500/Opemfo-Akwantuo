@@ -26,6 +26,11 @@ export interface BadgeProps {
   color?: BadgeColor;
   type?: BadgeType;
   size?: BadgeSize;
+  // This app's own status pills (Midwife/Doctor patient status, priority)
+  // are borderless — a real, systemic difference from this primitive's own
+  // Figma-verified bordered pill. Default true preserves the primitive's
+  // native look; set false to match that app convention.
+  border?: boolean;
   className?: string;
 }
 
@@ -48,12 +53,20 @@ const SIZE_STYLES: Record<BadgeSize, string> = {
   lg: "px-3 py-1",
 };
 
-export default function Badge({ children, color = "gray", type = "pill", size = "sm", className }: BadgeProps) {
+export default function Badge({
+  children,
+  color = "gray",
+  type = "pill",
+  size = "sm",
+  border = true,
+  className,
+}: BadgeProps) {
+  const colorStyles = border ? COLOR_STYLES[color] : COLOR_STYLES[color].replace(/\bborder-\S+/, "");
   return (
     <span
-      className={`inline-flex items-center whitespace-nowrap border font-body text-xs font-medium ${
-        type === "pill" ? "rounded-full" : "rounded-sm"
-      } ${COLOR_STYLES[color]} ${SIZE_STYLES[size]} ${className ?? ""}`}
+      className={`inline-flex items-center whitespace-nowrap font-body text-xs font-medium ${
+        border ? "border" : ""
+      } ${type === "pill" ? "rounded-full" : "rounded-sm"} ${colorStyles} ${SIZE_STYLES[size]} ${className ?? ""}`}
     >
       {children}
     </span>

@@ -6,6 +6,7 @@ import { cn, formatRelativeTime } from "@/lib/utils";
 import { SearchIcon, PlusIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import Avatar from "@/components/ui/Avatar";
+import Badge, { type BadgeColor } from "@/components/ui/Badge";
 import type { MidwifePatientListItem, PatientStatus } from "@/lib/queries/midwife-patients";
 
 const FILTERS = ["All", "Normal", "Flagged", "Critical"] as const;
@@ -15,11 +16,11 @@ const VISIT_TYPE_BADGE: Record<string, string> = {
   POSTNATAL: "bg-pink-light text-pink-deep",
 };
 
-const STATUS_STYLES: Record<PatientStatus, string> = {
-  NORMAL: "bg-low-bg text-low",
-  FLAGGED: "bg-high-bg text-high",
-  CRITICAL: "bg-critical-bg text-critical",
-  EMERGENCY: "bg-critical-bg text-critical",
+const STATUS_COLORS: Record<PatientStatus, BadgeColor> = {
+  NORMAL: "success",
+  FLAGGED: "warning",
+  CRITICAL: "error",
+  EMERGENCY: "error",
 };
 const STATUS_LABELS: Record<PatientStatus, string> = {
   NORMAL: "Normal",
@@ -193,14 +194,9 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
                   <td className="px-3 py-3.5 font-body text-sm text-text-primary">{shortDate(patient.lastVisitAt)}</td>
                   <td className="px-3 py-3.5 font-body text-sm text-text-primary">{shortDate(patient.nextVisitAt)}</td>
                   <td className="px-3 py-3.5">
-                    <span
-                      className={cn(
-                        "inline-block rounded-badge px-2.5 py-1 font-body text-xs font-medium",
-                        STATUS_STYLES[patient.status]
-                      )}
-                    >
+                    <Badge color={STATUS_COLORS[patient.status]} border={false} size="md">
                       {STATUS_LABELS[patient.status]}
-                    </span>
+                    </Badge>
                   </td>
                   <td className="px-6 py-3.5">
                     <div className="flex gap-2">

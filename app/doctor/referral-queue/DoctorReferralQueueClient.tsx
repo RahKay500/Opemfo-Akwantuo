@@ -6,6 +6,7 @@ import { SearchIcon, ChevronRightIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import ReferralActionButton, { hasNextAction } from "@/components/ui/ReferralActionButton";
 import { DOCTOR_REFERRAL_STATUS } from "@/lib/referral-status";
+import Badge, { type BadgeColor } from "@/components/ui/Badge";
 import type { DoctorReferralQueueItem } from "@/lib/queries/doctor-referral-queue";
 import type { Priority } from "@prisma/client";
 
@@ -18,11 +19,11 @@ const PRIORITY_BORDER: Record<Priority, string> = {
   LOW: "border-low",
 };
 
-const PRIORITY_PILL: Record<Priority, string> = {
-  CRITICAL: "bg-critical-bg text-critical",
-  HIGH: "bg-high-bg text-high",
-  MEDIUM: "bg-medium-bg text-medium",
-  LOW: "bg-low-bg text-low",
+const PRIORITY_BADGE_COLOR: Record<Priority, BadgeColor> = {
+  CRITICAL: "error",
+  HIGH: "warning",
+  MEDIUM: "yellow",
+  LOW: "success",
 };
 
 function sentLabel(iso: string): string {
@@ -163,9 +164,9 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
                       </p>
                     </td>
                     <td className="px-3 py-3.5">
-                      <span className={cn("inline-block rounded-badge px-2.5 py-1 font-body text-xs font-medium", PRIORITY_PILL[r.priority])}>
+                      <Badge color={PRIORITY_BADGE_COLOR[r.priority]} border={false} size="md">
                         {r.priority.charAt(0) + r.priority.slice(1).toLowerCase()}
-                      </span>
+                      </Badge>
                     </td>
                     <td className="px-3 py-3.5 font-body text-sm text-text-primary">{r.reason}</td>
                     <td className="px-3 py-3.5 font-body text-sm text-text-primary">{r.fromFacilityName}</td>
