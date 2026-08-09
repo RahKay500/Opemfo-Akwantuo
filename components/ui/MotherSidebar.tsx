@@ -77,18 +77,16 @@ export default function MotherSidebar({
             <PartnerIcon className="size-5" />
             Share with Partner
           </Link>
-        </nav>
 
-        <div className="px-3 pb-4">
           <button
             type="button"
             onClick={() => setEmergencyOpen(true)}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-button bg-critical font-heading text-sm font-bold text-white"
+            className="mt-3 flex h-12 w-full items-center justify-center gap-2 rounded-button bg-critical font-heading text-sm font-bold text-white"
           >
             <AlertTriangleIcon className="size-[18px]" />
             Emergency Alert
           </button>
-        </div>
+        </nav>
       </aside>
 
       <EmergencyConfirmSheet open={emergencyOpen} onClose={() => setEmergencyOpen(false)} />
