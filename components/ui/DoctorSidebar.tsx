@@ -4,7 +4,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn, facilityTypeLabel } from "@/lib/utils";
 import type { FacilityType } from "@prisma/client";
-import Avatar from "@/components/ui/Avatar";
 import {
   NavHomeIcon,
   NavReferralsIcon,
@@ -22,13 +21,9 @@ const NAV_ITEMS = [
 ];
 
 export default function DoctorSidebar({
-  name,
-  facilityName,
   facilityType,
   newSharedRecordsCount,
 }: {
-  name: string;
-  facilityName: string;
   facilityType: FacilityType | null;
   newSharedRecordsCount: number;
 }) {
@@ -41,20 +36,6 @@ export default function DoctorSidebar({
         <p className="mt-1 font-body text-[11px] font-medium tracking-[0.08em] text-[#8A8AA3]">
           {facilityType ? facilityTypeLabel(facilityType).toUpperCase() : "HOSPITAL"}
         </p>
-      </div>
-
-      <div className="mx-4 mb-2 flex items-center gap-2.5 rounded-card bg-[#27273A] px-3 py-3">
-        <Avatar
-          name={name}
-          size="md"
-          background="#eeaafd"
-          textColor="#821890"
-          textClassName="text-xs font-bold"
-        />
-        <div className="min-w-0">
-          <p className="truncate font-body text-sm font-medium text-white">{name}</p>
-          <p className="truncate font-body text-xs text-[#8A8AA3]">{facilityName} · Doctor</p>
-        </div>
       </div>
 
       {newSharedRecordsCount > 0 && (

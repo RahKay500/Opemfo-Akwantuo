@@ -15,14 +15,16 @@ export default async function DoctorLayout({
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
       <DoctorSidebar
-        name={sidebarData?.name ?? user?.name ?? ""}
-        facilityName={sidebarData?.facilityName ?? ""}
         facilityType={sidebarData?.facilityType ?? null}
         newSharedRecordsCount={sidebarData?.newSharedRecordsCount ?? 0}
       />
       <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:flex-col lg:justify-stretch lg:overflow-x-auto lg:pb-10">
         <div className="hidden justify-end px-8 pt-6 lg:flex">
-          <IdentityMenu name={sidebarData?.name ?? user?.name ?? ""} profileHref="/doctor/profile" />
+          <IdentityMenu
+            name={sidebarData?.name ?? user?.name ?? ""}
+            subtitle={sidebarData?.facilityName ? `${sidebarData.facilityName} · Doctor` : null}
+            profileHref="/doctor/profile"
+          />
         </div>
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
       </div>

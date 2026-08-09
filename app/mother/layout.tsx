@@ -26,7 +26,12 @@ export default async function MotherLayout({
           where the sidebar takes over instead. */}
       <div className="flex flex-1 justify-center overflow-x-hidden pb-28 lg:flex-col lg:justify-stretch lg:overflow-x-auto lg:px-[10px] lg:pb-10">
         <div className="hidden justify-end px-8 pt-6 lg:flex">
-          <IdentityMenu name={sidebarData?.name ?? user?.name ?? ""} profileHref="/mother/profile" />
+          <IdentityMenu
+            name={sidebarData?.name ?? user?.name ?? ""}
+            subtitle="Mother"
+            profileHref="/mother/profile"
+            variant="light"
+          />
         </div>
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
       </div>

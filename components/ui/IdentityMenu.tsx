@@ -2,10 +2,27 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
+import Avatar, { type AvatarSize } from "@/components/ui/Avatar";
 import LogoutButton from "@/components/ui/LogoutButton";
 
-export default function IdentityMenu({ name, profileHref }: { name: string; profileHref: string }) {
+// Same card this app already used inside each portal's Sidebar (avatar +
+// name + facility/role subtitle) — moved here instead of a new, slimmer
+// design, so the top-right identity menu is the sidebar card relocated,
+// not a different-looking element.
+export default function IdentityMenu({
+  name,
+  subtitle,
+  profileHref,
+  avatarSize = "md",
+  variant = "dark",
+}: {
+  name: string;
+  subtitle?: string | null;
+  profileHref: string;
+  avatarSize?: AvatarSize;
+  variant?: "dark" | "light";
+}) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -23,12 +40,22 @@ export default function IdentityMenu({ name, profileHref }: { name: string; prof
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-2 rounded-badge border border-border-color bg-white px-2 py-1.5 pr-3"
+        className={cn(
+          "flex items-center gap-2.5 rounded-card px-3 py-3",
+          variant === "dark" ? "bg-[#27273A]" : "bg-surface"
+        )}
       >
-        <div className="flex size-8 items-center justify-center rounded-badge bg-lilac-light">
-          <span className="font-heading text-xs font-bold text-lilac-deeper">{initials(name)}</span>
+        <Avatar name={name} size={avatarSize} background="#eeaafd" textColor="#821890" textClassName="text-xs font-bold" />
+        <div className="min-w-0 text-left">
+          <p className={cn("truncate font-body text-sm font-medium", variant === "dark" ? "text-white" : "text-text-primary")}>
+            {name}
+          </p>
+          {subtitle && (
+            <p className={cn("truncate font-body text-xs", variant === "dark" ? "text-[#8A8AA3]" : "text-text-secondary")}>
+              {subtitle}
+            </p>
+          )}
         </div>
-        <span className="font-body text-sm font-medium text-text-primary">{name}</span>
       </button>
 
       {open && (
