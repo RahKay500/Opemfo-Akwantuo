@@ -19,6 +19,9 @@ export async function getDoctorPatientDetail(patientId: string, doctorId: string
       facility: { select: { name: true } },
       visits: { orderBy: { createdAt: "desc" }, include: { nurse: { select: { name: true } } } },
       referrals: { orderBy: { sentAt: "desc" }, include: { toFacility: { select: { name: true } } } },
+      vaccinations: { orderBy: { dateGiven: "desc" } },
+      iptpDoses: { orderBy: { dateGiven: "desc" } },
+      deliveryRecord: true,
     },
   });
   if (!patient) return null;

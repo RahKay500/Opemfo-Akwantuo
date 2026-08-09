@@ -220,27 +220,31 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             <Field label="Occupation">
               <Input inputSize="lg" value={occupation} onChange={(e) => setOccupation(e.target.value)} placeholder="Optional" />
             </Field>
-            <Field label="Spouse's Name">
-              <Input inputSize="lg" value={spouseName} onChange={(e) => setSpouseName(e.target.value)} placeholder="Optional" />
-            </Field>
-            <div className="flex gap-3">
-              <Field label="Spouse's Phone" className="flex-1">
-                <Input
-                  inputSize="lg"
-                  value={spousePhone}
-                  onChange={(e) => setSpousePhone(e.target.value)}
-                  placeholder="024 123 4567"
-                />
-              </Field>
-              <Field label="Spouse's Occupation" className="flex-1">
-                <Input
-                  inputSize="lg"
-                  value={spouseOccupation}
-                  onChange={(e) => setSpouseOccupation(e.target.value)}
-                  placeholder="Optional"
-                />
-              </Field>
-            </div>
+            {maritalStatus === "Married" && (
+              <>
+                <Field label="Spouse's Name">
+                  <Input inputSize="lg" value={spouseName} onChange={(e) => setSpouseName(e.target.value)} placeholder="Optional" />
+                </Field>
+                <div className="flex gap-3">
+                  <Field label="Spouse's Phone" className="flex-1">
+                    <Input
+                      inputSize="lg"
+                      value={spousePhone}
+                      onChange={(e) => setSpousePhone(e.target.value)}
+                      placeholder="024 123 4567"
+                    />
+                  </Field>
+                  <Field label="Spouse's Occupation" className="flex-1">
+                    <Input
+                      inputSize="lg"
+                      value={spouseOccupation}
+                      onChange={(e) => setSpouseOccupation(e.target.value)}
+                      placeholder="Optional"
+                    />
+                  </Field>
+                </div>
+              </>
+            )}
             <Field label="Emergency Transport Phone">
               <Input
                 inputSize="lg"

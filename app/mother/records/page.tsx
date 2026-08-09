@@ -27,13 +27,14 @@ function visitSummary(visit: {
 export default async function MotherRecordsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ type?: string }>;
+  searchParams: Promise<{ type?: string; section?: string }>;
 }) {
   const user = await getCurrentUser();
   if (!user) redirect("/login");
 
-  const { type } = await searchParams;
+  const { type, section: rawSection } = await searchParams;
   const visitType = type === "postnatal" ? "POSTNATAL" : "ANTENATAL";
+  const section = rawSection === "vaccinations" || rawSection === "delivery" ? rawSection : "visits";
 
   const data = await getMotherRecordsData(user.id, visitType);
   if (!data) {
@@ -95,6 +96,28 @@ export default async function MotherRecordsPage({
         </div>
       </div>
 
+      <div className="flex gap-1 border-b border-border-color px-5 pt-4">
+        {(
+          [
+            { key: "visits", label: "Visits" },
+            { key: "vaccinations", label: "Vaccinations" },
+            { key: "delivery", label: "Delivery" },
+          ] as const
+        ).map((s) => (
+          <Link
+            key={s.key}
+            href={`/mother/records?type=${type ?? "antenatal"}&section=${s.key}`}
+            className={cn(
+              "border-b-2 px-3 py-2.5 text-center font-body text-sm font-medium",
+              section === s.key ? "border-primary text-lilac-deeper" : "border-transparent text-text-secondary"
+            )}
+          >
+            {s.label}
+          </Link>
+        ))}
+      </div>
+
+      {section === "visits" && (
       <div className="px-5 pb-8 pt-5 lg:grid lg:grid-cols-[1fr_320px] lg:items-start lg:gap-6">
         {data.bpTrend.length > 0 && (
           <div className="rounded-card bg-white p-5 shadow-card">
@@ -196,6 +219,67 @@ export default async function MotherRecordsPage({
           ))}
         </div>
       </div>
+      )}
+
+      {section === "vaccinations" && (
+        <div className="flex flex-col gap-2.5 px-5 pb-8 pt-5">
+          {data.vaccinations.length === 0 && (
+            <p className="font-body text-sm text-text-secondary">No vaccinations recorded yet.</p>
+          )}
+          {data.vaccinations.map((v) => (
+            <div key={v.id} className="rounded-card bg-white p-4 shadow-card">
+              <div className="flex items-center justify-between">
+                <span className="rounded-badge bg-lilac-light px-2.5 py-1 font-body text-xs font-medium text-lilac-deeper">
+                  {v.badge}
+                </span>
+                <p className="font-body text-xs text-text-secondary">{formatDate(v.dateGiven)}</p>
+              </div>
+              <p className="mt-2 font-heading text-[15px] font-bold text-text-primary">{v.title}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {section === "delivery" && (
+        <div className="px-5 pb-8 pt-5">
+          {!data.deliveryRecord && (
+            <p className="font-body text-sm text-text-secondary">No delivery record yet.</p>
+          )}
+          {data.deliveryRecord && (
+            <div className="rounded-card bg-white p-4 shadow-card">
+              <div className="flex items-center justify-between">
+                <p className="font-heading text-[15px] font-bold text-text-primary">
+                  {data.deliveryRecord.typeOfDelivery ?? "Delivery"}
+                </p>
+                <p className="font-body text-xs text-text-secondary">
+                  {data.deliveryRecord.dateOfDelivery ? formatDate(data.deliveryRecord.dateOfDelivery) : "—"}
+                </p>
+              </div>
+              <p className="mt-2 font-body text-xs text-text-secondary">
+                {[
+                  data.deliveryRecord.durationOfLabourHours != null || data.deliveryRecord.durationOfLabourMinutes != null
+                    ? `Labour ${data.deliveryRecord.durationOfLabourHours ?? 0}h ${data.deliveryRecord.durationOfLabourMinutes ?? 0}m`
+                    : null,
+                  data.deliveryRecord.estimatedBloodLossMl ? `Blood loss ${data.deliveryRecord.estimatedBloodLossMl}ml` : null,
+                  data.deliveryRecord.statePerineum ? `Perineum: ${data.deliveryRecord.statePerineum}` : null,
+                  data.deliveryRecord.birthAttendant ? `Attendant: ${data.deliveryRecord.birthAttendant}` : null,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+              <p className="mt-1 font-body text-xs text-text-secondary">
+                {[
+                  data.deliveryRecord.babySex ? `Baby: ${data.deliveryRecord.babySex}` : null,
+                  data.deliveryRecord.babyBirthWeightKg ? `${data.deliveryRecord.babyBirthWeightKg}kg` : null,
+                  data.deliveryRecord.babyCondition,
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </main>
   );
 }
