@@ -126,3 +126,7 @@ export async function sendPartnerInviteSms(
     `${motherName} invited you to follow her pregnancy journey on Ɔpemfoɔ Akwantuo. View it here: ${url}`
   );
 }
+
+export async function sendAdminBroadcastSms(phone: string, title: string, message: string): Promise<void> {
+  await sendSms(phone, `[${title}] ${message}`);
+}

@@ -5,6 +5,9 @@ import {
   NavShieldUserIcon,
   NavPatientsIcon,
   NavAuditLogIcon,
+  NavReferralsIcon,
+  AlertTriangleIcon,
+  BellIcon,
 } from "@/components/ui/icons";
 
 export interface AdminNavItem {
@@ -22,7 +25,11 @@ export function getAdminNavItems(facilityId: string | null): AdminNavItem[] {
       { href: "/admin/dashboard", label: "Dashboard", icon: NavHomeIcon },
       { href: "/admin/facilities", label: "Facilities", icon: NavFacilitiesIcon },
       { href: "/admin/facility-admins", label: "Facility Admins", icon: NavShieldUserIcon },
+      { href: "/admin/staff-directory", label: "Staff", icon: NavShieldUserIcon },
       { href: "/admin/patients", label: "Patients", icon: NavPatientsIcon },
+      { href: "/admin/referrals", label: "Referrals", icon: NavReferralsIcon },
+      { href: "/admin/alerts", label: "Emergency Alerts", icon: AlertTriangleIcon },
+      { href: "/admin/broadcast", label: "Broadcast", icon: BellIcon },
       { href: "/admin/audit", label: "Audit Log", icon: NavAuditLogIcon },
     ];
   }

@@ -85,3 +85,8 @@ export const updateStaffSchema = z.object({
   isActive: z.boolean().optional(),
   licenseNumber: z.string().nullable().optional(),
 });
+
+export const broadcastSchema = z.object({
+  title: z.string().min(2, "Enter a title"),
+  message: z.string().min(2, "Enter a message"),
+});

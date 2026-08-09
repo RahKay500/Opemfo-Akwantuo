@@ -502,7 +502,26 @@ model SuperAdmin {
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
+  notifications AdminNotification[]
+
   @@index([facilityId])
+}
+
+// In-app half of the Platform Super Admin's broadcast feature (SMS is the
+// other half, sent directly via Hubtel and not persisted). One row per
+// recipient Facility Admin, mirroring how Notification does one row per
+// User — kept as a separate model since SuperAdmin is deliberately not a
+// User and shouldn't gain a dependency on that table.
+model AdminNotification {
+  id           String     @id @default(cuid())
+  superAdminId String
+  superAdmin   SuperAdmin @relation(fields: [superAdminId], references: [id])
+  title        String
+  message      String
+  isRead       Boolean    @default(false)
+  createdAt    DateTime   @default(now())
+
+  @@index([superAdminId])
 }
 
 // Ghana MCH Record Book, Tetanus-diphtheria Immunization Schedule (page 8).

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { getCurrentAdminIdentity } from "@/lib/current-admin";
 import HeaderIdentityMenu from "@/components/admin/HeaderIdentityMenu";
+import NotificationBell from "@/components/admin/NotificationBell";
 
 export default async function Header({
   title,
@@ -28,6 +29,7 @@ export default async function Header({
       </div>
       <div className="flex shrink-0 items-center gap-3">
         {action}
+        {identity && !isPlatform && <NotificationBell />}
         {identity && (
           <HeaderIdentityMenu displayName={displayName} orgName={identity.orgName} tierLabel={tierLabel} accent={accent} />
         )}

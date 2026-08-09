@@ -40,7 +40,7 @@ export default function AdminLoginForm() {
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium text-[#1A1A2E]">Email</label>
         <input
-          type="email"
+          type="text"
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           placeholder="you@company.com"
