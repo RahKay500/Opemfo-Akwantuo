@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
 import StatusBadge from "@/components/admin/StatusBadge";
 import { formatDate } from "@/lib/utils";
@@ -19,7 +19,8 @@ export interface StaffRow {
 
 export default function StaffClient({ staff }: { staff: StaffRow[] }) {
   const router = useRouter();
-  const [query, setQuery] = useState("");
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") ?? "");
   const [roleFilter, setRoleFilter] = useState<"All" | "MIDWIFE" | "DOCTOR">("All");
 
   const filtered = useMemo(() => {

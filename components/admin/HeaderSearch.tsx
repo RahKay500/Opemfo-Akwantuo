@@ -18,7 +18,7 @@ interface SearchResults {
 
 const EMPTY: SearchResults = { facilities: [], staff: [], patients: [] };
 
-export default function HeaderSearch() {
+export default function HeaderSearch({ isPlatform }: { isPlatform: boolean }) {
   const router = useRouter();
   const ref = useRef<HTMLDivElement>(null);
   const [query, setQuery] = useState("");
@@ -49,7 +49,7 @@ export default function HeaderSearch() {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  function goTo(section: "facilities" | "staff-directory" | "patients", name: string) {
+  function goTo(section: "facilities" | "staff-directory" | "staff" | "patients", name: string) {
     setOpen(false);
     setQuery("");
     router.push(`/admin/${section}?q=${encodeURIComponent(name)}`);
@@ -65,7 +65,7 @@ export default function HeaderSearch() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => query.trim().length >= 2 && setOpen(true)}
-        placeholder="Search facilities, staff, patients..."
+        placeholder={isPlatform ? "Search facilities, staff, patients..." : "Search staff, patients..."}
         className="h-9 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-9 pr-3 text-sm text-[#1A1A2E] outline-none placeholder:text-[#94A3B8] focus:border-[#9F1AB1] focus:bg-white"
       />
 
@@ -84,7 +84,7 @@ export default function HeaderSearch() {
           {results.staff.length > 0 && (
             <ResultGroup label="Staff">
               {results.staff.map((s) => (
-                <ResultRow key={s.id} result={s} onClick={() => goTo("staff-directory", s.name)} />
+                <ResultRow key={s.id} result={s} onClick={() => goTo(isPlatform ? "staff-directory" : "staff", s.name)} />
               ))}
             </ResultGroup>
           )}
