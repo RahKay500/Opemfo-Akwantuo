@@ -50,10 +50,11 @@ export default function NotificationBell() {
       <button
         type="button"
         onClick={handleToggle}
-        // h-14 matches HeaderIdentityMenu's rendered height (a 40px avatar
-        // plus its py-2 padding) so the two buttons sit flush in the header
-        // row instead of the bell looking short next to the identity pill.
-        className="relative flex h-14 w-11 items-center justify-center rounded-lg border border-[#E2E8F0] bg-white/60 backdrop-blur-md transition-colors hover:bg-white/80"
+        // Nudged up slightly so it sits centered against the taller
+        // identity pill next to it (that pill's ~56px height, from its
+        // 40px avatar plus padding, would otherwise pull this shorter
+        // button's visual center a touch low).
+        className="relative -mt-1 flex size-10 items-center justify-center rounded-lg border border-[#E2E8F0] bg-white/60 backdrop-blur-md transition-colors hover:bg-white/80"
       >
         <EmergencyBellIcon className="size-5 text-[#1A1A2E]" />
         {unreadCount > 0 && (
