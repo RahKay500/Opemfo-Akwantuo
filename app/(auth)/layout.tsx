@@ -6,7 +6,7 @@ const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emer
 export default function AuthLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <div className="flex min-h-screen bg-white">
-      <div className="hidden w-[420px] shrink-0 flex-col justify-center gap-10 bg-primary px-12 py-16 lg:flex">
+      <div className="hidden w-1/2 shrink-0 flex-col justify-center gap-10 bg-primary px-12 py-16 lg:flex">
         <div className="text-center">
           <div className="mx-auto flex size-14 items-center justify-center rounded-badge bg-white">
             <Image src="/images/logo.png" alt="" width={40} height={40} />
