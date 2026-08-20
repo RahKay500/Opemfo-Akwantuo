@@ -218,17 +218,25 @@ model Patient {
   majorRiskFactors             String[]
 
   // Medical/Surgical/Social/Family History (page 5-6)
-  medicalHistory Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, epilepsy, asthma, allergiesDrugFood, medicationHistory, hivInfection, previousSurgery, other}
-  socialHistory  Json? // {alcohol, smoking}
+  medicalHistory Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, epilepsy, hivInfection, asthma, respiratoryDisease, tb, mentalIllness, allergiesDrugFood, allergiesDrugFoodDetail, medicationHistory, medicationHistoryDetail, previousSurgery, other}
+  socialHistory  Json? // {alcohol, alcoholDetail, smoking, smokingDetail}
   familyHistory  Json? // {hypertension, heartDisease, sickleCellDisease, diabetes, multiplePregnancies, birthDefects, mentalHealthDisorder, other}
 
+  // Physical Examination at First Visit (page 5) — {generalCondition, face,
+  // headNeck, breasts, abdomen, heart, lung, other}, each {normal, note}.
+  physicalExamAtFirstVisit Json?
+
   // Investigations (page 6) — bloodGroup already exists above.
-  rhTyping  String?
-  hbsAg     String?
-  sickling  String?
-  g6pd      String?
-  vdrl      String?
-  hivStatus String?
+  rhTyping     String?
+  hbsAg        String?
+  sickling     String?
+  g6pd         String?
+  vdrl         String?
+  hivStatus    String?
+  hbFirstVisit Float? // Hb (first visit), g/dl — repeat Hb at 28/36 weeks isn't tracked here
+  urineRE      String?
+  stoolRE      String?
+  bfForMalaria String? // blood film for malaria — only tested if suspected
 
   height                      Float?
   weightAtAnc1                Float?

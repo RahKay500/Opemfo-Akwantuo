@@ -9,8 +9,20 @@ import Select from "@/components/ui/Select";
 import GhanaCardInput from "@/components/ui/GhanaCardInput";
 import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
 import { digitsOnly, lettersOnly } from "@/lib/utils";
+import Field from "@/components/forms/patient-intake/Field";
+import ObstetricHistoryStep from "@/components/forms/patient-intake/ObstetricHistoryStep";
+import InvestigationsStep, { type InvestigationsValue } from "@/components/forms/patient-intake/InvestigationsStep";
+import HealthHistoryStep from "@/components/forms/patient-intake/HealthHistoryStep";
+import PhysicalExamStep from "@/components/forms/patient-intake/PhysicalExamStep";
+import type {
+  MedicalHistoryState,
+  SocialHistoryState,
+  FamilyHistoryState,
+  PhysicalExamState,
+  PreviousPregnancy,
+} from "@/lib/mch-record";
 
-const STEPS = ["Personal", "Family", "Pregnancy", "Emergency"] as const;
+const STEPS = ["Personal", "Family", "Pregnancy", "Obstetric", "Labs", "History", "Exam", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const RELATIONS = ["Husband", "Mother", "Sister", "Father", "Other"];
 const MARITAL_STATUSES = ["Single", "Married", "Divorced", "Widowed", "Other"];
@@ -39,6 +51,16 @@ export interface EditPatientInitial {
   para: string;
   bloodGroup: string;
   knownConditions: string;
+  abortionsSpontaneous: string;
+  abortionsInduced: string;
+  riskFactors: string[];
+  riskFactorOther: string;
+  previousPregnancies: PreviousPregnancy[];
+  investigations: InvestigationsValue;
+  medicalHistory: MedicalHistoryState;
+  socialHistory: SocialHistoryState;
+  familyHistory: FamilyHistoryState;
+  physicalExam: PhysicalExamState;
   emergencyContactName: string;
   emergencyContactPhone: string;
   emergencyContactRelation: string;
@@ -83,6 +105,20 @@ export default function EditPatientForm({
   const [bloodGroup, setBloodGroup] = useState(initial.bloodGroup);
   const [knownConditions, setKnownConditions] = useState(initial.knownConditions);
 
+  const [abortionsSpontaneous, setAbortionsSpontaneous] = useState(initial.abortionsSpontaneous);
+  const [abortionsInduced, setAbortionsInduced] = useState(initial.abortionsInduced);
+  const [riskFactors, setRiskFactors] = useState<string[]>(initial.riskFactors);
+  const [riskFactorOther, setRiskFactorOther] = useState(initial.riskFactorOther);
+  const [previousPregnancies, setPreviousPregnancies] = useState<PreviousPregnancy[]>(initial.previousPregnancies);
+
+  const [investigations, setInvestigations] = useState<InvestigationsValue>(initial.investigations);
+
+  const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryState>(initial.medicalHistory);
+  const [socialHistory, setSocialHistory] = useState<SocialHistoryState>(initial.socialHistory);
+  const [familyHistory, setFamilyHistory] = useState<FamilyHistoryState>(initial.familyHistory);
+
+  const [physicalExam, setPhysicalExam] = useState<PhysicalExamState>(initial.physicalExam);
+
   const [emergencyContactName, setEmergencyContactName] = useState(initial.emergencyContactName);
   const [emergencyContactPhone, setEmergencyContactPhone] = useState(initial.emergencyContactPhone);
   const [emergencyContactRelation, setEmergencyContactRelation] = useState(initial.emergencyContactRelation);
@@ -118,6 +154,12 @@ export default function EditPatientForm({
     setError(null);
     setSubmitting(true);
     try {
+      const bmiAtAnc1 =
+        investigations.height && investigations.weightAtAnc1
+          ? Number(investigations.weightAtAnc1) / (Number(investigations.height) / 100) ** 2
+          : undefined;
+      const majorRiskFactors = [...riskFactors, ...(riskFactorOther.trim() ? [riskFactorOther.trim()] : [])];
+
       const res = await fetch(`/api/patients/${patientId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -144,6 +186,29 @@ export default function EditPatientForm({
           para: para ? Number(para) : undefined,
           bloodGroup: bloodGroup || undefined,
           knownConditions: knownConditions.trim() || undefined,
+          numberOfAbortionsSpontaneous: abortionsSpontaneous ? Number(abortionsSpontaneous) : undefined,
+          numberOfAbortionsInduced: abortionsInduced ? Number(abortionsInduced) : undefined,
+          majorRiskFactors,
+          previousPregnancies: previousPregnancies.length ? previousPregnancies : undefined,
+          height: investigations.height ? Number(investigations.height) : undefined,
+          weightAtAnc1: investigations.weightAtAnc1 ? Number(investigations.weightAtAnc1) : undefined,
+          bmiAtAnc1,
+          estimatedDesiredWeightAtEdd: investigations.estimatedDesiredWeightAtEdd.trim() || undefined,
+          contraceptionUsed: investigations.contraceptionUsed.trim() || undefined,
+          rhTyping: investigations.rhTyping || undefined,
+          hbsAg: investigations.hbsAg || undefined,
+          sickling: investigations.sickling || undefined,
+          g6pd: investigations.g6pd || undefined,
+          vdrl: investigations.vdrl || undefined,
+          hivStatus: investigations.hivStatus.trim() || undefined,
+          hbFirstVisit: investigations.hbFirstVisit ? Number(investigations.hbFirstVisit) : undefined,
+          urineRE: investigations.urineRE.trim() || undefined,
+          stoolRE: investigations.stoolRE.trim() || undefined,
+          bfForMalaria: investigations.bfForMalaria || undefined,
+          medicalHistory,
+          socialHistory,
+          familyHistory,
+          physicalExamAtFirstVisit: physicalExam,
           emergencyContactName: emergencyContactName.trim() || undefined,
           emergencyContactPhone: emergencyContactPhone.trim() || undefined,
           emergencyContactRelation: emergencyContactRelation || undefined,
@@ -168,25 +233,24 @@ export default function EditPatientForm({
       <div className="lg:rounded-card lg:bg-white lg:p-8 lg:shadow-card">
         <h2 className="hidden font-heading text-lg font-bold text-text-primary lg:block">Edit Patient Details</h2>
 
-        <div className="flex items-center gap-1 px-6 pt-5 lg:px-0 lg:pt-0 lg:mt-6">
+        <div className="flex items-center gap-1 overflow-x-auto px-6 pt-5 lg:px-0 lg:pt-0 lg:mt-6">
           {STEPS.map((label, i) => (
-            <div key={label} className="flex flex-1 flex-col items-center">
-              <div className="flex w-full items-center">
-                {i > 0 && <div className={cn("h-0.5 flex-1", i <= step ? "bg-primary" : "bg-border-color")} />}
-                <div
-                  className={cn(
-                    "rounded-badge border-[1.5px] px-4 py-2 font-body text-xs font-medium",
-                    i === step
-                      ? "border-primary bg-primary text-white"
-                      : i < step
-                        ? "border-primary bg-white text-lilac-deeper"
-                        : "border-border-color bg-white text-text-secondary"
-                  )}
-                >
-                  {label}
-                </div>
-                {i < STEPS.length - 1 && <div className={cn("h-0.5 flex-1", i < step ? "bg-primary" : "bg-border-color")} />}
-              </div>
+            <div key={label} className="flex shrink-0 items-center">
+              {i > 0 && <div className={cn("h-0.5 w-4", i <= step ? "bg-primary" : "bg-border-color")} />}
+              <button
+                type="button"
+                onClick={() => setStep(i)}
+                className={cn(
+                  "shrink-0 rounded-badge border-[1.5px] px-3 py-2 font-body text-xs font-medium",
+                  i === step
+                    ? "border-primary bg-primary text-white"
+                    : i < step
+                      ? "border-primary bg-white text-lilac-deeper"
+                      : "border-border-color bg-white text-text-secondary"
+                )}
+              >
+                {label}
+              </button>
             </div>
           ))}
         </div>
@@ -392,6 +456,36 @@ export default function EditPatientForm({
         )}
 
         {step === 3 && (
+          <ObstetricHistoryStep
+            abortionsSpontaneous={abortionsSpontaneous}
+            onAbortionsSpontaneousChange={setAbortionsSpontaneous}
+            abortionsInduced={abortionsInduced}
+            onAbortionsInducedChange={setAbortionsInduced}
+            riskFactors={riskFactors}
+            onRiskFactorsChange={setRiskFactors}
+            riskFactorOther={riskFactorOther}
+            onRiskFactorOtherChange={setRiskFactorOther}
+            previousPregnancies={previousPregnancies}
+            onPreviousPregnanciesChange={setPreviousPregnancies}
+          />
+        )}
+
+        {step === 4 && <InvestigationsStep value={investigations} onChange={setInvestigations} />}
+
+        {step === 5 && (
+          <HealthHistoryStep
+            medicalHistory={medicalHistory}
+            onMedicalHistoryChange={setMedicalHistory}
+            socialHistory={socialHistory}
+            onSocialHistoryChange={setSocialHistory}
+            familyHistory={familyHistory}
+            onFamilyHistoryChange={setFamilyHistory}
+          />
+        )}
+
+        {step === 6 && <PhysicalExamStep value={physicalExam} onChange={setPhysicalExam} />}
+
+        {step === 7 && (
           <>
             <Field label="Emergency Contact Name">
               <Input
@@ -488,15 +582,6 @@ export default function EditPatientForm({
           </button>
         )}
       </div>
-    </div>
-  );
-}
-
-function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
-  return (
-    <div className={className}>
-      <label className="font-body text-[13px] font-medium text-text-secondary">{label}</label>
-      <div className="mt-1.5">{children}</div>
     </div>
   );
 }
