@@ -17,7 +17,7 @@ export default async function AdminPatientsPage() {
 
   return (
     <>
-      <Header title="Patients" subtitle={isPlatform ? "All facilities" : undefined} />
+      <Header title="Patients" subtitle={isPlatform ? "All facilities" : undefined} showSearch={false} />
       <div className="px-4 py-6 lg:px-8">
         <PatientsClient
           patients={patients.map((p) => ({

@@ -8,10 +8,16 @@ export default async function Header({
   title,
   subtitle,
   action,
+  // Pages that already have their own local list-filter search (Facilities,
+  // Facility Admins, Staff Directory, Staff, Patients) don't also need this
+  // header-level cross-entity one — showing both stacked two search bars on
+  // the same screen. Everywhere else, this is the page's only search.
+  showSearch = true,
 }: {
   title: string;
   subtitle?: string | null;
   action?: ReactNode;
+  showSearch?: boolean;
 }) {
   const identity = await getCurrentAdminIdentity();
   const isPlatform = identity?.facilityId === null;
@@ -28,7 +34,7 @@ export default async function Header({
         <h1 className="text-xl font-semibold text-[#1A1A2E]">{title}</h1>
         {subtitle && <p className="mt-0.5 truncate text-sm text-[#6B7280]">{subtitle}</p>}
       </div>
-      {identity && (
+      {identity && showSearch && (
         <div className="hidden flex-1 justify-center lg:flex">
           <HeaderSearch isPlatform={isPlatform} />
         </div>

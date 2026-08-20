@@ -20,7 +20,7 @@ export default async function AdminFacilityAdminsPage() {
 
   return (
     <>
-      <Header title="Facility Admins" />
+      <Header title="Facility Admins" showSearch={false} />
       <div className="px-4 py-6 lg:px-8">
         <FacilityAdminsClient
           admins={admins.map((a) => ({

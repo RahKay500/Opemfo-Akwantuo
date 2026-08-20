@@ -19,7 +19,7 @@ export default async function AdminStaffDirectoryPage() {
 
   return (
     <>
-      <Header title="Staff Directory" subtitle="All facilities" />
+      <Header title="Staff Directory" subtitle="All facilities" showSearch={false} />
       <div className="px-4 py-6 lg:px-8">
         <StaffDirectoryClient
           staff={staff.map((s) => ({

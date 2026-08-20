@@ -37,6 +37,7 @@ export default async function AdminStaffPage({
     <>
       <Header
         title={facility ? `Staff — ${facility.name}` : "Staff"}
+        showSearch={false}
         action={
           <Link
             href={`/admin/staff/new${isPlatform ? `?facilityId=${facilityId}` : ""}`}

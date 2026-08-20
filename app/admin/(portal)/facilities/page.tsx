@@ -23,7 +23,7 @@ export default async function AdminFacilitiesPage() {
 
   return (
     <>
-      <Header title="Facilities" />
+      <Header title="Facilities" showSearch={false} />
       <div className="px-4 py-6 lg:px-8">
         <FacilitiesClient
           facilities={facilities.map((f) => ({
