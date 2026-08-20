@@ -6,3 +6,37 @@ body {
   color: theme("colors.text-primary");
   background: theme("colors.surface");
 }
+
+/* Onboarding illustration's floating care-tokens (OnboardingIllustration) —
+   a small staggered bob, not a spin/pulse, so it reads as calm rather than
+   busy on a screen a mother sees for a few seconds before moving on. */
+@keyframes onboarding-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.onboarding-float-1,
+.onboarding-float-2,
+.onboarding-float-3 {
+  animation: onboarding-float 5s ease-in-out infinite;
+  transform-origin: center;
+}
+.onboarding-float-2 {
+  animation-delay: 1.1s;
+}
+.onboarding-float-3 {
+  animation-delay: 2.3s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onboarding-float-1,
+  .onboarding-float-2,
+  .onboarding-float-3 {
+    animation: none;
+  }
+}
