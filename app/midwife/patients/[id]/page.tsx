@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { getMidwifePatientDetail } from "@/lib/queries/midwife-patient-detail";
 import { calculateAge, calculatePregnancyProgress } from "@/lib/pregnancy";
 import { formatDate } from "@/lib/utils";
-import { ArrowLeftIcon } from "@/components/ui/icons";
+import { ArrowLeftIcon, PencilIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import PatientDetailClient from "./PatientDetailClient";
 
@@ -47,7 +47,7 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
         <div className="flex size-14 shrink-0 items-center justify-center rounded-badge bg-primary">
           <span className="font-heading text-xl font-bold text-white">{initialsStr}</span>
         </div>
-        <div>
+        <div className="flex-1">
           <p className="font-heading text-xl font-bold text-text-primary">{patient.name}</p>
           <p className="mt-1 font-body text-[13px] text-text-secondary">
             {[week != null ? `Week ${week}` : null, `DOB ${formatDate(patient.dateOfBirth)} (${age})`, patient.bloodGroup]
@@ -60,6 +60,13 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
             </div>
           )}
         </div>
+        <Link
+          href={`/midwife/patients/${patient.id}/edit`}
+          aria-label="Edit patient details"
+          className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-white text-lilac-deeper shadow-card"
+        >
+          <PencilIcon className="size-4" />
+        </Link>
       </div>
 
       <PatientDetailClient

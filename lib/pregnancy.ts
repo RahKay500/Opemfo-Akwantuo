@@ -45,6 +45,15 @@ export function calculateEffectiveLmpFromScan(
   return new Date(scanDate.getTime() - totalDays * MS_PER_DAY);
 }
 
+// Inverse of the above — reconstructs the weeks/days a scan originally
+// reported from the stored scanDate + effective lmp, since only those two
+// (not the original weeks/days split) are persisted. Used to pre-fill the
+// edit-patient form for a patient dated by ultrasound.
+export function gestationalAgeAtScan(scanDate: Date, effectiveLmp: Date): { weeks: number; days: number } {
+  const totalDays = Math.round((scanDate.getTime() - effectiveLmp.getTime()) / MS_PER_DAY);
+  return { weeks: Math.floor(totalDays / 7), days: totalDays % 7 };
+}
+
 // Standard ANC cadence: monthly through the first two trimesters, then every
 // 2 weeks once the mother reaches the third trimester (week >= 28, matching
 // this file's own trimester boundary above).
