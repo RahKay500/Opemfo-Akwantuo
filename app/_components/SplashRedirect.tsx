@@ -8,12 +8,16 @@ export default function SplashRedirect({ target }: { target: string }) {
   const router = useRouter();
 
   useEffect(() => {
-    const t = setTimeout(() => router.replace(target), 2000);
+    // The app-style splash pause is a mobile convention — on a desktop
+    // browser tab it just reads as a stalled page load, so skip straight
+    // to the destination there instead of waiting out the same 2s.
+    const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+    const t = setTimeout(() => router.replace(target), isDesktop ? 0 : 2000);
     return () => clearTimeout(t);
   }, [router, target]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-primary">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-primary lg:hidden">
       <div className="flex size-[120px] items-center justify-center rounded-[60px] bg-white">
         <Image src="/images/logo.png" alt="" width={100} height={100} priority />
       </div>
