@@ -2,7 +2,7 @@
 
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeftIcon, EyeIcon, CheckIcon } from "@/components/ui/icons";
+import { ArrowLeftIcon, EyeIcon, EyeOffIcon, CheckIcon } from "@/components/ui/icons";
 import { cn } from "@/lib/utils";
 
 function ChecklistItem({ met, label }: { met: boolean; label: string }) {
@@ -28,6 +28,8 @@ function ResetPasswordForm() {
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -91,13 +93,20 @@ function ResetPasswordForm() {
           <label className="font-body text-sm font-medium text-[#374151]">New password</label>
           <div className="flex h-14 items-center rounded-[14px] border-[1.5px] border-border-color bg-white px-4">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               placeholder="Enter new password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="flex-1 font-body text-[15px] text-text-primary outline-none"
             />
-            <EyeIcon className="size-[18px] text-text-secondary" />
+            <button
+              type="button"
+              onClick={() => setShowPassword((s) => !s)}
+              className="text-text-secondary"
+              aria-label={showPassword ? "Hide password" : "Show password"}
+            >
+              {showPassword ? <EyeOffIcon className="size-[18px]" /> : <EyeIcon className="size-[18px]" />}
+            </button>
           </div>
         </div>
 
@@ -105,13 +114,20 @@ function ResetPasswordForm() {
           <label className="font-body text-sm font-medium text-[#374151]">Confirm password</label>
           <div className="flex h-14 items-center rounded-[14px] border-[1.5px] border-border-color bg-white px-4">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               placeholder="Re-enter new password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="flex-1 font-body text-[15px] text-text-primary outline-none"
             />
-            <EyeIcon className="size-[18px] text-text-secondary" />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((s) => !s)}
+              className="text-text-secondary"
+              aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+            >
+              {showConfirmPassword ? <EyeOffIcon className="size-[18px]" /> : <EyeIcon className="size-[18px]" />}
+            </button>
           </div>
         </div>
 

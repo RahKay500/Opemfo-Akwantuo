@@ -2,12 +2,16 @@
 
 import { useState } from "react";
 import FormField from "@/components/admin/FormField";
+import { EyeIcon, EyeOffIcon } from "@/components/ui/icons";
 
 export default function ChangePasswordForm() {
   const [step, setStep] = useState<"request" | "confirm">("request");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [otp, setOtp] = useState("");
   const [phone, setPhone] = useState<string | null>(null);
   const [devOtp, setDevOtp] = useState<string | null>(null);
@@ -138,30 +142,60 @@ export default function ChangePasswordForm() {
       </p>
 
       <FormField label="Current password" required>
-        <input
-          type="password"
-          value={currentPassword}
-          onChange={(e) => setCurrentPassword(e.target.value)}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
+        <div className="relative">
+          <input
+            type={showCurrent ? "text" : "password"}
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 pr-10 text-sm outline-none focus:border-[#E4A8F3]"
+          />
+          <button
+            type="button"
+            onClick={() => setShowCurrent((s) => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+            aria-label={showCurrent ? "Hide password" : "Show password"}
+          >
+            {showCurrent ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+          </button>
+        </div>
       </FormField>
 
       <FormField label="New password" required>
-        <input
-          type="password"
-          value={newPassword}
-          onChange={(e) => setNewPassword(e.target.value)}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
+        <div className="relative">
+          <input
+            type={showNew ? "text" : "password"}
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 pr-10 text-sm outline-none focus:border-[#E4A8F3]"
+          />
+          <button
+            type="button"
+            onClick={() => setShowNew((s) => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+            aria-label={showNew ? "Hide password" : "Show password"}
+          >
+            {showNew ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+          </button>
+        </div>
       </FormField>
 
       <FormField label="Confirm new password" required>
-        <input
-          type="password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
-          className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-        />
+        <div className="relative">
+          <input
+            type={showConfirm ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 pr-10 text-sm outline-none focus:border-[#E4A8F3]"
+          />
+          <button
+            type="button"
+            onClick={() => setShowConfirm((s) => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-[#6B7280]"
+            aria-label={showConfirm ? "Hide password" : "Show password"}
+          >
+            {showConfirm ? <EyeOffIcon className="size-4" /> : <EyeIcon className="size-4" />}
+          </button>
+        </div>
       </FormField>
 
       {error && <p className="text-sm text-[#DC2626]">{error}</p>}
