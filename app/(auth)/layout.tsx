@@ -12,9 +12,6 @@ export default function AuthLayout({ children }: Readonly<{ children: React.Reac
             <Image src="/images/logo.png" alt="" width={40} height={40} />
           </div>
           <p className="mt-5 font-heading text-2xl font-bold text-white">Ɔpemfoɔ Akwantuo</p>
-          <p className="mt-2 font-body text-sm text-white/90">
-            Connecting CHPS compounds to district hospitals for safer maternal care
-          </p>
         </div>
         <div className="flex flex-col items-center gap-4">
           {FEATURES.map((f) => (
