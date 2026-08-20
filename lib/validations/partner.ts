@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { personName } from "@/lib/validations/auth";
 
 export const createPartnerLinkSchema = z.object({
-  partnerName: z.string().trim().min(1, "Enter your partner's name"),
+  partnerName: personName,
   partnerPhone: z.string().trim().min(1, "Enter your partner's phone number"),
   sendVia: z.enum(["sms", "link"]),
   shareProgress: z.boolean(),

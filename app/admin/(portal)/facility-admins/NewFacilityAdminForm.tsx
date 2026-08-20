@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import FormField from "@/components/admin/FormField";
-import { digitsOnly } from "@/lib/utils";
+import { digitsOnly, lettersOnly } from "@/lib/utils";
 
 export default function NewFacilityAdminForm({
   facilities,
@@ -108,7 +108,7 @@ export default function NewFacilityAdminForm({
       <FormField label="Full name" required error={fieldErrors.name}>
         <input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setName(lettersOnly(e.target.value))}
           placeholder="e.g. Emmanuel Tetteh"
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         />

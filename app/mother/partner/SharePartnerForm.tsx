@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PartnerIcon, CopyIcon, CheckIcon } from "@/components/ui/icons";
-import { cn, digitsOnly } from "@/lib/utils";
+import { cn, digitsOnly, lettersOnly } from "@/lib/utils";
 import Toggle from "@/components/ui/Toggle";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
@@ -197,7 +197,7 @@ export default function SharePartnerForm() {
           <Input
             inputSize="lg"
             value={partnerName}
-            onChange={(e) => setPartnerName(e.target.value)}
+            onChange={(e) => setPartnerName(lettersOnly(e.target.value))}
             placeholder="e.g. Kofi Mensah"
             className="mt-1.5"
           />

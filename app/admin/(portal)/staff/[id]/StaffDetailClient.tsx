@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import StatusBadge from "@/components/admin/StatusBadge";
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
-import { formatDate } from "@/lib/utils";
+import { formatDate, lettersOnly } from "@/lib/utils";
 import { deriveStaffStatus } from "@/lib/staff-status";
 import Button from "@/components/ui/Button";
 
@@ -246,7 +246,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         <FormField label="Full name" required>
           <input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setName(lettersOnly(e.target.value))}
             className="h-10 w-full rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
           />
         </FormField>

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "@/components/admin/FormField";
 import { GHANA_REGIONS, GHANA_REGION_NAMES } from "@/lib/ghana-regions";
+import { lettersOnly } from "@/lib/utils";
 
 export default function ProfileForm({
   initialName,
@@ -65,7 +66,7 @@ export default function ProfileForm({
       <FormField label="Full name">
         <input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setName(lettersOnly(e.target.value))}
           placeholder="e.g. System Administrator"
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         />

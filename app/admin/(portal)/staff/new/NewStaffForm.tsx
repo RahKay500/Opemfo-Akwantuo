@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import FormField from "@/components/admin/FormField";
-import { digitsOnly } from "@/lib/utils";
+import { digitsOnly, lettersOnly } from "@/lib/utils";
 
 export default function NewStaffForm({ facilityId }: { facilityId?: string }) {
   const router = useRouter();
@@ -101,7 +101,7 @@ export default function NewStaffForm({ facilityId }: { facilityId?: string }) {
       <FormField label="Full name" required error={fieldErrors.name}>
         <input
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) => setName(lettersOnly(e.target.value))}
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         />
       </FormField>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { initials, digitsOnly } from "@/lib/utils";
+import { initials, digitsOnly, lettersOnly } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
@@ -84,7 +84,7 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
 
       <div className="flex flex-1 flex-col gap-4 px-6 pb-6 pt-3">
         <Field label="Full name">
-          <Input inputSize="lg" value={form.name} onChange={(e) => update("name", e.target.value)} />
+          <Input inputSize="lg" value={form.name} onChange={(e) => update("name", lettersOnly(e.target.value))} />
         </Field>
 
         <Field label="Phone number">
@@ -117,7 +117,7 @@ export default function EditProfileForm({ initial }: { initial: ProfileFormData 
           <Input
             inputSize="lg"
             value={form.emergencyContactName}
-            onChange={(e) => update("emergencyContactName", e.target.value)}
+            onChange={(e) => update("emergencyContactName", lettersOnly(e.target.value))}
           />
         </Field>
 

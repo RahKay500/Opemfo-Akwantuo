@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { localPhoneSchema, strongPassword } from "@/lib/validations/auth";
+import { localPhoneSchema, strongPassword, personName } from "@/lib/validations/auth";
 
 export const adminLoginSchema = z.object({
   identifier: z.string().min(1, "Enter your email or phone number"),
@@ -38,21 +38,21 @@ export const updateFacilitySchema = z.object({
 });
 
 export const createFacilityAdminSchema = z.object({
-  name: z.string().min(2, "Enter a full name"),
+  name: personName,
   email: z.string().email("Enter a valid email").optional().or(z.literal("")),
   phone: localPhoneSchema,
   facilityId: z.string().min(1, "Select a facility"),
 });
 
 export const updateFacilityAdminSchema = z.object({
-  name: z.string().min(2).optional(),
+  name: personName.optional(),
   email: z.string().email().optional().or(z.literal("")),
   facilityId: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
 });
 
 export const updateAdminProfileSchema = z.object({
-  name: z.string().min(2, "Enter a full name").optional(),
+  name: personName.optional(),
   orgName: z.string().min(2, "Enter an organisation name").optional(),
   district: z.string().min(2, "Enter a district").optional(),
   region: z.string().min(2, "Enter a region").optional(),
@@ -73,7 +73,7 @@ export const activateAdminConfirmSchema = z.object({
 // derived from their session; the route ignores this field entirely for
 // that tier rather than letting a client-supplied value override it.
 export const createStaffSchema = z.object({
-  name: z.string().min(2, "Enter a full name"),
+  name: personName,
   phone: localPhoneSchema,
   role: z.enum(["MIDWIFE", "DOCTOR"]),
   licenseNumber: z.string().optional(),
@@ -81,7 +81,7 @@ export const createStaffSchema = z.object({
 });
 
 export const updateStaffSchema = z.object({
-  name: z.string().min(2).optional(),
+  name: personName.optional(),
   isActive: z.boolean().optional(),
   licenseNumber: z.string().nullable().optional(),
 });

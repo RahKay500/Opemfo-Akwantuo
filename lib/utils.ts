@@ -29,6 +29,13 @@ export function digitsOnly(value: string, maxLength = 10): string {
   return value.replace(/\D/g, "").slice(0, maxLength);
 }
 
+// A person's name shouldn't contain digits or symbols — spaces, hyphens,
+// and apostrophes are the only non-letter characters real names use (e.g.
+// "Mary-Jane", "O'Brien"). Strips anything else live as the user types.
+export function lettersOnly(value: string): string {
+  return value.replace(/[^\p{L}\s'-]/gu, "");
+}
+
 const FACILITY_TYPE_LABELS: Record<FacilityType, string> = {
   CHPS: "CHPS",
   HEALTH_CENTRE: "Health Centre / Clinic",

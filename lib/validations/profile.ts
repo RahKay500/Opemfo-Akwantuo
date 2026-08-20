@@ -5,7 +5,7 @@ export const updateProfileSchema = z.object({
   name: personName,
   dateOfBirth: z.string().min(1, "Date of birth is required"),
   bloodGroup: z.string().optional(),
-  emergencyContactName: z.string().optional(),
+  emergencyContactName: personName.optional().or(z.literal("")),
   emergencyContactPhone: z.string().optional(),
 });
 

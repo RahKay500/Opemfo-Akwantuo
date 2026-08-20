@@ -8,7 +8,7 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import GhanaCardInput from "@/components/ui/GhanaCardInput";
 import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
-import { digitsOnly } from "@/lib/utils";
+import { digitsOnly, lettersOnly } from "@/lib/utils";
 
 const STEPS = ["Personal", "Family", "Pregnancy", "Emergency"] as const;
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
@@ -160,7 +160,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
         {step === 0 && (
           <>
             <Field label="Full Name">
-              <Input inputSize="lg" value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter full name" />
+              <Input inputSize="lg" value={name} onChange={(e) => setName(lettersOnly(e.target.value))} placeholder="Enter full name" />
             </Field>
             <Field label="Date of Birth">
               <DateSelectInput
@@ -226,7 +226,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             {maritalStatus === "Married" && (
               <>
                 <Field label="Spouse's Name">
-                  <Input inputSize="lg" value={spouseName} onChange={(e) => setSpouseName(e.target.value)} placeholder="Optional" />
+                  <Input inputSize="lg" value={spouseName} onChange={(e) => setSpouseName(lettersOnly(e.target.value))} placeholder="Optional" />
                 </Field>
                 <div className="flex gap-3 lg:col-span-2">
                   <Field label="Spouse's Phone" className="flex-1">
@@ -362,7 +362,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
               <Input
                 inputSize="lg"
                 value={emergencyContactName}
-                onChange={(e) => setEmergencyContactName(e.target.value)}
+                onChange={(e) => setEmergencyContactName(lettersOnly(e.target.value))}
                 placeholder="Enter full name"
               />
             </Field>

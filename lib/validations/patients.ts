@@ -22,7 +22,7 @@ export const createPatientSchema = z.object({
   para: z.number().optional(),
   bloodGroup: z.string().optional(),
   knownConditions: z.string().optional(),
-  emergencyContactName: z.string().optional(),
+  emergencyContactName: personName.optional().or(z.literal("")),
   emergencyContactPhone: z.string().optional(),
   emergencyContactRelation: z.string().optional(),
   // Ghana MCH Record Book — Family Identification (page 3)
@@ -31,7 +31,7 @@ export const createPatientSchema = z.object({
   maritalStatus: z.string().optional(),
   educationalLevel: z.string().optional(),
   occupation: z.string().optional(),
-  spouseName: z.string().optional(),
+  spouseName: personName.optional().or(z.literal("")),
   spousePhone: z.string().optional(),
   spouseOccupation: z.string().optional(),
   emergencyTransportPhone: z.string().optional(),

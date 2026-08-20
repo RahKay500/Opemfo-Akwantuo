@@ -1,12 +1,20 @@
 import { z } from "zod";
 import { normalizeGhanaPhone, stripEmoji } from "@/lib/utils";
 
-// Server-side backstop: the client already strips emoji live, but the API
-// can be called directly, so this can't rely on that alone.
+const NAME_PATTERN = /^[\p{L}][\p{L}\s'-]*$/u;
+
+// Server-side backstop: the client already strips emoji/digits/symbols live
+// (lettersOnly in lib/utils.ts), but the API can be called directly, so
+// this can't rely on that alone.
 export const personName = z
   .string()
   .transform((value) => stripEmoji(value).trim())
-  .pipe(z.string().min(2, "Enter your full name"));
+  .pipe(
+    z
+      .string()
+      .min(2, "Enter your full name")
+      .regex(NAME_PATTERN, "Name can only contain letters, spaces, hyphens, and apostrophes")
+  );
 
 const ghanaPhone = z
   .string()

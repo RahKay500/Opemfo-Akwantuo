@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { initials } from "@/lib/utils";
+import { initials, lettersOnly } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import DateSelectInput from "@/components/ui/DateSelectInput";
 
@@ -95,7 +95,7 @@ export default function EditStaffProfileForm({
           <Field label="Full name">
             <input
               value={form.name}
-              onChange={(e) => update("name", e.target.value)}
+              onChange={(e) => update("name", lettersOnly(e.target.value))}
               className="h-[54px] w-full rounded-input border-[1.5px] border-border-color bg-white px-4 font-body text-[15px] text-text-primary outline-none focus:border-primary"
             />
           </Field>
