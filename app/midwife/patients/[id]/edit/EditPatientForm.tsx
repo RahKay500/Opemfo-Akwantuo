@@ -316,7 +316,7 @@ export default function EditPatientForm({
             </Field>
 
             {datingMethod === "LMP" ? (
-              <Field label="Last Menstrual Period (LMP)">
+              <Field label="Last Menstrual Period (LMP) — optional">
                 <DateSelectInput
                   value={lmp}
                   onChange={setLmp}

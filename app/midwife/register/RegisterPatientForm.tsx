@@ -281,7 +281,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             </Field>
 
             {datingMethod === "LMP" ? (
-              <Field label="Last Menstrual Period (LMP)">
+              <Field label="Last Menstrual Period (LMP) — optional">
                 <DateSelectInput
                   value={lmp}
                   onChange={setLmp}
