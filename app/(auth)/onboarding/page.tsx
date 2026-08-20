@@ -7,7 +7,7 @@ export default function OnboardingWelcomePage() {
     <main className="flex min-h-screen flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11 lg:justify-center lg:bg-transparent lg:pt-0">
       {/* Shown on both breakpoints — the shared auth layout's left panel only
           repeats the logo/wordmark, not this illustration, so no duplication. */}
-      <div className="flex aspect-square w-full max-w-[300px] items-center justify-center rounded-card bg-white shadow-card">
+      <div className="flex aspect-square w-full max-w-[360px] items-center justify-center rounded-card bg-white shadow-card">
         <OnboardingIllustration className="w-[85%]" />
       </div>
 
