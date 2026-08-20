@@ -65,6 +65,7 @@ import {
   Settings01Icon,
   Logout01Icon,
   Copy01Icon,
+  Video01Icon,
 } from "@hugeicons/core-free-icons";
 
 function makeIcon(glyph: IconSvgElement) {
@@ -140,3 +141,4 @@ export const NavShieldUserIcon = makeIcon(UserShield01Icon);
 export const SettingsIcon = makeIcon(Settings01Icon);
 export const LogoutIcon = makeIcon(Logout01Icon);
 export const CopyIcon = makeIcon(Copy01Icon);
+export const NavVideosIcon = makeIcon(Video01Icon);

@@ -152,6 +152,7 @@ model Facility {
   referralsFrom Referral[]   @relation("ReferralFromFacility")
   referralsTo   Referral[]   @relation("ReferralToFacility")
   admins        SuperAdmin[]
+  videos        Video[]
 }
 
 model Patient {
@@ -520,6 +521,7 @@ model SuperAdmin {
   updatedAt           DateTime  @updatedAt
 
   notifications AdminNotification[]
+  videosAdded   Video[]
 
   @@index([facilityId])
 }
@@ -539,6 +541,26 @@ model AdminNotification {
   createdAt    DateTime   @default(now())
 
   @@index([superAdminId])
+}
+
+// Learn & Prepare content a facility adds on top of the app's own curated
+// list. facilityId null = added by the Platform Super Admin and shown to
+// every mother; set = added by that Facility Admin and shown only to
+// mothers registered at their facility. YouTube-only for now (a plain
+// link, no upload/hosting) — the mother-facing player already knows how
+// to embed any YouTube URL.
+model Video {
+  id         String     @id @default(cuid())
+  title      String
+  url        String
+  category   String
+  facilityId String?
+  facility   Facility?  @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  addedById  String
+  addedBy    SuperAdmin @relation(fields: [addedById], references: [id])
+  createdAt  DateTime   @default(now())
+
+  @@index([facilityId])
 }
 
 // Ghana MCH Record Book, Tetanus-diphtheria Immunization Schedule (page 8).

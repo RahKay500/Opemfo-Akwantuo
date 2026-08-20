@@ -1,10 +1,17 @@
+import { VIDEO_CATEGORIES, type VideoCategory } from "@/lib/videos";
+
+export { youtubeVideoId, youtubeThumbnail, youtubeEmbedUrl } from "@/lib/videos";
+
 export interface VideoItem {
   id: string;
   title: string;
-  duration: string;
+  // Curated videos carry a manually-checked runtime; facility-added videos
+  // don't (no one's going to hand-time every clip a hospital links), so
+  // this is optional and simply omitted from display when absent.
+  duration?: string;
   source: string;
   url: string;
-  category: "Pregnancy" | "Nutrition" | "Labour" | "Postnatal" | "Baby Care";
+  category: VideoCategory;
 }
 
 // Every url below points to a real, published video from an identifiable
@@ -30,20 +37,4 @@ export const VIDEOS: VideoItem[] = [
   { id: "first-weeks", title: "Meeting Baby for the First Time", duration: "5 min", source: "UNICEF UK Baby Friendly Initiative", url: "https://www.youtube.com/watch?v=0vzW9qPz3So", category: "Baby Care" },
 ];
 
-export const CATEGORIES = ["All", "Pregnancy", "Nutrition", "Labour", "Postnatal", "Baby Care"] as const;
-
-export function youtubeVideoId(url: string): string | null {
-  return new URL(url).searchParams.get("v");
-}
-
-export function youtubeThumbnail(url: string): string {
-  return `https://i.ytimg.com/vi/${youtubeVideoId(url)}/hqdefault.jpg`;
-}
-
-// autoplay=1 starts playback the moment the player opens (a click already
-// expressed clear intent, so there's no need to also make her press Play);
-// rel=0 keeps YouTube's "related videos" end-screen restricted to this
-// channel instead of surfacing unrelated content.
-export function youtubeEmbedUrl(url: string): string {
-  return `https://www.youtube.com/embed/${youtubeVideoId(url)}?autoplay=1&rel=0`;
-}
+export const CATEGORIES = ["All", ...VIDEO_CATEGORIES] as const;

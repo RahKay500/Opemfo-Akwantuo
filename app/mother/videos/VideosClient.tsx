@@ -6,10 +6,17 @@ import { PlayIcon, XIcon } from "@/components/ui/icons";
 import Tabs from "@/components/ui/Tabs";
 import { FEATURED_VIDEO, VIDEOS, CATEGORIES, youtubeThumbnail, youtubeEmbedUrl, type VideoItem } from "./videos-data";
 
-export default function VideosClient({ currentWeek }: { currentWeek: number }) {
+export default function VideosClient({
+  currentWeek,
+  extraVideos,
+}: {
+  currentWeek: number;
+  extraVideos: VideoItem[];
+}) {
   const [category, setCategory] = useState<(typeof CATEGORIES)[number]>("All");
   const [playing, setPlaying] = useState<VideoItem | null>(null);
-  const videos = category === "All" ? VIDEOS : VIDEOS.filter((v) => v.category === category);
+  const allVideos = [...extraVideos, ...VIDEOS];
+  const videos = category === "All" ? allVideos : allVideos.filter((v) => v.category === category);
 
   return (
     <div className="flex flex-col gap-5 px-5 pb-8 pt-5">
@@ -42,7 +49,8 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             {FEATURED_VIDEO.title}
           </p>
           <p className="mt-1 font-body text-xs text-text-secondary lg:mt-2 lg:text-sm">
-            {FEATURED_VIDEO.duration} · {FEATURED_VIDEO.source}
+            {FEATURED_VIDEO.duration ? `${FEATURED_VIDEO.duration} · ` : ""}
+            {FEATURED_VIDEO.source}
           </p>
           <p className="mt-2 font-body text-[13px] font-medium text-pink-deep lg:hidden">Watch now →</p>
           <span className="mt-5 hidden w-fit rounded-button bg-lilac-mid px-6 py-3 font-heading text-sm font-bold text-lilac-deeper lg:block">
@@ -76,7 +84,8 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             <div className="p-2.5">
               <p className="font-heading text-[13px] font-bold leading-tight text-text-primary">{video.title}</p>
               <p className="mt-1 font-body text-[11px] text-text-secondary">
-                {video.duration} · {video.source}
+                {video.duration ? `${video.duration} · ` : ""}
+                {video.source}
               </p>
             </div>
           </button>
@@ -108,7 +117,8 @@ export default function VideosClient({ currentWeek }: { currentWeek: number }) {
             </div>
             <p className="mt-3 font-heading text-base font-bold text-white">{playing.title}</p>
             <p className="mt-1 font-body text-xs text-white/70">
-              {playing.duration} · {playing.source}
+              {playing.duration ? `${playing.duration} · ` : ""}
+              {playing.source}
             </p>
             <p className="mt-2 font-body text-xs text-white/50">
               Video not loading?{" "}
