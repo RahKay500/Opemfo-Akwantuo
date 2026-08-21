@@ -17,14 +17,19 @@ export default function SplashRedirect({ target }: { target: string }) {
   }, [router, target]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-primary lg:hidden">
-      <div className="flex size-[120px] items-center justify-center rounded-[60px] bg-white">
+    <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-lilac-deeper lg:hidden">
+      {/* Same calmer ambient-glow treatment as the auth branding panel,
+          instead of a flat bg-primary fill. */}
+      <div className="pointer-events-none absolute -left-20 -top-20 size-80 rounded-full bg-primary opacity-30 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-12 size-96 rounded-full bg-pink-accent opacity-20 blur-3xl" />
+
+      <div className="relative z-10 flex size-[120px] items-center justify-center rounded-[60px] bg-white">
         <Image src="/images/logo.png" alt="" width={100} height={100} priority />
       </div>
-      <p className="mt-6 font-heading text-[26px] font-bold tracking-[-0.5px] text-white">
+      <p className="relative z-10 mt-6 font-heading text-[26px] font-bold tracking-[-0.5px] text-white">
         Ɔpemfoɔ Akwantuo
       </p>
-      <p className="mt-1 font-body text-[15px] text-white">Caring for every mother</p>
+      <p className="relative z-10 mt-1 font-body text-[15px] text-white">Caring for every mother</p>
     </main>
   );
 }
