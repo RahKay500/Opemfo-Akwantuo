@@ -63,7 +63,7 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
         <Link
           href={`/midwife/patients/${patient.id}/edit`}
           aria-label="Edit patient details"
-          className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-white text-lilac-deeper shadow-card"
+          className="flex size-9 shrink-0 items-center justify-center rounded-badge bg-white text-lilac-deeper border border-border-color"
         >
           <PencilIcon className="size-4" />
         </Link>

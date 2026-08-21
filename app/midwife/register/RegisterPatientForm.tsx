@@ -210,7 +210,7 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
 
   return (
     <div className="flex flex-1 flex-col lg:px-5 lg:pb-10 lg:pt-6">
-      <div className="lg:rounded-card lg:bg-white lg:p-8 lg:shadow-card">
+      <div className="lg:rounded-card lg:bg-white lg:p-8 lg:border border-border-color">
         <h2 className="hidden font-heading text-lg font-bold text-text-primary lg:block">Register New Patient</h2>
 
         <div className="flex items-center gap-1 overflow-x-auto px-6 pt-5 lg:px-0 lg:pt-0 lg:mt-6">

@@ -369,7 +369,7 @@ function YesNoToggle({ value, onChange }: { value: boolean | null; onChange: (v:
           onClick={() => onChange(opt.v)}
           className={cn(
             "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-            value === opt.v ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+            value === opt.v ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
           )}
         >
           {opt.label}

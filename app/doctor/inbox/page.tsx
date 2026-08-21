@@ -46,7 +46,7 @@ export default async function DoctorInboxPage({
         <InboxClient shares={shares} />
       </div>
 
-      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 shadow-card lg:mx-5 lg:mt-8 lg:flex">
+      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-text-primary">Patient Records</h1>
           <p className="mt-1 font-body text-sm text-text-secondary">{sidebarData?.facilityName ?? ""}</p>
@@ -64,7 +64,7 @@ export default async function DoctorInboxPage({
       </div>
 
       <div className="hidden items-start gap-6 px-5 pb-8 pt-5 lg:flex">
-        <div className="w-[340px] shrink-0 rounded-card bg-white p-4 shadow-card">
+        <div className="w-[340px] shrink-0 rounded-card bg-white p-4 border border-border-color">
           <h2 className="px-2 pb-3 font-heading text-lg font-bold text-text-primary">Shared Records</h2>
           <div className="flex flex-col">
             {shares.length === 0 && (
@@ -119,7 +119,7 @@ export default async function DoctorInboxPage({
             otherDoctors={otherDoctors}
           />
         ) : (
-          <div className="flex flex-1 items-center justify-center rounded-card bg-white p-10 shadow-card">
+          <div className="flex flex-1 items-center justify-center rounded-card bg-white p-10 border border-border-color">
             <p className="font-body text-sm text-text-secondary">Select a record to view details.</p>
           </div>
         )}

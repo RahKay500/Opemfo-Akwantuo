@@ -69,7 +69,7 @@ export default async function MidwifeDashboardPage() {
         </div>
       </div>
 
-      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 shadow-card lg:mx-5 lg:mt-8 lg:flex">
+      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-text-primary">Dashboard</h1>
           <p className="mt-1 font-body text-sm text-text-secondary">{data.facilityName}</p>
@@ -171,7 +171,7 @@ export default async function MidwifeDashboardPage() {
                 key={item.visitId}
                 href={`/midwife/patients/${item.patientId}`}
                 className={cn(
-                  "block rounded-card border-l-4 bg-white py-4 pl-5 pr-4 shadow-card",
+                  "block rounded-card border-l-4 bg-white py-4 pl-5 pr-4",
                   PRIORITY_BORDER[item.priority]
                 )}
               >
@@ -202,7 +202,7 @@ export default async function MidwifeDashboardPage() {
               <Link
                 key={visit.patientId}
                 href={`/midwife/patients/${visit.patientId}`}
-                className="flex items-center gap-3 rounded-card bg-white p-3 shadow-card"
+                className="flex items-center gap-3 rounded-card bg-white p-3 border border-border-color"
               >
                 <div className="flex size-10 shrink-0 items-center justify-center rounded-badge bg-lilac-light">
                   <span className="font-heading text-[13px] font-bold text-lilac-deeper">{visit.initials}</span>
@@ -222,7 +222,7 @@ export default async function MidwifeDashboardPage() {
 
         {/* Desktop only: patient queue table + flagged patients / weekly chart. */}
         <div className="hidden lg:grid lg:grid-cols-[1fr_360px] lg:items-start lg:gap-6">
-          <div className="rounded-card bg-white shadow-card">
+          <div className="rounded-card bg-white border border-border-color">
             <div className="flex items-center justify-between px-6 pt-6">
               <h2 className="font-heading text-lg font-bold text-text-primary">Today&apos;s Patient Queue</h2>
               <Link
@@ -298,7 +298,7 @@ export default async function MidwifeDashboardPage() {
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="rounded-card bg-white p-5 shadow-card">
+            <div className="rounded-card bg-white p-5 border border-border-color">
               <h2 className="font-heading text-lg font-bold text-text-primary">Flagged Patients</h2>
               <div className="mt-3 flex flex-col">
                 {data.flaggedPatients.length === 0 && (
@@ -327,7 +327,7 @@ export default async function MidwifeDashboardPage() {
               </div>
             </div>
 
-            <div className="rounded-card bg-white p-5 shadow-card">
+            <div className="rounded-card bg-white p-5 border border-border-color">
               <h2 className="font-heading text-lg font-bold text-text-primary">Patients This Week</h2>
               <div className="mt-3">
                 <PatientsWeekChartLoader data={data.patientsThisWeek} />
@@ -354,7 +354,7 @@ function DashStat({
   subtitle?: string;
 }) {
   return (
-    <div className="rounded-card bg-white p-4 shadow-card lg:p-5">
+    <div className="rounded-card bg-white p-4 border border-border-color lg:p-5">
       <div className="flex items-start justify-between">
         <div>
           <p className="font-body text-xs text-text-secondary lg:text-sm">{label}</p>

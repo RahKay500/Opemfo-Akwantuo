@@ -30,7 +30,7 @@ export default function PreferencesCard({ initial }: { initial: Preferences }) {
   ];
 
   return (
-    <div className="rounded-card bg-white p-5 shadow-card">
+    <div className="rounded-card bg-white p-5 border border-border-color">
       <p className="font-heading text-base font-bold text-text-primary">Preferences</p>
       <div className="mt-3 flex flex-col">
         {ROWS.map((row, i) => (

@@ -68,7 +68,7 @@ export default function LogVaccinationForm({ patientId, week }: { patientId: str
               onClick={() => setCategory(c)}
               className={cn(
                 "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-                category === c ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+                category === c ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
               )}
             >
               {CATEGORY_LABEL[c]}

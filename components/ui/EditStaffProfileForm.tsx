@@ -69,7 +69,7 @@ export default function EditStaffProfileForm({
 
   return (
     <main className="flex min-h-screen flex-col bg-[#F6F1F8] lg:items-center lg:bg-[#F6F1F8] lg:py-10">
-      <div className="flex w-full items-center gap-2 bg-white px-4 pb-3.5 pt-[50px] shadow-[0px_1px_3px_0px_rgba(110,46,148,0.12)] lg:max-w-xl lg:rounded-card lg:pt-6 lg:shadow-card">
+      <div className="flex w-full items-center gap-2 bg-white px-4 pb-3.5 pt-[50px] shadow-[0px_1px_3px_0px_rgba(110,46,148,0.12)] lg:max-w-xl lg:rounded-card lg:pt-6 lg:border border-border-color">
         <Link href={backHref} className="flex size-7 items-center justify-center">
           <ArrowLeftIcon className="size-[22px] text-text-primary" />
         </Link>
@@ -84,7 +84,7 @@ export default function EditStaffProfileForm({
         </button>
       </div>
 
-      <div className="flex w-full flex-col lg:max-w-xl lg:rounded-card lg:bg-white lg:shadow-card">
+      <div className="flex w-full flex-col lg:max-w-xl lg:rounded-card lg:bg-white lg:border border-border-color">
         <div className="flex flex-col items-center gap-2.5 pb-2 pt-6">
           <div className="flex size-24 items-center justify-center rounded-badge bg-lilac-light">
             <span className="font-heading text-[32px] font-bold text-lilac-deeper">{initials(form.name)}</span>

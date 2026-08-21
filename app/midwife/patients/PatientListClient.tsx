@@ -89,7 +89,7 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
             key={patient.id}
             href={`/midwife/patients/${patient.id}`}
             className={cn(
-              "rounded-card bg-white p-4 shadow-card",
+              "rounded-card bg-white p-4 border border-border-color",
               patient.flagged &&
                 (patient.flagPriority === "CRITICAL"
                   ? "border-l-4 border-critical"
@@ -142,7 +142,7 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
 
       {/* Desktop: full data table. */}
       <div className="hidden px-5 pb-8 pt-5 lg:block">
-        <div className="overflow-x-auto rounded-card bg-white shadow-card">
+        <div className="overflow-x-auto rounded-card bg-white border border-border-color">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border-color text-left">

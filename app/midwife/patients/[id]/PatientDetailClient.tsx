@@ -124,7 +124,7 @@ export default function PatientDetailClient({
         {tab === "Overview" && (
           <>
             {latestVisit && (
-              <div className="flex rounded-card bg-white p-4 shadow-card">
+              <div className="flex rounded-card bg-white p-4 border border-border-color">
                 <VitalCell emoji="🩸" label="BP" value={latestVisit.systolic && latestVisit.diastolic ? `${latestVisit.systolic}/${latestVisit.diastolic}` : "—"} danger={latestVisit.flagged} />
                 <div className="w-px bg-border-color" />
                 <VitalCell emoji="💓" label="Fetal HR" value={latestVisit.fetalHeartRate ? `${latestVisit.fetalHeartRate} bpm` : "—"} />
@@ -163,7 +163,7 @@ export default function PatientDetailClient({
             </Link>
             {visits.length === 0 && <p className="font-body text-sm text-text-secondary">No vitals recorded yet.</p>}
             {visits.map((v) => (
-              <div key={v.id} className="rounded-card bg-white p-4 shadow-card">
+              <div key={v.id} className="rounded-card bg-white p-4 border border-border-color">
                 <div className="flex items-center justify-between">
                   <p className="font-heading text-sm font-bold text-text-primary">{formatDate(v.createdAt)}</p>
                   {v.flagged && <PriorityBadge priority={v.flagPriority ?? "LOW"} className="px-2.5 py-0.5 text-[11px]" />}
@@ -195,7 +195,7 @@ export default function PatientDetailClient({
               <p className="font-body text-sm text-text-secondary">No vaccinations recorded yet.</p>
             )}
             {vaccinationRows.map((v) => (
-              <div key={v.id} className="rounded-card bg-white p-4 shadow-card">
+              <div key={v.id} className="rounded-card bg-white p-4 border border-border-color">
                 <div className="flex items-center justify-between">
                   <span className="rounded-badge bg-lilac-light px-2.5 py-1 font-body text-xs font-medium text-lilac-deeper">
                     {v.badge}
@@ -223,7 +223,7 @@ export default function PatientDetailClient({
             )}
             {deliveryRecord && (
               <>
-                <div className="rounded-card bg-white p-4 shadow-card">
+                <div className="rounded-card bg-white p-4 border border-border-color">
                   <div className="flex items-center justify-between">
                     <p className="font-heading text-[15px] font-bold text-text-primary">
                       {deliveryRecord.typeOfDelivery ?? "Delivery"}
@@ -269,7 +269,7 @@ export default function PatientDetailClient({
           <div className="flex flex-col gap-2.5">
             {visits.length === 0 && <p className="font-body text-sm text-text-secondary">No visits recorded yet.</p>}
             {visits.map((v) => (
-              <div key={v.id} className="rounded-card bg-white p-4 shadow-card">
+              <div key={v.id} className="rounded-card bg-white p-4 border border-border-color">
                 <div className="flex items-center justify-between">
                   <span className="rounded-badge bg-lilac-light px-2.5 py-1 font-body text-xs font-medium text-lilac-deeper">
                     {v.visitType === "ANTENATAL" ? "Antenatal" : "Postnatal"}
@@ -289,7 +289,7 @@ export default function PatientDetailClient({
           <div className="flex flex-col gap-2.5">
             {referrals.length === 0 && <p className="font-body text-sm text-text-secondary">No referrals yet.</p>}
             {referrals.map((r) => (
-              <div key={r.id} className="rounded-card bg-white p-4 shadow-card">
+              <div key={r.id} className="rounded-card bg-white p-4 border border-border-color">
                 <div className="flex items-center justify-between">
                   <p className="font-heading text-[15px] font-bold text-text-primary">{r.hospitalName}</p>
                   <PriorityBadge priority={r.priority} className="px-2.5 py-0.5 text-[11px]" />

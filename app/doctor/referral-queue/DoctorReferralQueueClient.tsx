@@ -84,7 +84,7 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
           {filtered.map((r) => {
             const status = DOCTOR_REFERRAL_STATUS[r.status];
             return (
-              <div key={r.id} className={cn("rounded-card border-l-4 bg-white py-4 pl-5 pr-4 shadow-card", PRIORITY_BORDER[r.priority])}>
+              <div key={r.id} className={cn("rounded-card border-l-4 bg-white py-4 pl-5 pr-4", PRIORITY_BORDER[r.priority])}>
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="font-heading text-base font-bold text-text-primary">{r.patientName}</p>
@@ -111,7 +111,7 @@ export default function DoctorReferralQueueClient({ referrals }: { referrals: Do
 
       {/* Desktop: table. */}
       <div className="hidden px-5 pb-8 pt-5 lg:block">
-        <div className="mt-1 overflow-x-auto rounded-card bg-white shadow-card">
+        <div className="mt-1 overflow-x-auto rounded-card bg-white border border-border-color">
           <div className="flex flex-wrap gap-2 px-6 pt-6">
             <Tabs
               style="pill"

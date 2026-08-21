@@ -30,7 +30,7 @@ export default async function MidwifeProfilePage() {
         <h1 className="font-heading text-xl font-bold text-text-primary">My Profile</h1>
       </div>
 
-      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 shadow-card lg:mx-5 lg:mt-8 lg:flex">
+      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-text-primary">My Profile</h1>
           <p className="mt-1 font-body text-sm text-text-secondary">{data.facilityName}</p>
@@ -52,7 +52,7 @@ export default async function MidwifeProfilePage() {
 
       <div className="flex flex-col gap-4 px-5 pb-8 pt-5 lg:grid lg:grid-cols-[340px_1fr] lg:items-start lg:gap-6 lg:px-8">
         <div className="flex flex-col gap-4 lg:col-start-1">
-          <div className="flex flex-col items-center rounded-card bg-white p-6 text-center shadow-card lg:p-8">
+          <div className="flex flex-col items-center rounded-card bg-white p-6 text-center border border-border-color lg:p-8">
             <div className="flex size-24 items-center justify-center rounded-badge bg-lilac-light lg:size-28">
               <span className="font-heading text-3xl font-bold text-lilac-deeper lg:text-4xl">
                 {initials(data.name)}
@@ -75,7 +75,7 @@ export default async function MidwifeProfilePage() {
             </Link>
           </div>
 
-          <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+          <div className="rounded-card bg-white p-5 border border-border-color lg:p-6">
             <p className="font-heading text-base font-bold text-text-primary">Contact & Location</p>
             <div className="mt-4 flex flex-col gap-3">
               <div className="flex items-center gap-2.5">
@@ -100,7 +100,7 @@ export default async function MidwifeProfilePage() {
             <StatTile label="Avg. Response Time" value={data.avgResponseTimeLabel ?? "—"} />
           </div>
 
-          <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+          <div className="rounded-card bg-white p-5 border border-border-color lg:p-6">
             <p className="font-heading text-base font-bold text-text-primary">Personal Information</p>
             <div className="mt-4 grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2">
               <InfoField label="Full Name" value={data.name} />
@@ -115,7 +115,7 @@ export default async function MidwifeProfilePage() {
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-card bg-white shadow-card">
+          <div className="overflow-hidden rounded-card bg-white border border-border-color">
             <Row label="Language" value="English" />
             <Row label="Help & Support" value="" last />
           </div>
@@ -129,7 +129,7 @@ export default async function MidwifeProfilePage() {
 
 function StatTile({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col items-center gap-1 rounded-card bg-white py-5 text-center shadow-card">
+    <div className="flex flex-col items-center gap-1 rounded-card bg-white py-5 text-center border border-border-color">
       <p className="font-heading text-2xl font-bold text-lilac-deeper lg:text-[28px]">{value}</p>
       <p className="font-body text-xs text-text-secondary">{label}</p>
     </div>

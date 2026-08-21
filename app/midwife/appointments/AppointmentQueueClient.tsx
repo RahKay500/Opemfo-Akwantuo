@@ -79,7 +79,7 @@ export default function AppointmentQueueClient({ appointments }: { appointments:
         {filtered.map((a) => {
           const status = STATUS_STYLE[a.status];
           return (
-            <div key={a.id} className="rounded-card bg-white p-4 shadow-card">
+            <div key={a.id} className="rounded-card bg-white p-4 border border-border-color">
               <div className="flex items-start justify-between gap-2">
                 <div>
                   <p className="font-heading text-base font-bold text-text-primary">{a.patientName}</p>

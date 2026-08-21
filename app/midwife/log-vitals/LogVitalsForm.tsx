@@ -113,7 +113,7 @@ export default function LogVitalsForm({
   }
 
   return (
-    <div className="rounded-card bg-white p-5 shadow-card lg:p-8">
+    <div className="rounded-card bg-white p-5 border border-border-color lg:p-8">
       <h2 className="font-heading text-lg font-bold text-text-primary">Log Patient Vitals</h2>
 
       <div className="mt-5">
@@ -139,7 +139,7 @@ export default function LogVitalsForm({
               onClick={() => setVisitType(t)}
               className={cn(
                 "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-                visitType === t ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+                visitType === t ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
               )}
             >
               {t === "ANTENATAL" ? "Antenatal" : "Postnatal"}
@@ -183,7 +183,7 @@ export default function LogVitalsForm({
                     onClick={() => setOedema(o.value)}
                     className={cn(
                       "flex-1 rounded-badge text-center font-heading text-sm font-bold",
-                      oedema === o.value ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+                      oedema === o.value ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
                     )}
                   >
                     {o.label}

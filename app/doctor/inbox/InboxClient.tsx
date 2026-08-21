@@ -50,7 +50,7 @@ export default function InboxClient({ shares }: { shares: DoctorInboxItem[] }) {
           <div
             key={s.id}
             className={cn(
-              "rounded-card border-l-4 bg-white py-4 pl-5 pr-4 shadow-card",
+              "rounded-card border-l-4 bg-white py-4 pl-5 pr-4",
               s.flagged ? "border-critical" : "border-border-color"
             )}
           >

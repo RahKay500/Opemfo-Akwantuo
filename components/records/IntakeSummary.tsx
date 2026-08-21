@@ -135,14 +135,14 @@ export default function IntakeSummary({ data }: { data: IntakeSummaryData }) {
       )}
 
       {data.medicalHistory?.previousSurgery && (
-        <div className="rounded-card bg-white p-4 shadow-card">
+        <div className="rounded-card bg-white p-4 border border-border-color">
           <p className="font-body text-[11px] text-text-secondary">Previous Surgery</p>
           <p className="mt-0.5 font-body text-[13px] font-medium text-text-primary">{data.medicalHistory.previousSurgery}</p>
         </div>
       )}
 
       {examAbnormal.length > 0 && (
-        <div className="rounded-card bg-white p-4 shadow-card">
+        <div className="rounded-card bg-white p-4 border border-border-color">
           <p className="font-heading text-[13px] font-bold text-text-primary">Physical Exam — Abnormal Findings</p>
           <div className="mt-2 flex flex-col gap-1.5">
             {examAbnormal.map((a) => (
@@ -156,7 +156,7 @@ export default function IntakeSummary({ data }: { data: IntakeSummaryData }) {
       )}
 
       {hasObstetric && (
-        <div className="rounded-card bg-white p-4 shadow-card">
+        <div className="rounded-card bg-white p-4 border border-border-color">
           <p className="font-heading text-[13px] font-bold text-text-primary">Obstetric History</p>
           {((data.numberOfAbortionsSpontaneous ?? 0) > 0 || (data.numberOfAbortionsInduced ?? 0) > 0) && (
             <p className="mt-2 font-body text-[13px] text-text-secondary">
@@ -183,7 +183,7 @@ export default function IntakeSummary({ data }: { data: IntakeSummaryData }) {
       )}
 
       {investigations.length > 0 && (
-        <div className="rounded-card bg-white p-4 shadow-card">
+        <div className="rounded-card bg-white p-4 border border-border-color">
           <p className="font-heading text-[13px] font-bold text-text-primary">Investigations</p>
           <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-2">
             {investigations.map((inv) => (

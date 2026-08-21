@@ -132,7 +132,7 @@ export default async function MotherDashboardPage() {
           </div>
 
           {activeReferral && (
-            <div className="rounded-card bg-white p-5 shadow-card">
+            <div className="rounded-card bg-white p-5 border border-border-color">
               <div className="flex items-center justify-between">
                 <h2 className="font-heading text-[15px] font-bold text-text-primary">Active Referral</h2>
                 <Link href="/mother/referral" className="font-body text-[13px] font-medium text-pink-deep">
@@ -189,7 +189,7 @@ export default async function MotherDashboardPage() {
                   <Link
                     key={visit.id}
                     href="/mother/records"
-                    className="flex items-center gap-3.5 rounded-card bg-white p-3.5 shadow-card"
+                    className="flex items-center gap-3.5 rounded-card bg-white p-3.5 border border-border-color"
                   >
                     <div className="flex size-11 flex-col items-center justify-center rounded-[22px] bg-lilac-light">
                       <span className="font-heading text-base font-bold leading-none text-lilac-deeper">
@@ -216,7 +216,7 @@ export default async function MotherDashboardPage() {
         </div>
 
         <div className="mt-6 flex flex-col gap-6 lg:mt-0">
-          <div className="rounded-card bg-white p-5 shadow-card">
+          <div className="rounded-card bg-white p-5 border border-border-color">
             <h2 className="font-heading text-[15px] font-bold text-text-primary">Next Appointment</h2>
             {data.nextAppointment ? (
               <>
@@ -243,7 +243,7 @@ export default async function MotherDashboardPage() {
 
           <SharePartnerCard />
 
-          <div className="rounded-card bg-white p-5 shadow-card">
+          <div className="rounded-card bg-white p-5 border border-border-color">
             <div className="flex items-center justify-between">
               <h2 className="font-heading text-[15px] font-bold text-text-primary">Recent Alerts</h2>
               <Link href="/mother/notifications" className="font-body text-[13px] font-medium text-pink-deep">

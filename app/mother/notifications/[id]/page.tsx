@@ -56,7 +56,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
       <div className="flex flex-1 flex-col gap-4 px-5 pb-6 pt-5">
         {visitDetail ? (
           <>
-            <div className="flex gap-3.5 rounded-card border-l-4 border-[#EF4444] bg-critical-bg p-[18px] shadow-card">
+            <div className="flex gap-3.5 rounded-card border-l-4 border-[#EF4444] bg-critical-bg p-[18px]">
               <div className="flex size-12 shrink-0 items-center justify-center rounded-badge bg-[#FEE2E2]">
                 <AlertTriangleIcon className="size-6 text-critical" />
               </div>
@@ -73,7 +73,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
               </div>
             </div>
 
-            <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] shadow-card">
+            <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] border border-border-color">
               <p className="font-heading text-[15px] font-bold text-text-primary">What this means</p>
               <p className="font-body text-sm leading-[22px] text-[#4B5563]">
                 {visitDetail.systolic && visitDetail.diastolic
@@ -84,7 +84,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
               </p>
             </div>
 
-            <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] shadow-card">
+            <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] border border-border-color">
               <p className="font-heading text-[15px] font-bold text-text-primary">Recommended action</p>
               {[
                 `Contact your midwife/nurse ${visitDetail.nurseName} today`,
@@ -106,7 +106,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
             </a>
           </>
         ) : (
-          <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] shadow-card">
+          <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] border border-border-color">
             <p className="font-heading text-[17px] font-bold text-text-primary">{notification.title}</p>
             <p className="font-body text-xs text-text-secondary">{formatDate(notification.createdAt)}</p>
             <p className="mt-1 font-body text-sm leading-[22px] text-[#4B5563]">{notification.message}</p>

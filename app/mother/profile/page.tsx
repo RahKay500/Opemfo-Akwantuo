@@ -24,13 +24,13 @@ export default async function MotherProfilePage() {
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:mx-5 lg:mt-8 lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:text-left lg:shadow-card">
+      <div className="px-5 pb-4 pt-14 text-center lg:mx-5 lg:mt-8 lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:text-left lg:border border-border-color">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">My Profile</h1>
       </div>
 
       <div className="flex flex-col gap-4 px-5 pb-8 pt-5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
         <div className="flex flex-col gap-4 lg:col-start-1">
-          <div className="flex flex-col items-center rounded-card bg-white p-6 text-center shadow-card lg:p-10">
+          <div className="flex flex-col items-center rounded-card bg-white p-6 text-center border border-border-color lg:p-10">
             <div className="flex size-20 items-center justify-center rounded-badge bg-lilac-light lg:size-28">
               <span className="font-heading text-2xl font-bold text-lilac-deeper lg:text-4xl">
                 {initials(data.name)}
@@ -47,7 +47,7 @@ export default async function MotherProfilePage() {
             )}
           </div>
 
-          <div className="overflow-hidden rounded-card bg-white shadow-card">
+          <div className="overflow-hidden rounded-card bg-white border border-border-color">
             <div className="flex items-center justify-between px-5 pt-5">
               <p className="font-heading text-base font-bold text-text-primary">Personal Details</p>
               <Link href="/mother/profile/edit" className="font-body text-xs font-medium text-pink-deep">
@@ -64,7 +64,7 @@ export default async function MotherProfilePage() {
 
           <div>
             <p className="px-1 pb-2 font-body text-xs font-medium text-text-secondary">Medical information</p>
-            <div className="overflow-hidden rounded-card bg-white shadow-card">
+            <div className="overflow-hidden rounded-card bg-white border border-border-color">
               <Row label="Known Conditions" value={data.knownConditions ?? "None recorded"} />
               <Row
                 label="Emergency Contact"
@@ -80,7 +80,7 @@ export default async function MotherProfilePage() {
         </div>
 
         <div className="flex flex-col gap-4 lg:col-start-2">
-          <div className="overflow-hidden rounded-card bg-white shadow-card">
+          <div className="overflow-hidden rounded-card bg-white border border-border-color">
             <p className="px-5 pt-5 font-heading text-base font-bold text-text-primary">Pregnancy Info</p>
             <div className="mt-2">
               <Row label="Blood Group" value={data.bloodGroup ?? "Not recorded"} />

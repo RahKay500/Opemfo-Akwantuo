@@ -23,7 +23,7 @@ export default function VideosClient({
       <button
         type="button"
         onClick={() => setPlaying(FEATURED_VIDEO)}
-        className="overflow-hidden rounded-card bg-white text-left shadow-card lg:flex lg:items-stretch"
+        className="overflow-hidden rounded-card bg-white text-left border border-border-color lg:flex lg:items-stretch"
       >
         <div className="relative flex h-[200px] items-center justify-center bg-lilac-light lg:h-auto lg:w-[30%] lg:shrink-0">
           <Image
@@ -72,7 +72,7 @@ export default function VideosClient({
             key={video.id}
             type="button"
             onClick={() => setPlaying(video)}
-            className="overflow-hidden rounded-card bg-white text-left shadow-card"
+            className="overflow-hidden rounded-card bg-white text-left border border-border-color"
           >
             <div className="relative flex h-[120px] items-center justify-center bg-lilac-light">
               <Image src={youtubeThumbnail(video.url)} alt="" fill className="object-cover" sizes="50vw" />

@@ -179,7 +179,7 @@ export default function SharePartnerForm() {
 
   return (
     <div className="flex flex-col gap-4 px-5 pb-8 pt-5 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6">
-      <div className="rounded-card bg-white p-6 shadow-card">
+      <div className="rounded-card bg-white p-6 border border-border-color">
         <div className="flex items-start gap-3">
           <div className="flex size-11 shrink-0 items-center justify-center rounded-badge bg-pink-light">
             <PartnerIcon className="size-5 text-pink-deep" />
@@ -211,7 +211,7 @@ export default function SharePartnerForm() {
               onClick={() => setSendVia(v)}
               className={cn(
                 "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-                sendVia === v ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+                sendVia === v ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
               )}
             >
               {v === "sms" ? "Send via SMS" : "Copy link"}
@@ -232,7 +232,7 @@ export default function SharePartnerForm() {
         </div>
       </div>
 
-      <div className="rounded-card bg-white p-6 shadow-card">
+      <div className="rounded-card bg-white p-6 border border-border-color">
         <p className="font-heading text-base font-bold text-text-primary">What your partner can see</p>
         <div className="mt-4 flex flex-col">
           {PERMISSION_LABELS.map(({ key, label }, i) => (

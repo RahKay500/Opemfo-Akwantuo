@@ -41,7 +41,7 @@ export default async function DoctorAnalyticsPage() {
         <h1 className="font-heading text-xl font-bold text-text-primary">Analytics</h1>
       </div>
 
-      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 shadow-card lg:mx-5 lg:mt-8 lg:flex">
+      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-text-primary">Analytics</h1>
           <p className="mt-1 font-body text-sm text-text-secondary">{data.facilityName}</p>
@@ -86,14 +86,14 @@ export default async function DoctorAnalyticsPage() {
         </div>
 
         <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[1.6fr_1fr] lg:gap-6">
-          <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+          <div className="rounded-card bg-white p-5 border border-border-color lg:p-6">
             <h2 className="font-heading text-lg font-bold text-text-primary">6-Month Referral Trend</h2>
             <div className="mt-3">
               <MonthlyReferralsChartLoader data={data.monthlyReferrals} />
             </div>
           </div>
 
-          <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+          <div className="rounded-card bg-white p-5 border border-border-color lg:p-6">
             <h2 className="font-heading text-lg font-bold text-text-primary">Referral Reasons</h2>
             {data.reasonBreakdown.length === 0 ? (
               <p className="mt-4 font-body text-sm text-text-secondary">No referrals received yet.</p>
@@ -118,7 +118,7 @@ export default async function DoctorAnalyticsPage() {
           </div>
         </div>
 
-        <div className="rounded-card bg-white p-5 shadow-card lg:p-6">
+        <div className="rounded-card bg-white p-5 border border-border-color lg:p-6">
           <h2 className="font-heading text-base font-bold text-text-primary">Top Referring Facilities</h2>
           {data.byFacility.length === 0 && (
             <p className="mt-3 font-body text-sm text-text-secondary">No referrals received yet.</p>
@@ -157,7 +157,7 @@ function StatTile({
   caption: string;
 }) {
   return (
-    <div className="rounded-card bg-white p-4 shadow-card lg:p-5">
+    <div className="rounded-card bg-white p-4 border border-border-color lg:p-5">
       <p className="font-body text-sm text-text-secondary">{label}</p>
       <p className={`mt-1.5 font-heading text-2xl font-bold leading-none lg:text-[28px] ${valueColor}`}>{value}</p>
       <p className="mt-1.5 font-body text-xs text-text-secondary">{caption}</p>

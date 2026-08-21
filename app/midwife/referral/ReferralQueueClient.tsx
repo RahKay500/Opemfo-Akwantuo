@@ -96,7 +96,7 @@ export default function ReferralQueueClient({ referrals }: { referrals: MidwifeR
           {filtered.map((r) => {
             const status = STATUS_STYLE[r.status];
             return (
-              <div key={r.id} className={cn("rounded-card border-l-4 bg-white py-4 pl-5 pr-4 shadow-card", PRIORITY_BORDER[r.priority])}>
+              <div key={r.id} className={cn("rounded-card border-l-4 bg-white py-4 pl-5 pr-4", PRIORITY_BORDER[r.priority])}>
                 <div className="flex items-center justify-between">
                   <p className="font-heading text-base font-bold text-text-primary">{r.patientName}</p>
                   <PriorityBadge priority={r.priority} className="px-2.5 py-1 text-xs" />
@@ -133,7 +133,7 @@ export default function ReferralQueueClient({ referrals }: { referrals: MidwifeR
           </Link>
         </div>
 
-        <div className="mt-5 overflow-x-auto rounded-card bg-white shadow-card">
+        <div className="mt-5 overflow-x-auto rounded-card bg-white border border-border-color">
           <div className="px-6 pt-6">
             <h2 className="font-heading text-lg font-bold text-text-primary">Recent Referrals</h2>
           </div>

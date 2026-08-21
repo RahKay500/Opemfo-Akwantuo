@@ -19,7 +19,7 @@ interface StatCardProps {
 
 export default function StatCard({ icon: Icon, iconClassName, label, value, badge }: StatCardProps) {
   return (
-    <div className="flex-1 rounded-card bg-white p-2.5 shadow-card">
+    <div className="flex-1 rounded-card bg-white p-2.5 border border-border-color">
       <Icon className={cn("size-3.5", iconClassName)} />
       <p className="mt-1 font-body text-[10px] font-medium text-text-secondary">{label}</p>
       <p className="mt-0.5 font-heading text-[15px] font-bold text-text-primary">{value}</p>

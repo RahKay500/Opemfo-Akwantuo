@@ -69,7 +69,7 @@ export default async function DoctorDashboardPage() {
         </div>
       </div>
 
-      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 shadow-card lg:mx-5 lg:mt-8 lg:flex">
+      <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">
         <div>
           <h1 className="font-heading text-[28px] font-bold text-text-primary">Dashboard</h1>
           <p className="mt-1 font-body text-sm text-text-secondary">{data.facilityName}</p>
@@ -135,7 +135,7 @@ export default async function DoctorDashboardPage() {
         )}
 
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1.6fr_1fr] lg:gap-6">
-          <div className="rounded-card bg-white shadow-card">
+          <div className="rounded-card bg-white border border-border-color">
             <div className="flex items-center justify-between px-5 pt-5">
               <h2 className="font-heading text-lg font-bold text-text-primary">Referral Queue</h2>
               <Link
@@ -183,7 +183,7 @@ export default async function DoctorDashboardPage() {
             <div className="h-2" />
           </div>
 
-          <div className="rounded-card bg-white p-5 shadow-card">
+          <div className="rounded-card bg-white p-5 border border-border-color">
             <h2 className="font-heading text-lg font-bold text-text-primary">Monthly Referrals</h2>
             <p className="mt-0.5 font-body text-sm text-text-secondary">Received vs. seen</p>
             <div className="mt-3">
@@ -212,7 +212,7 @@ function DashStat({
   iconColor?: string;
 }) {
   return (
-    <div className="rounded-card bg-white p-4 shadow-card lg:p-5">
+    <div className="rounded-card bg-white p-4 border border-border-color lg:p-5">
       <div className="flex items-start justify-between">
         <p className="font-body text-sm text-text-secondary">{label}</p>
         {Icon && <Icon className={`size-[18px] ${iconColor}`} />}

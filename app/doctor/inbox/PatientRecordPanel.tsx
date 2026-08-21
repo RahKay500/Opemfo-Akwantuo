@@ -81,7 +81,7 @@ export default function PatientRecordPanel({
 
   return (
     <div className="flex flex-1 flex-col gap-4 overflow-y-auto">
-      <div className="flex items-start justify-between rounded-card bg-white p-6 shadow-card">
+      <div className="flex items-start justify-between rounded-card bg-white p-6 border border-border-color">
         <div>
           <h1 className="font-heading text-2xl font-bold text-text-primary">{patientName}</h1>
           <p className="mt-1.5 font-body text-sm text-text-secondary">
@@ -123,7 +123,7 @@ export default function PatientRecordPanel({
         </div>
       )}
 
-      <div className="rounded-card bg-white p-6 shadow-card">
+      <div className="rounded-card bg-white p-6 border border-border-color">
         <h2 className="font-heading text-lg font-bold text-text-primary">Blood Pressure Trend</h2>
         <p className="mt-0.5 font-body text-sm text-text-secondary">Last 6 antenatal visits</p>
         {bpTrend.length > 0 ? (
@@ -145,7 +145,7 @@ export default function PatientRecordPanel({
         )}
       </div>
 
-      <div className="rounded-card bg-white p-6 shadow-card">
+      <div className="rounded-card bg-white p-6 border border-border-color">
         <h2 className="font-heading text-lg font-bold text-text-primary">Latest Vitals</h2>
         <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
           <VitalTile
@@ -251,7 +251,7 @@ function ForwardModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30 p-4">
-      <div className="w-full max-w-md rounded-card bg-white p-6 shadow-card">
+      <div className="w-full max-w-md rounded-card bg-white p-6 border border-border-color">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-lg font-bold text-text-primary">Forward Record</h2>
           <button type="button" onClick={onClose} aria-label="Close">
@@ -345,7 +345,7 @@ function NotesModal({
 
   return (
     <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/30 p-4">
-      <div className="w-full max-w-md rounded-card bg-white p-6 shadow-card">
+      <div className="w-full max-w-md rounded-card bg-white p-6 border border-border-color">
         <div className="flex items-center justify-between">
           <h2 className="font-heading text-lg font-bold text-text-primary">Add Notes</h2>
           <button type="button" onClick={onClose} aria-label="Close">

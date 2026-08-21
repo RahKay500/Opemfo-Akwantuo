@@ -244,7 +244,7 @@ export default function ReferralCreationForm({
         <p className="font-heading text-[15px] font-bold text-text-primary">Attach to referral</p>
         <div className="mt-3 flex flex-col gap-3">
           {TOGGLES.map((t) => (
-            <div key={t.key} className="flex items-center justify-between rounded-input bg-white px-4 py-3.5 shadow-card">
+            <div key={t.key} className="flex items-center justify-between rounded-input bg-white px-4 py-3.5 border border-border-color">
               <span className="font-body text-sm text-text-primary">{t.label}</span>
               <button
                 type="button"

@@ -49,14 +49,14 @@ export default async function MotherRecordsPage({
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:mx-5 lg:mt-8 lg:flex lg:items-center lg:justify-between lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:text-left lg:shadow-card">
+      <div className="px-5 pb-4 pt-14 text-center lg:mx-5 lg:mt-8 lg:flex lg:items-center lg:justify-between lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:text-left lg:border border-border-color">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">My Health Records</h1>
         <div className="hidden rounded-badge bg-lilac-light p-1 lg:flex">
           <Link
             href="/mother/records?type=antenatal"
             className={cn(
               "rounded-badge px-5 py-2 text-center font-heading text-sm font-bold",
-              visitType === "ANTENATAL" ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+              visitType === "ANTENATAL" ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
             )}
           >
             Antenatal
@@ -65,7 +65,7 @@ export default async function MotherRecordsPage({
             href="/mother/records?type=postnatal"
             className={cn(
               "rounded-badge px-5 py-2 text-center font-heading text-sm font-bold",
-              visitType === "POSTNATAL" ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+              visitType === "POSTNATAL" ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
             )}
           >
             Postnatal
@@ -79,7 +79,7 @@ export default async function MotherRecordsPage({
             href="/mother/records?type=antenatal"
             className={cn(
               "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-              visitType === "ANTENATAL" ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+              visitType === "ANTENATAL" ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
             )}
           >
             Antenatal
@@ -88,7 +88,7 @@ export default async function MotherRecordsPage({
             href="/mother/records?type=postnatal"
             className={cn(
               "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-              visitType === "POSTNATAL" ? "bg-white text-lilac-deeper shadow-card" : "font-body font-normal text-text-secondary"
+              visitType === "POSTNATAL" ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
             )}
           >
             Postnatal
@@ -120,7 +120,7 @@ export default async function MotherRecordsPage({
       {section === "visits" && (
       <div className="px-5 pb-8 pt-5 lg:grid lg:grid-cols-[1fr_320px] lg:items-start lg:gap-6">
         {data.bpTrend.length > 0 && (
-          <div className="rounded-card bg-white p-5 shadow-card">
+          <div className="rounded-card bg-white p-5 border border-border-color">
             <div className="flex items-center justify-between">
               <h2 className="font-heading text-[15px] font-bold text-text-primary">Blood Pressure Trend</h2>
               <span className="font-body text-xs text-text-secondary">Last {data.bpTrend.length} visits</span>
@@ -147,7 +147,7 @@ export default async function MotherRecordsPage({
               <p className="font-body text-sm text-text-secondary">No visits recorded yet.</p>
             )}
             {data.visits.map((visit) => (
-              <div key={visit.id} className="rounded-card bg-white p-4 shadow-card">
+              <div key={visit.id} className="rounded-card bg-white p-4 border border-border-color">
                 <div className="flex items-center justify-between">
                   <span className="rounded-input border border-border-color px-2.5 py-1.5 font-body text-[13px] font-medium text-text-primary">
                     {formatDate(visit.date)}
@@ -180,7 +180,7 @@ export default async function MotherRecordsPage({
             <div
               key={visit.id}
               className={cn(
-                "rounded-card border-l-4 bg-white p-4 shadow-card",
+                "rounded-card border-l-4 bg-white p-4",
                 visit.flagged ? "border-critical" : "border-transparent"
               )}
             >
@@ -227,7 +227,7 @@ export default async function MotherRecordsPage({
             <p className="font-body text-sm text-text-secondary">No vaccinations recorded yet.</p>
           )}
           {data.vaccinations.map((v) => (
-            <div key={v.id} className="rounded-card bg-white p-4 shadow-card">
+            <div key={v.id} className="rounded-card bg-white p-4 border border-border-color">
               <div className="flex items-center justify-between">
                 <span className="rounded-badge bg-lilac-light px-2.5 py-1 font-body text-xs font-medium text-lilac-deeper">
                   {v.badge}
@@ -246,7 +246,7 @@ export default async function MotherRecordsPage({
             <p className="font-body text-sm text-text-secondary">No delivery record yet.</p>
           )}
           {data.deliveryRecord && (
-            <div className="rounded-card bg-white p-4 shadow-card">
+            <div className="rounded-card bg-white p-4 border border-border-color">
               <div className="flex items-center justify-between">
                 <p className="font-heading text-[15px] font-bold text-text-primary">
                   {data.deliveryRecord.typeOfDelivery ?? "Delivery"}

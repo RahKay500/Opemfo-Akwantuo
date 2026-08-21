@@ -58,7 +58,7 @@ export default function NotificationsClient({
 
   return (
     <div className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 lg:mx-5 lg:mt-8 lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:shadow-card">
+      <div className="px-5 pb-4 pt-14 lg:mx-5 lg:mt-8 lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:border border-border-color">
         <div className="relative flex items-center justify-center lg:justify-start">
           <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">Notifications</h1>
           <button
@@ -95,7 +95,7 @@ export default function NotificationsClient({
               onClick={() => router.push(`/mother/notifications/${n.id}`)}
               className={cn(
                 "flex gap-3 rounded-card bg-white p-4 text-left",
-                n.isRead ? "shadow-card" : "border-l-[3px] border-primary shadow-[0px_2px_8px_0px_rgba(110,46,148,0.25)]"
+                n.isRead ? "border border-border-color" : "border-l-[3px] border-primary shadow-[0px_2px_8px_0px_rgba(110,46,148,0.25)]"
               )}
             >
               <div className={cn("flex size-10 shrink-0 items-center justify-center rounded-badge", bg)}>

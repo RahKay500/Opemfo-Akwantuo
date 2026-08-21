@@ -166,7 +166,7 @@ export default function MotherSymptomsPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="px-5 pb-4 pt-14 text-center lg:mx-5 lg:mt-8 lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:text-left lg:shadow-card">
+      <div className="px-5 pb-4 pt-14 text-center lg:mx-5 lg:mt-8 lg:rounded-card lg:bg-white lg:px-6 lg:py-5 lg:pb-5 lg:pt-5 lg:text-left lg:border border-border-color">
         <h1 className="font-heading text-xl font-bold text-text-primary lg:text-[28px]">How are you feeling?</h1>
       </div>
 
@@ -184,7 +184,7 @@ export default function MotherSymptomsPage() {
             a taller left-column card in the same row. */}
         <div className="flex flex-col gap-6 lg:grid lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start lg:gap-6">
           <div className="flex flex-col gap-6">
-            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
+            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:border border-border-color">
               <p className="font-body text-sm font-medium text-text-primary">Select any symptoms you have</p>
               <div className="mt-3 flex flex-wrap gap-2.5">
                 {SYMPTOMS.map((symptom) => (
@@ -198,7 +198,7 @@ export default function MotherSymptomsPage() {
               </div>
             </div>
 
-            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
+            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:border border-border-color">
               <p className="font-body text-sm font-medium text-text-primary">When did symptoms start?</p>
               <div className="mt-2 flex gap-2">
                 {STARTED_WHEN_OPTIONS.map((option) => (
@@ -221,7 +221,7 @@ export default function MotherSymptomsPage() {
           </div>
 
           <div className="flex flex-col gap-6">
-            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
+            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:border border-border-color">
               <p className="font-body text-sm font-medium text-text-primary">How severe is it?</p>
               <div className="mt-3 flex gap-2.5">
                 {SEVERITIES.map((s) => (
@@ -242,7 +242,7 @@ export default function MotherSymptomsPage() {
               </div>
             </div>
 
-            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:shadow-card">
+            <div className="lg:rounded-card lg:bg-white lg:p-5 lg:border border-border-color">
               <p className="font-body text-sm font-medium text-text-primary">Anything else to add?</p>
               <textarea
                 value={notes}
@@ -290,7 +290,7 @@ export default function MotherSymptomsPage() {
                 const editable = !report.cancelledAt && !report.reviewedByNurseId;
                 const status = report.cancelledAt ? "Cancelled" : report.reviewedByNurseId ? "Reviewed" : "Pending review";
                 return (
-                  <div key={report.id} className="rounded-card bg-white p-4 shadow-card">
+                  <div key={report.id} className="rounded-card bg-white p-4 border border-border-color">
                     <div className="flex items-start justify-between gap-3">
                       <div>
                         <p className="font-heading text-sm font-bold text-text-primary">
