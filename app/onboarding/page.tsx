@@ -29,16 +29,38 @@ export default function OnboardingWelcomePage() {
         <div className="pointer-events-none absolute right-0 top-1/3 size-72 rounded-full bg-lilac-mid opacity-20 blur-2xl" />
         <div className="pointer-events-none absolute left-1/3 top-8 size-64 rounded-full bg-pink-deep opacity-20 blur-3xl" />
 
-        {/* Decorative constellation — varied filled/outline/rotated shapes
-            scattered through the upper-right of the panel, away from the
-            pinned logo and the lower feature list. */}
+        {/* Decorative constellation — a full-panel scatter with real scale
+            hierarchy (one big bleeding ring, several mid rings, a field of
+            small filled/outline/rotated shapes) rather than a handful of
+            uniform dots, so the panel reads as composed rather than sparse. */}
+        {/* One large shape for scale contrast against the small confetti. */}
+        <div className="pointer-events-none absolute -right-14 -top-14 size-44 rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute -bottom-16 left-10 size-48 rounded-full border border-pink-accent/15" />
+
+        {/* Top band, spanning the full width above the headline. */}
         <div className="pointer-events-none absolute right-24 top-14 size-9 rounded-full border-2 border-white/25" />
         <div className="pointer-events-none absolute right-10 top-28 size-3 rounded-full bg-pink-accent" />
         <div className="pointer-events-none absolute right-44 top-10 size-2 rounded-full bg-white/50" />
-        <div className="pointer-events-none absolute right-16 top-48 size-4 rotate-12 rounded-lg bg-lilac-mid/80" />
         <div className="pointer-events-none absolute right-60 top-6 size-5 rounded-full border-2 border-pink-accent/60" />
-        <div className="pointer-events-none absolute left-[26rem] top-56 size-2.5 rotate-45 rounded-[3px] bg-white/30" />
-        <div className="pointer-events-none absolute right-32 top-60 size-1.5 rounded-full bg-pink-deep/80" />
+        <div className="pointer-events-none absolute right-52 top-2 size-14 rounded-full border border-pink-accent/20" />
+        <div className="pointer-events-none absolute right-96 top-2 size-2 rotate-45 rounded-[3px] bg-white/25" />
+        <div className="pointer-events-none absolute right-72 top-32 size-2.5 rounded-full bg-lilac-mid/70" />
+
+        {/* Right column, running down the empty margin beside the copy. */}
+        <div className="pointer-events-none absolute right-8 top-64 size-16 rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute right-16 top-48 size-4 rotate-12 rounded-lg bg-lilac-mid/80" />
+        <div className="pointer-events-none absolute right-14 top-72 size-3 rounded-full bg-lilac-mid/60" />
+        <div className="pointer-events-none absolute right-4 top-[22rem] size-3 rotate-45 rounded-[3px] bg-white/25" />
+        <div className="pointer-events-none absolute right-28 top-[19rem] size-1.5 rounded-full bg-pink-deep/70" />
+        <div className="pointer-events-none absolute right-20 top-[26rem] size-6 rounded-full border-2 border-pink-accent/50" />
+        <div className="pointer-events-none absolute right-40 top-60 size-1.5 rounded-full bg-pink-deep/80" />
+
+        {/* Bottom band, below the feature list. */}
+        <div className="pointer-events-none absolute bottom-8 left-24 size-24 rounded-full border border-pink-accent/15" />
+        <div className="pointer-events-none absolute bottom-16 left-64 size-2 rounded-full bg-white/40" />
+        <div className="pointer-events-none absolute bottom-24 left-96 size-8 rounded-full border-2 border-lilac-mid/30" />
+        <div className="pointer-events-none absolute bottom-12 left-[30rem] size-3 rotate-45 rounded-[3px] bg-pink-deep/40" />
+        <div className="pointer-events-none absolute bottom-6 right-16 size-2.5 rounded-full bg-pink-accent/60" />
 
         {/* Pinned to the panel's top-left, independent of the vertically
             centered headline block below it — matches how a reference
@@ -71,10 +93,23 @@ export default function OnboardingWelcomePage() {
         </div>
       </div>
 
-      {/* Desktop: CTA panel — a faint radial wash instead of flat white so it
-          doesn't read as a void against the rich gradient panel beside it. */}
-      <div className="hidden w-1/2 shrink-0 items-center justify-center bg-[radial-gradient(ellipse_at_center,#ffffff_55%,#fdf4ff_100%)] lg:flex">
-        <div className="flex w-full max-w-xs flex-col items-center">
+      {/* Desktop: CTA panel — a faint radial wash plus the brand's own care
+          illustration and a few pale shape accents, so it carries real
+          content instead of reading as a void next to the gradient panel. */}
+      <div className="relative hidden w-1/2 shrink-0 flex-col items-center justify-center gap-10 overflow-hidden bg-[radial-gradient(ellipse_at_center,#ffffff_55%,#fdf4ff_100%)] lg:flex">
+        <div className="pointer-events-none absolute left-10 top-16 size-16 rounded-full border border-lilac-mid/30" />
+        <div className="pointer-events-none absolute right-16 top-24 size-2.5 rounded-full bg-pink-accent/40" />
+        <div className="pointer-events-none absolute left-20 top-1/2 size-3 rotate-45 rounded-[3px] bg-lilac-mid/40" />
+        <div className="pointer-events-none absolute bottom-24 right-14 size-20 rounded-full border border-pink-accent/20" />
+        <div className="pointer-events-none absolute bottom-16 left-16 size-2 rounded-full bg-primary/30" />
+
+        <div className="relative flex items-center justify-center">
+          <div className="pointer-events-none absolute size-72 rounded-full bg-lilac-mid/25 blur-3xl" />
+          <div className="pointer-events-none absolute -right-4 -top-4 size-24 rounded-full bg-pink-accent/15 blur-2xl" />
+          <OnboardingIllustration className="relative w-60" />
+        </div>
+
+        <div className="relative flex w-full max-w-xs flex-col items-center">
           <Link
             href="/activate"
             className="flex h-14 w-full items-center justify-center rounded-button bg-lilac-dark font-heading text-[17px] font-bold text-white"
