@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import OnboardingIllustration from "@/components/illustrations/OnboardingIllustration";
+import OnboardingSeenMarker from "@/components/OnboardingSeenMarker";
 import { CheckIcon } from "@/components/ui/icons";
 
 const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emergency alerts & escalation"];
@@ -13,6 +14,7 @@ const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emer
 export default function OnboardingWelcomePage() {
   return (
     <main className="flex min-h-screen flex-col lg:flex-row">
+      <OnboardingSeenMarker />
       {/* Desktop: dark hero panel — hidden on mobile. */}
       <div className="relative hidden w-1/2 shrink-0 flex-col justify-center overflow-hidden bg-lilac-deeper px-16 py-16 lg:flex">
         <div className="pointer-events-none absolute -left-24 -top-24 size-96 rounded-full bg-primary opacity-30 blur-3xl" />

@@ -3,16 +3,22 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { hasSeenOnboarding } from "@/lib/onboarding-seen";
 
 export default function SplashRedirect({ target }: { target: string }) {
   const router = useRouter();
 
   useEffect(() => {
+    // A returning visitor who isn't currently logged in (session expired,
+    // or they signed out) doesn't need the marketing/onboarding page
+    // again — send them straight to sign in instead.
+    const destination = target === "/onboarding" && hasSeenOnboarding() ? "/login" : target;
+
     // The app-style splash pause is a mobile convention — on a desktop
     // browser tab it just reads as a stalled page load, so skip straight
     // to the destination there instead of waiting out the same 2s.
     const isDesktop = window.matchMedia("(min-width: 1024px)").matches;
-    const t = setTimeout(() => router.replace(target), isDesktop ? 0 : 2000);
+    const t = setTimeout(() => router.replace(destination), isDesktop ? 0 : 2000);
     return () => clearTimeout(t);
   }, [router, target]);
 
