@@ -38,7 +38,11 @@ function sentLabel(iso: string): string {
   const now = new Date();
   const isToday = d.toDateString() === now.toDateString();
   const datePart = isToday ? "Today" : d.toLocaleDateString("en-GH", { day: "numeric", month: "short" });
-  const timePart = d.toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit", hour12: false });
+  // Manual 24h formatting, not toLocaleTimeString: at midnight, server and
+  // browser Intl engines disagree on whether hour 0 renders as "00" or
+  // "24" (hour12: false) — plain Date getters give the same string
+  // everywhere and avoid a hydration mismatch.
+  const timePart = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   return `${datePart} · ${timePart}`;
 }
 

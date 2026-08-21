@@ -28,7 +28,10 @@ function sentLabel(iso: string): string {
   const now = new Date();
   const isToday = d.toDateString() === now.toDateString();
   const datePart = isToday ? "Today" : d.toLocaleDateString("en-GH", { day: "numeric", month: "short" });
-  const timePart = d.toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit", hour12: false });
+  // Manual 24h formatting: toLocaleTimeString's hour12: false renders
+  // midnight as "00" or "24" depending on the ICU/Intl engine version —
+  // plain Date getters are deterministic.
+  const timePart = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   return `${datePart} · ${timePart}`;
 }
 

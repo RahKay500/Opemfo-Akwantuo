@@ -10,6 +10,13 @@ import IdentityMenu from "@/components/ui/IdentityMenu";
 import InboxClient from "./InboxClient";
 import PatientRecordPanel from "./PatientRecordPanel";
 
+// Not toLocaleTimeString: at midnight, server and browser Intl engines
+// disagree on whether hour 0 renders as "00" or "24" (hour12: false) —
+// plain Date getters are deterministic.
+function formatTime24(d: Date): string {
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
 export default async function DoctorInboxPage({
   searchParams,
 }: {
@@ -79,7 +86,7 @@ export default async function DoctorInboxPage({
                   <p className="truncate font-body text-xs text-text-secondary">
                     {s.facilityName} · {s.status === "Active" && new Date(s.createdAt).toDateString() === new Date().toDateString() ? "Today" : new Date(s.createdAt).toLocaleDateString("en-GH", { day: "numeric", month: "short" })}
                     {" · "}
-                    {new Date(s.createdAt).toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit", hour12: false })}
+                    {formatTime24(new Date(s.createdAt))}
                   </p>
                 </div>
                 {s.status === "Active" && <span className="size-2 shrink-0 rounded-badge bg-pink-accent" />}

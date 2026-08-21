@@ -15,7 +15,11 @@ function sharedLabel(iso: string): string {
   const now = new Date();
   const isToday = d.toDateString() === now.toDateString();
   const datePart = isToday ? "Today" : formatDate(d);
-  const timePart = d.toLocaleTimeString("en-GH", { hour: "2-digit", minute: "2-digit", hour12: false });
+  // Manual 24h formatting, not toLocaleTimeString: at midnight, server and
+  // browser Intl engines disagree on whether hour 0 renders as "00" or
+  // "24" (hour12: false), which produced a server/client hydration
+  // mismatch — plain Date getters give the same string everywhere.
+  const timePart = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
   return `${datePart} · ${timePart}`;
 }
 
