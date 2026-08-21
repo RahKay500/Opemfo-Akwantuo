@@ -6,6 +6,21 @@ import { CheckIcon } from "@/components/ui/icons";
 
 const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emergency alerts & escalation"];
 
+// A real mesh gradient — several radial blooms of different brand hues,
+// each fading to transparent over a deep base color — instead of a single
+// linear ramp. Stacking soft-edged radial gradients this way is the
+// standard CSS technique for a mesh/aurora look with no canvas or plugin.
+const MESH_GRADIENT_STYLE = {
+  backgroundColor: "#5c1367",
+  backgroundImage: [
+    "radial-gradient(at 12% 20%, #c341db 0%, transparent 55%)",
+    "radial-gradient(at 88% 14%, #ee46bc 0%, transparent 50%)",
+    "radial-gradient(at 80% 90%, #c11574 0%, transparent 55%)",
+    "radial-gradient(at 14% 92%, #eeaafd 0%, transparent 42%)",
+    "radial-gradient(at 55% 46%, #9f1ab1 0%, transparent 65%)",
+  ].join(", "),
+};
+
 // Mobile keeps the illustration-led layout (it already works well there).
 // Desktop moves to its own editorial hero — a dark panel carrying a big
 // headline, body copy and small decorative accents, with the CTA on a
@@ -15,12 +30,16 @@ export default function OnboardingWelcomePage() {
   return (
     <main className="flex min-h-screen flex-col lg:flex-row">
       <OnboardingSeenMarker />
-      {/* Desktop: dark hero panel — hidden on mobile. A real diagonal gradient
-          (not a flat fill) carries the base tone, layered with soft color
-          blooms for depth and a small scattered constellation of shapes —
-          the same "dark editorial panel with drifting confetti" language as
-          the Cisco reference, built from our own brand ramp. */}
-      <div className="relative hidden w-1/2 shrink-0 flex-col justify-center overflow-hidden bg-[linear-gradient(145deg,#5c1367_0%,#821890_40%,#9f1ab1_72%,#ba24d5_100%)] px-16 py-16 lg:flex">
+      {/* Desktop: dark hero panel — hidden on mobile. A real mesh gradient
+          (several radial color blooms, not a single linear ramp) carries
+          the base tone, layered with soft blur blooms for extra depth and
+          a small scattered constellation of shapes — the same "dark
+          editorial panel with drifting confetti" language as the Cisco
+          reference, built from our own brand ramp. */}
+      <div
+        className="relative hidden w-1/2 shrink-0 flex-col justify-center overflow-hidden px-16 py-16 lg:flex"
+        style={MESH_GRADIENT_STYLE}
+      >
         {/* Color blooms — four, varied in hue/size/blur, the two largest
             drifting slowly (aurora-blob-*), so the gradient reads as lit
             from within and gently alive rather than a static tint. */}
@@ -127,7 +146,7 @@ export default function OnboardingWelcomePage() {
         <div className="relative flex items-center justify-center rounded-[32px] border border-white/70 bg-white/50 p-10 shadow-[0_24px_60px_-24px_rgba(130,24,144,0.28)] backdrop-blur-xl">
           <div className="pointer-events-none absolute size-72 rounded-full bg-lilac-mid/25 blur-3xl" />
           <div className="pointer-events-none absolute -right-4 -top-4 size-24 rounded-full bg-pink-accent/15 blur-2xl" />
-          <OnboardingIllustration className="relative w-56" />
+          <OnboardingIllustration className="relative w-56" idPrefix="desktop-" />
         </div>
 
         <div className="relative flex w-full max-w-xs flex-col items-center">
@@ -146,9 +165,12 @@ export default function OnboardingWelcomePage() {
         </div>
       </div>
 
-      {/* Mobile: the same aurora-gradient hero as desktop — illustration-led,
+      {/* Mobile: the same mesh-gradient hero as desktop — illustration-led,
           just stacked vertically instead of split into two panels. */}
-      <div className="relative flex flex-1 flex-col items-center overflow-hidden bg-[linear-gradient(165deg,#5c1367_0%,#821890_38%,#9f1ab1_70%,#ba24d5_100%)] px-6 pb-6 pt-11 lg:hidden">
+      <div
+        className="relative flex flex-1 flex-col items-center overflow-hidden px-6 pb-6 pt-11 lg:hidden"
+        style={MESH_GRADIENT_STYLE}
+      >
         <div className="aurora-blob-a pointer-events-none absolute -left-16 -top-12 size-64 rounded-full bg-primary opacity-25 blur-3xl" />
         <div className="aurora-blob-b pointer-events-none absolute -bottom-20 -right-14 size-72 rounded-full bg-pink-accent opacity-25 blur-3xl" />
         <div className="pointer-events-none absolute right-0 top-1/3 size-40 rounded-full bg-lilac-mid opacity-20 blur-2xl" />
@@ -163,7 +185,7 @@ export default function OnboardingWelcomePage() {
         <div className="pointer-events-none absolute bottom-16 right-10 size-8 rounded-[58%_42%_39%_61%/52%_36%_64%_48%] bg-lilac-mid/15" />
 
         <div className="relative z-10 flex aspect-square w-full max-w-[360px] items-center justify-center rounded-card border border-white/60 bg-white/60 shadow-[0_24px_60px_-24px_rgba(130,24,144,0.35)] backdrop-blur-xl">
-          <OnboardingIllustration className="w-[85%]" />
+          <OnboardingIllustration className="w-[85%]" idPrefix="mobile-" />
         </div>
 
         <div className="relative z-10 mt-5 flex items-center gap-2">
