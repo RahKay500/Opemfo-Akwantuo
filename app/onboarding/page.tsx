@@ -15,15 +15,30 @@ export default function OnboardingWelcomePage() {
   return (
     <main className="flex min-h-screen flex-col lg:flex-row">
       <OnboardingSeenMarker />
-      {/* Desktop: dark hero panel — hidden on mobile. */}
-      <div className="relative hidden w-1/2 shrink-0 flex-col justify-center overflow-hidden bg-lilac-deeper px-16 py-16 lg:flex">
-        <div className="pointer-events-none absolute -left-24 -top-24 size-96 rounded-full bg-primary opacity-30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -right-16 size-[28rem] rounded-full bg-pink-accent opacity-20 blur-3xl" />
+      {/* Desktop: dark hero panel — hidden on mobile. A real diagonal gradient
+          (not a flat fill) carries the base tone, layered with soft color
+          blooms for depth and a small scattered constellation of shapes —
+          the same "dark editorial panel with drifting confetti" language as
+          the Cisco reference, built from our own brand ramp. */}
+      <div className="relative hidden w-1/2 shrink-0 flex-col justify-center overflow-hidden bg-[linear-gradient(145deg,#5c1367_0%,#821890_40%,#9f1ab1_72%,#ba24d5_100%)] px-16 py-16 lg:flex">
+        {/* Color blooms — three, varied in hue/size/blur, instead of two flat
+            circles, so the gradient reads as lit from within rather than
+            just tinted. */}
+        <div className="pointer-events-none absolute -left-28 -top-28 size-[26rem] rounded-full bg-primary opacity-25 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-36 -right-20 size-[32rem] rounded-full bg-pink-accent opacity-25 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-1/3 size-72 rounded-full bg-lilac-mid opacity-20 blur-2xl" />
+        <div className="pointer-events-none absolute left-1/3 top-8 size-64 rounded-full bg-pink-deep opacity-20 blur-3xl" />
 
-        <div className="pointer-events-none absolute left-56 top-16 size-3 rounded-full bg-pink-accent" />
-        <div className="pointer-events-none absolute left-72 top-12 size-2 rounded-full bg-white/50" />
-        <div className="pointer-events-none absolute left-52 top-40 size-4 rotate-12 rounded-lg bg-lilac-mid/80" />
-        <div className="pointer-events-none absolute left-80 top-24 size-5 rounded-full border-2 border-pink-accent/70" />
+        {/* Decorative constellation — varied filled/outline/rotated shapes
+            scattered through the upper-right of the panel, away from the
+            pinned logo and the lower feature list. */}
+        <div className="pointer-events-none absolute right-24 top-14 size-9 rounded-full border-2 border-white/25" />
+        <div className="pointer-events-none absolute right-10 top-28 size-3 rounded-full bg-pink-accent" />
+        <div className="pointer-events-none absolute right-44 top-10 size-2 rounded-full bg-white/50" />
+        <div className="pointer-events-none absolute right-16 top-48 size-4 rotate-12 rounded-lg bg-lilac-mid/80" />
+        <div className="pointer-events-none absolute right-60 top-6 size-5 rounded-full border-2 border-pink-accent/60" />
+        <div className="pointer-events-none absolute left-[26rem] top-56 size-2.5 rotate-45 rounded-[3px] bg-white/30" />
+        <div className="pointer-events-none absolute right-32 top-60 size-1.5 rounded-full bg-pink-deep/80" />
 
         {/* Pinned to the panel's top-left, independent of the vertically
             centered headline block below it — matches how a reference
@@ -56,8 +71,9 @@ export default function OnboardingWelcomePage() {
         </div>
       </div>
 
-      {/* Desktop: plain white CTA panel. */}
-      <div className="hidden w-1/2 shrink-0 items-center justify-center lg:flex">
+      {/* Desktop: CTA panel — a faint radial wash instead of flat white so it
+          doesn't read as a void against the rich gradient panel beside it. */}
+      <div className="hidden w-1/2 shrink-0 items-center justify-center bg-[radial-gradient(ellipse_at_center,#ffffff_55%,#fdf4ff_100%)] lg:flex">
         <div className="flex w-full max-w-xs flex-col items-center">
           <Link
             href="/activate"
