@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
+import IntakeSummary, { type IntakeSummaryData } from "@/components/records/IntakeSummary";
 import type { DoctorInboxStatus } from "@/lib/queries/doctor-inbox";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
-const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
+const TABS = ["Overview", "Intake", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
 
 // formatRelativeTime assumes a past date ("2 hours ago") — expiresAt is in
 // the future, so it needs its own countdown phrasing.
@@ -85,6 +86,7 @@ export default function DoctorRecordClient({
   vaccinations,
   iptpDoses,
   deliveryRecord,
+  intake,
 }: {
   shareId: string;
   status: DoctorInboxStatus;
@@ -96,6 +98,7 @@ export default function DoctorRecordClient({
   vaccinations: DoctorRecordVaccination[];
   iptpDoses: DoctorRecordIptpDose[];
   deliveryRecord: DoctorRecordDelivery | null;
+  intake: IntakeSummaryData;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
@@ -212,6 +215,8 @@ export default function DoctorRecordClient({
             {!latestVisit && <p className="font-body text-sm text-text-secondary">No visits recorded yet.</p>}
           </>
         )}
+
+        {tab === "Intake" && <IntakeSummary data={intake} />}
 
         {tab === "Vitals" && (
           <div className="flex flex-col gap-2.5">

@@ -6,6 +6,14 @@ import { calculateAge, calculatePregnancyProgress } from "@/lib/pregnancy";
 import { formatDate } from "@/lib/utils";
 import { ArrowLeftIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
+import type { IntakeSummaryData } from "@/components/records/IntakeSummary";
+import type {
+  MedicalHistoryState,
+  SocialHistoryState,
+  FamilyHistoryState,
+  PhysicalExamState,
+  PreviousPregnancy,
+} from "@/lib/mch-record";
 import DoctorRecordClient from "./DoctorRecordClient";
 
 export default async function DoctorPatientDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -113,6 +121,33 @@ export default async function DoctorPatientDetailPage({ params }: { params: Prom
               }
             : null
         }
+        intake={{
+          numberOfAbortionsSpontaneous: patient.numberOfAbortionsSpontaneous,
+          numberOfAbortionsInduced: patient.numberOfAbortionsInduced,
+          majorRiskFactors: patient.majorRiskFactors,
+          previousPregnancies: Array.isArray(patient.previousPregnancies)
+            ? (patient.previousPregnancies as unknown as PreviousPregnancy[])
+            : [],
+          height: patient.height,
+          weightAtAnc1: patient.weightAtAnc1,
+          bmiAtAnc1: patient.bmiAtAnc1,
+          estimatedDesiredWeightAtEdd: patient.estimatedDesiredWeightAtEdd,
+          contraceptionUsed: patient.contraceptionUsed,
+          rhTyping: patient.rhTyping,
+          hbsAg: patient.hbsAg,
+          sickling: patient.sickling,
+          g6pd: patient.g6pd,
+          vdrl: patient.vdrl,
+          hivStatus: patient.hivStatus,
+          hbFirstVisit: patient.hbFirstVisit,
+          urineRE: patient.urineRE,
+          stoolRE: patient.stoolRE,
+          bfForMalaria: patient.bfForMalaria,
+          medicalHistory: patient.medicalHistory as Partial<MedicalHistoryState> | null,
+          socialHistory: patient.socialHistory as Partial<SocialHistoryState> | null,
+          familyHistory: patient.familyHistory as Partial<FamilyHistoryState> | null,
+          physicalExamAtFirstVisit: patient.physicalExamAtFirstVisit as Partial<PhysicalExamState> | null,
+        } satisfies IntakeSummaryData}
       />
     </main>
   );
