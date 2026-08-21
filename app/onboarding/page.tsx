@@ -146,22 +146,36 @@ export default function OnboardingWelcomePage() {
         </div>
       </div>
 
-      {/* Mobile: unchanged illustration-led layout. */}
-      <div className="flex flex-1 flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11 lg:hidden">
-        <div className="flex aspect-square w-full max-w-[360px] items-center justify-center rounded-card bg-white shadow-card">
+      {/* Mobile: the same aurora-gradient hero as desktop — illustration-led,
+          just stacked vertically instead of split into two panels. */}
+      <div className="relative flex flex-1 flex-col items-center overflow-hidden bg-[linear-gradient(165deg,#5c1367_0%,#821890_38%,#9f1ab1_70%,#ba24d5_100%)] px-6 pb-6 pt-11 lg:hidden">
+        <div className="aurora-blob-a pointer-events-none absolute -left-16 -top-12 size-64 rounded-full bg-primary opacity-25 blur-3xl" />
+        <div className="aurora-blob-b pointer-events-none absolute -bottom-20 -right-14 size-72 rounded-full bg-pink-accent opacity-25 blur-3xl" />
+        <div className="pointer-events-none absolute right-0 top-1/3 size-40 rounded-full bg-lilac-mid opacity-20 blur-2xl" />
+        <div className="grain-overlay pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay" />
+
+        <div className="pointer-events-none absolute -right-10 -top-6 size-32 rounded-full border border-white/10" />
+        <div className="pointer-events-none absolute -bottom-10 -left-8 size-36 rounded-full border border-pink-accent/15" />
+        <div className="pointer-events-none absolute right-8 top-2 size-2 rounded-full bg-pink-accent" />
+        <div className="pointer-events-none absolute right-16 top-8 size-5 rounded-full border-2 border-white/25" />
+        <div className="pointer-events-none absolute bottom-24 right-8 size-2.5 rotate-45 rounded-[3px] bg-white/25" />
+        <div className="pointer-events-none absolute bottom-32 left-4 size-9 rounded-full border border-white/20 bg-white/10 backdrop-blur-md" />
+        <div className="pointer-events-none absolute bottom-16 right-10 size-8 rounded-[58%_42%_39%_61%/52%_36%_64%_48%] bg-lilac-mid/15" />
+
+        <div className="relative z-10 flex aspect-square w-full max-w-[360px] items-center justify-center rounded-card border border-white/60 bg-white/60 shadow-[0_24px_60px_-24px_rgba(130,24,144,0.35)] backdrop-blur-xl">
           <OnboardingIllustration className="w-[85%]" />
         </div>
 
-        <div className="mt-5 flex items-center gap-2">
-          <div className="flex size-8 items-center justify-center rounded-badge bg-primary">
+        <div className="relative z-10 mt-5 flex items-center gap-2">
+          <div className="flex size-8 items-center justify-center rounded-badge bg-white">
             <Image src="/images/logo.png" alt="" width={18} height={18} />
           </div>
-          <p className="font-heading text-base font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
+          <p className="font-heading text-base font-bold text-white">Ɔpemfoɔ Akwantuo</p>
         </div>
 
-        <div className="flex flex-col items-center gap-3 pt-6 text-center">
-          <h1 className="font-heading text-2xl font-bold text-text-primary">Caring for every mother</h1>
-          <p className="font-body text-[15px] text-text-secondary">
+        <div className="relative z-10 flex flex-col items-center gap-3 pt-6 text-center">
+          <h1 className="font-heading text-2xl font-bold text-white">Caring for every mother</h1>
+          <p className="font-body text-[15px] text-white/80">
             Track pregnancies, manage referrals and connect mothers, midwives/nurses and doctors — all in one
             place.
           </p>
@@ -171,13 +185,13 @@ export default function OnboardingWelcomePage() {
 
         <Link
           href="/activate"
-          className="flex h-14 w-full items-center justify-center rounded-button bg-lilac-dark font-heading text-[17px] font-bold text-white"
+          className="relative z-10 flex h-14 w-full items-center justify-center rounded-button bg-white font-heading text-[17px] font-bold text-lilac-dark"
         >
           Get Started
         </Link>
-        <p className="pt-4 font-body text-[13px] text-text-secondary">
+        <p className="relative z-10 pt-4 font-body text-[13px] text-white/80">
           Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-pink-deep">
+          <Link href="/login" className="font-semibold text-white underline decoration-white/40 underline-offset-2">
             Sign in
           </Link>
         </p>
