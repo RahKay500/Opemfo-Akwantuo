@@ -21,13 +21,17 @@ export default function OnboardingWelcomePage() {
           the same "dark editorial panel with drifting confetti" language as
           the Cisco reference, built from our own brand ramp. */}
       <div className="relative hidden w-1/2 shrink-0 flex-col justify-center overflow-hidden bg-[linear-gradient(145deg,#5c1367_0%,#821890_40%,#9f1ab1_72%,#ba24d5_100%)] px-16 py-16 lg:flex">
-        {/* Color blooms — three, varied in hue/size/blur, instead of two flat
-            circles, so the gradient reads as lit from within rather than
-            just tinted. */}
-        <div className="pointer-events-none absolute -left-28 -top-28 size-[26rem] rounded-full bg-primary opacity-25 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-36 -right-20 size-[32rem] rounded-full bg-pink-accent opacity-25 blur-3xl" />
+        {/* Color blooms — four, varied in hue/size/blur, the two largest
+            drifting slowly (aurora-blob-*), so the gradient reads as lit
+            from within and gently alive rather than a static tint. */}
+        <div className="aurora-blob-a pointer-events-none absolute -left-28 -top-28 size-[26rem] rounded-full bg-primary opacity-25 blur-3xl" />
+        <div className="aurora-blob-b pointer-events-none absolute -bottom-36 -right-20 size-[32rem] rounded-full bg-pink-accent opacity-25 blur-3xl" />
         <div className="pointer-events-none absolute right-0 top-1/3 size-72 rounded-full bg-lilac-mid opacity-20 blur-2xl" />
         <div className="pointer-events-none absolute left-1/3 top-8 size-64 rounded-full bg-pink-deep opacity-20 blur-3xl" />
+
+        {/* Fractal-noise grain — a textured finish over the gradient instead
+            of a flat digital fill. */}
+        <div className="grain-overlay pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay" />
 
         {/* Decorative constellation — a full-panel scatter with real scale
             hierarchy (one big bleeding ring, several mid rings, a field of
@@ -36,6 +40,18 @@ export default function OnboardingWelcomePage() {
         {/* One large shape for scale contrast against the small confetti. */}
         <div className="pointer-events-none absolute -right-14 -top-14 size-44 rounded-full border border-white/10" />
         <div className="pointer-events-none absolute -bottom-16 left-10 size-48 rounded-full border border-pink-accent/15" />
+
+        {/* Organic blob shapes — irregular border-radius instead of a perfect
+            circle, for the softer, hand-drawn accent that a field of pure
+            circles/rings can't give on its own. */}
+        <div className="pointer-events-none absolute right-20 top-40 size-16 rounded-[63%_37%_54%_46%/43%_37%_63%_57%] bg-pink-accent/15" />
+        <div className="pointer-events-none absolute bottom-32 left-48 size-12 rounded-[38%_62%_57%_43%/47%_41%_59%_53%] bg-lilac-mid/20" />
+
+        {/* Frosted-glass "porthole" shapes — real glassmorphism (blurred
+            backdrop + hairline border) rather than a flat tint, catching
+            the gradient behind them like glass would. */}
+        <div className="pointer-events-none absolute right-48 top-52 size-11 rounded-full border border-white/25 bg-white/10 backdrop-blur-md" />
+        <div className="pointer-events-none absolute bottom-40 left-8 size-16 rounded-full border border-white/20 bg-white/10 backdrop-blur-md" />
 
         {/* Top band, spanning the full width above the headline. */}
         <div className="pointer-events-none absolute right-24 top-14 size-9 rounded-full border-2 border-white/25" />
@@ -84,7 +100,7 @@ export default function OnboardingWelcomePage() {
         <div className="relative z-10 mt-10 flex flex-col gap-3.5">
           {FEATURES.map((f) => (
             <div key={f} className="flex items-center gap-3">
-              <span className="flex size-6 shrink-0 items-center justify-center rounded-badge bg-white/15">
+              <span className="flex size-6 shrink-0 items-center justify-center rounded-badge border border-white/20 bg-white/10 backdrop-blur-md">
                 <CheckIcon className="size-3.5 text-white" />
               </span>
               <p className="font-body text-sm text-white/90">{f}</p>
@@ -102,11 +118,16 @@ export default function OnboardingWelcomePage() {
         <div className="pointer-events-none absolute left-20 top-1/2 size-3 rotate-45 rounded-[3px] bg-lilac-mid/40" />
         <div className="pointer-events-none absolute bottom-24 right-14 size-20 rounded-full border border-pink-accent/20" />
         <div className="pointer-events-none absolute bottom-16 left-16 size-2 rounded-full bg-primary/30" />
+        <div className="pointer-events-none absolute right-24 top-1/2 size-10 rounded-[58%_42%_39%_61%/52%_36%_64%_48%] bg-pink-accent/10" />
+        <div className="pointer-events-none absolute bottom-40 left-32 size-8 rounded-[41%_59%_63%_37%/48%_55%_45%_52%] bg-lilac-mid/15" />
 
-        <div className="relative flex items-center justify-center">
+        {/* Illustration sits in its own frosted-glass card — the "elevated
+            card container" a hero visual gets on richer reference login
+            pages, instead of floating loose on the panel. */}
+        <div className="relative flex items-center justify-center rounded-[32px] border border-white/70 bg-white/50 p-10 shadow-[0_24px_60px_-24px_rgba(130,24,144,0.28)] backdrop-blur-xl">
           <div className="pointer-events-none absolute size-72 rounded-full bg-lilac-mid/25 blur-3xl" />
           <div className="pointer-events-none absolute -right-4 -top-4 size-24 rounded-full bg-pink-accent/15 blur-2xl" />
-          <OnboardingIllustration className="relative w-60" />
+          <OnboardingIllustration className="relative w-56" />
         </div>
 
         <div className="relative flex w-full max-w-xs flex-col items-center">
