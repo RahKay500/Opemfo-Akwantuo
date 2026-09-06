@@ -18,8 +18,19 @@ export default function OnboardingWelcomePage() {
       <OnboardingSeenMarker />
 
       <div className="relative hidden w-1/2 shrink-0 flex-col justify-center gap-10 overflow-hidden bg-lilac-deeper px-12 py-16 lg:flex">
-        <div className="pointer-events-none absolute -left-24 -top-24 size-96 rounded-full bg-primary opacity-30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -right-16 size-[28rem] rounded-full bg-pink-accent opacity-20 blur-3xl" />
+        {/* A real photo instead of an abstract gradient — a purple scrim on
+            top keeps the panel reading as the same brand color and keeps
+            the white text/logo legible over it, wherever the photo is
+            lighter (photo credit: Unsplash, free license). */}
+        <Image
+          src="/images/onboarding-hero.jpg"
+          alt=""
+          fill
+          priority
+          sizes="50vw"
+          className="object-cover object-[center_25%]"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-lilac-deeper/85 via-lilac-deeper/80 to-[#3a0f42]/95" />
 
         <div className="relative z-10 text-center">
           <div className="mx-auto flex size-14 items-center justify-center rounded-badge bg-white">
@@ -27,7 +38,7 @@ export default function OnboardingWelcomePage() {
           </div>
           <p className="mt-5 font-heading text-2xl font-bold text-white">Ɔpemfoɔ Akwantuo</p>
         </div>
-        <div className="relative z-10 flex flex-col items-center gap-4">
+        <div className="relative z-10 mx-auto flex w-fit flex-col items-start gap-4">
           {FEATURES.map((f) => (
             <div key={f} className="flex items-center gap-3">
               <span className="flex size-6 shrink-0 items-center justify-center rounded-badge bg-white/20">
