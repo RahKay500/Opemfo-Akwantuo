@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
   });
 
   for (const midwife of midwives) {
-    await sendEmergencyTriggeredSms(midwife.phone, patient.emergencyContactPhone, patient.name);
+    // Midwives without a phone on file (email-only accounts) still get the
+    // in-app Notification created above — just no SMS backup.
+    if (midwife.phone) await sendEmergencyTriggeredSms(midwife.phone, patient.emergencyContactPhone, patient.name);
   }
 
   return NextResponse.json({ alert });

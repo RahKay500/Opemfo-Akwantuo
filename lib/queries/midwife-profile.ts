@@ -3,7 +3,7 @@ import { averageDurationLabel } from "@/lib/referral-metrics";
 
 export interface MidwifeProfileData {
   name: string;
-  phone: string;
+  phone: string | null;
   facilityName: string;
   facilityRegion: string;
   memberSince: number;

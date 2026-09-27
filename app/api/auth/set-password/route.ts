@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
   // link her new account back to that existing record instead of leaving two
   // disconnected identities — and adopt the clinically-recorded real name
   // over the OTP flow's placeholder "New Mother".
-  if (!before.isActive && user.role === "MOTHER") {
+  if (!before.isActive && user.role === "MOTHER" && user.phone) {
     const existingPatient = await prisma.patient.findFirst({
       where: { phone: user.phone, userId: null },
     });

@@ -194,7 +194,13 @@ export async function recoverSuperAdminPassword(
 
   const passwordHash = await bcrypt.hash(newPassword, 12);
   const targetEmail = (newEmail || email).toLowerCase();
-  const existing = await prisma.superAdmin.findFirst({ where: { facilityId: null } });
+  // All three FKs must be null, not just facilityId — Regional and District
+  // Admins also have facilityId: null (see isPlatformAdmin above), so
+  // filtering on facilityId alone could match one of them instead of the
+  // actual Platform row once those tiers exist.
+  const existing = await prisma.superAdmin.findFirst({
+    where: { facilityId: null, districtId: null, regionId: null },
+  });
 
   if (existing) {
     await prisma.superAdmin.update({
@@ -260,6 +266,65 @@ export async function confirmFacilityAdminActivation(
   await prisma.superAdmin.update({
     where: { id: admin.id },
     data: { passwordHash, isActive: true, otp: null, otpExpiry: null },
+  });
+
+  return {
+    success: true,
+    id: admin.id,
+    facilityId: admin.facilityId,
+    districtId: admin.districtId,
+    regionId: admin.regionId,
+  };
+}
+
+// Activation-by-link: used for newly-created admins, who now always register
+// with an email (mandatory) rather than the phone the flow above requires.
+// A signed, stateless token stands in for the OTP-plus-phone-lookup dance —
+// receiving the link in an inbox is itself the proof of identity, so there's
+// no separate "verify the code" step before setting a password. The
+// phone+OTP flow above is untouched and keeps working for admins created
+// before this existed (phone-only, no email on file).
+export interface AdminActivationTokenPayload {
+  adminId: string;
+  purpose: "admin-activate";
+}
+
+export async function signAdminActivationToken(adminId: string): Promise<string> {
+  return new SignJWT({ adminId, purpose: "admin-activate" })
+    .setProtectedHeader({ alg: "HS256" })
+    .setIssuedAt()
+    .setExpirationTime("48h")
+    .sign(ADMIN_SECRET);
+}
+
+export async function verifyAdminActivationToken(token: string): Promise<AdminActivationTokenPayload> {
+  const { payload } = await jwtVerify(token, ADMIN_SECRET);
+  if (payload.purpose !== "admin-activate" || typeof payload.adminId !== "string") {
+    throw new Error("Invalid activation token");
+  }
+  return payload as unknown as AdminActivationTokenPayload;
+}
+
+export async function confirmAdminActivationByLink(
+  token: string,
+  password: string
+): Promise<{ success: boolean; error?: string; id?: string } & Partial<AdminScope>> {
+  let adminId: string;
+  try {
+    ({ adminId } = await verifyAdminActivationToken(token));
+  } catch {
+    return { success: false, error: "This activation link is invalid or has expired." };
+  }
+
+  const admin = await prisma.superAdmin.findUnique({ where: { id: adminId } });
+  if (!admin || admin.isActive || admin.passwordHash) {
+    return { success: false, error: "This activation link has already been used." };
+  }
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  await prisma.superAdmin.update({
+    where: { id: admin.id },
+    data: { passwordHash, isActive: true },
   });
 
   return {

@@ -33,7 +33,7 @@ export default function NewDistrictAdminForm({
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState<{ phone: string; devOtp?: string } | null>(null);
+  const [success, setSuccess] = useState<{ email: string; devLink?: string } | null>(null);
 
   const selectedRegion = regions.find((r) => r.id === regionId);
 
@@ -44,7 +44,7 @@ export default function NewDistrictAdminForm({
 
     const errors: Record<string, string> = {};
     if (!name.trim()) errors.name = "Enter a full name.";
-    if (!phone.trim()) errors.phone = "Enter a phone number.";
+    if (!email.trim()) errors.email = "Enter an email address.";
     if (!districtId) errors.districtId = "Select a district.";
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -56,7 +56,7 @@ export default function NewDistrictAdminForm({
       const res = await fetch("/api/admin/district-admins", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email: email.trim() || undefined, phone, districtId }),
+        body: JSON.stringify({ name, email, phone: phone.trim() || undefined, districtId }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -71,7 +71,7 @@ export default function NewDistrictAdminForm({
         }
         return;
       }
-      setSuccess({ phone: data.data.phone, devOtp: data.data.devOtp });
+      setSuccess({ email: data.data.email, devLink: data.data.devLink });
       onCreated?.();
     } catch {
       setError("Network error. Please try again.");
@@ -84,13 +84,16 @@ export default function NewDistrictAdminForm({
     return (
       <div>
         <p className="text-sm font-medium text-[#16A34A]">Account created</p>
-        <p className="mt-2 text-lg font-semibold text-[#1A1A2E]">OTP sent to {success.phone}</p>
+        <p className="mt-2 text-lg font-semibold text-[#1A1A2E]">Activation email sent to {success.email}</p>
         <p className="mt-2 text-sm text-[#6B7280]">
-          The District Admin can now open the admin portal and use this phone number to activate their account.
+          The District Admin can click the link in that email to set their password and activate their account.
         </p>
-        {success.devOtp && (
-          <p className="mt-3 rounded-md bg-[#F8FAFC] px-3 py-2 text-sm text-[#1A1A2E]">
-            Dev OTP (no SMS provider configured): <strong>{success.devOtp}</strong>
+        {success.devLink && (
+          <p className="mt-3 break-all rounded-md bg-[#F8FAFC] px-3 py-2 text-sm text-[#1A1A2E]">
+            Dev activation link (no email provider configured):{" "}
+            <a href={success.devLink} className="font-medium text-[#9F1AB1] underline">
+              {success.devLink}
+            </a>
           </p>
         )}
         <div className="mt-6 flex gap-3">
@@ -129,7 +132,7 @@ export default function NewDistrictAdminForm({
         />
       </FormField>
 
-      <FormField label="Email" error={fieldErrors.email}>
+      <FormField label="Email" required error={fieldErrors.email}>
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -180,7 +183,7 @@ export default function NewDistrictAdminForm({
         </select>
       </FormField>
 
-      <FormField label="Phone number" required error={fieldErrors.phone}>
+      <FormField label="Phone number" error={fieldErrors.phone}>
         <input
           value={phone}
           onChange={(e) => setPhone(digitsOnly(e.target.value))}

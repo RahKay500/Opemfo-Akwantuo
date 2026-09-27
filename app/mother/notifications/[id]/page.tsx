@@ -24,7 +24,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
     await prisma.notification.update({ where: { id }, data: { isRead: true } });
   }
 
-  let visitDetail: { systolic: number | null; diastolic: number | null; flagReason: string | null; flagPriority: string | null; nurseName: string; nursePhone: string } | null = null;
+  let visitDetail: { systolic: number | null; diastolic: number | null; flagReason: string | null; flagPriority: string | null; nurseName: string; nursePhone: string | null } | null = null;
 
   if (notification.type === "VITALS" && notification.relatedType === "Visit" && notification.relatedId) {
     const visit = await prisma.visit.findUnique({
@@ -98,12 +98,14 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
               ))}
             </div>
 
-            <a
-              href={`tel:${visitDetail.nursePhone}`}
-              className="flex h-[54px] items-center justify-center rounded-card bg-lilac-dark font-heading text-base font-bold text-white"
-            >
-              Call My Midwife/Nurse
-            </a>
+            {visitDetail.nursePhone && (
+              <a
+                href={`tel:${visitDetail.nursePhone}`}
+                className="flex h-[54px] items-center justify-center rounded-card bg-lilac-dark font-heading text-base font-bold text-white"
+              >
+                Call My Midwife/Nurse
+              </a>
+            )}
           </>
         ) : (
           <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] border border-border-color">

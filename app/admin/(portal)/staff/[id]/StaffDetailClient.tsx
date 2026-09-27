@@ -12,7 +12,8 @@ import Button from "@/components/ui/Button";
 export interface StaffDetail {
   id: string;
   name: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   role: "MIDWIFE" | "DOCTOR";
   facilityId: string | null;
   facilityName: string | null;
@@ -108,9 +109,15 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         setOtpMessage(typeof json.error === "string" ? json.error : "Something went wrong.");
         return;
       }
-      setOtpMessage(
-        json.data.devOtp ? `OTP resent. Dev OTP: ${json.data.devOtp}` : `OTP resent to ${json.data.phone}.`
-      );
+      if (json.data.devLink) {
+        setOtpMessage(`Activation link resent. Dev link: ${json.data.devLink}`);
+      } else if (json.data.email) {
+        setOtpMessage(`Activation email resent to ${json.data.email}.`);
+      } else if (json.data.devOtp) {
+        setOtpMessage(`OTP resent. Dev OTP: ${json.data.devOtp}`);
+      } else {
+        setOtpMessage(`OTP resent to ${json.data.phone}.`);
+      }
       router.refresh();
     } finally {
       setSubmitting(false);
@@ -130,8 +137,12 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
 
         <dl className="mt-5 grid grid-cols-2 gap-4 text-sm">
           <div>
+            <dt className="text-[#6B7280]">Email</dt>
+            <dd className="mt-0.5 text-[#1A1A2E]">{staff.email ?? "—"}</dd>
+          </div>
+          <div>
             <dt className="text-[#6B7280]">Phone</dt>
-            <dd className="mt-0.5 text-[#1A1A2E]">{staff.phone}</dd>
+            <dd className="mt-0.5 text-[#1A1A2E]">{staff.phone ?? "—"}</dd>
           </div>
           <div>
             <dt className="text-[#6B7280]">Facility</dt>
@@ -158,7 +169,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
               disabled={submitting}
               className="rounded-md border border-[#E2E8F0] px-4 py-2 text-sm font-medium text-[#1A1A2E] disabled:opacity-60"
             >
-              Resend OTP
+              Resend activation
             </button>
           )}
           <button

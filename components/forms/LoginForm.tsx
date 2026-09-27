@@ -6,13 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import Link from "next/link";
-import { normalizeGhanaPhone, digitsOnly } from "@/lib/utils";
-import { localPhoneSchema } from "@/lib/validations/auth";
 import { EyeIcon, EyeOffIcon } from "@/components/ui/icons";
 import { setLastRole } from "@/lib/last-role";
 
+// Mothers log in by phone; staff (Midwife/Doctor) now register with email as
+// their mandatory identifier instead — this field accepts either, and the
+// API branches on "@" (same pattern as the admin portal's login).
 const formSchema = z.object({
-  phone: localPhoneSchema,
+  identifier: z.string().min(1, "Enter your phone number or email"),
   password: z.string().min(1, "Enter your password"),
 });
 
@@ -38,15 +39,13 @@ export default function LoginForm() {
 
   async function onSubmit(values: FormValues) {
     setServerError(null);
-    // Non-null: localPhoneSchema's refine already confirmed this normalizes.
-    const phone = normalizeGhanaPhone(values.phone)!;
 
     setSubmitting(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phone, password: values.password }),
+        body: JSON.stringify({ identifier: values.identifier, password: values.password }),
       });
       const data = await res.json();
 
@@ -69,17 +68,15 @@ export default function LoginForm() {
     <form onSubmit={handleSubmit(onSubmit)} className="flex w-full flex-col gap-4">
       <div>
         <label className="mb-1.5 block font-body text-[13px] font-medium text-text-secondary">
-          Phone number
+          Phone or email
         </label>
         <input
-          type="tel"
-          inputMode="numeric"
-          placeholder="024 123 4567"
-          maxLength={10}
+          type="text"
+          placeholder="024 123 4567 or you@example.com"
           className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
-          {...register("phone", { onChange: (e) => { e.target.value = digitsOnly(e.target.value); } })}
+          {...register("identifier")}
         />
-        {errors.phone && <p className="mt-1 text-xs text-[#DC2626]">{errors.phone.message}</p>}
+        {errors.identifier && <p className="mt-1 text-xs text-[#DC2626]">{errors.identifier.message}</p>}
       </div>
 
       <div>

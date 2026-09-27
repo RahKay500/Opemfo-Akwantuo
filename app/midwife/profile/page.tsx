@@ -80,7 +80,7 @@ export default async function MidwifeProfilePage() {
             <div className="mt-4 flex flex-col gap-3">
               <div className="flex items-center gap-2.5">
                 <PhoneCallIcon className="size-4 text-text-secondary" />
-                <p className="font-body text-sm text-text-primary">{data.phone}</p>
+                <p className="font-body text-sm text-text-primary">{data.phone ?? "—"}</p>
               </div>
               <div className="flex items-center gap-2.5">
                 <LocationPinIcon className="size-4 text-text-secondary" />

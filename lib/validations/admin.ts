@@ -37,8 +37,8 @@ export const updateFacilitySchema = z.object({
 
 export const createFacilityAdminSchema = z.object({
   name: personName,
-  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
-  phone: localPhoneSchema,
+  email: z.string().email("Enter a valid email address"),
+  phone: localPhoneSchema.optional().or(z.literal("")),
   facilityId: z.string().min(1, "Select a facility"),
 });
 
@@ -56,8 +56,8 @@ export const updateFacilityAdminSchema = z.object({
 // override it (same convention as createStaffSchema's facilityId below).
 export const createDistrictAdminSchema = z.object({
   name: personName,
-  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
-  phone: localPhoneSchema,
+  email: z.string().email("Enter a valid email address"),
+  phone: localPhoneSchema.optional().or(z.literal("")),
   regionId: z.string().optional(),
   districtId: z.string().min(1, "Select a district"),
 });
@@ -71,8 +71,8 @@ export const updateDistrictAdminSchema = z.object({
 
 export const createRegionalAdminSchema = z.object({
   name: personName,
-  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
-  phone: localPhoneSchema,
+  email: z.string().email("Enter a valid email address"),
+  phone: localPhoneSchema.optional().or(z.literal("")),
   regionId: z.string().min(1, "Select a region"),
 });
 
@@ -100,13 +100,21 @@ export const activateAdminConfirmSchema = z.object({
   password: strongPassword,
 });
 
+// One-step activation via the emailed link's token — no separate OTP entry,
+// since receiving the link is itself the proof of identity.
+export const activateAdminLinkSchema = z.object({
+  token: z.string().min(1, "Missing activation token"),
+  password: strongPassword,
+});
+
 // facilityId is optional and only ever honored for the Platform Super Admin
 // tier — a Facility Admin can only ever create staff at their own facility,
 // derived from their session; the route ignores this field entirely for
 // that tier rather than letting a client-supplied value override it.
 export const createStaffSchema = z.object({
   name: personName,
-  phone: localPhoneSchema,
+  email: z.string().email("Enter a valid email address"),
+  phone: localPhoneSchema.optional().or(z.literal("")),
   role: z.enum(["MIDWIFE", "DOCTOR"]),
   licenseNumber: z.string().optional(),
   facilityId: z.string().optional(),

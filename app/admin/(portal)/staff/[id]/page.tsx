@@ -39,6 +39,7 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
           staff={{
             id: staff.id,
             name: staff.name,
+            email: staff.email,
             phone: staff.phone,
             role: staff.role as "MIDWIFE" | "DOCTOR",
             facilityId: staff.facilityId,

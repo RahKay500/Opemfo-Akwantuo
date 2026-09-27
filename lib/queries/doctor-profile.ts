@@ -3,7 +3,7 @@ import { averageDurationLabel } from "@/lib/referral-metrics";
 
 export interface DoctorProfileData {
   name: string;
-  phone: string;
+  phone: string | null;
   facilityName: string;
   facilityRegion: string;
   specialty: string | null;

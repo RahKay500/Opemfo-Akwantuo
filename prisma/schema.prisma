@@ -91,7 +91,10 @@ enum PostnatalVisitType {
 model User {
   id               String    @id @default(cuid())
   name             String
-  phone            String    @unique
+  // Required for Mothers (set by the registering midwife); optional for
+  // staff, who now register with email as their mandatory identifier
+  // instead (see the `email` field below).
+  phone            String?   @unique
   passwordHash     String?
   role             Role
   facilityId       String?
@@ -105,7 +108,10 @@ model User {
   licenseNumber    String?
   dateOfBirth      DateTime?
   gender           Gender?
-  email            String?
+  // Required for staff (their mandatory login identifier); optional for
+  // Mothers. @unique is safe for Mothers leaving it null — Postgres allows
+  // any number of NULLs under a unique constraint.
+  email            String?   @unique
   // Doctor's professional title, e.g. "Consultant Gynaecologist &
   // Obstetrician" — free text, shown under their name on Profile.
   specialty        String?

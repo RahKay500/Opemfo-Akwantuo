@@ -1,11 +1,10 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin, signAdminActivationToken } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { normalizeGhanaPhone } from "@/lib/utils";
 import { createDistrictAdminSchema } from "@/lib/validations/admin";
-import { generateOtp } from "@/lib/auth";
-import { sendAdminActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
+import { sendAdminActivationEmail, isEmailUnconfigured } from "@/lib/email";
 
 // The Platform Super Admin can list/create District Admins anywhere; a
 // Regional Admin can too, but only within their own region.
@@ -54,14 +53,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const phone = normalizeGhanaPhone(parsed.data.phone);
-  if (!phone) {
+  const email = parsed.data.email.trim().toLowerCase();
+  const phone = parsed.data.phone ? normalizeGhanaPhone(parsed.data.phone) : null;
+  if (parsed.data.phone && !phone) {
     return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
   }
 
-  const existing = await prisma.superAdmin.findUnique({ where: { phone } });
-  if (existing) {
-    return NextResponse.json({ success: false, error: "This phone number is already registered." }, { status: 409 });
+  const existingEmail = await prisma.superAdmin.findUnique({ where: { email } });
+  if (existingEmail) {
+    return NextResponse.json({ success: false, error: "This email is already registered." }, { status: 409 });
+  }
+  if (phone) {
+    const existingPhone = await prisma.superAdmin.findUnique({ where: { phone } });
+    if (existingPhone) {
+      return NextResponse.json({ success: false, error: "This phone number is already registered." }, { status: 409 });
+    }
   }
 
   const district = await prisma.district.findUnique({
@@ -77,18 +83,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Selected district is not available." }, { status: 400 });
   }
 
-  const otp = generateOtp();
-  const otpExpiry = new Date(Date.now() + 10 * 60_000);
-
   const admin = await prisma.superAdmin.create({
     data: {
       name: parsed.data.name,
-      email: parsed.data.email || undefined,
+      email,
       phone,
       districtId: district.id,
       isActive: false,
-      otp,
-      otpExpiry,
     },
   });
 
@@ -101,10 +102,12 @@ export async function POST(request: NextRequest) {
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 
-  await sendAdminActivationSms(phone, otp, "District Admin", `${district.name}, ${district.region.name}`);
+  const activationToken = await signAdminActivationToken(admin.id);
+  const link = `${request.nextUrl.origin}/admin/activate/link?token=${activationToken}`;
+  await sendAdminActivationEmail(email, link, "District Admin", `${district.name}, ${district.region.name}`);
 
   return NextResponse.json({
     success: true,
-    data: { id: admin.id, phone, ...(isSmsUnconfigured() ? { devOtp: otp } : {}) },
+    data: { id: admin.id, email, ...(isEmailUnconfigured() ? { devLink: link } : {}) },
   });
 }

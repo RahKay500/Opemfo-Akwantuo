@@ -10,7 +10,8 @@ import { deriveStaffStatus } from "@/lib/staff-status";
 export interface StaffRow {
   id: string;
   name: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   role: "MIDWIFE" | "DOCTOR";
   isActive: boolean;
   hasPassword: boolean;
@@ -28,7 +29,12 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
       if (roleFilter !== "All" && s.role !== roleFilter) return false;
       if (query) {
         const q = query.toLowerCase();
-        if (!s.name.toLowerCase().includes(q) && !s.phone.includes(query)) return false;
+        if (
+          !s.name.toLowerCase().includes(q) &&
+          !(s.email ?? "").toLowerCase().includes(q) &&
+          !(s.phone ?? "").includes(query)
+        )
+          return false;
       }
       return true;
     });
@@ -36,7 +42,8 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
 
   const columns: DataTableColumn<StaffRow>[] = [
     { key: "name", header: "Name", render: (r) => r.name },
-    { key: "phone", header: "Phone", render: (r) => r.phone },
+    { key: "email", header: "Email", render: (r) => r.email ?? "—" },
+    { key: "phone", header: "Phone", render: (r) => r.phone ?? "—" },
     { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife/Nurse" : "Doctor") },
     {
       key: "status",

@@ -56,6 +56,7 @@ export default async function AdminStaffPage({
           staff={staff.map((s) => ({
             id: s.id,
             name: s.name,
+            email: s.email,
             phone: s.phone,
             role: s.role as "MIDWIFE" | "DOCTOR",
             isActive: s.isActive,

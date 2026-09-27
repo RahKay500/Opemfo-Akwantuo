@@ -30,8 +30,12 @@ export const localPhoneSchema = z
     message: "Enter a valid Ghana phone number, e.g. 024 123 4567",
   });
 
+// "identifier" rather than "phone" — Mothers log in with their phone,
+// but staff (Midwife/Doctor) now register with email as their mandatory
+// identifier instead, so this accepts either (the route branches on "@",
+// same pattern as the admin portal's checkAdminCredentials).
 export const loginSchema = z.object({
-  phone: ghanaPhone,
+  identifier: z.string().min(1, "Enter your phone number or email"),
   password: z.string().min(8),
 });
 

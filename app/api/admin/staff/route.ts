@@ -4,8 +4,8 @@ import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { normalizeGhanaPhone } from "@/lib/utils";
 import { createStaffSchema } from "@/lib/validations/admin";
-import { generateOtp } from "@/lib/auth";
-import { sendStaffActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
+import { signSetupToken } from "@/lib/auth";
+import { sendStaffActivationEmail, isEmailUnconfigured } from "@/lib/email";
 
 // A Facility Admin manages their own facility's staff (session.facilityId).
 // The Platform Super Admin (facilityId: null) doesn't manage staff day to
@@ -78,14 +78,21 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Select a facility." }, { status: 400 });
   }
 
-  const phone = normalizeGhanaPhone(parsed.data.phone);
-  if (!phone) {
+  const email = parsed.data.email.trim().toLowerCase();
+  const phone = parsed.data.phone ? normalizeGhanaPhone(parsed.data.phone) : null;
+  if (parsed.data.phone && !phone) {
     return NextResponse.json({ success: false, error: "Invalid phone number." }, { status: 400 });
   }
 
-  const existing = await prisma.user.findUnique({ where: { phone } });
-  if (existing) {
-    return NextResponse.json({ success: false, error: "This phone number is already registered." }, { status: 409 });
+  const existingEmail = await prisma.user.findUnique({ where: { email } });
+  if (existingEmail) {
+    return NextResponse.json({ success: false, error: "This email is already registered." }, { status: 409 });
+  }
+  if (phone) {
+    const existingPhone = await prisma.user.findUnique({ where: { phone } });
+    if (existingPhone) {
+      return NextResponse.json({ success: false, error: "This phone number is already registered." }, { status: 409 });
+    }
   }
 
   const facility = await prisma.facility.findUnique({ where: { id: facilityId } });
@@ -93,22 +100,15 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Selected facility is not available." }, { status: 400 });
   }
 
-  // Plaintext, matching the existing OTP verify flow's comparison (User.otp is
-  // compared directly, not hashed) — the mobile app's activation flow needs
-  // to read the same value back.
-  const otp = generateOtp();
-  const otpExpiry = new Date(Date.now() + 10 * 60_000);
-
   const staff = await prisma.user.create({
     data: {
       name: parsed.data.name,
+      email,
       phone,
       role: parsed.data.role,
       facilityId: facility.id,
       licenseNumber: parsed.data.licenseNumber || null,
       isActive: false,
-      otp,
-      otpExpiry,
     },
   });
 
@@ -122,10 +122,12 @@ export async function POST(request: NextRequest) {
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 
-  await sendStaffActivationSms(phone, otp);
+  const setupToken = await signSetupToken(staff.id, "48h");
+  const link = `${request.nextUrl.origin}/set-password?token=${setupToken}`;
+  await sendStaffActivationEmail(email, link, staff.role === "DOCTOR" ? "Doctor" : "Midwife");
 
   return NextResponse.json({
     success: true,
-    data: { id: staff.id, phone, ...(isSmsUnconfigured() ? { devOtp: otp } : {}) },
+    data: { id: staff.id, email, ...(isEmailUnconfigured() ? { devLink: link } : {}) },
   });
 }

@@ -10,7 +10,8 @@ import Avatar from "@/components/ui/Avatar";
 export interface StaffDirectoryRow {
   id: string;
   name: string;
-  phone: string;
+  email: string | null;
+  phone: string | null;
   role: "MIDWIFE" | "DOCTOR";
   facilityName: string;
   isActive: boolean;
@@ -31,7 +32,8 @@ export default function StaffDirectoryClient({ staff }: { staff: StaffDirectoryR
       return (
         s.name.toLowerCase().includes(q) ||
         s.facilityName.toLowerCase().includes(q) ||
-        s.phone.includes(query)
+        (s.email ?? "").toLowerCase().includes(q) ||
+        (s.phone ?? "").includes(query)
       );
     });
   }, [staff, query]);
@@ -49,7 +51,7 @@ export default function StaffDirectoryClient({ staff }: { staff: StaffDirectoryR
     },
     { key: "role", header: "Role", render: (r) => ROLE_LABELS[r.role] },
     { key: "facility", header: "Facility", render: (r) => r.facilityName },
-    { key: "phone", header: "Phone", render: (r) => r.phone },
+    { key: "phone", header: "Phone", render: (r) => r.phone ?? "—" },
     {
       key: "status",
       header: "Status",

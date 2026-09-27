@@ -67,11 +67,11 @@ export interface SetupTokenPayload {
   purpose: "set-password";
 }
 
-export async function signSetupToken(userId: string): Promise<string> {
+export async function signSetupToken(userId: string, expiry: string = "10m"): Promise<string> {
   return new SignJWT({ userId, purpose: "set-password" })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("10m")
+    .setExpirationTime(expiry)
     .sign(ACCESS_SECRET);
 }
 

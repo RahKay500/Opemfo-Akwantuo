@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { comparePassword, signAccessToken, signRefreshToken, setAuthCookies } from "@/lib/auth";
 import { loginSchema } from "@/lib/validations/auth";
+import { normalizeGhanaPhone } from "@/lib/utils";
 import { logAudit } from "@/lib/audit";
 
 export async function POST(request: NextRequest) {
@@ -11,16 +12,23 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const { phone, password } = parsed.data;
-  const user = await prisma.user.findUnique({ where: { phone } });
+  const { identifier, password } = parsed.data;
+  // Mothers log in by phone; staff (Midwife/Doctor) by email — same "@"
+  // branch the admin portal's checkAdminCredentials already uses.
+  const user = identifier.includes("@")
+    ? await prisma.user.findUnique({ where: { email: identifier.trim().toLowerCase() } })
+    : await (async () => {
+        const phone = normalizeGhanaPhone(identifier);
+        return phone ? prisma.user.findUnique({ where: { phone } }) : null;
+      })();
 
   if (!user || !user.passwordHash || !user.isActive) {
-    return NextResponse.json({ error: "Invalid phone number or password." }, { status: 401 });
+    return NextResponse.json({ error: "Invalid phone/email or password." }, { status: 401 });
   }
 
   const valid = await comparePassword(password, user.passwordHash);
   if (!valid) {
-    return NextResponse.json({ error: "Invalid phone number or password." }, { status: 401 });
+    return NextResponse.json({ error: "Invalid phone/email or password." }, { status: 401 });
   }
 
   const tokenPayload = { userId: user.id, role: user.role, facilityId: user.facilityId };

@@ -26,6 +26,7 @@ export default async function AdminStaffDirectoryPage() {
           staff={staff.map((s) => ({
             id: s.id,
             name: s.name,
+            email: s.email,
             phone: s.phone,
             role: s.role as "MIDWIFE" | "DOCTOR",
             facilityName: s.facility?.name ?? "—",

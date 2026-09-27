@@ -2,8 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getAdminSessionFromRequest } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
-import { generateOtp } from "@/lib/auth";
+import { generateOtp, signSetupToken } from "@/lib/auth";
 import { sendStaffActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
+import { sendStaffActivationEmail, isEmailUnconfigured } from "@/lib/email";
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
@@ -19,12 +20,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     return NextResponse.json({ success: false, error: "Account is already active." }, { status: 400 });
   }
 
-  const otp = generateOtp();
-  const otpExpiry = new Date(Date.now() + 10 * 60_000);
-  await prisma.user.update({ where: { id: staff.id }, data: { otp, otpExpiry } });
-
-  await sendStaffActivationSms(staff.phone, otp);
-
   await logAudit({
     actorLabel: "Super Admin",
     facilityId: session.facilityId,
@@ -33,6 +28,24 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     entityId: staff.id,
     ipAddress: request.headers.get("x-forwarded-for"),
   });
+
+  // Email is the mandatory identifier for every staff account created after
+  // this activation flow was introduced — prefer it. Only accounts created
+  // before then (phone-only, no email) fall back to the original SMS-OTP path.
+  if (staff.email) {
+    const setupToken = await signSetupToken(staff.id, "48h");
+    const link = `${request.nextUrl.origin}/set-password?token=${setupToken}`;
+    await sendStaffActivationEmail(staff.email, link, staff.role === "DOCTOR" ? "Doctor" : "Midwife");
+    return NextResponse.json({
+      success: true,
+      data: { email: staff.email, ...(isEmailUnconfigured() ? { devLink: link } : {}) },
+    });
+  }
+
+  const otp = generateOtp();
+  const otpExpiry = new Date(Date.now() + 10 * 60_000);
+  await prisma.user.update({ where: { id: staff.id }, data: { otp, otpExpiry } });
+  await sendStaffActivationSms(staff.phone!, otp);
 
   return NextResponse.json({
     success: true,
