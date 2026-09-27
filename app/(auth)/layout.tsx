@@ -16,17 +16,17 @@ export default function AuthLayout({ children }: Readonly<{ children: React.Reac
           fill
           priority
           sizes="50vw"
-          className="object-cover object-[center_25%]"
+          className="object-cover object-[68%_25%]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-lilac-deeper/55 via-lilac-deeper/45 to-[#3a0f42]/80" />
 
-        <div className="relative z-10 ml-[16%] w-fit text-center">
+        <div className="relative z-10 ml-[32%] w-fit text-center">
           <div className="mx-auto flex size-14 items-center justify-center rounded-badge bg-white">
             <Image src="/images/logo.png" alt="" width={40} height={40} />
           </div>
           <p className="mt-5 font-heading text-2xl font-bold text-white drop-shadow-md">Ɔpemfoɔ Akwantuo</p>
         </div>
-        <div className="relative z-10 ml-[16%] flex w-fit flex-col items-start gap-4">
+        <div className="relative z-10 ml-[32%] flex w-fit flex-col items-start gap-4">
           {FEATURES.map((f) => (
             <div key={f} className="flex items-center gap-3">
               <span className="flex size-6 shrink-0 items-center justify-center rounded-badge bg-white/25 backdrop-blur-sm">
