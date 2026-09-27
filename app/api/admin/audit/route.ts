@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
+import { getVisibleFacilityIds } from "@/lib/current-admin";
 import { logAudit } from "@/lib/audit";
 import type { Prisma } from "@prisma/client";
 
@@ -17,10 +18,12 @@ export async function GET(request: NextRequest) {
   const page = Math.max(1, Number(searchParams.get("page") ?? "1"));
   const pageSize = 20;
 
+  const visibleFacilityIds = await getVisibleFacilityIds(session);
   const where: Prisma.AuditLogWhereInput = {
-    // A Facility Admin only ever sees their own facility's staff-related
-    // entries; the Platform Super Admin (facilityId null) sees everything.
-    ...(session.facilityId !== null ? { facilityId: session.facilityId } : {}),
+    // A Facility/District/Regional Admin only ever sees entries scoped to
+    // their jurisdiction's facilities; the Platform Super Admin sees
+    // everything.
+    ...(isPlatformAdmin(session) ? {} : { facilityId: { in: visibleFacilityIds ?? [] } }),
     ...(action ? { action } : {}),
     ...(from || to
       ? {
@@ -73,8 +76,10 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Not authenticated." }, { status: 401 });
   }
 
-  const where: Prisma.AuditLogWhereInput =
-    session.facilityId !== null ? { facilityId: session.facilityId } : {};
+  const visibleFacilityIds = await getVisibleFacilityIds(session);
+  const where: Prisma.AuditLogWhereInput = isPlatformAdmin(session)
+    ? {}
+    : { facilityId: { in: visibleFacilityIds ?? [] } };
 
   const { count } = await prisma.auditLog.deleteMany({ where });
 

@@ -21,8 +21,7 @@ export const recoverAdminSchema = z.object({
 export const createFacilitySchema = z.object({
   name: z.string().min(2, "Enter a facility name"),
   type: z.enum(["CHPS", "HEALTH_CENTRE", "DISTRICT_HOSPITAL", "REGIONAL_HOSPITAL", "TEACHING_HOSPITAL"]),
-  region: z.string().min(2, "Enter a region"),
-  district: z.string().min(2, "Enter a district"),
+  districtId: z.string().min(1, "Select a district"),
   phone: z.string().optional(),
   openedAt: z.string().optional(),
 });
@@ -30,8 +29,7 @@ export const createFacilitySchema = z.object({
 export const updateFacilitySchema = z.object({
   name: z.string().min(2).optional(),
   type: z.enum(["CHPS", "HEALTH_CENTRE", "DISTRICT_HOSPITAL", "REGIONAL_HOSPITAL", "TEACHING_HOSPITAL"]).optional(),
-  region: z.string().min(2).optional(),
-  district: z.string().min(2).optional(),
+  districtId: z.string().min(1).optional(),
   phone: z.string().optional(),
   isActive: z.boolean().optional(),
   openedAt: z.string().optional(),
@@ -48,6 +46,40 @@ export const updateFacilityAdminSchema = z.object({
   name: personName.optional(),
   email: z.string().email().optional().or(z.literal("")),
   facilityId: z.string().min(1).optional(),
+  isActive: z.boolean().optional(),
+});
+
+// regionId is optional and only ever honored for the Platform Super Admin
+// tier — a Regional Admin can only ever create District Admins within their
+// own region, derived from their session; the route ignores this field
+// entirely for that tier rather than letting a client-supplied value
+// override it (same convention as createStaffSchema's facilityId below).
+export const createDistrictAdminSchema = z.object({
+  name: personName,
+  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
+  phone: localPhoneSchema,
+  regionId: z.string().optional(),
+  districtId: z.string().min(1, "Select a district"),
+});
+
+export const updateDistrictAdminSchema = z.object({
+  name: personName.optional(),
+  email: z.string().email().optional().or(z.literal("")),
+  districtId: z.string().min(1).optional(),
+  isActive: z.boolean().optional(),
+});
+
+export const createRegionalAdminSchema = z.object({
+  name: personName,
+  email: z.string().email("Enter a valid email").optional().or(z.literal("")),
+  phone: localPhoneSchema,
+  regionId: z.string().min(1, "Select a region"),
+});
+
+export const updateRegionalAdminSchema = z.object({
+  name: personName.optional(),
+  email: z.string().email().optional().or(z.literal("")),
+  regionId: z.string().min(1).optional(),
   isActive: z.boolean().optional(),
 });
 

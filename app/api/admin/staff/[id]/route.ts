@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { updateStaffSchema } from "@/lib/validations/admin";
 import { countPatientsRegisteredBy, deleteStaffCascade } from "@/lib/staff-cascade-delete";
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   if (
     !staff ||
     (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") ||
-    (session.facilityId !== null && staff.facilityId !== session.facilityId)
+    (!isPlatformAdmin(session) && staff.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
@@ -75,7 +75,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   if (
     !existing ||
     (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
-    (session.facilityId !== null && existing.facilityId !== session.facilityId)
+    (!isPlatformAdmin(session) && existing.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
@@ -119,7 +119,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   if (
     !existing ||
     (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
-    (session.facilityId !== null && existing.facilityId !== session.facilityId)
+    (!isPlatformAdmin(session) && existing.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }

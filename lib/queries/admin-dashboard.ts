@@ -1,11 +1,22 @@
 import { prisma } from "@/lib/prisma";
 import type { FacilityType, Role } from "@prisma/client";
+import { isPlatformAdmin, type AdminSessionPayload } from "@/lib/admin-auth";
+import { getVisibleFacilityIds } from "@/lib/current-admin";
 
 export interface AdminDashboardData {
-  // Populated for the Platform Super Admin tier only (facilityId: null).
+  // Populated for the Platform Super Admin tier only.
   platform: PlatformDashboardData | null;
-  // Populated for the Facility Admin tier only (facilityId: set).
+  // Populated for the Facility Admin tier only.
   facility: FacilityAdminDashboardData | null;
+  // Populated for the Regional/District Admin tiers only — a lighter
+  // jurisdiction-scoped summary, not the full platform analytics view.
+  jurisdiction: JurisdictionDashboardData | null;
+}
+
+export interface JurisdictionDashboardData {
+  facilityCount: number;
+  registeredPatients: number;
+  activeStaff: number;
 }
 
 export interface PlatformDashboardData {
@@ -38,6 +49,14 @@ export interface FacilityAdminDashboardData {
   pendingReferrals: number;
   staff: { id: string; name: string; role: Role; isActive: boolean }[];
   facilityInfo: { type: FacilityType; district: string; region: string; openedAt: Date | null };
+}
+
+async function getJurisdictionDashboardData(facilityIds: string[]): Promise<JurisdictionDashboardData> {
+  const [registeredPatients, activeStaff] = await Promise.all([
+    prisma.patient.count({ where: { facilityId: { in: facilityIds } } }),
+    prisma.user.count({ where: { role: { in: ["MIDWIFE", "DOCTOR"] }, isActive: true, facilityId: { in: facilityIds } } }),
+  ]);
+  return { facilityCount: facilityIds.length, registeredPatients, activeStaff };
 }
 
 const MONTH_LABELS = [
@@ -120,7 +139,12 @@ async function getFacilityAdminDashboardData(facilityId: string): Promise<Facili
     await Promise.all([
       prisma.facility.findUnique({
         where: { id: facilityId },
-        select: { name: true, type: true, district: true, region: true, openedAt: true },
+        select: {
+          name: true,
+          type: true,
+          openedAt: true,
+          district: { select: { name: true, region: { select: { name: true } } } },
+        },
       }),
       prisma.user.count({ where: staffWhere }),
       prisma.user.count({ where: { ...staffWhere, isActive: true } }),
@@ -149,20 +173,27 @@ async function getFacilityAdminDashboardData(facilityId: string): Promise<Facili
     staff,
     facilityInfo: {
       type: facility.type,
-      district: facility.district,
-      region: facility.region,
+      district: facility.district.name,
+      region: facility.district.region.name,
       openedAt: facility.openedAt,
     },
   };
 }
 
-// facilityId null = Platform Super Admin (platform-wide stats); set = a
-// Facility Admin, scoped to just their own facility's staff and patients.
-export async function getAdminDashboardData(facilityId: string | null): Promise<AdminDashboardData> {
-  const [platform, facility] = await Promise.all([
-    facilityId ? Promise.resolve(null) : getPlatformDashboardData(),
-    facilityId ? getFacilityAdminDashboardData(facilityId) : Promise.resolve(null),
-  ]);
+export async function getAdminDashboardData(session: AdminSessionPayload): Promise<AdminDashboardData> {
+  if (session.facilityId !== null) {
+    const facility = await getFacilityAdminDashboardData(session.facilityId);
+    return { platform: null, facility, jurisdiction: null };
+  }
 
-  return { platform, facility };
+  if (isPlatformAdmin(session)) {
+    const platform = await getPlatformDashboardData();
+    return { platform, facility: null, jurisdiction: null };
+  }
+
+  // Regional or District Admin — a lighter jurisdiction-scoped summary
+  // rather than the full platform-wide analytics view above.
+  const facilityIds = await getVisibleFacilityIds(session);
+  const jurisdiction = await getJurisdictionDashboardData(facilityIds ?? []);
+  return { platform: null, facility: null, jurisdiction };
 }

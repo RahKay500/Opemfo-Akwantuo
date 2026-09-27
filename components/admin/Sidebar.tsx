@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { getAdminNavItems } from "@/lib/admin-nav";
+import { isPlatformAdmin, type AdminScope } from "@/lib/admin-auth";
 
 export interface SidebarAdmin {
   name: string | null;
@@ -11,10 +12,10 @@ export interface SidebarAdmin {
   region: string | null;
 }
 
-export default function Sidebar({ facilityId, admin }: { facilityId: string | null; admin: SidebarAdmin }) {
+export default function Sidebar({ scope, admin }: { scope: AdminScope; admin: SidebarAdmin }) {
   const pathname = usePathname();
-  const navItems = getAdminNavItems(facilityId);
-  const isPlatform = facilityId === null;
+  const navItems = getAdminNavItems(scope);
+  const isPlatform = isPlatformAdmin(scope);
   // Platform Super Admin's accent is pulled from the shared design system's
   // own brand ramp (brand-700) rather than an unrelated raw hex, so it reads
   // as a deliberate variation on this app's identity, not a bolted-on tool.

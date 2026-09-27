@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
+import { seedRegionsAndDistricts } from "./seed-regions";
 
 const prisma = new PrismaClient();
 
@@ -9,13 +10,24 @@ const prisma = new PrismaClient();
 // document itself uses, so seeded data exercises the new MCH fields with
 // realistic values instead of arbitrary placeholders.
 
+// Looks up a seeded District by name+region (seedRegionsAndDistricts must
+// run first) rather than hardcoding ids, so this file stays readable with
+// plain region/district names the way it always has.
+async function districtId(regionName: string, districtName: string): Promise<string> {
+  const district = await prisma.district.findFirstOrThrow({
+    where: { name: districtName, region: { name: regionName } },
+  });
+  return district.id;
+}
+
 async function main() {
+  await seedRegionsAndDistricts();
+
   const chps = await prisma.facility.create({
     data: {
       name: "Kintampo CHPS Compound",
       type: "CHPS",
-      region: "Bono East",
-      district: "Kintampo North Municipal",
+      districtId: await districtId("Bono East", "Kintampo North Municipal"),
       phone: "+233352091234",
     },
   });
@@ -24,8 +36,7 @@ async function main() {
     data: {
       name: "Kintampo Municipal Hospital",
       type: "DISTRICT_HOSPITAL",
-      region: "Bono East",
-      district: "Kintampo North Municipal",
+      districtId: await districtId("Bono East", "Kintampo North Municipal"),
       phone: "+233352092345",
     },
   });
@@ -34,8 +45,7 @@ async function main() {
     data: {
       name: "Korle Bu Teaching Hospital",
       type: "TEACHING_HOSPITAL",
-      region: "Greater Accra",
-      district: "Korle Klottey",
+      districtId: await districtId("Greater Accra", "Korle-Klottey Municipal"),
       phone: "+233302501234",
     },
   });
@@ -44,8 +54,7 @@ async function main() {
     data: {
       name: "Tema General Hospital",
       type: "DISTRICT_HOSPITAL",
-      region: "Greater Accra",
-      district: "Tema Metropolitan",
+      districtId: await districtId("Greater Accra", "Tema Metropolitan"),
       phone: "+233303202345",
     },
   });

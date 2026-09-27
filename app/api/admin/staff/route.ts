@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { normalizeGhanaPhone } from "@/lib/utils";
 import { createStaffSchema } from "@/lib/validations/admin";
@@ -15,6 +15,13 @@ import { sendStaffActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
 export async function GET(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
   if (!session) {
+    return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
+  }
+  // Regional/District Admin staff management isn't built yet — the
+  // session-facilityId-or-explicit-query-param fallback below is only safe
+  // for Platform (unrestricted) or a Facility Admin (session already scopes
+  // it); anyone else would be able to pass an arbitrary facilityId.
+  if (session.facilityId === null && !isPlatformAdmin(session)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
@@ -54,7 +61,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session) {
+  if (!session || (session.facilityId === null && !isPlatformAdmin(session))) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 

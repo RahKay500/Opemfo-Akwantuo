@@ -21,14 +21,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: result.error }, { status: 400 });
   }
 
-  const token = await signAdminToken(result.id, result.facilityId ?? null);
+  const token = await signAdminToken(result.id, {
+    facilityId: result.facilityId ?? null,
+    districtId: result.districtId ?? null,
+    regionId: result.regionId ?? null,
+  });
   const response = NextResponse.json({ success: true });
   setAdminCookie(response, token);
 
+  const tier = result.facilityId ? "Facility" : result.districtId ? "District" : "Regional";
   await logAudit({
-    actorLabel: "Facility Admin",
-    facilityId: result.facilityId,
-    action: "FACILITY_ADMIN_ACTIVATED",
+    actorLabel: `${tier} Admin`,
+    facilityId: result.facilityId ?? null,
+    action: `${tier.toUpperCase()}_ADMIN_ACTIVATED`,
     entityType: "SuperAdmin",
     entityId: result.id,
     ipAddress: request.headers.get("x-forwarded-for"),

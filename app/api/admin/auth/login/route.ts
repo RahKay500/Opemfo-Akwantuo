@@ -15,7 +15,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "Invalid email/phone or password." }, { status: 401 });
   }
 
-  const token = await signAdminToken(admin.id, admin.facilityId);
+  const token = await signAdminToken(admin.id, {
+    facilityId: admin.facilityId,
+    districtId: admin.districtId,
+    regionId: admin.regionId,
+  });
   const response = NextResponse.json({ success: true });
   setAdminCookie(response, token);
 

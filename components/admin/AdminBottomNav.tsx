@@ -4,10 +4,11 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { getAdminNavItems } from "@/lib/admin-nav";
+import type { AdminScope } from "@/lib/admin-auth";
 
-export default function AdminBottomNav({ facilityId }: { facilityId: string | null }) {
+export default function AdminBottomNav({ scope }: { scope: AdminScope }) {
   const pathname = usePathname();
-  const navItems = getAdminNavItems(facilityId);
+  const navItems = getAdminNavItems(scope);
 
   return (
     <nav className="flex h-16 w-full border-t border-[#E2E8F0] bg-white">

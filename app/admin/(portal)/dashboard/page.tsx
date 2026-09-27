@@ -17,25 +17,41 @@ import {
   ReferralArrowIcon,
 } from "@/components/ui/icons";
 import FacilitiesOverviewTable from "./FacilitiesOverviewTable";
-import type { PlatformDashboardData, FacilityAdminDashboardData } from "@/lib/queries/admin-dashboard";
+import type {
+  PlatformDashboardData,
+  FacilityAdminDashboardData,
+  JurisdictionDashboardData,
+} from "@/lib/queries/admin-dashboard";
 
 export default async function AdminDashboardPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
 
-  const data = await getAdminDashboardData(session.facilityId);
-  const isFacilityAdmin = session.facilityId !== null;
+  const data = await getAdminDashboardData(session);
 
   return (
     <>
       <Header title="Dashboard" />
 
       <div className="px-4 py-6 lg:px-8">
-        {isFacilityAdmin
-          ? data.facility && <FacilityAdminDashboard facility={data.facility} />
-          : data.platform && <PlatformDashboard platform={data.platform} />}
+        {data.facility && <FacilityAdminDashboard facility={data.facility} />}
+        {data.platform && <PlatformDashboard platform={data.platform} />}
+        {data.jurisdiction && <JurisdictionDashboard jurisdiction={data.jurisdiction} />}
       </div>
     </>
+  );
+}
+
+// A lighter summary for Regional/District Admins — full facility-level
+// drilldown (staff lists, per-facility patient counts) is a fast follow-up,
+// not needed for the "view access to jurisdiction" requirement itself.
+function JurisdictionDashboard({ jurisdiction }: { jurisdiction: JurisdictionDashboardData }) {
+  return (
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+      <StatsCard label="Facilities" value={jurisdiction.facilityCount} color="purple" icon={NavFacilitiesIcon} />
+      <StatsCard label="Registered Patients" value={jurisdiction.registeredPatients} color="blue" icon={PatientsIcon} />
+      <StatsCard label="Active Staff" value={jurisdiction.activeStaff} color="green" icon={MidwifeIcon} />
+    </div>
   );
 }
 

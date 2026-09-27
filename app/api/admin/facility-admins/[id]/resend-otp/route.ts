@@ -1,21 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { generateOtp } from "@/lib/auth";
 import { sendFacilityAdminActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId !== null) {
+  if (!session || (!isPlatformAdmin(session) && session.districtId === null)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const admin = await prisma.superAdmin.findUnique({
     where: { id: params.id },
-    include: { facility: { select: { name: true } } },
+    include: { facility: { select: { name: true, districtId: true } } },
   });
-  if (!admin || admin.facilityId === null || !admin.phone) {
+  if (
+    !admin ||
+    admin.facilityId === null ||
+    !admin.phone ||
+    (session.districtId !== null && admin.facility?.districtId !== session.districtId)
+  ) {
     return NextResponse.json({ success: false, error: "Facility Admin not found." }, { status: 404 });
   }
   if (admin.isActive) {
@@ -29,7 +34,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   await sendFacilityAdminActivationSms(admin.phone, otp, admin.facility?.name ?? "your facility");
 
   await logAudit({
-    actorLabel: "Super Admin",
+    actorLabel: isPlatformAdmin(session) ? "Super Admin" : "District Admin",
     action: "FACILITY_ADMIN_OTP_RESENT",
     entityType: "SuperAdmin",
     entityId: admin.id,

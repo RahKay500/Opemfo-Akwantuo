@@ -53,6 +53,22 @@ export async function sendFacilityAdminActivationSms(phone: string, otp: string,
   );
 }
 
+// Shared by Regional and District Admin activation — same shape as
+// sendFacilityAdminActivationSms above but parameterized by role label
+// ("Regional Admin"/"District Admin") and jurisdiction name, since neither
+// of those tiers is a "Facility Admin for <facility>".
+export async function sendAdminActivationSms(
+  phone: string,
+  otp: string,
+  roleLabel: string,
+  jurisdictionName: string
+): Promise<void> {
+  await sendSms(
+    phone,
+    `You've been added as the ${roleLabel} for ${jurisdictionName} on Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the admin portal to set your password.`
+  );
+}
+
 // True when there's no real SMS provider wired up, so callers can surface the
 // OTP directly in the API response instead of it going nowhere. Local dev
 // gets this for free. A `next build`/deploy with NODE_ENV=production (true

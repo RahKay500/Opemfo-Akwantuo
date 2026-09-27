@@ -20,13 +20,22 @@ export default async function Header({
   showSearch?: boolean;
 }) {
   const identity = await getCurrentAdminIdentity();
-  const isPlatform = identity?.facilityId === null;
-  const tierLabel = isPlatform ? "Super Admin" : "Facility Admin";
+  // Tier inferred the same way as everywhere else in the admin portal —
+  // facilityId: null alone stopped meaning "Platform" once Regional/District
+  // Admin existed (see isPlatformAdmin's own comment in lib/admin-auth.ts).
+  const isPlatform = identity !== null && identity.facilityId === null && identity.districtId === null && identity.regionId === null;
+  const tierLabel = isPlatform
+    ? "Super Admin"
+    : identity?.regionId !== null && identity?.regionId !== undefined
+      ? "Regional Admin"
+      : identity?.districtId !== null && identity?.districtId !== undefined
+        ? "District Admin"
+        : "Facility Admin";
   // Platform Super Admin's accent is pulled from the shared design system's
   // own brand ramp (brand-700) rather than an unrelated raw hex, so it reads
   // as a deliberate variation on this app's identity, not a bolted-on tool.
   const accent = isPlatform ? "#9F1AB1" : "#2663EB";
-  const displayName = identity?.name?.trim() || (isPlatform ? "System Administrator" : "Facility Administrator");
+  const displayName = identity?.name?.trim() || (isPlatform ? "System Administrator" : "Administrator");
 
   return (
     <div className="flex items-center justify-between gap-4 border-b border-[#E2E8F0] bg-white px-4 py-5 lg:px-8">

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/current-admin";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import StaffDirectoryClient from "./StaffDirectoryClient";
@@ -9,7 +10,7 @@ import StaffDirectoryClient from "./StaffDirectoryClient";
 export default async function AdminStaffDirectoryPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  if (session.facilityId !== null) redirect("/admin/staff");
+  if (!isPlatformAdmin(session)) redirect("/admin/staff");
 
   const staff = await prisma.user.findMany({
     where: { role: { in: ["MIDWIFE", "DOCTOR"] } },

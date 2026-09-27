@@ -6,8 +6,12 @@ export async function getReferralPrintData(referralId: string) {
     where: { id: referralId },
     include: {
       patient: true,
-      fromFacility: { select: { name: true, phone: true, district: true, region: true } },
-      toFacility: { select: { name: true, phone: true, district: true, region: true } },
+      fromFacility: {
+        select: { name: true, phone: true, district: { select: { name: true, region: { select: { name: true } } } } },
+      },
+      toFacility: {
+        select: { name: true, phone: true, district: { select: { name: true, region: { select: { name: true } } } } },
+      },
       initiatedBy: { select: { name: true } },
     },
   });

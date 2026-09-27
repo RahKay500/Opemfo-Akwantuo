@@ -22,7 +22,9 @@ export default async function ReferralPrintPage({ params }: { params: { id: stri
 
   const destinationName = referral.toFacility?.name ?? referral.externalHospitalName ?? "";
   const destinationPhone = referral.toFacility?.phone ?? referral.externalHospitalPhone ?? null;
-  const destinationLocation = referral.toFacility ? `${referral.toFacility.district}, ${referral.toFacility.region}` : null;
+  const destinationLocation = referral.toFacility
+    ? `${referral.toFacility.district.name}, ${referral.toFacility.district.region.name}`
+    : null;
 
   return (
     <div className="mx-auto max-w-2xl px-6 py-10 print:px-0 print:py-0">
@@ -48,7 +50,7 @@ export default async function ReferralPrintPage({ params }: { params: { id: stri
             <p className="font-body text-[11px] font-medium uppercase tracking-wide text-text-secondary">From</p>
             <p className="mt-1 font-body text-sm font-bold text-text-primary">{referral.fromFacility.name}</p>
             <p className="font-body text-xs text-text-secondary">
-              {referral.fromFacility.district}, {referral.fromFacility.region}
+              {referral.fromFacility.district.name}, {referral.fromFacility.district.region.name}
             </p>
             {referral.fromFacility.phone && (
               <p className="font-body text-xs text-text-secondary">{referral.fromFacility.phone}</p>

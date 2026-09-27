@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { broadcastSchema } from "@/lib/validations/admin";
 import { sendAdminBroadcastSms } from "@/lib/hubtel";
@@ -9,7 +9,7 @@ import { sendAdminBroadcastSms } from "@/lib/hubtel";
 // in-app (AdminNotification) and by SMS.
 export async function POST(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId !== null) {
+  if (!session || !isPlatformAdmin(session)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/current-admin";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import AlertsClient from "./AlertsClient";
@@ -10,7 +11,7 @@ import AlertsClient from "./AlertsClient";
 export default async function AdminAlertsPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  if (session.facilityId !== null) redirect("/admin/dashboard");
+  if (!isPlatformAdmin(session)) redirect("/admin/dashboard");
 
   const alerts = await prisma.emergencyAlert.findMany({
     include: {

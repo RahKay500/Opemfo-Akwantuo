@@ -22,7 +22,10 @@ export interface DoctorProfileData {
 }
 
 export async function getDoctorProfileData(userId: string): Promise<DoctorProfileData | null> {
-  const user = await prisma.user.findUnique({ where: { id: userId }, include: { facility: true } });
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { facility: { include: { district: { include: { region: true } } } } },
+  });
   if (!user || !user.facilityId || !user.facility) return null;
 
   const facilityId = user.facilityId;
@@ -54,7 +57,7 @@ export async function getDoctorProfileData(userId: string): Promise<DoctorProfil
     name: user.name,
     phone: user.phone,
     facilityName: user.facility.name,
-    facilityRegion: user.facility.region,
+    facilityRegion: user.facility.district.region.name,
     specialty: user.specialty,
     memberSince: user.createdAt.getFullYear(),
     referralsReviewedCount,

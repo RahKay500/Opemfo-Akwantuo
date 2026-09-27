@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/current-admin";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import { prisma } from "@/lib/prisma";
 import Header from "@/components/admin/Header";
 import ReferralsClient from "./ReferralsClient";
@@ -9,7 +10,7 @@ import ReferralsClient from "./ReferralsClient";
 export default async function AdminReferralsPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  if (session.facilityId !== null) redirect("/admin/dashboard");
+  if (!isPlatformAdmin(session)) redirect("/admin/dashboard");
 
   const referrals = await prisma.referral.findMany({
     include: {

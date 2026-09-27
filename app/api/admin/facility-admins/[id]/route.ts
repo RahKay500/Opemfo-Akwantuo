@@ -1,20 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getAdminSessionFromRequest } from "@/lib/admin-auth";
+import { getAdminSessionFromRequest, isPlatformAdmin, type AdminSessionPayload } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { updateFacilityAdminSchema } from "@/lib/validations/admin";
 
+// A District Admin can only see a Facility Admin whose facility is inside
+// their own district — never trust the id path param alone for scoping.
+function isOutOfJurisdiction(session: AdminSessionPayload, facilityDistrictId: string | null): boolean {
+  return session.districtId !== null && facilityDistrictId !== session.districtId;
+}
+
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId !== null) {
+  if (!session || (!isPlatformAdmin(session) && session.districtId === null)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const admin = await prisma.superAdmin.findUnique({
     where: { id: params.id },
-    include: { facility: { select: { id: true, name: true } } },
+    include: { facility: { select: { id: true, name: true, districtId: true } } },
   });
-  if (!admin || admin.facilityId === null) {
+  if (!admin || admin.facilityId === null || isOutOfJurisdiction(session, admin.facility?.districtId ?? null)) {
     return NextResponse.json({ success: false, error: "Facility Admin not found." }, { status: 404 });
   }
 
@@ -43,7 +49,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId !== null) {
+  if (!session || (!isPlatformAdmin(session) && session.districtId === null)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
@@ -53,14 +59,21 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ success: false, error: parsed.error.flatten() }, { status: 400 });
   }
 
-  const existing = await prisma.superAdmin.findUnique({ where: { id: params.id } });
-  if (!existing || existing.facilityId === null) {
+  const existing = await prisma.superAdmin.findUnique({
+    where: { id: params.id },
+    include: { facility: { select: { districtId: true } } },
+  });
+  if (
+    !existing ||
+    existing.facilityId === null ||
+    isOutOfJurisdiction(session, existing.facility?.districtId ?? null)
+  ) {
     return NextResponse.json({ success: false, error: "Facility Admin not found." }, { status: 404 });
   }
 
   if (parsed.data.facilityId) {
     const facility = await prisma.facility.findUnique({ where: { id: parsed.data.facilityId } });
-    if (!facility || !facility.isActive) {
+    if (!facility || !facility.isActive || isOutOfJurisdiction(session, facility.districtId)) {
       return NextResponse.json({ success: false, error: "Selected facility is not available." }, { status: 400 });
     }
   }
@@ -80,7 +93,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
           : "FACILITY_ADMIN_UPDATED";
 
   await logAudit({
-    actorLabel: "Super Admin",
+    actorLabel: isPlatformAdmin(session) ? "Super Admin" : "District Admin",
     action,
     entityType: "SuperAdmin",
     entityId: admin.id,
@@ -98,12 +111,19 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 // keyed to this account's id and would otherwise be orphaned.
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || session.facilityId !== null) {
+  if (!session || (!isPlatformAdmin(session) && session.districtId === null)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
-  const existing = await prisma.superAdmin.findUnique({ where: { id: params.id } });
-  if (!existing || existing.facilityId === null) {
+  const existing = await prisma.superAdmin.findUnique({
+    where: { id: params.id },
+    include: { facility: { select: { districtId: true } } },
+  });
+  if (
+    !existing ||
+    existing.facilityId === null ||
+    isOutOfJurisdiction(session, existing.facility?.districtId ?? null)
+  ) {
     return NextResponse.json({ success: false, error: "Facility Admin not found." }, { status: 404 });
   }
 
@@ -111,7 +131,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   await prisma.superAdmin.delete({ where: { id: params.id } });
 
   await logAudit({
-    actorLabel: "Super Admin",
+    actorLabel: isPlatformAdmin(session) ? "Super Admin" : "District Admin",
     action: "FACILITY_ADMIN_DELETED",
     entityType: "SuperAdmin",
     entityId: params.id,

@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAdminSession } from "@/lib/current-admin";
+import { isPlatformAdmin } from "@/lib/admin-auth";
 import Header from "@/components/admin/Header";
 import BroadcastForm from "./BroadcastForm";
 
@@ -8,7 +9,7 @@ import BroadcastForm from "./BroadcastForm";
 export default async function AdminBroadcastPage() {
   const session = await getAdminSession();
   if (!session) redirect("/admin/login");
-  if (session.facilityId !== null) redirect("/admin/dashboard");
+  if (!isPlatformAdmin(session)) redirect("/admin/dashboard");
 
   return (
     <>

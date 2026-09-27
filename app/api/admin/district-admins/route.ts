@@ -3,26 +3,25 @@ import { prisma } from "@/lib/prisma";
 import { getAdminSessionFromRequest, isPlatformAdmin } from "@/lib/admin-auth";
 import { logAudit } from "@/lib/audit";
 import { normalizeGhanaPhone } from "@/lib/utils";
-import { createFacilityAdminSchema } from "@/lib/validations/admin";
+import { createDistrictAdminSchema } from "@/lib/validations/admin";
 import { generateOtp } from "@/lib/auth";
-import { sendFacilityAdminActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
+import { sendAdminActivationSms, isSmsUnconfigured } from "@/lib/hubtel";
 
-// The Platform Super Admin can list/create Facility Admins anywhere; a
-// District Admin can too, but only within their own district. A Facility
-// Admin has no visibility into other facilities' admins.
+// The Platform Super Admin can list/create District Admins anywhere; a
+// Regional Admin can too, but only within their own region.
 export async function GET(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || (!isPlatformAdmin(session) && session.districtId === null)) {
+  if (!session || (!isPlatformAdmin(session) && session.regionId === null)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const admins = await prisma.superAdmin.findMany({
     where: {
-      facilityId: { not: null },
-      ...(session.districtId !== null ? { facility: { districtId: session.districtId } } : {}),
+      districtId: { not: null },
+      ...(session.regionId !== null ? { districtScope: { regionId: session.regionId } } : {}),
     },
     orderBy: { createdAt: "desc" },
-    include: { facility: { select: { name: true } } },
+    include: { districtScope: { select: { name: true, region: { select: { name: true } } } } },
   });
 
   return NextResponse.json({
@@ -32,8 +31,9 @@ export async function GET(request: NextRequest) {
       name: a.name,
       email: a.email,
       phone: a.phone,
-      facilityId: a.facilityId,
-      facilityName: a.facility?.name ?? null,
+      districtId: a.districtId,
+      districtName: a.districtScope?.name ?? null,
+      regionName: a.districtScope?.region.name ?? null,
       isActive: a.isActive,
       hasPassword: Boolean(a.passwordHash),
       createdAt: a.createdAt,
@@ -44,12 +44,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await getAdminSessionFromRequest(request);
-  if (!session || (!isPlatformAdmin(session) && session.districtId === null)) {
+  if (!session || (!isPlatformAdmin(session) && session.regionId === null)) {
     return NextResponse.json({ success: false, error: "Not authorized." }, { status: 403 });
   }
 
   const body = await request.json().catch(() => null);
-  const parsed = createFacilityAdminSchema.safeParse(body);
+  const parsed = createDistrictAdminSchema.safeParse(body);
   if (!parsed.success) {
     return NextResponse.json({ success: false, error: parsed.error.flatten() }, { status: 400 });
   }
@@ -64,14 +64,17 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: false, error: "This phone number is already registered." }, { status: 409 });
   }
 
-  const facility = await prisma.facility.findUnique({ where: { id: parsed.data.facilityId } });
-  if (!facility || !facility.isActive) {
-    return NextResponse.json({ success: false, error: "Selected facility is not available." }, { status: 400 });
+  const district = await prisma.district.findUnique({
+    where: { id: parsed.data.districtId },
+    include: { region: { select: { id: true, name: true } } },
+  });
+  if (!district) {
+    return NextResponse.json({ success: false, error: "Selected district is not available." }, { status: 400 });
   }
-  // A District Admin can only create Facility Admins for a facility inside
-  // their own district — never trust the client-supplied facilityId alone.
-  if (session.districtId !== null && facility.districtId !== session.districtId) {
-    return NextResponse.json({ success: false, error: "Selected facility is not available." }, { status: 400 });
+  // A Regional Admin can only create District Admins within their own
+  // region — never trust the client-supplied districtId's region alone.
+  if (session.regionId !== null && district.regionId !== session.regionId) {
+    return NextResponse.json({ success: false, error: "Selected district is not available." }, { status: 400 });
   }
 
   const otp = generateOtp();
@@ -82,7 +85,7 @@ export async function POST(request: NextRequest) {
       name: parsed.data.name,
       email: parsed.data.email || undefined,
       phone,
-      facilityId: facility.id,
+      districtId: district.id,
       isActive: false,
       otp,
       otpExpiry,
@@ -90,15 +93,15 @@ export async function POST(request: NextRequest) {
   });
 
   await logAudit({
-    actorLabel: isPlatformAdmin(session) ? "Super Admin" : "District Admin",
-    action: "FACILITY_ADMIN_CREATED",
+    actorLabel: isPlatformAdmin(session) ? "Super Admin" : "Regional Admin",
+    action: "DISTRICT_ADMIN_CREATED",
     entityType: "SuperAdmin",
     entityId: admin.id,
-    metadata: { facilityId: facility.id },
+    metadata: { districtId: district.id },
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 
-  await sendFacilityAdminActivationSms(phone, otp, facility.name);
+  await sendAdminActivationSms(phone, otp, "District Admin", `${district.name}, ${district.region.name}`);
 
   return NextResponse.json({
     success: true,

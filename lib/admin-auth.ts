@@ -18,13 +18,28 @@ export const ADMIN_COOKIE_NAME = "admin_session";
 const ADMIN_SESSION_EXPIRY = "8h";
 const ADMIN_SESSION_MAX_AGE = 8 * 60 * 60;
 
-export interface AdminSessionPayload {
-  sub: string; // SuperAdmin.id
-  facilityId: string | null; // null = Platform Super Admin; set = Facility Admin
+// Tier is inferred from which one of these is set (none set = Platform
+// Super Admin) — mirrors SuperAdmin's own nullable-FK-as-tier-discriminator
+// columns (regionId/districtId/facilityId).
+export interface AdminScope {
+  facilityId: string | null;
+  districtId: string | null;
+  regionId: string | null;
 }
 
-export async function signAdminToken(adminId: string, facilityId: string | null): Promise<string> {
-  return new SignJWT({ sub: adminId, facilityId })
+export interface AdminSessionPayload extends AdminScope {
+  sub: string; // SuperAdmin.id
+}
+
+// The Platform Super Admin is the only tier with none of the three scope
+// fields set — checking facilityId alone (the old 2-tier check) now wrongly
+// includes Regional/District Admins, who also have facilityId: null.
+export function isPlatformAdmin(scope: AdminScope): boolean {
+  return scope.facilityId === null && scope.districtId === null && scope.regionId === null;
+}
+
+export async function signAdminToken(adminId: string, scope: AdminScope): Promise<string> {
+  return new SignJWT({ sub: adminId, ...scope })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(ADMIN_SESSION_EXPIRY)
@@ -36,8 +51,10 @@ export async function verifyAdminToken(token: string): Promise<AdminSessionPaylo
   if (typeof payload.sub !== "string" || !payload.sub) {
     throw new Error("Invalid admin token");
   }
-  if (payload.facilityId !== null && typeof payload.facilityId !== "string") {
-    throw new Error("Invalid admin token");
+  for (const key of ["facilityId", "districtId", "regionId"] as const) {
+    if (payload[key] !== null && typeof payload[key] !== "string") {
+      throw new Error("Invalid admin token");
+    }
   }
   return payload as unknown as AdminSessionPayload;
 }
@@ -69,7 +86,7 @@ async function ensureSuperAdminBootstrapped(): Promise<void> {
 export async function checkAdminCredentials(
   identifier: string,
   password: string
-): Promise<{ id: string; facilityId: string | null } | null> {
+): Promise<({ id: string } & AdminScope) | null> {
   await ensureSuperAdminBootstrapped();
 
   const admin = identifier.includes("@")
@@ -85,7 +102,7 @@ export async function checkAdminCredentials(
   if (!valid) return null;
 
   await prisma.superAdmin.update({ where: { id: admin.id }, data: { lastLoginAt: new Date() } });
-  return { id: admin.id, facilityId: admin.facilityId };
+  return { id: admin.id, facilityId: admin.facilityId, districtId: admin.districtId, regionId: admin.regionId };
 }
 
 // Step 1 of 2: verifies the current password and stages the new one, but
@@ -197,17 +214,20 @@ export async function recoverSuperAdminPassword(
   return { success: true };
 }
 
-// Step 1 of 2 for a newly-created Facility Admin's first activation: finds
-// the pending row (created by the Platform Super Admin via
-// POST /api/admin/facility-admins — isActive:false, passwordHash:null) and
-// sends it a fresh OTP. Mirrors how staff activation works, but scoped to
-// SuperAdmin since admins are deliberately never a User row.
+// Step 1 of 2 for a newly-created admin's first activation: finds the
+// pending row (created by a higher tier via POST /api/admin/facility-admins,
+// /district-admins, or /regional-admins — isActive:false, passwordHash:null)
+// and sends it a fresh OTP. Shared by every self-activating tier (Regional,
+// District, Facility Admin — the Platform Super Admin never goes through
+// this, it's bootstrapped from env vars instead). Mirrors how staff
+// activation works, but scoped to SuperAdmin since admins are deliberately
+// never a User row.
 export async function requestFacilityAdminActivation(
   phone: string
 ): Promise<{ success: boolean; error?: string; otp?: string }> {
   const admin = await prisma.superAdmin.findUnique({ where: { phone } });
   if (!admin || admin.isActive || admin.passwordHash) {
-    return { success: false, error: "No pending Facility Admin account found for this number." };
+    return { success: false, error: "No pending admin account found for this number." };
   }
 
   const otp = generateOtp();
@@ -218,8 +238,8 @@ export async function requestFacilityAdminActivation(
   return { success: true, otp };
 }
 
-// Step 2 of 2: verifies the OTP and sets the Facility Admin's own password in
-// one submission (no intermediate setup token — this is a fresh, admin-only
+// Step 2 of 2: verifies the OTP and sets the admin's own password in one
+// submission (no intermediate setup token — this is a fresh, admin-only
 // flow, so it doesn't need to mirror the User table's 3-step dance, and
 // deliberately doesn't reuse lib/auth.ts's signSetupToken/ACCESS_SECRET,
 // which belongs to the separate Mother/Midwife/Doctor auth system).
@@ -227,10 +247,10 @@ export async function confirmFacilityAdminActivation(
   phone: string,
   otp: string,
   password: string
-): Promise<{ success: boolean; error?: string; id?: string; facilityId?: string | null }> {
+): Promise<{ success: boolean; error?: string; id?: string } & Partial<AdminScope>> {
   const admin = await prisma.superAdmin.findUnique({ where: { phone } });
   if (!admin || admin.isActive || admin.passwordHash) {
-    return { success: false, error: "No pending Facility Admin account found for this number." };
+    return { success: false, error: "No pending admin account found for this number." };
   }
   if (!admin.otp || !admin.otpExpiry || admin.otp !== otp || admin.otpExpiry < new Date()) {
     return { success: false, error: "Invalid or expired code." };
@@ -242,7 +262,13 @@ export async function confirmFacilityAdminActivation(
     data: { passwordHash, isActive: true, otp: null, otpExpiry: null },
   });
 
-  return { success: true, id: admin.id, facilityId: admin.facilityId };
+  return {
+    success: true,
+    id: admin.id,
+    facilityId: admin.facilityId,
+    districtId: admin.districtId,
+    regionId: admin.regionId,
+  };
 }
 
 const isProd = process.env.NODE_ENV === "production";

@@ -133,19 +133,40 @@ model User {
   @@index([facilityId])
 }
 
-model Facility {
+// Region -> District -> Facility, seeded from lib/ghana-regions.ts (the same
+// canonical list Facility's own region/district selects already validated
+// against before this became a real relation).
+model Region {
   id        String       @id @default(cuid())
-  name      String
-  type      FacilityType
-  region    String
-  district  String
-  phone     String?
-  isActive  Boolean      @default(true)
+  name      String       @unique
+  districts District[]
+  admins    SuperAdmin[] @relation("RegionalAdmins")
+}
+
+model District {
+  id         String       @id @default(cuid())
+  name       String
+  regionId   String
+  region     Region       @relation(fields: [regionId], references: [id])
+  facilities Facility[]
+  admins     SuperAdmin[] @relation("DistrictAdmins")
+
+  @@unique([regionId, name])
+}
+
+model Facility {
+  id         String       @id @default(cuid())
+  name       String
+  type       FacilityType
+  districtId String
+  district   District     @relation(fields: [districtId], references: [id])
+  phone      String?
+  isActive   Boolean      @default(true)
   // When the facility historically opened — distinct from createdAt (when
   // this record was added to the system). Optional, set by a Platform Super
   // Admin who knows the facility's real history.
-  openedAt  DateTime?
-  createdAt DateTime     @default(now())
+  openedAt   DateTime?
+  createdAt  DateTime     @default(now())
 
   users         User[]
   patients      Patient[]
@@ -153,6 +174,8 @@ model Facility {
   referralsTo   Referral[]   @relation("ReferralToFacility")
   admins        SuperAdmin[]
   videos        Video[]
+
+  @@index([districtId])
 }
 
 model Patient {
@@ -506,6 +529,14 @@ model SuperAdmin {
   // Optional/unique since the Platform Super Admin no longer has one.
   phone               String?   @unique
   passwordHash        String?
+  // Admin tier is inferred from exactly one of these three being set (none
+  // set = Platform Super Admin) — the same nullable-FK-as-tier-discriminator
+  // pattern facilityId already used, extended up the Region -> District ->
+  // Facility chain. Enforced in the create-admin API routes, not the DB.
+  regionId            String?
+  regionScope         Region?   @relation("RegionalAdmins", fields: [regionId], references: [id])
+  districtId          String?
+  districtScope       District? @relation("DistrictAdmins", fields: [districtId], references: [id])
   facilityId          String?
   facility            Facility? @relation(fields: [facilityId], references: [id])
   isActive            Boolean   @default(true)
@@ -514,8 +545,9 @@ model SuperAdmin {
   // any Facility/District model.
   orgName             String?
   // Jurisdiction shown in the sidebar footer (e.g. "Kwahu East District" /
-  // "Eastern Region, Ghana"). Also free text, distinct from orgName and not
-  // tied to any Facility's own district/region.
+  // "Eastern Region, Ghana"). Only used by the Platform Super Admin's own
+  // self-reported display — Regional/District/Facility Admins derive their
+  // jurisdiction label from regionScope/districtScope/facility instead.
   district            String?
   region              String?
   lastLoginAt         DateTime?
@@ -532,6 +564,8 @@ model SuperAdmin {
   videosAdded   Video[]
 
   @@index([facilityId])
+  @@index([districtId])
+  @@index([regionId])
 }
 
 // In-app half of the Platform Super Admin's broadcast feature (SMS is the

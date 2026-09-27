@@ -21,7 +21,10 @@ export interface MidwifeProfileData {
 }
 
 export async function getMidwifeProfileData(userId: string): Promise<MidwifeProfileData | null> {
-  const user = await prisma.user.findUnique({ where: { id: userId }, include: { facility: true } });
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    include: { facility: { include: { district: { include: { region: true } } } } },
+  });
   if (!user || !user.facilityId || !user.facility) return null;
 
   const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
@@ -48,7 +51,7 @@ export async function getMidwifeProfileData(userId: string): Promise<MidwifeProf
     name: user.name,
     phone: user.phone,
     facilityName: user.facility.name,
-    facilityRegion: user.facility.region,
+    facilityRegion: user.facility.district.region.name,
     memberSince: user.createdAt.getFullYear(),
     patientsCount,
     visitsThisMonthCount,
