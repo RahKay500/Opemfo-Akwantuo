@@ -7,8 +7,8 @@ import DateSelectInput from "@/components/ui/DateSelectInput";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import GhanaCardInput from "@/components/ui/GhanaCardInput";
-import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
-import { digitsOnly, lettersOnly } from "@/lib/utils";
+import { calculateEdd, calculateEffectiveLmpFromScan, eddWindow } from "@/lib/pregnancy";
+import { digitsOnly, formatDateRange, lettersOnly } from "@/lib/utils";
 import Field from "@/components/forms/patient-intake/Field";
 import ObstetricHistoryStep from "@/components/forms/patient-intake/ObstetricHistoryStep";
 import InvestigationsStep, { type InvestigationsValue } from "@/components/forms/patient-intake/InvestigationsStep";
@@ -437,9 +437,9 @@ export default function EditPatientForm({
                 />
               </Field>
             )}
-            <Field label="Estimated Due Date (EDD)">
+            <Field label="Possible Delivery Period" hint="An estimate, not a guaranteed date — shown as a 2-week window either side of the calculated EDD.">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
-                {edd ? edd.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" }) : "Enter LMP to calculate"}
+                {edd ? formatDateRange(eddWindow(edd).start, eddWindow(edd).end) : "Enter LMP to calculate"}
               </div>
             </Field>
             {datingMethod === "ULTRASOUND" && (

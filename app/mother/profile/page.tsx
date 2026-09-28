@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getMotherProfileData } from "@/lib/queries/mother-profile";
-import { formatDate, initials } from "@/lib/utils";
+import { formatDate, formatDateRange, initials } from "@/lib/utils";
+import { eddWindow } from "@/lib/pregnancy";
 import LogoutButton from "@/components/ui/LogoutButton";
 import PreferencesCard from "./PreferencesCard";
 import DeleteAccountRow from "./DeleteAccountRow";
@@ -42,7 +43,7 @@ export default async function MotherProfilePage() {
             </p>
             {data.edd && (
               <span className="mt-4 rounded-badge bg-lilac-light px-4 py-2 font-body text-sm font-medium text-lilac-deeper">
-                Week {data.currentWeek} · Due {formatDate(data.edd)}
+                Week {data.currentWeek} · Possible delivery {formatDateRange(eddWindow(data.edd).start, eddWindow(data.edd).end)}
               </span>
             )}
           </div>
@@ -83,6 +84,12 @@ export default async function MotherProfilePage() {
           <div className="overflow-hidden rounded-card bg-white border border-border-color">
             <p className="px-5 pt-5 font-heading text-base font-bold text-text-primary">Pregnancy Info</p>
             <div className="mt-2">
+              {data.edd && (
+                <Row
+                  label="Possible Delivery Period"
+                  value={formatDateRange(eddWindow(data.edd).start, eddWindow(data.edd).end)}
+                />
+              )}
               <Row label="Blood Group" value={data.bloodGroup ?? "Not recorded"} />
               <Row label="Gravida" value={data.gravida != null ? String(data.gravida) : "Not recorded"} />
               <Row label="Para" value={data.para != null ? String(data.para) : "Not recorded"} />

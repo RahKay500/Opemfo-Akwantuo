@@ -93,7 +93,7 @@ export default async function MotherDashboardPage() {
                 <p className="font-heading text-xs font-bold text-[#6A1E8A]">
                   {data.dueDate ? formatDate(data.dueDate) : "—"}
                 </p>
-                <p className="font-body text-[9px] font-medium text-[#945BAC]">Due Date</p>
+                <p className="font-body text-[9px] font-medium text-[#945BAC]">Est. Due</p>
               </div>
             </div>
             <ProgressRing percent={data.pregnancy.progressPercent} showCaption size="lg" />

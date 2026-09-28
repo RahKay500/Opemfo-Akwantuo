@@ -32,6 +32,16 @@ export function calculateEdd(lmp: Date): Date {
   return new Date(lmp.getTime() + GESTATION_DAYS * MS_PER_DAY);
 }
 
+// A single EDD reads as more certain than pregnancy dating actually is —
+// shown to mothers/staff as a ±2-week window around the calculated date
+// instead of one hard promise.
+export function eddWindow(edd: Date): { start: Date; end: Date } {
+  return {
+    start: new Date(edd.getTime() - 2 * MS_PER_WEEK),
+    end: new Date(edd.getTime() + 2 * MS_PER_WEEK),
+  };
+}
+
 // LMP is unreliable for mothers with irregular cycles — when dated by an
 // early ultrasound instead, this back-calculates the "effective LMP" a scan
 // implies (scanDate minus gestational age at the scan), so calculateEdd and

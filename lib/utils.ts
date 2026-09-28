@@ -73,6 +73,16 @@ export function formatDate(date: Date | string): string {
   return d.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" });
 }
 
+// "17 Sep – 15 Oct 2026" — only the end date carries the year, since the
+// window is always short enough (e.g. an EDD's ±2 weeks) that a start/end
+// spanning a year boundary is the rare exception, not the common case.
+export function formatDateRange(start: Date | string, end: Date | string): string {
+  const s = typeof start === "string" ? new Date(start) : start;
+  const e = typeof end === "string" ? new Date(end) : end;
+  const startLabel = s.toLocaleDateString("en-GH", { day: "numeric", month: "short" });
+  return `${startLabel} – ${formatDate(e)}`;
+}
+
 export function formatLastLogin(date: Date | string): string {
   const d = typeof date === "string" ? new Date(date) : date;
   const now = new Date();
