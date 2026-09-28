@@ -190,6 +190,7 @@ model Patient {
   phone                    String
   dateOfBirth              DateTime
   ghanaCardId              String?
+  nationality              String?
   facilityId               String
   facility                 Facility  @relation(fields: [facilityId], references: [id])
   registeredById           String

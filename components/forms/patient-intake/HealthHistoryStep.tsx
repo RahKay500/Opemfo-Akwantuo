@@ -30,7 +30,7 @@ export default function HealthHistoryStep({
 }) {
   return (
     <>
-      <Field label="Medical & Surgical History" className="lg:col-span-2">
+      <Field label="Medical & Surgical History" hint="The mother's own health history." className="lg:col-span-2">
         <div className="rounded-input border-[1.5px] border-border-color bg-white px-4">
           {MEDICAL_HISTORY_ITEMS.map((item) => (
             <YesNoRow
@@ -74,7 +74,7 @@ export default function HealthHistoryStep({
         />
       </Field>
 
-      <Field label="Social Risk Factors" className="lg:col-span-2">
+      <Field label="Social Risk Factors" hint="The mother's own lifestyle habits." className="lg:col-span-2">
         <div className="rounded-input border-[1.5px] border-border-color bg-white px-4">
           <YesNoRow
             label="Alcohol"
@@ -92,8 +92,16 @@ export default function HealthHistoryStep({
           />
         </div>
       </Field>
+      <Field label="Other Social Risk Factors" className="lg:col-span-2">
+        <input
+          value={socialHistory.other}
+          onChange={(e) => onSocialHistoryChange({ ...socialHistory, other: e.target.value })}
+          placeholder="Optional"
+          className="h-14 w-full rounded-input border-[1.5px] border-border-color bg-white px-[17.5px] font-body text-[15px] text-text-primary outline-none focus:border-primary"
+        />
+      </Field>
 
-      <Field label="Family History" className="lg:col-span-2">
+      <Field label="Family History" hint="Health conditions among the mother's relatives, not her own." className="lg:col-span-2">
         <div className="rounded-input border-[1.5px] border-border-color bg-white px-4">
           {FAMILY_HISTORY_ITEMS.map((item) => (
             <YesNoRow

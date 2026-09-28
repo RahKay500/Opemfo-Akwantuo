@@ -26,13 +26,26 @@ const STEPS = ["Personal", "Family", "Pregnancy", "Obstetric", "Labs", "History"
 const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 const RELATIONS = ["Husband", "Mother", "Sister", "Father", "Other"];
 const MARITAL_STATUSES = ["Single", "Married", "Divorced", "Widowed", "Other"];
+const KNOWN_MARITAL_STATUSES = ["Single", "Married", "Divorced", "Widowed"];
 const EDUCATIONAL_LEVELS = ["None", "Primary", "JHS", "SHS", "Tertiary"];
+
+// The registration form stores a custom "Other" answer directly as the
+// maritalStatus string (no separate column) — reconstruct the select/free-
+// text split from that stored value the same way risk factors are split
+// back apart in edit/page.tsx.
+function deriveMaritalStatus(stored: string): { select: string; other: string } {
+  if (!stored) return { select: "", other: "" };
+  if (KNOWN_MARITAL_STATUSES.includes(stored)) return { select: stored, other: "" };
+  if (stored === "Other") return { select: "Other", other: "" };
+  return { select: "Other", other: stored };
+}
 
 export interface EditPatientInitial {
   name: string;
   dateOfBirth: string;
   phone: string;
   ghanaCardId: string;
+  nationality: string;
   community: string;
   nhisNumber: string;
   maritalStatus: string;
@@ -70,13 +83,15 @@ export default function EditPatientForm({
   patientId,
   facilityName,
   initial,
+  initialStep,
 }: {
   patientId: string;
   facilityName: string;
   initial: EditPatientInitial;
+  initialStep?: number;
 }) {
   const router = useRouter();
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(initialStep ?? 0);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -84,10 +99,13 @@ export default function EditPatientForm({
   const [dateOfBirth, setDateOfBirth] = useState(initial.dateOfBirth);
   const [phone, setPhone] = useState(initial.phone);
   const [ghanaCardId, setGhanaCardId] = useState(initial.ghanaCardId);
+  const [nationality, setNationality] = useState(initial.nationality);
 
+  const initialMarital = deriveMaritalStatus(initial.maritalStatus);
   const [community, setCommunity] = useState(initial.community);
   const [nhisNumber, setNhisNumber] = useState(initial.nhisNumber);
-  const [maritalStatus, setMaritalStatus] = useState(initial.maritalStatus);
+  const [maritalStatus, setMaritalStatus] = useState(initialMarital.select);
+  const [maritalStatusOther, setMaritalStatusOther] = useState(initialMarital.other);
   const [educationalLevel, setEducationalLevel] = useState(initial.educationalLevel);
   const [occupation, setOccupation] = useState(initial.occupation);
   const [spouseName, setSpouseName] = useState(initial.spouseName);
@@ -168,9 +186,10 @@ export default function EditPatientForm({
           dateOfBirth,
           phone: phone.trim(),
           ghanaCardId: ghanaCardId.trim() || undefined,
+          nationality: nationality.trim() || undefined,
           community: community.trim() || undefined,
           nhisNumber: nhisNumber.trim() || undefined,
-          maritalStatus: maritalStatus || undefined,
+          maritalStatus: (maritalStatus === "Other" ? maritalStatusOther.trim() : maritalStatus) || undefined,
           educationalLevel: educationalLevel || undefined,
           occupation: occupation.trim() || undefined,
           spouseName: spouseName.trim() || undefined,
@@ -281,6 +300,9 @@ export default function EditPatientForm({
             <Field label="Ghana Card ID">
               <GhanaCardInput value={ghanaCardId} onChange={setGhanaCardId} />
             </Field>
+            <Field label="Nationality">
+              <Input inputSize="lg" value={nationality} onChange={(e) => setNationality(e.target.value)} placeholder="e.g. Ghanaian" />
+            </Field>
             <Field label="CHPS Zone" className="lg:col-span-2">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
                 {facilityName}
@@ -299,7 +321,14 @@ export default function EditPatientForm({
             </Field>
             <div className="flex gap-3 lg:col-span-2">
               <Field label="Marital Status" className="flex-1">
-                <Select selectSize="lg" value={maritalStatus} onChange={(e) => setMaritalStatus(e.target.value)}>
+                <Select
+                  selectSize="lg"
+                  value={maritalStatus}
+                  onChange={(e) => {
+                    setMaritalStatus(e.target.value);
+                    if (e.target.value !== "Other") setMaritalStatusOther("");
+                  }}
+                >
                   <option value="">Select</option>
                   {MARITAL_STATUSES.map((m) => (
                     <option key={m} value={m}>
@@ -319,6 +348,16 @@ export default function EditPatientForm({
                 </Select>
               </Field>
             </div>
+            {maritalStatus === "Other" && (
+              <Field label="Marital Status — please specify" className="lg:col-span-2">
+                <Input
+                  inputSize="lg"
+                  value={maritalStatusOther}
+                  onChange={(e) => setMaritalStatusOther(e.target.value)}
+                  placeholder="e.g. Common-law"
+                />
+              </Field>
+            )}
             <Field label="Occupation">
               <Input inputSize="lg" value={occupation} onChange={(e) => setOccupation(e.target.value)} placeholder="Optional" />
             </Field>

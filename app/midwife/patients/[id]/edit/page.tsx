@@ -26,16 +26,28 @@ function mergeJson<T extends object>(stored: unknown, empty: T): T {
   return stored && typeof stored === "object" ? { ...empty, ...(stored as Partial<T>) } : empty;
 }
 
-export default async function EditPatientPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function EditPatientPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ step?: string }>;
+}) {
   const user = await getCurrentUser();
   if (!user || user.role !== "MIDWIFE" || !user.facilityId) redirect("/login");
 
   const { id } = await params;
+  const { step: stepParam } = await searchParams;
   const [detail, facility] = await Promise.all([
     getMidwifePatientDetail(id, user.facilityId),
     prisma.facility.findUnique({ where: { id: user.facilityId } }),
   ]);
   if (!detail) notFound();
+
+  // 8 steps total (see EditPatientForm's STEPS) — clamp so an arbitrary
+  // query param can't index past the array.
+  const parsedStep = stepParam ? Number(stepParam) : NaN;
+  const initialStep = Number.isInteger(parsedStep) ? Math.min(Math.max(parsedStep, 0), 7) : undefined;
 
   const { patient } = detail;
 
@@ -70,11 +82,13 @@ export default async function EditPatientPage({ params }: { params: Promise<{ id
       <EditPatientForm
         patientId={patient.id}
         facilityName={facility?.name ?? "Your facility"}
+        initialStep={initialStep}
         initial={{
           name: patient.name,
           dateOfBirth: patient.dateOfBirth.toISOString().slice(0, 10),
           phone: patient.phone,
           ghanaCardId: patient.ghanaCardId ?? "",
+          nationality: patient.nationality ?? "",
           community: patient.community ?? "",
           nhisNumber: patient.nhisNumber ?? "",
           maritalStatus: patient.maritalStatus ?? "",

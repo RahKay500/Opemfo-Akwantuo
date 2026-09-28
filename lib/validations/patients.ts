@@ -72,6 +72,7 @@ export const createPatientSchema = z.object({
     .regex(/^GHA-\d{9}-\d$/, "Enter a complete Ghana Card ID")
     .optional()
     .or(z.literal("")),
+  nationality: z.string().optional(),
   lmp: z.string().optional(),
   // Alternative to lmp for mothers with irregular cycles — a scan date +
   // gestational age at that scan, used to back-calculate an effective LMP

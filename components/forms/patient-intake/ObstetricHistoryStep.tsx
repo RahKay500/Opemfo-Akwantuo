@@ -76,7 +76,7 @@ export default function ObstetricHistoryStep({
         </Field>
       </div>
 
-      <Field label="Major Risk Factors" className="lg:col-span-2">
+      <Field label="Major Risk Factors" hint="Risk factors specific to this pregnancy, separate from her general or family medical history." className="lg:col-span-2">
         <div className="flex flex-wrap gap-2">
           {MAJOR_RISK_FACTORS.map((factor) => {
             const active = riskFactors.includes(factor);

@@ -71,6 +71,7 @@ export interface SocialHistoryState {
   alcoholDetail: string;
   smoking: boolean;
   smokingDetail: string;
+  other: string;
 }
 
 export const EMPTY_SOCIAL_HISTORY: SocialHistoryState = {
@@ -78,6 +79,7 @@ export const EMPTY_SOCIAL_HISTORY: SocialHistoryState = {
   alcoholDetail: "",
   smoking: false,
   smokingDetail: "",
+  other: "",
 };
 
 export interface FamilyHistoryState {

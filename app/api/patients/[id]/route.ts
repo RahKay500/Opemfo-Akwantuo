@@ -78,6 +78,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       phone,
       dateOfBirth: new Date(parsed.data.dateOfBirth),
       ghanaCardId: parsed.data.ghanaCardId || null,
+      nationality: parsed.data.nationality || null,
       lmp,
       edd,
       datingMethod,

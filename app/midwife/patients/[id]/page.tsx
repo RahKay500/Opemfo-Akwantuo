@@ -69,6 +69,18 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
         </Link>
       </div>
 
+      {!patient.lmp && !patient.datingMethod && !patient.bloodGroup && (
+        <div className="mx-5 mt-4 flex items-center justify-between gap-3 rounded-card border border-lilac-mid bg-lilac-light px-4 py-3">
+          <p className="font-body text-sm text-lilac-deeper">Pregnancy &amp; clinical details not added yet.</p>
+          <Link
+            href={`/midwife/patients/${patient.id}/edit?step=2`}
+            className="shrink-0 rounded-badge bg-lilac-deeper px-3 py-1.5 font-body text-xs font-semibold text-white"
+          >
+            Add now
+          </Link>
+        </div>
+      )}
+
       <PatientDetailClient
         patientId={patient.id}
         patientName={patient.name}

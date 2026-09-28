@@ -7,47 +7,12 @@ import DateSelectInput from "@/components/ui/DateSelectInput";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import GhanaCardInput from "@/components/ui/GhanaCardInput";
-import { calculateEdd, calculateEffectiveLmpFromScan } from "@/lib/pregnancy";
 import { digitsOnly, lettersOnly } from "@/lib/utils";
 import Field from "@/components/forms/patient-intake/Field";
-import ObstetricHistoryStep from "@/components/forms/patient-intake/ObstetricHistoryStep";
-import InvestigationsStep, { type InvestigationsValue } from "@/components/forms/patient-intake/InvestigationsStep";
-import HealthHistoryStep from "@/components/forms/patient-intake/HealthHistoryStep";
-import PhysicalExamStep from "@/components/forms/patient-intake/PhysicalExamStep";
-import {
-  EMPTY_MEDICAL_HISTORY,
-  EMPTY_SOCIAL_HISTORY,
-  EMPTY_FAMILY_HISTORY,
-  EMPTY_PHYSICAL_EXAM,
-  type MedicalHistoryState,
-  type SocialHistoryState,
-  type FamilyHistoryState,
-  type PhysicalExamState,
-  type PreviousPregnancy,
-} from "@/lib/mch-record";
 
-const STEPS = ["Personal", "Family", "Pregnancy", "Obstetric", "Labs", "History", "Exam", "Emergency"] as const;
-const BLOOD_GROUPS = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
-const RELATIONS = ["Husband", "Mother", "Sister", "Father", "Other"];
+const STEPS = ["Personal", "Family"] as const;
 const MARITAL_STATUSES = ["Single", "Married", "Divorced", "Widowed", "Other"];
 const EDUCATIONAL_LEVELS = ["None", "Primary", "JHS", "SHS", "Tertiary"];
-
-const EMPTY_INVESTIGATIONS: InvestigationsValue = {
-  height: "",
-  weightAtAnc1: "",
-  estimatedDesiredWeightAtEdd: "",
-  contraceptionUsed: "",
-  rhTyping: "",
-  hbsAg: "",
-  sickling: "",
-  g6pd: "",
-  vdrl: "",
-  hivStatus: "",
-  hbFirstVisit: "",
-  urineRE: "",
-  stoolRE: "",
-  bfForMalaria: "",
-};
 
 export default function RegisterPatientForm({ facilityName }: { facilityName: string }) {
   const router = useRouter();
@@ -59,56 +24,18 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [phone, setPhone] = useState("");
   const [ghanaCardId, setGhanaCardId] = useState("");
+  const [nationality, setNationality] = useState("Ghanaian");
 
   const [community, setCommunity] = useState("");
   const [nhisNumber, setNhisNumber] = useState("");
   const [maritalStatus, setMaritalStatus] = useState("");
+  const [maritalStatusOther, setMaritalStatusOther] = useState("");
   const [educationalLevel, setEducationalLevel] = useState("");
   const [occupation, setOccupation] = useState("");
   const [spouseName, setSpouseName] = useState("");
   const [spousePhone, setSpousePhone] = useState("");
   const [spouseOccupation, setSpouseOccupation] = useState("");
   const [emergencyTransportPhone, setEmergencyTransportPhone] = useState("");
-
-  const [datingMethod, setDatingMethod] = useState<"LMP" | "ULTRASOUND">("LMP");
-  const [lmp, setLmp] = useState("");
-  const [scanDate, setScanDate] = useState("");
-  const [scanWeeks, setScanWeeks] = useState("");
-  const [scanDays, setScanDays] = useState("");
-  const [gravida, setGravida] = useState("");
-  const [para, setPara] = useState("");
-  const [bloodGroup, setBloodGroup] = useState("");
-  const [knownConditions, setKnownConditions] = useState("");
-
-  // Obstetric History
-  const [abortionsSpontaneous, setAbortionsSpontaneous] = useState("");
-  const [abortionsInduced, setAbortionsInduced] = useState("");
-  const [riskFactors, setRiskFactors] = useState<string[]>([]);
-  const [riskFactorOther, setRiskFactorOther] = useState("");
-  const [previousPregnancies, setPreviousPregnancies] = useState<PreviousPregnancy[]>([]);
-
-  // Investigations
-  const [investigations, setInvestigations] = useState<InvestigationsValue>(EMPTY_INVESTIGATIONS);
-
-  // Medical/Social/Family History
-  const [medicalHistory, setMedicalHistory] = useState<MedicalHistoryState>(EMPTY_MEDICAL_HISTORY);
-  const [socialHistory, setSocialHistory] = useState<SocialHistoryState>(EMPTY_SOCIAL_HISTORY);
-  const [familyHistory, setFamilyHistory] = useState<FamilyHistoryState>(EMPTY_FAMILY_HISTORY);
-
-  // Physical Exam
-  const [physicalExam, setPhysicalExam] = useState<PhysicalExamState>(EMPTY_PHYSICAL_EXAM);
-
-  const [emergencyContactName, setEmergencyContactName] = useState("");
-  const [emergencyContactPhone, setEmergencyContactPhone] = useState("");
-  const [emergencyContactRelation, setEmergencyContactRelation] = useState("");
-
-  const effectiveLmp =
-    datingMethod === "ULTRASOUND" && scanDate
-      ? calculateEffectiveLmpFromScan(new Date(scanDate), Number(scanWeeks) || 0, Number(scanDays) || 0)
-      : lmp
-        ? new Date(lmp)
-        : null;
-  const edd = effectiveLmp ? calculateEdd(effectiveLmp) : null;
 
   function validateStep(): string | null {
     if (step === 0) {
@@ -133,12 +60,6 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
     setError(null);
     setSubmitting(true);
     try {
-      const bmiAtAnc1 =
-        investigations.height && investigations.weightAtAnc1
-          ? Number(investigations.weightAtAnc1) / (Number(investigations.height) / 100) ** 2
-          : undefined;
-      const majorRiskFactors = [...riskFactors, ...(riskFactorOther.trim() ? [riskFactorOther.trim()] : [])];
-
       const res = await fetch("/api/patients", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -147,50 +68,16 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
           dateOfBirth,
           phone: phone.trim(),
           ghanaCardId: ghanaCardId.trim() || undefined,
+          nationality: nationality.trim() || undefined,
           community: community.trim() || undefined,
           nhisNumber: nhisNumber.trim() || undefined,
-          maritalStatus: maritalStatus || undefined,
+          maritalStatus: (maritalStatus === "Other" ? maritalStatusOther.trim() : maritalStatus) || undefined,
           educationalLevel: educationalLevel || undefined,
           occupation: occupation.trim() || undefined,
           spouseName: spouseName.trim() || undefined,
           spousePhone: spousePhone.trim() || undefined,
           spouseOccupation: spouseOccupation.trim() || undefined,
           emergencyTransportPhone: emergencyTransportPhone.trim() || undefined,
-          lmp: lmp || undefined,
-          datingMethod,
-          scanDate: datingMethod === "ULTRASOUND" ? scanDate || undefined : undefined,
-          gestationalAgeAtScanWeeks: datingMethod === "ULTRASOUND" ? Number(scanWeeks) || 0 : undefined,
-          gestationalAgeAtScanDays: datingMethod === "ULTRASOUND" ? Number(scanDays) || 0 : undefined,
-          gravida: gravida ? Number(gravida) : undefined,
-          para: para ? Number(para) : undefined,
-          bloodGroup: bloodGroup || undefined,
-          knownConditions: knownConditions.trim() || undefined,
-          numberOfAbortionsSpontaneous: abortionsSpontaneous ? Number(abortionsSpontaneous) : undefined,
-          numberOfAbortionsInduced: abortionsInduced ? Number(abortionsInduced) : undefined,
-          majorRiskFactors,
-          previousPregnancies: previousPregnancies.length ? previousPregnancies : undefined,
-          height: investigations.height ? Number(investigations.height) : undefined,
-          weightAtAnc1: investigations.weightAtAnc1 ? Number(investigations.weightAtAnc1) : undefined,
-          bmiAtAnc1,
-          estimatedDesiredWeightAtEdd: investigations.estimatedDesiredWeightAtEdd.trim() || undefined,
-          contraceptionUsed: investigations.contraceptionUsed.trim() || undefined,
-          rhTyping: investigations.rhTyping || undefined,
-          hbsAg: investigations.hbsAg || undefined,
-          sickling: investigations.sickling || undefined,
-          g6pd: investigations.g6pd || undefined,
-          vdrl: investigations.vdrl || undefined,
-          hivStatus: investigations.hivStatus.trim() || undefined,
-          hbFirstVisit: investigations.hbFirstVisit ? Number(investigations.hbFirstVisit) : undefined,
-          urineRE: investigations.urineRE.trim() || undefined,
-          stoolRE: investigations.stoolRE.trim() || undefined,
-          bfForMalaria: investigations.bfForMalaria || undefined,
-          medicalHistory,
-          socialHistory,
-          familyHistory,
-          physicalExamAtFirstVisit: physicalExam,
-          emergencyContactName: emergencyContactName.trim() || undefined,
-          emergencyContactPhone: emergencyContactPhone.trim() || undefined,
-          emergencyContactRelation: emergencyContactRelation || undefined,
         }),
       });
       if (!res.ok) {
@@ -261,6 +148,9 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             <Field label="Ghana Card ID">
               <GhanaCardInput value={ghanaCardId} onChange={setGhanaCardId} />
             </Field>
+            <Field label="Nationality">
+              <Input inputSize="lg" value={nationality} onChange={(e) => setNationality(e.target.value)} placeholder="e.g. Ghanaian" />
+            </Field>
             <Field label="CHPS Zone" className="lg:col-span-2">
               <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
                 {facilityName}
@@ -279,7 +169,14 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
             </Field>
             <div className="flex gap-3 lg:col-span-2">
               <Field label="Marital Status" className="flex-1">
-                <Select selectSize="lg" value={maritalStatus} onChange={(e) => setMaritalStatus(e.target.value)}>
+                <Select
+                  selectSize="lg"
+                  value={maritalStatus}
+                  onChange={(e) => {
+                    setMaritalStatus(e.target.value);
+                    if (e.target.value !== "Other") setMaritalStatusOther("");
+                  }}
+                >
                   <option value="">Select</option>
                   {MARITAL_STATUSES.map((m) => (
                     <option key={m} value={m}>
@@ -299,6 +196,16 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 </Select>
               </Field>
             </div>
+            {maritalStatus === "Other" && (
+              <Field label="Marital Status — please specify" className="lg:col-span-2">
+                <Input
+                  inputSize="lg"
+                  value={maritalStatusOther}
+                  onChange={(e) => setMaritalStatusOther(e.target.value)}
+                  placeholder="e.g. Common-law"
+                />
+              </Field>
+            )}
             <Field label="Occupation">
               <Input inputSize="lg" value={occupation} onChange={(e) => setOccupation(e.target.value)} placeholder="Optional" />
             </Field>
@@ -335,164 +242,6 @@ export default function RegisterPatientForm({ facilityName }: { facilityName: st
                 onChange={(e) => setEmergencyTransportPhone(e.target.value)}
                 placeholder="e.g. driver or ambulance contact"
               />
-            </Field>
-          </>
-        )}
-
-        {step === 2 && (
-          <>
-            <Field label="Pregnancy Dating Method" className="lg:col-span-2">
-              <div className="flex gap-1 rounded-input border-[1.5px] border-border-color bg-white p-1">
-                {(["LMP", "ULTRASOUND"] as const).map((method) => (
-                  <button
-                    key={method}
-                    type="button"
-                    onClick={() => setDatingMethod(method)}
-                    className={cn(
-                      "h-10 flex-1 rounded-badge font-body text-[13px] font-medium",
-                      datingMethod === method ? "bg-lilac-mid text-lilac-deeper" : "text-text-secondary"
-                    )}
-                  >
-                    {method === "LMP" ? "Last Menstrual Period" : "Ultrasound Scan"}
-                  </button>
-                ))}
-              </div>
-            </Field>
-
-            {datingMethod === "LMP" ? (
-              <Field label="Last Menstrual Period (LMP) — optional">
-                <DateSelectInput
-                  value={lmp}
-                  onChange={setLmp}
-                  max={new Date().toISOString().split("T")[0]}
-                  aria-label="Last Menstrual Period"
-                />
-              </Field>
-            ) : (
-              <Field label="Scan Date">
-                <DateSelectInput
-                  value={scanDate}
-                  onChange={setScanDate}
-                  max={new Date().toISOString().split("T")[0]}
-                  aria-label="Scan Date"
-                />
-              </Field>
-            )}
-            <Field label="Estimated Due Date (EDD)">
-              <div className="flex h-14 w-full items-center rounded-input border-[1.5px] border-lilac-light bg-lilac-light px-[17.5px] font-body text-[15px] text-lilac-deeper">
-                {edd ? edd.toLocaleDateString("en-GH", { day: "numeric", month: "short", year: "numeric" }) : "Enter LMP to calculate"}
-              </div>
-            </Field>
-            {datingMethod === "ULTRASOUND" && (
-              <div className="flex gap-3 lg:col-span-2">
-                <Field label="Gestational Age — Weeks" className="flex-1">
-                  <Input
-                    inputSize="lg"
-                    type="number"
-                    value={scanWeeks}
-                    onChange={(e) => setScanWeeks(e.target.value)}
-                    placeholder="e.g. 12"
-                  />
-                </Field>
-                <Field label="Gestational Age — Days" className="flex-1">
-                  <Input
-                    inputSize="lg"
-                    type="number"
-                    value={scanDays}
-                    onChange={(e) => setScanDays(e.target.value)}
-                    placeholder="e.g. 3"
-                  />
-                </Field>
-              </div>
-            )}
-            <div className="flex gap-3 lg:col-span-2">
-              <Field label="Gravida" className="flex-1">
-                <Input inputSize="lg" type="number" value={gravida} onChange={(e) => setGravida(e.target.value)} placeholder="e.g. 2" />
-              </Field>
-              <Field label="Para" className="flex-1">
-                <Input inputSize="lg" type="number" value={para} onChange={(e) => setPara(e.target.value)} placeholder="e.g. 1" />
-              </Field>
-            </div>
-            <Field label="Blood Group">
-              <Select selectSize="lg" value={bloodGroup} onChange={(e) => setBloodGroup(e.target.value)}>
-                <option value="">Select blood group</option>
-                {BLOOD_GROUPS.map((bg) => (
-                  <option key={bg} value={bg}>
-                    {bg}
-                  </option>
-                ))}
-              </Select>
-            </Field>
-            <Field label="Known Conditions" className="lg:col-span-2">
-              <textarea
-                value={knownConditions}
-                onChange={(e) => setKnownConditions(e.target.value)}
-                rows={3}
-                placeholder="Optional"
-                className="w-full resize-none rounded-input border-[1.5px] border-border-color bg-white p-[17.5px] font-body text-sm text-text-primary outline-none focus:border-primary"
-              />
-            </Field>
-          </>
-        )}
-
-        {step === 3 && (
-          <ObstetricHistoryStep
-            abortionsSpontaneous={abortionsSpontaneous}
-            onAbortionsSpontaneousChange={setAbortionsSpontaneous}
-            abortionsInduced={abortionsInduced}
-            onAbortionsInducedChange={setAbortionsInduced}
-            riskFactors={riskFactors}
-            onRiskFactorsChange={setRiskFactors}
-            riskFactorOther={riskFactorOther}
-            onRiskFactorOtherChange={setRiskFactorOther}
-            previousPregnancies={previousPregnancies}
-            onPreviousPregnanciesChange={setPreviousPregnancies}
-          />
-        )}
-
-        {step === 4 && <InvestigationsStep value={investigations} onChange={setInvestigations} />}
-
-        {step === 5 && (
-          <HealthHistoryStep
-            medicalHistory={medicalHistory}
-            onMedicalHistoryChange={setMedicalHistory}
-            socialHistory={socialHistory}
-            onSocialHistoryChange={setSocialHistory}
-            familyHistory={familyHistory}
-            onFamilyHistoryChange={setFamilyHistory}
-          />
-        )}
-
-        {step === 6 && <PhysicalExamStep value={physicalExam} onChange={setPhysicalExam} />}
-
-        {step === 7 && (
-          <>
-            <Field label="Emergency Contact Name">
-              <Input
-                inputSize="lg"
-                value={emergencyContactName}
-                onChange={(e) => setEmergencyContactName(lettersOnly(e.target.value))}
-                placeholder="Enter full name"
-              />
-            </Field>
-            <Field label="Emergency Contact Phone">
-              <Input
-                inputSize="lg"
-                value={emergencyContactPhone}
-                onChange={(e) => setEmergencyContactPhone(digitsOnly(e.target.value))}
-                placeholder="024 123 4567"
-                inputMode="numeric"
-              />
-            </Field>
-            <Field label="Relationship">
-              <Select selectSize="lg" value={emergencyContactRelation} onChange={(e) => setEmergencyContactRelation(e.target.value)}>
-                <option value="">Select relationship</option>
-                {RELATIONS.map((r) => (
-                  <option key={r} value={r}>
-                    {r}
-                  </option>
-                ))}
-              </Select>
             </Field>
           </>
         )}

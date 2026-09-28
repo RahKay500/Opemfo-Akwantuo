@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
       phone,
       dateOfBirth: new Date(parsed.data.dateOfBirth),
       ghanaCardId: parsed.data.ghanaCardId || null,
+      nationality: parsed.data.nationality || null,
       facilityId: session.facilityId,
       registeredById: session.userId,
       userId: linkedUserId,
