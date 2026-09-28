@@ -5,11 +5,13 @@ export default function FormField({
   error,
   children,
   required,
+  hint,
 }: {
   label: string;
   error?: string;
   children: ReactNode;
   required?: boolean;
+  hint?: string;
 }) {
   return (
     <div className="flex flex-col gap-1.5">
@@ -17,6 +19,7 @@ export default function FormField({
         {label}
         {required && <span className="text-[#DC2626]"> *</span>}
       </label>
+      {hint && <p className="text-xs text-[#6B7280]">{hint}</p>}
       {children}
       {error && <p className="text-xs text-[#DC2626]">{error}</p>}
     </div>

@@ -16,13 +16,14 @@ export interface NotificationListItem {
   createdAt: string;
 }
 
-const TABS = ["All", "Referral", "Vitals", "Appointments", "Lab Results"] as const;
+const TABS = ["All", "Referral", "Vitals", "Appointments", "Lab Results", "Announcements"] as const;
 
 const TYPE_STYLES: Record<string, { bg: string; color: string; Icon: typeof CheckIcon }> = {
   REFERRAL: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: CheckIcon },
   APPOINTMENT: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: CalendarIcon },
   VITALS: { bg: "bg-high-bg", color: "text-high", Icon: AlertTriangleIcon },
   LAB_RESULT: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: LabIcon },
+  ANNOUNCEMENT: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: BellIcon },
 };
 
 function styleFor(type: string) {
@@ -33,6 +34,7 @@ function matchesTab(type: string, tab: (typeof TABS)[number]) {
   if (tab === "All") return true;
   if (tab === "Appointments") return type === "APPOINTMENT";
   if (tab === "Lab Results") return type === "LAB_RESULT";
+  if (tab === "Announcements") return type === "ANNOUNCEMENT";
   return type === tab.toUpperCase();
 }
 

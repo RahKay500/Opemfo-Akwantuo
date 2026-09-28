@@ -129,4 +129,18 @@ export const updateStaffSchema = z.object({
 export const broadcastSchema = z.object({
   title: z.string().min(2, "Enter a title"),
   message: z.string().min(2, "Enter a message"),
+  // Who receives it. ADMINS (the original behaviour) reaches Facility
+  // Admins via AdminNotification; STAFF/MOTHERS reach real staff/mother
+  // accounts via the generic Notification model — see the route for why
+  // these are two different delivery paths.
+  audience: z.enum(["ADMINS", "STAFF", "MOTHERS"]).default("ADMINS"),
+  // Geographic narrowing. ALL is every recipient in the audience;
+  // REGION/DISTRICT/FACILITY require the matching id below.
+  scope: z.enum(["ALL", "REGION", "DISTRICT", "FACILITY"]).default("ALL"),
+  regionId: z.string().optional(),
+  districtId: z.string().optional(),
+  facilityId: z.string().optional(),
+  // Only meaningful when audience is STAFF — which staff roles to include.
+  // Empty/omitted means all three.
+  roles: z.array(z.enum(["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"])).optional(),
 });
