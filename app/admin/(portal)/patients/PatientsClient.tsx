@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import DataTable, { type DataTableColumn } from "@/components/admin/DataTable";
-import { formatDate } from "@/lib/utils";
+import { formatDate, phoneSearchDigits } from "@/lib/utils";
 import { calculateAge } from "@/lib/pregnancy";
 import Avatar from "@/components/ui/Avatar";
 
@@ -30,10 +30,11 @@ export default function PatientsClient({
   const filtered = useMemo(() => {
     if (!query) return patients;
     const q = query.toLowerCase();
+    const queryDigits = phoneSearchDigits(query);
     return patients.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
-        p.phone.includes(query) ||
+        (queryDigits.length > 0 && phoneSearchDigits(p.phone).includes(queryDigits)) ||
         (p.facilityName?.toLowerCase().includes(q) ?? false)
     );
   }, [patients, query]);

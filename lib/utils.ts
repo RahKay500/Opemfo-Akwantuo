@@ -29,6 +29,17 @@ export function digitsOnly(value: string, maxLength = 10): string {
   return value.replace(/\D/g, "").slice(0, maxLength);
 }
 
+// Strips a phone number down to its core Ghana subscriber digits (drops a
+// leading "233" or "0"), so a patient-search box can match "024 123 4567",
+// "0241234567", or "241234567" all against the stored "+233241234567" form,
+// regardless of which shape the person searching happens to type.
+export function phoneSearchDigits(value: string): string {
+  const digits = value.replace(/\D/g, "");
+  if (digits.startsWith("233")) return digits.slice(3);
+  if (digits.startsWith("0")) return digits.slice(1);
+  return digits;
+}
+
 // A person's name shouldn't contain digits or symbols — spaces, hyphens,
 // and apostrophes are the only non-letter characters real names use (e.g.
 // "Mary-Jane", "O'Brien"). Strips anything else live as the user types.

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { cn, formatRelativeTime } from "@/lib/utils";
+import { cn, formatRelativeTime, phoneSearchDigits } from "@/lib/utils";
 import { SearchIcon, PlusIcon } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import Avatar from "@/components/ui/Avatar";
@@ -39,8 +39,13 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
   const [filter, setFilter] = useState<(typeof FILTERS)[number]>("All");
   const [query, setQuery] = useState("");
 
+  const queryDigits = phoneSearchDigits(query);
   const filtered = patients.filter((p) => {
-    if (query && !p.name.toLowerCase().includes(query.toLowerCase())) return false;
+    if (query) {
+      const nameMatch = p.name.toLowerCase().includes(query.toLowerCase());
+      const phoneMatch = queryDigits.length > 0 && phoneSearchDigits(p.phone).includes(queryDigits);
+      if (!nameMatch && !phoneMatch) return false;
+    }
     if (filter === "Normal") return p.status === "NORMAL";
     if (filter === "Flagged") return p.status === "FLAGGED";
     if (filter === "Critical") return p.status === "CRITICAL" || p.status === "EMERGENCY";
@@ -56,7 +61,7 @@ export default function PatientListClient({ patients }: { patients: MidwifePatie
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search patients..."
+              placeholder="Search by name or phone..."
               className="flex-1 bg-transparent font-body text-sm text-text-primary outline-none placeholder:text-[#9CA3AF]"
             />
           </div>

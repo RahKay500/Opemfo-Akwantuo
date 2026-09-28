@@ -23,6 +23,13 @@ export async function GET(request: NextRequest) {
 
   const facilityFilter = visibleFacilityIds ? { facilityId: { in: visibleFacilityIds } } : {};
 
+  // Phone is stored as "+233XXXXXXXXX" — match it regardless of whether the
+  // admin types the local "024..." form, the digits alone, or with "+233".
+  const qDigits = q.replace(/\D/g, "");
+  const qPhoneVariants = qDigits
+    ? Array.from(new Set([qDigits, `+233${qDigits.replace(/^0/, "")}`]))
+    : [];
+
   const [facilities, staff, patients] = await Promise.all([
     session.facilityId === null
       ? prisma.facility.findMany({
@@ -40,7 +47,13 @@ export async function GET(request: NextRequest) {
       take: 5,
     }),
     prisma.patient.findMany({
-      where: { name: { contains: q, mode: "insensitive" }, ...facilityFilter },
+      where: {
+        OR: [
+          { name: { contains: q, mode: "insensitive" } },
+          ...qPhoneVariants.map((phone) => ({ phone: { contains: phone } })),
+        ],
+        ...facilityFilter,
+      },
       select: { id: true, name: true, phone: true, facilityId: true, facility: { select: { name: true } } },
       take: 5,
     }),
