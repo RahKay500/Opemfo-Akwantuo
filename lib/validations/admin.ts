@@ -115,7 +115,7 @@ export const createStaffSchema = z.object({
   name: personName,
   email: z.string().email("Enter a valid email address"),
   phone: localPhoneSchema.optional().or(z.literal("")),
-  role: z.enum(["MIDWIFE", "DOCTOR"]),
+  role: z.enum(["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"]),
   licenseNumber: z.string().optional(),
   facilityId: z.string().optional(),
 });

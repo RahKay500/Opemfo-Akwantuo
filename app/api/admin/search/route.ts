@@ -42,7 +42,11 @@ export async function GET(request: NextRequest) {
         })
       : Promise.resolve([]),
     prisma.user.findMany({
-      where: { role: { in: ["MIDWIFE", "DOCTOR"] }, name: { contains: q, mode: "insensitive" }, ...facilityFilter },
+      where: {
+        role: { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] },
+        name: { contains: q, mode: "insensitive" },
+        ...facilityFilter,
+      },
       select: { id: true, name: true, role: true, facilityId: true, facility: { select: { name: true } } },
       take: 5,
     }),
@@ -70,7 +74,7 @@ export async function GET(request: NextRequest) {
       staff: staff.map((s) => ({
         id: s.id,
         name: s.name,
-        subtitle: `${s.role === "MIDWIFE" ? "Midwife" : "Doctor"} · ${s.facility?.name ?? "Unassigned"}`,
+        subtitle: `${s.role === "MIDWIFE" ? "Midwife" : s.role === "DOCTOR" ? "Doctor" : "Lab Technician"} · ${s.facility?.name ?? "Unassigned"}`,
         facilityId: s.facilityId,
       })),
       patients: patients.map((p) => ({

@@ -35,7 +35,10 @@ export async function GET(request: NextRequest) {
 
   const staff = await prisma.user.findMany({
     where: {
-      role: role === "MIDWIFE" || role === "DOCTOR" ? role : { in: ["MIDWIFE", "DOCTOR"] },
+      role:
+        role === "MIDWIFE" || role === "DOCTOR" || role === "LAB_TECHNICIAN"
+          ? role
+          : { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] },
       facilityId,
       ...(q ? { OR: [{ name: { contains: q, mode: "insensitive" } }, { phone: { contains: q } }] } : {}),
     },
@@ -124,7 +127,8 @@ export async function POST(request: NextRequest) {
 
   const setupToken = await signSetupToken(staff.id, "48h");
   const link = `${request.nextUrl.origin}/set-password?token=${setupToken}`;
-  await sendStaffActivationEmail(email, link, staff.role === "DOCTOR" ? "Doctor" : "Midwife");
+  const roleLabel = staff.role === "DOCTOR" ? "Doctor" : staff.role === "LAB_TECHNICIAN" ? "Lab Technician" : "Midwife";
+  await sendStaffActivationEmail(email, link, roleLabel);
 
   return NextResponse.json({
     success: true,

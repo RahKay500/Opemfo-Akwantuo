@@ -11,7 +11,7 @@ export default function NewStaffForm({ facilityId }: { facilityId?: string }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [role, setRole] = useState<"MIDWIFE" | "DOCTOR">("MIDWIFE");
+  const [role, setRole] = useState<"MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN">("MIDWIFE");
   const [licenseNumber, setLicenseNumber] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [error, setError] = useState<string | null>(null);
@@ -140,11 +140,12 @@ export default function NewStaffForm({ facilityId }: { facilityId?: string }) {
       <FormField label="Role" required>
         <select
           value={role}
-          onChange={(e) => setRole(e.target.value as "MIDWIFE" | "DOCTOR")}
+          onChange={(e) => setRole(e.target.value as "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN")}
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         >
           <option value="MIDWIFE">Midwife/Nurse</option>
           <option value="DOCTOR">Doctor</option>
+          <option value="LAB_TECHNICIAN">Lab Technician</option>
         </select>
       </FormField>
 

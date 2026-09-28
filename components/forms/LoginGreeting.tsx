@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { getLastRole, type LastRole } from "@/lib/last-role";
-import { PersonIcon, MidwifeIcon, DoctorIcon } from "@/components/ui/icons";
+import { PersonIcon, MidwifeIcon, DoctorIcon, LabIcon } from "@/components/ui/icons";
 
 const ROLE_LABEL: Record<LastRole, string> = {
   MOTHER: "Ɔpemfoɔ",
   MIDWIFE: "Midwife/Nurse",
   DOCTOR: "Doc",
+  LAB_TECHNICIAN: "Lab Tech",
 };
 
 export default function LoginGreeting() {
@@ -24,6 +25,7 @@ export default function LoginGreeting() {
         {lastRole === "MOTHER" && <Image src="/images/logo.png" alt="" width={32} height={32} />}
         {lastRole === "MIDWIFE" && <MidwifeIcon className="size-9 text-lilac-dark" />}
         {lastRole === "DOCTOR" && <DoctorIcon className="size-9 text-[#EA580C]" />}
+        {lastRole === "LAB_TECHNICIAN" && <LabIcon className="size-9 text-[#0891B2]" />}
         {!lastRole && <PersonIcon className="size-9 text-lilac-deeper" />}
       </div>
 

@@ -14,7 +14,7 @@ export interface StaffDetail {
   name: string;
   email: string | null;
   phone: string | null;
-  role: "MIDWIFE" | "DOCTOR";
+  role: "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN";
   facilityId: string | null;
   facilityName: string | null;
   licenseNumber: string | null;
@@ -24,6 +24,12 @@ export interface StaffDetail {
   patientCount: number;
   auditLogs: { id: string; action: string; createdAt: string }[];
 }
+
+const ROLE_LABEL: Record<StaffDetail["role"], string> = {
+  MIDWIFE: "Midwife/Nurse",
+  DOCTOR: "Doctor",
+  LAB_TECHNICIAN: "Lab Technician",
+};
 
 const ACTION_LABELS: Record<string, string> = {
   STAFF_CREATED: "Account created",
@@ -130,7 +136,7 @@ export default function StaffDetailClient({ staff }: { staff: StaffDetail }) {
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-lg font-semibold text-[#1A1A2E]">{staff.name}</h2>
-            <p className="mt-1 text-sm text-[#6B7280]">{staff.role === "MIDWIFE" ? "Midwife/Nurse" : "Doctor"}</p>
+            <p className="mt-1 text-sm text-[#6B7280]">{ROLE_LABEL[staff.role]}</p>
           </div>
           <StatusBadge status={status} />
         </div>

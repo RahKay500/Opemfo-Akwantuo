@@ -23,6 +23,7 @@ const ROLE_PREFIXES: Record<string, string> = {
   "/mother": "MOTHER",
   "/midwife": "MIDWIFE",
   "/doctor": "DOCTOR",
+  "/lab-technician": "LAB_TECHNICIAN",
 };
 
 const AUTH_RATE_LIMIT_PATHS = [
@@ -146,6 +147,7 @@ export const config = {
     "/mother/:path*",
     "/midwife/:path*",
     "/doctor/:path*",
+    "/lab-technician/:path*",
     "/api/auth/:path*",
     "/admin/:path*",
     "/api/admin/auth/login",

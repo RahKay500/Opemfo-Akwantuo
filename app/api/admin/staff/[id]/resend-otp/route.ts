@@ -13,7 +13,11 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 
   const staff = await prisma.user.findUnique({ where: { id: params.id } });
-  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") || staff.facilityId !== session.facilityId) {
+  if (
+    !staff ||
+    (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR" && staff.role !== "LAB_TECHNICIAN") ||
+    staff.facilityId !== session.facilityId
+  ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
   }
   if (staff.isActive) {
@@ -35,7 +39,8 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   if (staff.email) {
     const setupToken = await signSetupToken(staff.id, "48h");
     const link = `${request.nextUrl.origin}/set-password?token=${setupToken}`;
-    await sendStaffActivationEmail(staff.email, link, staff.role === "DOCTOR" ? "Doctor" : "Midwife");
+    const roleLabel = staff.role === "DOCTOR" ? "Doctor" : staff.role === "LAB_TECHNICIAN" ? "Lab Technician" : "Midwife";
+    await sendStaffActivationEmail(staff.email, link, roleLabel);
     return NextResponse.json({
       success: true,
       data: { email: staff.email, ...(isEmailUnconfigured() ? { devLink: link } : {}) },

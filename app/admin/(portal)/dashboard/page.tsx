@@ -151,7 +151,7 @@ function PlatformDashboard({ platform }: { platform: PlatformDashboardData }) {
   );
 }
 
-const ROLE_LABELS: Record<string, string> = { MIDWIFE: "Midwife", DOCTOR: "Doctor" };
+const ROLE_LABELS: Record<string, string> = { MIDWIFE: "Midwife", DOCTOR: "Doctor", LAB_TECHNICIAN: "Lab Technician" };
 
 function FacilityAdminDashboard({ facility }: { facility: FacilityAdminDashboardData }) {
   return (

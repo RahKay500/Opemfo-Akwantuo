@@ -143,6 +143,13 @@ export async function sendPartnerInviteSms(
   );
 }
 
+export async function sendLabResultReadySms(patientPhone: string, testType: string): Promise<void> {
+  await sendSms(
+    patientPhone,
+    `Your ${testType} result is ready. Ask your midwife/nurse for the details on your next visit.`
+  );
+}
+
 export async function sendAdminBroadcastSms(phone: string, title: string, message: string): Promise<void> {
   await sendSms(phone, `[${title}] ${message}`);
 }

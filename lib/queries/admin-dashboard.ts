@@ -54,7 +54,9 @@ export interface FacilityAdminDashboardData {
 async function getJurisdictionDashboardData(facilityIds: string[]): Promise<JurisdictionDashboardData> {
   const [registeredPatients, activeStaff] = await Promise.all([
     prisma.patient.count({ where: { facilityId: { in: facilityIds } } }),
-    prisma.user.count({ where: { role: { in: ["MIDWIFE", "DOCTOR"] }, isActive: true, facilityId: { in: facilityIds } } }),
+    prisma.user.count({
+      where: { role: { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] }, isActive: true, facilityId: { in: facilityIds } },
+    }),
   ]);
   return { facilityCount: facilityIds.length, registeredPatients, activeStaff };
 }
@@ -91,7 +93,7 @@ async function getPlatformDashboardData(): Promise<PlatformDashboardData> {
     prisma.facility.count({ where: { createdAt: { gte: startOfQuarter } } }),
     prisma.patient.count(),
     prisma.patient.count({ where: { createdAt: { gte: startOfMonth } } }),
-    prisma.user.count({ where: { role: { in: ["MIDWIFE", "DOCTOR"] }, isActive: true } }),
+    prisma.user.count({ where: { role: { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] }, isActive: true } }),
     prisma.superAdmin.findMany({
       where: { facilityId: { not: null } },
       select: { facilityId: true, name: true, isActive: true },
@@ -133,7 +135,7 @@ async function getFacilityAdminDashboardData(facilityId: string): Promise<Facili
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const sevenDaysAgo = new Date(now.getTime() - 7 * 86_400_000);
-  const staffWhere = { role: { in: ["MIDWIFE", "DOCTOR"] as Role[] }, facilityId };
+  const staffWhere = { role: { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] as Role[] }, facilityId };
 
   const [facility, totalStaff, activeStaff, totalPatients, patientsThisWeek, visitsThisMonth, pendingReferrals, staff] =
     await Promise.all([

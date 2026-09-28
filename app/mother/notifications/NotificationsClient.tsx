@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { cn, formatRelativeTime } from "@/lib/utils";
-import { CheckIcon, CalendarIcon, AlertTriangleIcon, MessageIcon, BellIcon } from "@/components/ui/icons";
+import { CheckIcon, CalendarIcon, AlertTriangleIcon, MessageIcon, BellIcon, LabIcon } from "@/components/ui/icons";
 import EmptyState from "@/components/ui/EmptyState";
 import Tabs from "@/components/ui/Tabs";
 
@@ -16,12 +16,13 @@ export interface NotificationListItem {
   createdAt: string;
 }
 
-const TABS = ["All", "Referral", "Vitals", "Appointments"] as const;
+const TABS = ["All", "Referral", "Vitals", "Appointments", "Lab Results"] as const;
 
 const TYPE_STYLES: Record<string, { bg: string; color: string; Icon: typeof CheckIcon }> = {
   REFERRAL: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: CheckIcon },
   APPOINTMENT: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: CalendarIcon },
   VITALS: { bg: "bg-high-bg", color: "text-high", Icon: AlertTriangleIcon },
+  LAB_RESULT: { bg: "bg-lilac-light", color: "text-lilac-deeper", Icon: LabIcon },
 };
 
 function styleFor(type: string) {
@@ -31,6 +32,7 @@ function styleFor(type: string) {
 function matchesTab(type: string, tab: (typeof TABS)[number]) {
   if (tab === "All") return true;
   if (tab === "Appointments") return type === "APPOINTMENT";
+  if (tab === "Lab Results") return type === "LAB_RESULT";
   return type === tab.toUpperCase();
 }
 

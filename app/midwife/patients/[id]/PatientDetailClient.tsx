@@ -5,7 +5,8 @@ import Link from "next/link";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import ShareRecordSheet from "@/components/ui/ShareRecordSheet";
-import { ShareIcon } from "@/components/ui/icons";
+import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
+import { ShareIcon, LabIcon } from "@/components/ui/icons";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
 const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
@@ -83,6 +84,7 @@ export default function PatientDetailClient({
 }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
   const [shareOpen, setShareOpen] = useState(false);
+  const [labSheetOpen, setLabSheetOpen] = useState(false);
 
   const latestVisit = visits[0] ?? null;
   const activeFlag = latestVisit?.flagged ? latestVisit : null;
@@ -123,6 +125,15 @@ export default function PatientDetailClient({
       <div className="flex flex-col gap-4 px-5 pb-40 pt-5">
         {tab === "Overview" && (
           <>
+            <button
+              type="button"
+              onClick={() => setLabSheetOpen(true)}
+              className="flex h-12 items-center justify-center gap-2 rounded-input border-[1.5px] border-border-color font-body text-sm font-bold text-text-primary"
+            >
+              <LabIcon className="size-4" />
+              Request Lab Test
+            </button>
+
             {latestVisit && (
               <div className="flex rounded-card bg-white p-4 border border-border-color">
                 <VitalCell emoji="🩸" label="BP" value={latestVisit.systolic && latestVisit.diastolic ? `${latestVisit.systolic}/${latestVisit.diastolic}` : "—"} danger={latestVisit.flagged} />
@@ -331,6 +342,13 @@ export default function PatientDetailClient({
         doctors={doctors}
         open={shareOpen}
         onClose={() => setShareOpen(false)}
+      />
+
+      <RequestLabTestSheet
+        patientId={patientId}
+        patientName={patientName}
+        open={labSheetOpen}
+        onClose={() => setLabSheetOpen(false)}
       />
     </>
   );

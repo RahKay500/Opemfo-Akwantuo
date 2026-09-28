@@ -12,13 +12,17 @@ export interface StaffDirectoryRow {
   name: string;
   email: string | null;
   phone: string | null;
-  role: "MIDWIFE" | "DOCTOR";
+  role: "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN";
   facilityName: string;
   isActive: boolean;
   hasPassword: boolean;
 }
 
-const ROLE_LABELS: Record<StaffDirectoryRow["role"], string> = { MIDWIFE: "Midwife", DOCTOR: "Doctor" };
+const ROLE_LABELS: Record<StaffDirectoryRow["role"], string> = {
+  MIDWIFE: "Midwife",
+  DOCTOR: "Doctor",
+  LAB_TECHNICIAN: "Lab Technician",
+};
 
 export default function StaffDirectoryClient({ staff }: { staff: StaffDirectoryRow[] }) {
   const router = useRouter();

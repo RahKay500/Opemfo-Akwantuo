@@ -33,7 +33,7 @@ export default async function AdminStaffPage({
   if (platform && !facility) notFound();
 
   const staff = await prisma.user.findMany({
-    where: { role: { in: ["MIDWIFE", "DOCTOR"] }, facilityId },
+    where: { role: { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] }, facilityId },
     orderBy: { createdAt: "desc" },
   });
 
@@ -58,7 +58,7 @@ export default async function AdminStaffPage({
             name: s.name,
             email: s.email,
             phone: s.phone,
-            role: s.role as "MIDWIFE" | "DOCTOR",
+            role: s.role as "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN",
             isActive: s.isActive,
             hasPassword: Boolean(s.passwordHash),
             createdAt: s.createdAt.toISOString(),

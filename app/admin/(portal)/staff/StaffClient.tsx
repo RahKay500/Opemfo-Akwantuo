@@ -12,17 +12,23 @@ export interface StaffRow {
   name: string;
   email: string | null;
   phone: string | null;
-  role: "MIDWIFE" | "DOCTOR";
+  role: "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN";
   isActive: boolean;
   hasPassword: boolean;
   createdAt: string;
 }
 
+const ROLE_LABEL: Record<StaffRow["role"], string> = {
+  MIDWIFE: "Midwife/Nurse",
+  DOCTOR: "Doctor",
+  LAB_TECHNICIAN: "Lab Technician",
+};
+
 export default function StaffClient({ staff }: { staff: StaffRow[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(searchParams.get("q") ?? "");
-  const [roleFilter, setRoleFilter] = useState<"All" | "MIDWIFE" | "DOCTOR">("All");
+  const [roleFilter, setRoleFilter] = useState<"All" | "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN">("All");
 
   const filtered = useMemo(() => {
     return staff.filter((s) => {
@@ -44,7 +50,7 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
     { key: "name", header: "Name", render: (r) => r.name },
     { key: "email", header: "Email", render: (r) => r.email ?? "—" },
     { key: "phone", header: "Phone", render: (r) => r.phone ?? "—" },
-    { key: "role", header: "Role", render: (r) => (r.role === "MIDWIFE" ? "Midwife/Nurse" : "Doctor") },
+    { key: "role", header: "Role", render: (r) => ROLE_LABEL[r.role] },
     {
       key: "status",
       header: "Status",
@@ -70,6 +76,7 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
           <option value="All">All roles</option>
           <option value="MIDWIFE">Midwife/Nurse</option>
           <option value="DOCTOR">Doctor</option>
+          <option value="LAB_TECHNICIAN">Lab Technician</option>
         </select>
       </div>
 

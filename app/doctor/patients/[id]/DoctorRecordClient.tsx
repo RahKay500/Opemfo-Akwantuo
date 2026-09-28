@@ -5,6 +5,8 @@ import { useState } from "react";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import IntakeSummary, { type IntakeSummaryData } from "@/components/records/IntakeSummary";
+import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
+import { LabIcon } from "@/components/ui/icons";
 import type { DoctorInboxStatus } from "@/lib/queries/doctor-inbox";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
@@ -76,6 +78,8 @@ export interface DoctorRecordDelivery {
 }
 
 export default function DoctorRecordClient({
+  patientId,
+  patientName,
   shareId,
   status: initialStatus,
   sharedByName,
@@ -88,6 +92,8 @@ export default function DoctorRecordClient({
   deliveryRecord,
   intake,
 }: {
+  patientId: string;
+  patientName: string;
   shareId: string;
   status: DoctorInboxStatus;
   sharedByName: string;
@@ -104,6 +110,7 @@ export default function DoctorRecordClient({
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
   const [status, setStatus] = useState(initialStatus);
   const [submitting, setSubmitting] = useState(false);
+  const [labSheetOpen, setLabSheetOpen] = useState(false);
 
   const latestVisit = visits[0] ?? null;
   const activeFlag = latestVisit?.flagged ? latestVisit : null;
@@ -178,6 +185,15 @@ export default function DoctorRecordClient({
       <div className="flex flex-col gap-4 px-5 pb-32 pt-5">
         {tab === "Overview" && (
           <>
+            <button
+              type="button"
+              onClick={() => setLabSheetOpen(true)}
+              className="flex h-12 items-center justify-center gap-2 rounded-input border-[1.5px] border-border-color font-body text-sm font-bold text-text-primary"
+            >
+              <LabIcon className="size-4" />
+              Request Lab Test
+            </button>
+
             {latestVisit && (
               <div className="flex rounded-card bg-white p-4 border border-border-color">
                 <VitalCell
@@ -350,6 +366,13 @@ export default function DoctorRecordClient({
           </button>
         </div>
       )}
+
+      <RequestLabTestSheet
+        patientId={patientId}
+        patientName={patientName}
+        open={labSheetOpen}
+        onClose={() => setLabSheetOpen(false)}
+      />
     </>
   );
 }

@@ -65,6 +65,8 @@ export default async function DoctorPatientDetailPage({ params }: { params: Prom
       </div>
 
       <DoctorRecordClient
+        patientId={patient.id}
+        patientName={patient.name}
         shareId={share.id}
         status={status}
         sharedByName={share.sharedByNurse.name}

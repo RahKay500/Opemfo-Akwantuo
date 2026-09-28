@@ -11,6 +11,7 @@ enum Role {
   MOTHER
   MIDWIFE
   DOCTOR
+  LAB_TECHNICIAN
 }
 
 enum Gender {
@@ -135,6 +136,8 @@ model User {
   auditLogs               AuditLog[]
   deliveryRecordsRecorded DeliveryRecord[] @relation("DeliveryRecordedBy")
   postnatalVisitsAsNurse  PostnatalVisit[] @relation("PostnatalVisitNurse")
+  labRequestsCreated      LabRequest[]     @relation("LabRequestedBy")
+  labRequestsCompleted    LabRequest[]     @relation("LabCompletedBy")
 
   @@index([facilityId])
 }
@@ -180,6 +183,7 @@ model Facility {
   referralsTo   Referral[]   @relation("ReferralToFacility")
   admins        SuperAdmin[]
   videos        Video[]
+  labRequests   LabRequest[]
 
   @@index([districtId])
 }
@@ -233,6 +237,7 @@ model Patient {
   notifyAppointments       Boolean @default(true)
   notifyReferralUpdates    Boolean @default(true)
   notifyEducationalContent Boolean @default(false)
+  notifyLabResults         Boolean @default(true)
 
   // Obstetric History (page 4) — no. of pregnancies/births already covered
   // by gravida/para above; the document splits abortions into these two.
@@ -287,6 +292,7 @@ model Patient {
   deliveryRecord      DeliveryRecord?
   postnatalVisits     PostnatalVisit[]
   labResults          LabResult[]
+  labRequests         LabRequest[]
 
   @@index([facilityId])
 }
@@ -725,4 +731,44 @@ model LabResult {
   createdAt  DateTime @default(now())
 
   @@index([patientId])
+}
+
+enum LabRequestStatus {
+  REQUESTED
+  IN_PROGRESS
+  READY
+  CANCELLED
+}
+
+// A Midwife or Doctor requests a test; it routes to the Lab Technician queue
+// at the PATIENT's own facility (like Referral routes to a facility, not a
+// specific person) since that's where the physical sample/test happens.
+// Deliberately separate from Patient's own flat Investigations fields and
+// from the (unused) LabResult model above — this is a request/result trail
+// with a status lifecycle, not a point-in-time snapshot.
+model LabRequest {
+  id            String           @id @default(cuid())
+  patientId     String
+  patient       Patient          @relation(fields: [patientId], references: [id])
+  facilityId    String
+  facility      Facility         @relation(fields: [facilityId], references: [id])
+  requestedById String
+  requestedBy   User             @relation("LabRequestedBy", fields: [requestedById], references: [id])
+  testType      String
+  notes         String?
+  status        LabRequestStatus @default(REQUESTED)
+  // Free-text, set by the Lab Technician while IN_PROGRESS — e.g. "Ready in
+  // 20 min". Not a computed countdown, just a human-friendly note.
+  eta           String?
+  result        String?
+  isAbnormal    Boolean          @default(false)
+  completedById String?
+  completedBy   User?            @relation("LabCompletedBy", fields: [completedById], references: [id])
+  requestedAt   DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  completedAt   DateTime?
+
+  @@index([facilityId])
+  @@index([patientId])
+  @@index([status])
 }

@@ -16,6 +16,7 @@ import {
   UserMultiple02Icon,
   Stethoscope02Icon,
   Doctor01Icon,
+  TestTubeIcon,
   Message01Icon,
   LockIcon as HugeLockIcon,
   ViewIcon,
@@ -84,6 +85,7 @@ export const FamilyIcon = makeIcon(UserMultiple02Icon);
 export const MidwifeIcon = makeIcon(Stethoscope02Icon);
 // Doctor role card icon.
 export const DoctorIcon = makeIcon(Doctor01Icon);
+export const LabIcon = makeIcon(TestTubeIcon);
 export const MessageIcon = makeIcon(Message01Icon);
 export const LockIcon = makeIcon(HugeLockIcon);
 export const EyeIcon = makeIcon(ViewIcon);

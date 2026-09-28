@@ -13,7 +13,7 @@ export default async function AdminStaffDirectoryPage() {
   if (!isPlatformAdmin(session)) redirect("/admin/staff");
 
   const staff = await prisma.user.findMany({
-    where: { role: { in: ["MIDWIFE", "DOCTOR"] } },
+    where: { role: { in: ["MIDWIFE", "DOCTOR", "LAB_TECHNICIAN"] } },
     include: { facility: { select: { name: true } } },
     orderBy: { createdAt: "desc" },
   });
@@ -28,7 +28,7 @@ export default async function AdminStaffDirectoryPage() {
             name: s.name,
             email: s.email,
             phone: s.phone,
-            role: s.role as "MIDWIFE" | "DOCTOR",
+            role: s.role as "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN",
             facilityName: s.facility?.name ?? "—",
             isActive: s.isActive,
             hasPassword: Boolean(s.passwordHash),

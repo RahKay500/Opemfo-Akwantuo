@@ -20,7 +20,7 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
   // yet, so they're treated the same as a Facility Admin here — scoped to
   // (in practice, never matching) session.facilityId rather than granted
   // Platform-style unrestricted access.
-  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR")) notFound();
+  if (!staff || (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR" && staff.role !== "LAB_TECHNICIAN")) notFound();
   if (!isPlatformAdmin(session) && staff.facilityId !== session.facilityId) notFound();
 
   const [auditLogs, patientCount] = await Promise.all([
@@ -41,7 +41,7 @@ export default async function AdminStaffDetailPage({ params }: { params: Promise
             name: staff.name,
             email: staff.email,
             phone: staff.phone,
-            role: staff.role as "MIDWIFE" | "DOCTOR",
+            role: staff.role as "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN",
             facilityId: staff.facilityId,
             facilityName: staff.facility?.name ?? null,
             licenseNumber: staff.licenseNumber,

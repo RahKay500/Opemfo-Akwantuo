@@ -21,7 +21,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   });
   if (
     !staff ||
-    (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR") ||
+    (staff.role !== "MIDWIFE" && staff.role !== "DOCTOR" && staff.role !== "LAB_TECHNICIAN") ||
     (!isPlatformAdmin(session) && staff.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   const existing = await prisma.user.findUnique({ where: { id: params.id } });
   if (
     !existing ||
-    (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
+    (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR" && existing.role !== "LAB_TECHNICIAN") ||
     (!isPlatformAdmin(session) && existing.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });
@@ -118,7 +118,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
   const existing = await prisma.user.findUnique({ where: { id: params.id } });
   if (
     !existing ||
-    (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR") ||
+    (existing.role !== "MIDWIFE" && existing.role !== "DOCTOR" && existing.role !== "LAB_TECHNICIAN") ||
     (!isPlatformAdmin(session) && existing.facilityId !== session.facilityId)
   ) {
     return NextResponse.json({ success: false, error: "Staff member not found." }, { status: 404 });

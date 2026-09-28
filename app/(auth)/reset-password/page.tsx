@@ -64,6 +64,7 @@ function ResetPasswordForm() {
         MOTHER: "/mother/dashboard",
         MIDWIFE: "/midwife/dashboard",
         DOCTOR: "/doctor/dashboard",
+        LAB_TECHNICIAN: "/lab-technician/dashboard",
       };
       router.push(ROLE_HOME[data.user.role] ?? "/login");
     } catch {

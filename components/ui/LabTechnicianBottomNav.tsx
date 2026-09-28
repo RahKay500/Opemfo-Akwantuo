@@ -3,16 +3,14 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { NavHomeIcon, NavRecordsIcon, NavProfileIcon, LabIcon } from "@/components/ui/icons";
+import { NavHomeIcon, NavProfileIcon } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
-  { href: "/doctor/dashboard", label: "Home", icon: NavHomeIcon },
-  { href: "/doctor/inbox", label: "Inbox", icon: NavRecordsIcon },
-  { href: "/doctor/lab-requests", label: "Lab", icon: LabIcon },
-  { href: "/doctor/profile", label: "Profile", icon: NavProfileIcon },
+  { href: "/lab-technician/dashboard", label: "Home", icon: NavHomeIcon },
+  { href: "/lab-technician/profile", label: "Profile", icon: NavProfileIcon },
 ] as const;
 
-export default function DoctorBottomNav() {
+export default function LabTechnicianBottomNav() {
   const pathname = usePathname();
 
   return (
