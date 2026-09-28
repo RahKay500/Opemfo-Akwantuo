@@ -60,7 +60,7 @@ export default async function MidwifeLogVitalsPage({
 
       <div className="px-5 pb-6 pt-5 lg:px-5 lg:pt-6">
         <LogVitalsForm
-          patients={patients.map((p) => ({ id: p.id, name: p.name, week: p.week }))}
+          patients={patients.map((p) => ({ id: p.id, name: p.name, phone: p.phone, week: p.week }))}
           initialPatientId={patientId ?? null}
         />
       </div>

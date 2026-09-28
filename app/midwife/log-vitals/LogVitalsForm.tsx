@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { cn, phoneSearchDigits } from "@/lib/utils";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import DateSelectInput from "@/components/ui/DateSelectInput";
@@ -12,6 +12,7 @@ import { suggestNextVisitDate } from "@/lib/pregnancy";
 export interface LogVitalsPatientOption {
   id: string;
   name: string;
+  phone: string;
   week: number | null;
 }
 
@@ -38,6 +39,9 @@ export default function LogVitalsForm({
 }) {
   const router = useRouter();
   const [patientId, setPatientId] = useState(initialPatientId ?? patients[0]?.id ?? "");
+  const initialPatient = patients.find((p) => p.id === (initialPatientId ?? patients[0]?.id));
+  const [patientQuery, setPatientQuery] = useState(initialPatient?.name ?? "");
+  const [patientListOpen, setPatientListOpen] = useState(false);
   const [visitType, setVisitType] = useState<"ANTENATAL" | "POSTNATAL">("ANTENATAL");
   const [systolic, setSystolic] = useState("");
   const [diastolic, setDiastolic] = useState("");
@@ -58,6 +62,20 @@ export default function LogVitalsForm({
   const [error, setError] = useState<string | null>(null);
 
   const selectedPatient = patients.find((p) => p.id === patientId) ?? null;
+
+  const queryDigits = phoneSearchDigits(patientQuery);
+  const filteredPatients = patients.filter((p) => {
+    if (!patientQuery) return true;
+    const nameMatch = p.name.toLowerCase().includes(patientQuery.toLowerCase());
+    const phoneMatch = queryDigits.length > 0 && phoneSearchDigits(p.phone).includes(queryDigits);
+    return nameMatch || phoneMatch;
+  });
+
+  function selectPatient(p: LogVitalsPatientOption) {
+    setPatientId(p.id);
+    setPatientQuery(p.name);
+    setPatientListOpen(false);
+  }
 
   // Pre-fills a suggested next-visit date whenever the patient/visit type
   // changes — a default, not a lock, matching this app's other
@@ -116,17 +134,45 @@ export default function LogVitalsForm({
     <div className="rounded-card bg-white p-5 border border-border-color lg:p-8">
       <h2 className="font-heading text-lg font-bold text-text-primary">Log Patient Vitals</h2>
 
-      <div className="mt-5">
+      <div className="relative mt-5">
         <label className="font-body text-[13px] font-medium text-text-secondary">Select Patient</label>
-        <Select selectSize="lg" value={patientId} onChange={(e) => setPatientId(e.target.value)} className="mt-1.5">
-          {patients.length === 0 && <option value="">No patients</option>}
-          {patients.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name}
-              {p.week != null ? ` — Wk ${p.week}` : ""}
-            </option>
-          ))}
-        </Select>
+        <Input
+          inputSize="lg"
+          value={patientQuery}
+          onChange={(e) => {
+            setPatientQuery(e.target.value);
+            setPatientListOpen(true);
+            if (e.target.value === "") setPatientId("");
+          }}
+          onFocus={() => setPatientListOpen(true)}
+          onBlur={() => setTimeout(() => setPatientListOpen(false), 150)}
+          placeholder="Search by name or phone..."
+          className="mt-1.5"
+        />
+        {patientListOpen && (
+          <div className="absolute z-10 mt-1 max-h-64 w-full overflow-y-auto rounded-input border-[1.5px] border-border-color bg-white shadow-md">
+            {filteredPatients.length === 0 && (
+              <p className="px-4 py-3 font-body text-sm text-text-secondary">No patients match.</p>
+            )}
+            {filteredPatients.map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                onMouseDown={() => selectPatient(p)}
+                className={cn(
+                  "flex w-full items-center justify-between px-4 py-2.5 text-left font-body text-sm hover:bg-lilac-light",
+                  p.id === patientId ? "bg-lilac-light text-lilac-deeper" : "text-text-primary"
+                )}
+              >
+                <span>{p.name}</span>
+                <span className="text-xs text-text-secondary">
+                  {p.phone}
+                  {p.week != null ? ` · Wk ${p.week}` : ""}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="mt-5">
