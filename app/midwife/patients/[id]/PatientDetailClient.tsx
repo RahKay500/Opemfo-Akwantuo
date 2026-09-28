@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import ShareRecordSheet from "@/components/ui/ShareRecordSheet";
 import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
-import { ShareIcon, LabIcon } from "@/components/ui/icons";
+import { ShareIcon, LabIcon, AlertTriangleIcon } from "@/components/ui/icons";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
 const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
@@ -73,6 +74,7 @@ export default function PatientDetailClient({
   iptpDoses,
   deliveryRecord,
   nextVisitOverride,
+  activeEmergencyAlert,
 }: {
   patientId: string;
   patientName: string;
@@ -83,10 +85,36 @@ export default function PatientDetailClient({
   iptpDoses: PatientDetailIptpDose[];
   deliveryRecord: PatientDetailDeliveryRecord | null;
   nextVisitOverride: { date: string; doctorName: string } | null;
+  activeEmergencyAlert: { id: string; triggeredAt: string } | null;
 }) {
+  const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
   const [shareOpen, setShareOpen] = useState(false);
   const [labSheetOpen, setLabSheetOpen] = useState(false);
+  const [emergencyAlert, setEmergencyAlert] = useState(activeEmergencyAlert);
+  const [resolveOpen, setResolveOpen] = useState(false);
+  const [resolveNotes, setResolveNotes] = useState("");
+  const [resolveSubmitting, setResolveSubmitting] = useState(false);
+
+  async function handleResolveEmergency() {
+    if (!emergencyAlert) return;
+    setResolveSubmitting(true);
+    try {
+      const res = await fetch(`/api/emergency/${emergencyAlert.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ notes: resolveNotes.trim() || undefined }),
+      });
+      if (res.ok) {
+        setEmergencyAlert(null);
+        setResolveOpen(false);
+        setResolveNotes("");
+        router.refresh();
+      }
+    } finally {
+      setResolveSubmitting(false);
+    }
+  }
 
   const latestVisit = visits[0] ?? null;
   const activeFlag = latestVisit?.flagged ? latestVisit : null;
@@ -127,6 +155,57 @@ export default function PatientDetailClient({
       <div className="flex flex-col gap-4 px-5 pb-40 pt-5">
         {tab === "Overview" && (
           <>
+            {emergencyAlert && (
+              <div className="rounded-card border border-critical/20 bg-critical-bg px-4 py-4">
+                <div className="flex items-start gap-2.5">
+                  <AlertTriangleIcon className="mt-0.5 size-5 shrink-0 text-critical" />
+                  <div className="flex-1">
+                    <p className="font-heading text-sm font-bold text-critical">Active Emergency Alert</p>
+                    <p className="mt-0.5 font-body text-xs text-critical">
+                      Triggered {formatRelativeTime(emergencyAlert.triggeredAt)}
+                    </p>
+                  </div>
+                </div>
+
+                {resolveOpen ? (
+                  <div className="mt-3 flex flex-col gap-2.5">
+                    <textarea
+                      value={resolveNotes}
+                      onChange={(e) => setResolveNotes(e.target.value)}
+                      rows={2}
+                      placeholder="Notes on how this was resolved (optional)"
+                      className="w-full resize-none rounded-input border-[1.5px] border-critical/30 bg-white p-3 font-body text-sm text-text-primary outline-none focus:border-critical"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setResolveOpen(false)}
+                        className="h-10 flex-1 rounded-input border-[1.5px] border-border-color bg-white font-body text-xs font-bold text-text-primary"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleResolveEmergency}
+                        disabled={resolveSubmitting}
+                        className="h-10 flex-1 rounded-input bg-critical font-body text-xs font-bold text-white disabled:opacity-60"
+                      >
+                        {resolveSubmitting ? "Saving…" : "Confirm Resolved"}
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setResolveOpen(true)}
+                    className="mt-3 flex h-10 w-full items-center justify-center rounded-input bg-critical font-body text-sm font-bold text-white"
+                  >
+                    Mark as Resolved
+                  </button>
+                )}
+              </div>
+            )}
+
             <button
               type="button"
               onClick={() => setLabSheetOpen(true)}

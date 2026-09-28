@@ -17,7 +17,7 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
   const detail = await getMidwifePatientDetail(id, user.facilityId);
   if (!detail) notFound();
 
-  const { patient, latestVisit } = detail;
+  const { patient, latestVisit, activeEmergencyAlert } = detail;
 
   const doctors = await prisma.user.findMany({
     where: { role: "DOCTOR", isActive: true },
@@ -84,6 +84,11 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
       <PatientDetailClient
         patientId={patient.id}
         patientName={patient.name}
+        activeEmergencyAlert={
+          activeEmergencyAlert
+            ? { id: activeEmergencyAlert.id, triggeredAt: activeEmergencyAlert.triggeredAt.toISOString() }
+            : null
+        }
         nextVisitOverride={
           patient.doctorNextVisitOverride
             ? {

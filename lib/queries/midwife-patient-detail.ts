@@ -13,6 +13,7 @@ export async function getMidwifePatientDetail(patientId: string, midwifeFacility
       iptpDoses: { orderBy: { dateGiven: "desc" } },
       deliveryRecord: true,
       doctorNextVisitOverrideBy: { select: { name: true } },
+      emergencyAlerts: { where: { isActive: true }, orderBy: { triggeredAt: "desc" }, take: 1 },
     },
   });
 
@@ -20,8 +21,9 @@ export async function getMidwifePatientDetail(patientId: string, midwifeFacility
 
   const latestVisit = patient.visits[0] ?? null;
   const activeReferral = patient.referrals.find((r) => !["COMPLETED", "CANCELLED"].includes(r.status)) ?? null;
+  const activeEmergencyAlert = patient.emergencyAlerts[0] ?? null;
 
-  return { patient, latestVisit, activeReferral };
+  return { patient, latestVisit, activeReferral, activeEmergencyAlert };
 }
 
 export type MidwifePatientDetail = NonNullable<Awaited<ReturnType<typeof getMidwifePatientDetail>>>;
