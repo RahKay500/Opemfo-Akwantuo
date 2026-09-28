@@ -72,6 +72,7 @@ export default function PatientDetailClient({
   vaccinations,
   iptpDoses,
   deliveryRecord,
+  nextVisitOverride,
 }: {
   patientId: string;
   patientName: string;
@@ -81,6 +82,7 @@ export default function PatientDetailClient({
   vaccinations: PatientDetailVaccination[];
   iptpDoses: PatientDetailIptpDose[];
   deliveryRecord: PatientDetailDeliveryRecord | null;
+  nextVisitOverride: { date: string; doctorName: string } | null;
 }) {
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
   const [shareOpen, setShareOpen] = useState(false);
@@ -133,6 +135,14 @@ export default function PatientDetailClient({
               <LabIcon className="size-4" />
               Request Lab Test
             </button>
+
+            {nextVisitOverride && (
+              <div className="rounded-card border border-lilac-mid bg-lilac-light px-4 py-3">
+                <p className="font-body text-sm font-medium text-lilac-deeper">
+                  {nextVisitOverride.doctorName} changed the next visit date to {formatDate(nextVisitOverride.date)}.
+                </p>
+              </div>
+            )}
 
             {latestVisit && (
               <div className="flex rounded-card bg-white p-4 border border-border-color">

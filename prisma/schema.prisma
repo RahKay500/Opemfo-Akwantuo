@@ -138,6 +138,7 @@ model User {
   postnatalVisitsAsNurse  PostnatalVisit[] @relation("PostnatalVisitNurse")
   labRequestsCreated      LabRequest[]     @relation("LabRequestedBy")
   labRequestsCompleted    LabRequest[]     @relation("LabCompletedBy")
+  nextVisitOverridesGiven Patient[]        @relation("DoctorNextVisitOverrideBy")
 
   @@index([facilityId])
 }
@@ -221,6 +222,14 @@ model Patient {
   deliveryDate             DateTime?
   createdAt                DateTime  @default(now())
   updatedAt                DateTime  @updatedAt
+
+  // A Doctor's clinical override of the midwife's auto-suggested next-visit
+  // date (see Visit.nextVisitDate below) — takes precedence over it on the
+  // mother's dashboard when set and in the future. Null clears the override,
+  // reverting to the midwife's own recorded date.
+  doctorNextVisitOverride     DateTime?
+  doctorNextVisitOverrideById String?
+  doctorNextVisitOverrideBy   User?     @relation("DoctorNextVisitOverrideBy", fields: [doctorNextVisitOverrideById], references: [id])
 
   // Ghana MCH Record Book — Family Identification (page 3)
   nhisNumber              String?

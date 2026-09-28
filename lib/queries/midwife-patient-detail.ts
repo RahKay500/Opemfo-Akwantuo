@@ -12,6 +12,7 @@ export async function getMidwifePatientDetail(patientId: string, midwifeFacility
       vaccinations: { orderBy: { dateGiven: "desc" } },
       iptpDoses: { orderBy: { dateGiven: "desc" } },
       deliveryRecord: true,
+      doctorNextVisitOverrideBy: { select: { name: true } },
     },
   });
 

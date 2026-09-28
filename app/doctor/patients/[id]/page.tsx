@@ -67,6 +67,13 @@ export default async function DoctorPatientDetailPage({ params }: { params: Prom
       <DoctorRecordClient
         patientId={patient.id}
         patientName={patient.name}
+        midwifeNextVisitDate={
+          latestVisit?.nextVisitDate && latestVisit.nextVisitDate.getTime() >= Date.now()
+            ? latestVisit.nextVisitDate.toISOString()
+            : null
+        }
+        nextVisitOverride={patient.doctorNextVisitOverride ? patient.doctorNextVisitOverride.toISOString() : null}
+        nextVisitOverrideByName={patient.doctorNextVisitOverrideBy?.name ?? null}
         shareId={share.id}
         status={status}
         sharedByName={share.sharedByNurse.name}

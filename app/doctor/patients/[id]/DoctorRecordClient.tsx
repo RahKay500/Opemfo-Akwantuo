@@ -91,6 +91,9 @@ export default function DoctorRecordClient({
   iptpDoses,
   deliveryRecord,
   intake,
+  midwifeNextVisitDate,
+  nextVisitOverride: initialNextVisitOverride,
+  nextVisitOverrideByName: initialNextVisitOverrideByName,
 }: {
   patientId: string;
   patientName: string;
@@ -105,12 +108,39 @@ export default function DoctorRecordClient({
   iptpDoses: DoctorRecordIptpDose[];
   deliveryRecord: DoctorRecordDelivery | null;
   intake: IntakeSummaryData;
+  midwifeNextVisitDate: string | null;
+  nextVisitOverride: string | null;
+  nextVisitOverrideByName: string | null;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
   const [status, setStatus] = useState(initialStatus);
   const [submitting, setSubmitting] = useState(false);
   const [labSheetOpen, setLabSheetOpen] = useState(false);
+  const [nextVisitOverride, setNextVisitOverride] = useState(initialNextVisitOverride);
+  const [nextVisitOverrideByName, setNextVisitOverrideByName] = useState(initialNextVisitOverrideByName);
+  const [overrideEditing, setOverrideEditing] = useState(false);
+  const [overrideDate, setOverrideDate] = useState(initialNextVisitOverride?.slice(0, 10) ?? "");
+  const [overrideSubmitting, setOverrideSubmitting] = useState(false);
+
+  async function saveOverride(date: string | null) {
+    setOverrideSubmitting(true);
+    try {
+      const res = await fetch(`/api/doctor/patients/${patientId}/next-visit`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ nextVisitDate: date }),
+      });
+      if (res.ok) {
+        setNextVisitOverride(date ? new Date(date).toISOString() : null);
+        setNextVisitOverrideByName(date ? "you" : null);
+        setOverrideEditing(false);
+        router.refresh();
+      }
+    } finally {
+      setOverrideSubmitting(false);
+    }
+  }
 
   const latestVisit = visits[0] ?? null;
   const activeFlag = latestVisit?.flagged ? latestVisit : null;
@@ -193,6 +223,79 @@ export default function DoctorRecordClient({
               <LabIcon className="size-4" />
               Request Lab Test
             </button>
+
+            <div className="rounded-card bg-white p-4 border border-border-color">
+              <div className="flex items-center justify-between">
+                <p className="font-body text-xs font-medium text-text-secondary">Next Visit</p>
+                {!overrideEditing && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOverrideDate(nextVisitOverride?.slice(0, 10) ?? midwifeNextVisitDate?.slice(0, 10) ?? "");
+                      setOverrideEditing(true);
+                    }}
+                    className="font-body text-xs font-medium text-pink-deep"
+                  >
+                    {nextVisitOverride ? "Change" : "Override"}
+                  </button>
+                )}
+              </div>
+
+              {overrideEditing ? (
+                <div className="mt-2 flex flex-col gap-2.5">
+                  <input
+                    type="date"
+                    value={overrideDate}
+                    onChange={(e) => setOverrideDate(e.target.value)}
+                    className="h-11 w-full rounded-input border-[1.5px] border-border-color px-3.5 font-body text-sm text-text-primary outline-none focus:border-primary"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setOverrideEditing(false)}
+                      className="h-10 flex-1 rounded-input border-[1.5px] border-border-color font-body text-xs font-bold text-text-primary"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => saveOverride(overrideDate || null)}
+                      disabled={overrideSubmitting || !overrideDate}
+                      className="h-10 flex-1 rounded-input bg-primary font-body text-xs font-bold text-white disabled:opacity-60"
+                    >
+                      {overrideSubmitting ? "Saving…" : "Save"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <p className="mt-1 font-heading text-base font-bold text-text-primary">
+                    {nextVisitOverride
+                      ? formatDate(nextVisitOverride)
+                      : midwifeNextVisitDate
+                        ? formatDate(midwifeNextVisitDate)
+                        : "Not set"}
+                  </p>
+                  <p className="mt-0.5 font-body text-xs text-text-secondary">
+                    {nextVisitOverride
+                      ? `Overridden by ${nextVisitOverrideByName === "you" ? "you" : nextVisitOverrideByName}`
+                      : midwifeNextVisitDate
+                        ? "Set by the midwife"
+                        : "No visit scheduled yet"}
+                  </p>
+                  {nextVisitOverride && (
+                    <button
+                      type="button"
+                      onClick={() => saveOverride(null)}
+                      disabled={overrideSubmitting}
+                      className="mt-2 font-body text-xs font-medium text-text-secondary underline disabled:opacity-60"
+                    >
+                      Clear override
+                    </button>
+                  )}
+                </>
+              )}
+            </div>
 
             {latestVisit && (
               <div className="flex rounded-card bg-white p-4 border border-border-color">

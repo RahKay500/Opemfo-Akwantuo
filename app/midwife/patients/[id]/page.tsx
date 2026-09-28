@@ -84,6 +84,14 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
       <PatientDetailClient
         patientId={patient.id}
         patientName={patient.name}
+        nextVisitOverride={
+          patient.doctorNextVisitOverride
+            ? {
+                date: patient.doctorNextVisitOverride.toISOString(),
+                doctorName: patient.doctorNextVisitOverrideBy?.name ?? "a doctor",
+              }
+            : null
+        }
         visits={patient.visits.map((v) => ({
           id: v.id,
           visitType: v.visitType,

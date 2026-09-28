@@ -22,6 +22,7 @@ export async function getDoctorPatientDetail(patientId: string, doctorId: string
       vaccinations: { orderBy: { dateGiven: "desc" } },
       iptpDoses: { orderBy: { dateGiven: "desc" } },
       deliveryRecord: true,
+      doctorNextVisitOverrideBy: { select: { name: true } },
     },
   });
   if (!patient) return null;

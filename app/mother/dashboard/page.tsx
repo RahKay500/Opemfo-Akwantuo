@@ -227,7 +227,11 @@ export default async function MotherDashboardPage() {
                   {data.nextAppointment.facilityName}
                 </p>
                 <p className="mt-0.5 font-body text-[11px] text-text-secondary">
-                  {data.nextAppointment.setByMidwife ? "Set by your midwife" : "Your booking request"}
+                  {data.nextAppointment.source === "doctor"
+                    ? "Set by your doctor"
+                    : data.nextAppointment.source === "midwife"
+                      ? "Set by your midwife"
+                      : "Your booking request"}
                 </p>
               </>
             ) : (
