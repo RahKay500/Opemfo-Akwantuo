@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { PlayIcon, XIcon } from "@/components/ui/icons";
+import { PlayIcon, XIcon, NavVideosIcon, VolumeHighIcon } from "@/components/ui/icons";
 import Tabs from "@/components/ui/Tabs";
+import VideoPlayer from "@/components/ui/VideoPlayer";
 import { FEATURED_VIDEO, VIDEOS, CATEGORIES, youtubeThumbnail, youtubeEmbedUrl, type VideoItem } from "./videos-data";
+
+function isAudio(video: VideoItem) {
+  return video.mimeType?.startsWith("audio/") ?? false;
+}
 
 export default function VideosClient({
   currentWeek,
@@ -75,7 +80,17 @@ export default function VideosClient({
             className="overflow-hidden rounded-card bg-white text-left border border-border-color"
           >
             <div className="relative flex h-[120px] items-center justify-center bg-lilac-light">
-              <Image src={youtubeThumbnail(video.url)} alt="" fill className="object-cover" sizes="50vw" />
+              {video.mimeType ? (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {isAudio(video) ? (
+                    <VolumeHighIcon className="size-8 text-lilac-deeper" />
+                  ) : (
+                    <NavVideosIcon className="size-8 text-lilac-deeper" />
+                  )}
+                </div>
+              ) : (
+                <Image src={youtubeThumbnail(video.url)} alt="" fill className="object-cover" sizes="50vw" />
+              )}
               <div className="absolute inset-0 bg-black/10" />
               <div className="relative flex size-8 items-center justify-center rounded-badge bg-white">
                 <PlayIcon className="ml-0.5 size-3 text-lilac-deeper" />
@@ -106,26 +121,39 @@ export default function VideosClient({
             <XIcon className="size-5" />
           </button>
           <div className="mx-auto w-full max-w-3xl">
-            <div className="aspect-video w-full overflow-hidden rounded-card bg-black">
-              <iframe
-                src={youtubeEmbedUrl(playing.url)}
-                title={playing.title}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="size-full"
-              />
-            </div>
+            {playing.mimeType ? (
+              isAudio(playing) ? (
+                <div className="flex aspect-video w-full flex-col items-center justify-center gap-4 rounded-card bg-black">
+                  <VolumeHighIcon className="size-12 text-white/70" />
+                  <audio controls autoPlay src={playing.url} className="w-full max-w-sm px-6" />
+                </div>
+              ) : (
+                <VideoPlayer src={playing.url} className="aspect-video w-full" />
+              )
+            ) : (
+              <div className="aspect-video w-full overflow-hidden rounded-card bg-black">
+                <iframe
+                  src={youtubeEmbedUrl(playing.url)}
+                  title={playing.title}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="size-full"
+                />
+              </div>
+            )}
             <p className="mt-3 font-heading text-base font-bold text-white">{playing.title}</p>
             <p className="mt-1 font-body text-xs text-white/70">
               {playing.duration ? `${playing.duration} · ` : ""}
               {playing.source}
             </p>
-            <p className="mt-2 font-body text-xs text-white/50">
-              Video not loading?{" "}
-              <a href={playing.url} target="_blank" rel="noopener noreferrer" className="underline">
-                Watch on YouTube ↗
-              </a>
-            </p>
+            {!playing.mimeType && (
+              <p className="mt-2 font-body text-xs text-white/50">
+                Video not loading?{" "}
+                <a href={playing.url} target="_blank" rel="noopener noreferrer" className="underline">
+                  Watch on YouTube ↗
+                </a>
+              </p>
+            )}
           </div>
         </div>
       )}

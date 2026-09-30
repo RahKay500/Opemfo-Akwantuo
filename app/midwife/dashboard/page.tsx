@@ -15,6 +15,7 @@ import {
   ChevronRightIcon,
   AlertTriangleIcon,
   MessageIcon,
+  NavVideosIcon,
 } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import PatientsWeekChartLoader from "@/components/ui/PatientsWeekChartLoader";
@@ -161,6 +162,17 @@ export default async function MidwifeDashboardPage() {
             <MessageIcon className="size-5" />
           </div>
           <p className="flex-1 font-heading text-sm font-bold text-text-primary">Messages</p>
+          <ChevronRightIcon className="size-3.5 text-[#9CA3AF]" />
+        </Link>
+
+        <Link
+          href="/midwife/learn"
+          className="flex items-center gap-3 rounded-card bg-white p-4 border border-border-color lg:hidden"
+        >
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-badge bg-lilac-light text-lilac-deeper">
+            <NavVideosIcon className="size-5" />
+          </div>
+          <p className="flex-1 font-heading text-sm font-bold text-text-primary">Learn &amp; Prepare</p>
           <ChevronRightIcon className="size-3.5 text-[#9CA3AF]" />
         </Link>
 

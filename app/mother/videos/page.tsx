@@ -34,6 +34,7 @@ export default async function MotherVideosPage() {
       title: v.title,
       source: v.facility?.name ?? "Ɔpemfoɔ Akwantuo",
       url: v.url,
+      mimeType: v.mimeType,
       category: v.category as VideoCategory,
     }));
 

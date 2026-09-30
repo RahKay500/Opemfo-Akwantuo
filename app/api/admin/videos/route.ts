@@ -28,6 +28,7 @@ export async function GET(request: NextRequest) {
       id: v.id,
       title: v.title,
       url: v.url,
+      mimeType: v.mimeType,
       category: v.category,
       createdAt: v.createdAt,
     })),
@@ -50,9 +51,11 @@ export async function POST(request: NextRequest) {
     data: {
       title: parsed.data.title,
       url: parsed.data.url,
+      mimeType: parsed.data.mimeType,
       category: parsed.data.category,
       facilityId: session.facilityId,
       addedById: session.sub,
+      addedByLabel: session.facilityId ? "Facility Admin" : "Platform Admin",
     },
   });
 

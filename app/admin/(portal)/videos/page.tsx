@@ -35,6 +35,7 @@ export default async function AdminVideosPage() {
             id: v.id,
             title: v.title,
             url: v.url,
+            mimeType: v.mimeType,
             category: v.category,
             createdAt: v.createdAt.toISOString(),
           }))}

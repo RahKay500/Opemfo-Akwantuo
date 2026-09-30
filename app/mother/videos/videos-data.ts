@@ -11,6 +11,9 @@ export interface VideoItem {
   duration?: string;
   source: string;
   url: string;
+  // Set only for an uploaded file ("video/mp4", "audio/mpeg", ...); absent
+  // means url is a YouTube link (true for every video below).
+  mimeType?: string | null;
   category: VideoCategory;
 }
 

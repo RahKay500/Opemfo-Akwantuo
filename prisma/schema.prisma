@@ -586,7 +586,6 @@ model SuperAdmin {
   updatedAt           DateTime  @updatedAt
 
   notifications AdminNotification[]
-  videosAdded   Video[]
 
   @@index([facilityId])
   @@index([districtId])
@@ -617,15 +616,22 @@ model AdminNotification {
 // link, no upload/hosting) — the mother-facing player already knows how
 // to embed any YouTube URL.
 model Video {
-  id         String     @id @default(cuid())
-  title      String
-  url        String
-  category   String
-  facilityId String?
-  facility   Facility?  @relation(fields: [facilityId], references: [id], onDelete: Cascade)
-  addedById  String
-  addedBy    SuperAdmin @relation(fields: [addedById], references: [id])
-  createdAt  DateTime   @default(now())
+  id           String    @id @default(cuid())
+  title        String
+  url          String
+  category     String
+  // null = a YouTube link (the original, only case); set = an uploaded file's
+  // MIME type ("video/mp4", "audio/mpeg", ...), which is what mother-facing
+  // playback branches on.
+  mimeType     String?
+  facilityId   String?
+  facility     Facility? @relation(fields: [facilityId], references: [id], onDelete: Cascade)
+  // Not a relation: authors can be a SuperAdmin (Platform/Facility Admin) or a
+  // Midwife (User) — two unrelated models with no clean polymorphic FK in
+  // Prisma. addedByLabel is a name+role snapshot taken at creation time.
+  addedById    String
+  addedByLabel String
+  createdAt    DateTime  @default(now())
 
   @@index([facilityId])
 }

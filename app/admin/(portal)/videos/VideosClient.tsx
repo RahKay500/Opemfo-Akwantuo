@@ -7,6 +7,8 @@ import RowActionsMenu, { RowActionItem } from "@/components/admin/RowActionsMenu
 import Modal from "@/components/admin/Modal";
 import FormField from "@/components/admin/FormField";
 import Button from "@/components/ui/Button";
+import FileUpload from "@/components/ui/FileUpload";
+import { useVideoUpload } from "@/lib/useVideoUpload";
 import { formatDate } from "@/lib/utils";
 import { VIDEO_CATEGORIES } from "@/lib/videos";
 
@@ -14,6 +16,7 @@ export interface VideoRow {
   id: string;
   title: string;
   url: string;
+  mimeType: string | null;
   category: string;
   createdAt: string;
 }
@@ -21,6 +24,7 @@ export interface VideoRow {
 interface FormState {
   title: string;
   url: string;
+  mimeType?: string;
   category: (typeof VIDEO_CATEGORIES)[number];
 }
 
@@ -31,20 +35,26 @@ export default function VideosClient({ videos }: { videos: VideoRow[] }) {
   const [addOpen, setAddOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<VideoRow | null>(null);
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [mode, setMode] = useState<"link" | "upload">("link");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const upload = useVideoUpload();
 
   function closeModals() {
     setAddOpen(false);
     setDeleteTarget(null);
     setForm(EMPTY_FORM);
+    setMode("link");
+    upload.reset();
     setError(null);
   }
 
   async function handleCreate() {
     setError(null);
-    if (!form.title.trim() || !form.url.trim()) {
-      setError("Fill in all fields.");
+    const url = mode === "upload" ? upload.result?.url : form.url;
+    const mimeType = mode === "upload" ? upload.result?.mimeType : undefined;
+    if (!form.title.trim() || !url) {
+      setError(mode === "upload" ? "Add a title and wait for the file to finish uploading." : "Fill in all fields.");
       return;
     }
     setSubmitting(true);
@@ -52,7 +62,7 @@ export default function VideosClient({ videos }: { videos: VideoRow[] }) {
       const res = await fetch("/api/admin/videos", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ title: form.title, category: form.category, url, mimeType }),
       });
       const data = await res.json();
       if (!data.success) {
@@ -107,7 +117,7 @@ export default function VideosClient({ videos }: { videos: VideoRow[] }) {
           onClick={(e) => e.stopPropagation()}
           className="text-[#2663EB] hover:underline"
         >
-          Watch on YouTube ↗
+          {r.mimeType ? `Open ${r.mimeType.startsWith("audio/") ? "audio" : "video"} file ↗` : "Watch on YouTube ↗"}
         </a>
       ),
     },
@@ -136,6 +146,8 @@ export default function VideosClient({ videos }: { videos: VideoRow[] }) {
           type="button"
           onClick={() => {
             setForm(EMPTY_FORM);
+            setMode("link");
+            upload.reset();
             setError(null);
             setAddOpen(true);
           }}
@@ -180,13 +192,41 @@ export default function VideosClient({ videos }: { videos: VideoRow[] }) {
               className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
             />
           </FormField>
-          <FormField label="YouTube link" required>
-            <input
-              value={form.url}
-              onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
-              placeholder="https://www.youtube.com/watch?v=..."
-              className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
-            />
+          <FormField label="Content" required>
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setMode("link")}
+                  className={`h-9 flex-1 rounded-md border px-3 text-sm font-medium ${mode === "link" ? "border-[#9F1AB1] bg-[#FBE8FF] text-[#9F1AB1]" : "border-[#E2E8F0] text-[#1A1A2E]"}`}
+                >
+                  YouTube link
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("upload")}
+                  className={`h-9 flex-1 rounded-md border px-3 text-sm font-medium ${mode === "upload" ? "border-[#9F1AB1] bg-[#FBE8FF] text-[#9F1AB1]" : "border-[#E2E8F0] text-[#1A1A2E]"}`}
+                >
+                  Upload file
+                </button>
+              </div>
+              {mode === "link" ? (
+                <input
+                  value={form.url}
+                  onChange={(e) => setForm((f) => ({ ...f, url: e.target.value }))}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
+                />
+              ) : (
+                <FileUpload
+                  accept="video/*,audio/*"
+                  hint="MP4, MOV, WebM or MP3/WAV (max 200MB)"
+                  files={upload.file ? [upload.file] : []}
+                  onFilesSelected={upload.handleFilesSelected}
+                  onRemove={upload.reset}
+                />
+              )}
+            </div>
           </FormField>
           <FormField label="Category" required>
             <select
@@ -201,7 +241,7 @@ export default function VideosClient({ videos }: { videos: VideoRow[] }) {
               ))}
             </select>
           </FormField>
-          {error && <p className="text-sm text-[#DC2626]">{error}</p>}
+          {(error || upload.error) && <p className="text-sm text-[#DC2626]">{error ?? upload.error}</p>}
         </div>
       </Modal>
 

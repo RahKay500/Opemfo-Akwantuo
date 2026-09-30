@@ -14,6 +14,7 @@ import {
   AlertTriangleIcon,
   LabIcon,
   MessageIcon,
+  NavVideosIcon,
 } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
@@ -24,6 +25,7 @@ const NAV_ITEMS = [
   { href: "/midwife/messages", label: "Messages", icon: MessageIcon, badge: true },
   { href: "/midwife/lab-requests", label: "Lab Requests", icon: LabIcon },
   { href: "/midwife/appointments", label: "Appointments", icon: CalendarIcon },
+  { href: "/midwife/learn", label: "Learn & Prepare", icon: NavVideosIcon },
   { href: "/midwife/register", label: "Register Patient", icon: PlusIcon },
 ];
 
