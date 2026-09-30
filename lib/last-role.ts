@@ -3,10 +3,11 @@
 // never sent to the server, unrelated to the actual session/auth cookies.
 const KEY = "opemfo_last_role";
 
-export type LastRole = "MOTHER" | "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN";
+export type LastRole = "MOTHER" | "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN" | "PARTNER";
 
 export function setLastRole(role: string): void {
-  if (role !== "MOTHER" && role !== "MIDWIFE" && role !== "DOCTOR" && role !== "LAB_TECHNICIAN") return;
+  if (role !== "MOTHER" && role !== "MIDWIFE" && role !== "DOCTOR" && role !== "LAB_TECHNICIAN" && role !== "PARTNER")
+    return;
   try {
     localStorage.setItem(KEY, role);
   } catch {
@@ -17,7 +18,14 @@ export function setLastRole(role: string): void {
 export function getLastRole(): LastRole | null {
   try {
     const value = localStorage.getItem(KEY);
-    if (value === "MOTHER" || value === "MIDWIFE" || value === "DOCTOR" || value === "LAB_TECHNICIAN") return value;
+    if (
+      value === "MOTHER" ||
+      value === "MIDWIFE" ||
+      value === "DOCTOR" ||
+      value === "LAB_TECHNICIAN" ||
+      value === "PARTNER"
+    )
+      return value;
     return null;
   } catch {
     return null;

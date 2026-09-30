@@ -1,25 +1,38 @@
+import { redirect } from "next/navigation";
+import { getCurrentUser } from "@/lib/current-user";
 import { getPartnerViewData } from "@/lib/queries/partner-view";
 import { formatDate } from "@/lib/utils";
-import ProgressRing from "@/components/ui/ProgressRing";
 import { HeartRateIcon, BPIcon, FlagIcon, PatientsIcon } from "@/components/ui/icons";
+import LogoutButton from "@/components/ui/LogoutButton";
+import ProgressRing from "@/components/ui/ProgressRing";
 
-export default async function PartnerViewPage({ params }: { params: { token: string } }) {
-  const data = await getPartnerViewData(params.token);
+export default async function PartnerDashboardPage() {
+  const user = await getCurrentUser();
+  if (!user) redirect("/login");
+
+  const data = await getPartnerViewData(user.id);
 
   if (!data) {
     return (
-      <main className="flex min-h-screen flex-col items-center justify-center gap-2 bg-[#F6F1F8] p-6 text-center">
-        <p className="font-heading text-lg font-bold text-text-primary">Link no longer active</p>
+      <main className="flex min-h-screen flex-col items-center justify-center gap-3 bg-[#F6F1F8] p-6 text-center">
+        <p className="font-heading text-lg font-bold text-text-primary">You&apos;re not currently connected</p>
         <p className="font-body text-sm text-text-secondary">
-          This link is no longer active. Ask them to share a new one.
+          You don&apos;t have active access to anyone&apos;s pregnancy tracker right now. Ask them to invite you again
+          from their app.
         </p>
+        <LogoutButton />
       </main>
     );
   }
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-[#F6F1F8] px-5 pb-10 pt-14">
-      <div className="flex flex-col items-center gap-1 text-center">
+    <main className="mx-auto flex min-h-screen w-full max-w-[430px] flex-col bg-[#F6F1F8] px-5 pb-10 pt-8">
+      <div className="flex items-center justify-between">
+        <p className="font-body text-xs text-text-secondary">Signed in as {user.name}</p>
+        <LogoutButton />
+      </div>
+
+      <div className="mt-4 flex flex-col items-center gap-1 text-center">
         <div className="flex size-14 items-center justify-center rounded-badge bg-lilac-light">
           <HeartRateIcon className="size-6 text-lilac-deeper" />
         </div>
@@ -131,7 +144,8 @@ export default async function PartnerViewPage({ params }: { params: { token: str
               Blood group: <span className="text-text-secondary">{data.medicalHistory.bloodGroup ?? "Not recorded"}</span>
             </p>
             <p className="font-body text-sm text-text-primary">
-              Known conditions: <span className="text-text-secondary">{data.medicalHistory.knownConditions ?? "None recorded"}</span>
+              Known conditions:{" "}
+              <span className="text-text-secondary">{data.medicalHistory.knownConditions ?? "None recorded"}</span>
             </p>
             {data.medicalHistory.majorRiskFactors.length > 0 && (
               <p className="font-body text-sm text-text-primary">

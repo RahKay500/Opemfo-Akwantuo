@@ -132,14 +132,10 @@ export async function sendAppointmentConfirmedSms(
   await sendSms(motherPhone, `Your appointment on ${date} has been confirmed.`);
 }
 
-export async function sendPartnerInviteSms(
-  partnerPhone: string,
-  motherName: string,
-  url: string
-): Promise<void> {
+export async function sendPartnerInviteSms(partnerPhone: string, motherName: string): Promise<void> {
   await sendSms(
     partnerPhone,
-    `${motherName} invited you to follow her pregnancy journey on Ɔpemfoɔ Akwantuo. View it here: ${url}`
+    `${motherName} invited you to follow her pregnancy journey on Ɔpemfoɔ Akwantuo. Open the app and activate your account with this phone number to get started.`
   );
 }
 

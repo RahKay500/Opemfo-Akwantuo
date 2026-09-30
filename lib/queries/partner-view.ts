@@ -19,12 +19,12 @@ export interface PartnerViewData {
   };
 }
 
-export async function getPartnerViewData(token: string): Promise<PartnerViewData | null> {
-  const link = await prisma.partnerLink.findUnique({
-    where: { token },
+export async function getPartnerViewData(userId: string): Promise<PartnerViewData | null> {
+  const link = await prisma.partnerLink.findFirst({
+    where: { userId, revokedAt: null },
     include: { patient: true },
   });
-  if (!link || link.revokedAt) return null;
+  if (!link) return null;
 
   const permissions = {
     shareProgress: link.shareProgress,

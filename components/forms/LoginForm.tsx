@@ -24,6 +24,7 @@ const ROLE_HOME: Record<string, string> = {
   MIDWIFE: "/midwife/dashboard",
   DOCTOR: "/doctor/dashboard",
   LAB_TECHNICIAN: "/lab-technician/dashboard",
+  PARTNER: "/partner/dashboard",
 };
 
 export default function LoginForm() {

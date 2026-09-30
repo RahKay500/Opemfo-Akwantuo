@@ -12,6 +12,7 @@ enum Role {
   MIDWIFE
   DOCTOR
   LAB_TECHNICIAN
+  PARTNER
 }
 
 enum Gender {
@@ -141,6 +142,7 @@ model User {
   nextVisitOverridesGiven Patient[]        @relation("DoctorNextVisitOverrideBy")
   conversationsAsStaff    Conversation[]   @relation("ConversationStaff")
   messagesSent            Message[]
+  partnerLinks            PartnerLink[]
 
   @@index([facilityId])
 }
@@ -317,8 +319,16 @@ model Patient {
 model PartnerLink {
   id                  String    @id @default(cuid())
   patientId           String
-  patient             Patient   @relation(fields: [patientId], references: [id])
-  token               String    @unique
+  patient             Patient   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  // The invited Partner's own account, set at invite time (see
+  // POST /api/mother/partner-link) — replaces the old bearer-token link;
+  // a Partner now signs in like every other role instead of following a URL.
+  // Not @unique — a revoked link stays as history, so the same partner
+  // phone/account can end up with more than one row over time (mirrors the
+  // patientId side, where only one `revokedAt: null` row per patient/partner
+  // is enforced at the application level, not by the schema).
+  userId              String?
+  user                User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
   partnerName         String?
   partnerPhone        String?
   // Per-category visibility, set by the mother when the invite is created.
@@ -335,6 +345,7 @@ model PartnerLink {
   revokedAt           DateTime?
 
   @@index([patientId])
+  @@index([userId])
 }
 
 model Visit {

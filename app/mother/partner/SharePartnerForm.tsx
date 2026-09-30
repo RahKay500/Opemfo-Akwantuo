@@ -2,13 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { PartnerIcon, CopyIcon, CheckIcon } from "@/components/ui/icons";
+import { PartnerIcon } from "@/components/ui/icons";
 import { cn, digitsOnly, lettersOnly } from "@/lib/utils";
 import Toggle from "@/components/ui/Toggle";
 import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
 
-type LinkState = "loading" | "inactive" | "active";
+type LinkState = "loading" | "inactive" | "pending" | "active";
 
 interface Permissions {
   shareProgress: boolean;
@@ -40,14 +39,11 @@ const PERMISSION_LABELS: { key: keyof Permissions; label: string }[] = [
 export default function SharePartnerForm() {
   const router = useRouter();
   const [state, setState] = useState<LinkState>("loading");
-  const [url, setUrl] = useState<string | null>(null);
   const [activePartnerName, setActivePartnerName] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [copied, setCopied] = useState(false);
 
   const [partnerName, setPartnerName] = useState("");
   const [partnerPhone, setPartnerPhone] = useState("");
-  const [sendVia, setSendVia] = useState<"sms" | "link">("sms");
   const [permissions, setPermissions] = useState<Permissions>(DEFAULT_PERMISSIONS);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,9 +52,8 @@ export default function SharePartnerForm() {
       .then((res) => res.json())
       .then((data) => {
         if (data.active) {
-          setUrl(data.url);
           setActivePartnerName(data.partnerName ?? null);
-          setState("active");
+          setState(data.partnerActivated ? "active" : "pending");
         } else {
           setState("inactive");
         }
@@ -79,7 +74,6 @@ export default function SharePartnerForm() {
         body: JSON.stringify({
           partnerName: partnerName.trim(),
           partnerPhone: partnerPhone.trim(),
-          sendVia,
           ...permissions,
         }),
       });
@@ -89,9 +83,8 @@ export default function SharePartnerForm() {
         return;
       }
       const data = await res.json();
-      setUrl(data.url);
       setActivePartnerName(partnerName.trim());
-      setState("active");
+      setState(data.partnerActivated ? "active" : "pending");
     } finally {
       setBusy(false);
     }
@@ -101,7 +94,6 @@ export default function SharePartnerForm() {
     setBusy(true);
     try {
       await fetch("/api/mother/partner-link", { method: "DELETE" });
-      setUrl(null);
       setActivePartnerName(null);
       setPartnerName("");
       setPartnerPhone("");
@@ -112,59 +104,29 @@ export default function SharePartnerForm() {
     }
   }
 
-  async function handleCopy() {
-    if (!url) return;
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  async function handleShare() {
-    if (!url) return;
-    if (navigator.share) {
-      try {
-        await navigator.share({ title: "Follow my pregnancy journey", url });
-        return;
-      } catch {
-        // User cancelled the share sheet — fall through to clipboard copy.
-      }
-    }
-    await navigator.clipboard.writeText(url);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
   if (state === "loading") {
     return <p className="px-5 py-8 text-center font-body text-sm text-text-secondary">Loading…</p>;
   }
 
-  if (state === "active" && url) {
+  if (state === "pending" || state === "active") {
     return (
       <div className="flex flex-col items-center gap-4 px-5 py-8 text-center">
+        <div className="flex size-14 items-center justify-center rounded-badge bg-pink-light">
+          <PartnerIcon className="size-6 text-pink-deep" />
+        </div>
         <p className="font-body text-sm text-text-secondary">
-          {activePartnerName ? (
+          {state === "pending" ? (
             <>
-              <span className="font-medium text-text-primary">{activePartnerName}</span> can view your pregnancy
-              tracker from this link until you revoke it.
+              We texted <span className="font-medium text-text-primary">{activePartnerName}</span> — they&apos;ll be
+              able to view your pregnancy tracker once they activate their account.
             </>
           ) : (
-            "Your partner can view your pregnancy tracker from this link until you revoke it."
+            <>
+              <span className="font-medium text-text-primary">{activePartnerName}</span> has access to your
+              pregnancy tracker.
+            </>
           )}
         </p>
-        <div className="flex w-full max-w-md items-center gap-2 rounded-input border-[1.5px] border-border-color bg-white p-3.5">
-          <p className="flex-1 break-all text-left font-body text-xs text-text-secondary">{url}</p>
-          <button
-            type="button"
-            onClick={handleCopy}
-            aria-label="Copy link"
-            className="flex size-8 shrink-0 items-center justify-center rounded-badge bg-lilac-light text-lilac-deeper"
-          >
-            {copied ? <CheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
-          </button>
-        </div>
-        <Button size="cta" shape="rect" onClick={handleShare} className="max-w-md">
-          {copied ? "Copied!" : "Share link"}
-        </Button>
         <button
           type="button"
           onClick={handleRevoke}
@@ -187,7 +149,7 @@ export default function SharePartnerForm() {
           <div>
             <h2 className="font-heading text-base font-bold text-text-primary">Invite your partner</h2>
             <p className="mt-0.5 font-body text-[13px] text-text-secondary">
-              Give your partner read-only access to stay informed and involved.
+              Give your partner their own read-only login to stay informed and involved.
             </p>
           </div>
         </div>
@@ -203,22 +165,6 @@ export default function SharePartnerForm() {
           />
         </div>
 
-        <div className="mt-4 flex rounded-badge bg-lilac-light p-1">
-          {(["sms", "link"] as const).map((v) => (
-            <button
-              key={v}
-              type="button"
-              onClick={() => setSendVia(v)}
-              className={cn(
-                "flex-1 rounded-badge py-2.5 text-center font-heading text-sm font-bold",
-                sendVia === v ? "bg-white text-lilac-deeper border border-border-color" : "font-body font-normal text-text-secondary"
-              )}
-            >
-              {v === "sms" ? "Send via SMS" : "Copy link"}
-            </button>
-          ))}
-        </div>
-
         <div className="mt-4">
           <label className="font-body text-[13px] font-medium text-text-secondary">Partner&apos;s phone number</label>
           <Input
@@ -229,6 +175,9 @@ export default function SharePartnerForm() {
             className="mt-1.5"
             inputMode="numeric"
           />
+          <p className="mt-1.5 font-body text-xs text-text-secondary">
+            We&apos;ll text them to activate their own account with this number.
+          </p>
         </div>
       </div>
 
@@ -258,7 +207,7 @@ export default function SharePartnerForm() {
       <div className="rounded-card bg-lilac-light p-4 lg:col-span-2">
         <p className="font-body text-xs text-lilac-deeper">
           <span className="font-semibold">✓ Your partner gets read-only access.</span> They cannot edit records,
-          contact your nurse, or create referrals. Revoke anytime from Profile → Privacy Settings.
+          contact your nurse, or create referrals. Revoke anytime from this screen.
         </p>
       </div>
 

@@ -1,9 +1,9 @@
-import { randomBytes } from "crypto";
 import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { getSessionFromRequest } from "@/lib/auth";
 import { createPartnerLinkSchema } from "@/lib/validations/partner";
 import { sendPartnerInviteSms } from "@/lib/hubtel";
+import { normalizeGhanaPhone } from "@/lib/utils";
 
 async function getPatientForSession(request: NextRequest) {
   const session = await getSessionFromRequest(request);
@@ -20,6 +20,7 @@ export async function GET(request: NextRequest) {
   const link = await prisma.partnerLink.findFirst({
     where: { patientId: patient.id, revokedAt: null },
     orderBy: { createdAt: "desc" },
+    include: { user: { select: { isActive: true } } },
   });
 
   if (!link) {
@@ -27,7 +28,7 @@ export async function GET(request: NextRequest) {
   }
   return NextResponse.json({
     active: true,
-    url: `${request.nextUrl.origin}/partner/${link.token}`,
+    partnerActivated: link.user?.isActive ?? false,
     partnerName: link.partnerName,
     partnerPhone: link.partnerPhone,
     permissions: {
@@ -55,7 +56,6 @@ export async function POST(request: NextRequest) {
   const {
     partnerName,
     partnerPhone,
-    sendVia,
     shareProgress,
     shareAppointments,
     shareVitals,
@@ -64,18 +64,47 @@ export async function POST(request: NextRequest) {
     shareMedicalHistory,
   } = parsed.data;
 
+  const phone = normalizeGhanaPhone(partnerPhone);
+  if (!phone) {
+    return NextResponse.json({ error: "Invalid phone number." }, { status: 400 });
+  }
+
+  let partnerUser = await prisma.user.findUnique({ where: { phone } });
+  if (partnerUser && partnerUser.role !== "PARTNER") {
+    return NextResponse.json(
+      { error: "This phone number already has an account on Ɔpemfoɔ Akwantuo and can't be invited as a partner." },
+      { status: 409 }
+    );
+  }
+  if (partnerUser) {
+    const existingLink = await prisma.partnerLink.findFirst({
+      where: { userId: partnerUser.id, revokedAt: null },
+    });
+    if (existingLink && existingLink.patientId !== patient.id) {
+      return NextResponse.json(
+        { error: "This phone number is already invited or connected as a partner to another account." },
+        { status: 409 }
+      );
+    }
+  }
+
+  if (!partnerUser) {
+    partnerUser = await prisma.user.create({
+      data: { name: partnerName, phone, role: "PARTNER", isActive: false },
+    });
+  }
+
   await prisma.partnerLink.updateMany({
     where: { patientId: patient.id, revokedAt: null },
     data: { revokedAt: new Date() },
   });
 
-  const token = randomBytes(24).toString("base64url");
   await prisma.partnerLink.create({
     data: {
       patientId: patient.id,
-      token,
+      userId: partnerUser.id,
       partnerName,
-      partnerPhone,
+      partnerPhone: phone,
       shareProgress,
       shareAppointments,
       shareVitals,
@@ -85,13 +114,9 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  const url = `${request.nextUrl.origin}/partner/${token}`;
+  await sendPartnerInviteSms(phone, patient.name);
 
-  if (sendVia === "sms") {
-    await sendPartnerInviteSms(partnerPhone, patient.name, url);
-  }
-
-  return NextResponse.json({ url });
+  return NextResponse.json({ partnerActivated: partnerUser.isActive });
 }
 
 export async function DELETE(request: NextRequest) {
