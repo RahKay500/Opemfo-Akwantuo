@@ -7,7 +7,7 @@ import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import ShareRecordSheet from "@/components/ui/ShareRecordSheet";
 import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
-import { ShareIcon, LabIcon, AlertTriangleIcon } from "@/components/ui/icons";
+import { ShareIcon, LabIcon, AlertTriangleIcon, MessageIcon } from "@/components/ui/icons";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
 const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
@@ -75,6 +75,7 @@ export default function PatientDetailClient({
   deliveryRecord,
   nextVisitOverride,
   activeEmergencyAlert,
+  canMessage,
 }: {
   patientId: string;
   patientName: string;
@@ -86,6 +87,7 @@ export default function PatientDetailClient({
   deliveryRecord: PatientDetailDeliveryRecord | null;
   nextVisitOverride: { date: string; doctorName: string } | null;
   activeEmergencyAlert: { id: string; triggeredAt: string } | null;
+  canMessage: boolean;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
@@ -95,6 +97,24 @@ export default function PatientDetailClient({
   const [resolveOpen, setResolveOpen] = useState(false);
   const [resolveNotes, setResolveNotes] = useState("");
   const [resolveSubmitting, setResolveSubmitting] = useState(false);
+  const [messaging, setMessaging] = useState(false);
+
+  async function handleMessage() {
+    setMessaging(true);
+    try {
+      const res = await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patientId }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        router.push(`/midwife/messages/${data.conversationId}`);
+      }
+    } finally {
+      setMessaging(false);
+    }
+  }
 
   async function handleResolveEmergency() {
     if (!emergencyAlert) return;
@@ -214,6 +234,18 @@ export default function PatientDetailClient({
               <LabIcon className="size-4" />
               Request Lab Test
             </button>
+
+            {canMessage && (
+              <button
+                type="button"
+                onClick={handleMessage}
+                disabled={messaging}
+                className="flex h-12 items-center justify-center gap-2 rounded-input border-[1.5px] border-border-color font-body text-sm font-bold text-text-primary disabled:opacity-60"
+              >
+                <MessageIcon className="size-4" />
+                {messaging ? "Opening…" : "Message"}
+              </button>
+            )}
 
             {nextVisitOverride && (
               <div className="rounded-card border border-lilac-mid bg-lilac-light px-4 py-3">

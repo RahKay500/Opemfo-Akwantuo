@@ -101,6 +101,7 @@ export const ChevronRightIcon = makeIcon(HugeChevronRightIcon);
 export const NavHomeIcon = makeIcon(Home01Icon);
 export const NavRecordsIcon = makeIcon(File01Icon);
 export const NavReferralIcon = makeIcon(SentIcon);
+export const SendIcon = makeIcon(SentIcon);
 export const NavAlertsIcon = makeIcon(AlertCircleIcon);
 export const NavProfileIcon = makeIcon(UserIcon);
 export const AnalyticsIcon = makeIcon(Analytics01Icon);

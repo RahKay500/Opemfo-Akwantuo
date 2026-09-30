@@ -14,6 +14,7 @@ import {
   NavAlertsIcon,
   PartnerIcon,
   NavProfileIcon,
+  MessageIcon,
 } from "@/components/ui/icons";
 import EmergencyConfirmSheet from "@/components/ui/EmergencyConfirmSheet";
 
@@ -21,6 +22,7 @@ const NAV_ITEMS = [
   { href: "/mother/dashboard", label: "Home", icon: NavHomeIcon },
   { href: "/mother/records", label: "My Records", icon: NavRecordsIcon },
   { href: "/mother/referral", label: "Referral Status", icon: NavReferralIcon },
+  { href: "/mother/messages", label: "Messages", icon: MessageIcon },
   { href: "/mother/symptoms", label: "Report Symptoms", icon: AlertTriangleIcon },
   { href: "/mother/book", label: "Book a Visit", icon: CalendarIcon },
   { href: "/mother/videos", label: "Learn & Prepare", icon: PlayIcon },
@@ -30,8 +32,10 @@ const NAV_ITEMS = [
 
 export default function MotherSidebar({
   unreadCount,
+  unreadMessagesCount,
 }: {
   unreadCount: number;
+  unreadMessagesCount: number;
 }) {
   const pathname = usePathname();
   const [emergencyOpen, setEmergencyOpen] = useState(false);
@@ -61,6 +65,11 @@ export default function MotherSidebar({
                 {label === "Alerts" && unreadCount > 0 && (
                   <span className="flex h-5 min-w-5 items-center justify-center rounded-badge bg-pink-accent px-1.5 font-body text-[11px] font-bold text-white">
                     {unreadCount}
+                  </span>
+                )}
+                {label === "Messages" && unreadMessagesCount > 0 && (
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-badge bg-pink-accent px-1.5 font-body text-[11px] font-bold text-white">
+                    {unreadMessagesCount}
                   </span>
                 )}
               </Link>

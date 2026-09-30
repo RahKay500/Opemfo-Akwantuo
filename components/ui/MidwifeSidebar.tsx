@@ -13,6 +13,7 @@ import {
   NavProfileIcon,
   AlertTriangleIcon,
   LabIcon,
+  MessageIcon,
 } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
@@ -20,6 +21,7 @@ const NAV_ITEMS = [
   { href: "/midwife/patients", label: "Patients", icon: NavPatientsIcon },
   { href: "/midwife/log-vitals", label: "Log Vitals", icon: HeartRateIcon },
   { href: "/midwife/referral", label: "Referrals", icon: NavReferralsIcon },
+  { href: "/midwife/messages", label: "Messages", icon: MessageIcon, badge: true },
   { href: "/midwife/lab-requests", label: "Lab Requests", icon: LabIcon },
   { href: "/midwife/appointments", label: "Appointments", icon: CalendarIcon },
   { href: "/midwife/register", label: "Register Patient", icon: PlusIcon },
@@ -27,8 +29,10 @@ const NAV_ITEMS = [
 
 export default function MidwifeSidebar({
   activeEmergency,
+  unreadMessagesCount,
 }: {
   activeEmergency: { patientId: string; patientName: string } | null;
+  unreadMessagesCount: number;
 }) {
   const pathname = usePathname();
 
@@ -40,19 +44,26 @@ export default function MidwifeSidebar({
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ href, label, icon: Icon, badge }) => {
           const active = pathname === href;
           return (
             <Link
               key={label}
               href={href}
               className={cn(
-                "flex items-center gap-3 rounded-input px-4 py-2.5 font-body text-sm font-medium",
+                "flex items-center justify-between gap-3 rounded-input px-4 py-2.5 font-body text-sm font-medium",
                 active ? "bg-lilac-mid text-lilac-deeper" : "text-[#9494AC] hover:bg-white/5"
               )}
             >
-              <Icon className="size-5" />
-              {label}
+              <span className="flex items-center gap-3">
+                <Icon className="size-5" />
+                {label}
+              </span>
+              {badge && unreadMessagesCount > 0 && (
+                <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
+                  {unreadMessagesCount}
+                </span>
+              )}
             </Link>
           );
         })}

@@ -39,7 +39,7 @@ export default function MessageBubble({
           </div>
         )}
         <div
-          className={`w-full px-3 py-2 font-body text-md ${
+          className={`w-full px-3 py-2 font-body text-sm ${
             sent
               ? "rounded-bl-lg rounded-br-none rounded-tl-lg rounded-tr-lg bg-brand-600 text-white"
               : "rounded-bl-none rounded-br-lg rounded-tl-lg rounded-tr-lg border border-gray-200 bg-gray-50 text-gray-900"

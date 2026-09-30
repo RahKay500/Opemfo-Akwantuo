@@ -14,6 +14,7 @@ import {
   ClockIcon,
   ChevronRightIcon,
   AlertTriangleIcon,
+  MessageIcon,
 } from "@/components/ui/icons";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import PatientsWeekChartLoader from "@/components/ui/PatientsWeekChartLoader";
@@ -151,6 +152,17 @@ export default async function MidwifeDashboardPage() {
             subtitle="Active patients"
           />
         </div>
+
+        <Link
+          href="/midwife/messages"
+          className="flex items-center gap-3 rounded-card bg-white p-4 border border-border-color lg:hidden"
+        >
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-badge bg-lilac-light text-lilac-deeper">
+            <MessageIcon className="size-5" />
+          </div>
+          <p className="flex-1 font-heading text-sm font-bold text-text-primary">Messages</p>
+          <ChevronRightIcon className="size-3.5 text-[#9CA3AF]" />
+        </Link>
 
         {/* Mobile only: flagged patients + today's visits as simple stacked lists. */}
         <div className="lg:hidden">

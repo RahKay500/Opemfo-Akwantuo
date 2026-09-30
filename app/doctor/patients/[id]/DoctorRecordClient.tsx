@@ -6,7 +6,7 @@ import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
 import PriorityBadge from "@/components/ui/PriorityBadge";
 import IntakeSummary, { type IntakeSummaryData } from "@/components/records/IntakeSummary";
 import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
-import { LabIcon } from "@/components/ui/icons";
+import { LabIcon, MessageIcon } from "@/components/ui/icons";
 import type { DoctorInboxStatus } from "@/lib/queries/doctor-inbox";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
@@ -122,6 +122,24 @@ export default function DoctorRecordClient({
   const [overrideEditing, setOverrideEditing] = useState(false);
   const [overrideDate, setOverrideDate] = useState(initialNextVisitOverride?.slice(0, 10) ?? "");
   const [overrideSubmitting, setOverrideSubmitting] = useState(false);
+  const [messaging, setMessaging] = useState(false);
+
+  async function handleMessage() {
+    setMessaging(true);
+    try {
+      const res = await fetch("/api/conversations", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ patientId }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        router.push(`/doctor/messages/${data.conversationId}`);
+      }
+    } finally {
+      setMessaging(false);
+    }
+  }
 
   async function saveOverride(date: string | null) {
     setOverrideSubmitting(true);
@@ -222,6 +240,16 @@ export default function DoctorRecordClient({
             >
               <LabIcon className="size-4" />
               Request Lab Test
+            </button>
+
+            <button
+              type="button"
+              onClick={handleMessage}
+              disabled={messaging}
+              className="flex h-12 items-center justify-center gap-2 rounded-input border-[1.5px] border-border-color font-body text-sm font-bold text-text-primary disabled:opacity-60"
+            >
+              <MessageIcon className="size-4" />
+              {messaging ? "Opening…" : "Message"}
             </button>
 
             <div className="rounded-card bg-white p-4 border border-border-color">

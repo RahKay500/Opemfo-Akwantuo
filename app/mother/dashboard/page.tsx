@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/current-user";
 import { getMotherDashboardData } from "@/lib/queries/mother-dashboard";
 import { getMotherReferralData } from "@/lib/queries/mother-referral";
 import { cn, formatDate, formatRelativeTime } from "@/lib/utils";
-import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, ChevronRightIcon } from "@/components/ui/icons";
+import { BellIcon, BPIcon, CalendarIcon, HeartRateIcon, ChevronRightIcon, MessageIcon } from "@/components/ui/icons";
 import StatCard from "@/components/ui/StatCard";
 import ProgressRing from "@/components/ui/ProgressRing";
 import SharePartnerCard from "@/components/ui/SharePartnerCard";
@@ -130,6 +130,17 @@ export default async function MotherDashboardPage() {
               }
             />
           </div>
+
+          <Link
+            href="/mother/messages"
+            className="flex items-center gap-3 rounded-card bg-white p-4 border border-border-color lg:hidden"
+          >
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-badge bg-lilac-light text-lilac-deeper">
+              <MessageIcon className="size-5" />
+            </div>
+            <p className="flex-1 font-heading text-sm font-bold text-text-primary">Messages</p>
+            <ChevronRightIcon className="size-3.5 text-[#9CA3AF]" />
+          </Link>
 
           {activeReferral && (
             <div className="rounded-card bg-white p-5 border border-border-color">

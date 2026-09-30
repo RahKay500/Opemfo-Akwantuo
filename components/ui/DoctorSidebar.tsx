@@ -11,20 +11,24 @@ import {
   NavProfileIcon,
   ShareIcon,
   LabIcon,
+  MessageIcon,
 } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
   { href: "/doctor/dashboard", label: "Dashboard", icon: NavHomeIcon },
   { href: "/doctor/referral-queue", label: "Referral Queue", icon: NavReferralsIcon },
   { href: "/doctor/inbox", label: "Patient Records", icon: NavRecordsIcon, badgeKey: "shares" as const },
+  { href: "/doctor/messages", label: "Messages", icon: MessageIcon, badgeKey: "messages" as const },
   { href: "/doctor/lab-requests", label: "Lab Requests", icon: LabIcon },
   { href: "/doctor/analytics", label: "Analytics", icon: AnalyticsIcon },
 ];
 
 export default function DoctorSidebar({
   newSharedRecordsCount,
+  unreadMessagesCount,
 }: {
   newSharedRecordsCount: number;
+  unreadMessagesCount: number;
 }) {
   const pathname = usePathname();
 
@@ -64,6 +68,11 @@ export default function DoctorSidebar({
               {badgeKey === "shares" && newSharedRecordsCount > 0 && (
                 <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
                   {newSharedRecordsCount}
+                </span>
+              )}
+              {badgeKey === "messages" && unreadMessagesCount > 0 && (
+                <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
+                  {unreadMessagesCount}
                 </span>
               )}
             </Link>

@@ -84,6 +84,7 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
       <PatientDetailClient
         patientId={patient.id}
         patientName={patient.name}
+        canMessage={patient.registeredById === user.id}
         activeEmergencyAlert={
           activeEmergencyAlert
             ? { id: activeEmergencyAlert.id, triggeredAt: activeEmergencyAlert.triggeredAt.toISOString() }

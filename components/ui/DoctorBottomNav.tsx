@@ -3,11 +3,12 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { NavHomeIcon, NavRecordsIcon, NavProfileIcon, LabIcon } from "@/components/ui/icons";
+import { NavHomeIcon, NavRecordsIcon, NavProfileIcon, LabIcon, MessageIcon } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
   { href: "/doctor/dashboard", label: "Home", icon: NavHomeIcon },
   { href: "/doctor/inbox", label: "Inbox", icon: NavRecordsIcon },
+  { href: "/doctor/messages", label: "Messages", icon: MessageIcon },
   { href: "/doctor/lab-requests", label: "Lab", icon: LabIcon },
   { href: "/doctor/profile", label: "Profile", icon: NavProfileIcon },
 ] as const;

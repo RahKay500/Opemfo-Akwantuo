@@ -139,6 +139,8 @@ model User {
   labRequestsCreated      LabRequest[]     @relation("LabRequestedBy")
   labRequestsCompleted    LabRequest[]     @relation("LabCompletedBy")
   nextVisitOverridesGiven Patient[]        @relation("DoctorNextVisitOverrideBy")
+  conversationsAsStaff    Conversation[]   @relation("ConversationStaff")
+  messagesSent            Message[]
 
   @@index([facilityId])
 }
@@ -302,6 +304,7 @@ model Patient {
   postnatalVisits     PostnatalVisit[]
   labResults          LabResult[]
   labRequests         LabRequest[]
+  conversations       Conversation[]
 
   @@index([facilityId])
 }
@@ -780,4 +783,43 @@ model LabRequest {
   @@index([facilityId])
   @@index([patientId])
   @@index([status])
+}
+
+// A mother's independent direct-chat thread with one member of staff — either
+// her assigned Midwife (Patient.registeredById, exactly one, fixed at
+// registration) or a Doctor who has (or has had) a ReferralShare on her
+// record (zero, one, or many). staffRole is denormalized so both sides can be
+// queried without joining back to User.role, and so the same (patientId,
+// staffId) unique pair naturally allows many DOCTOR conversations per patient
+// alongside exactly one MIDWIFE conversation.
+model Conversation {
+  id               String    @id @default(cuid())
+  patientId        String
+  patient          Patient   @relation(fields: [patientId], references: [id])
+  staffId          String
+  staff            User      @relation("ConversationStaff", fields: [staffId], references: [id])
+  staffRole        Role
+  // Last-read timestamps, not per-message flags — unread count for either
+  // side is messages sent by the other party after their own last-read time.
+  motherLastReadAt DateTime?
+  staffLastReadAt  DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  messages         Message[]
+
+  @@unique([patientId, staffId])
+  @@index([staffId])
+  @@index([patientId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id])
+  body           String
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
 }

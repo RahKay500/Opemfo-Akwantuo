@@ -13,7 +13,10 @@ export default async function MotherLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
-      <MotherSidebar unreadCount={sidebarData?.unreadCount ?? 0} />
+      <MotherSidebar
+        unreadCount={sidebarData?.unreadCount ?? 0}
+        unreadMessagesCount={sidebarData?.unreadMessagesCount ?? 0}
+      />
       {/* pb clears the fixed 80px MotherBottomNav so bottom-of-page content
           like a submit button is never covered by it. Disappears at lg:,
           where the sidebar takes over instead. */}
