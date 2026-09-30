@@ -6,7 +6,6 @@
 export interface MedicalHistoryState {
   hypertension: boolean;
   heartDisease: boolean;
-  sickleCellDisease: boolean;
   diabetes: boolean;
   epilepsy: boolean;
   hivInfection: boolean;
@@ -25,7 +24,6 @@ export interface MedicalHistoryState {
 export const EMPTY_MEDICAL_HISTORY: MedicalHistoryState = {
   hypertension: false,
   heartDisease: false,
-  sickleCellDisease: false,
   diabetes: false,
   epilepsy: false,
   hivInfection: false,
@@ -44,7 +42,6 @@ export const EMPTY_MEDICAL_HISTORY: MedicalHistoryState = {
 type MedicalHistoryBooleanKey =
   | "hypertension"
   | "heartDisease"
-  | "sickleCellDisease"
   | "diabetes"
   | "epilepsy"
   | "hivInfection"
@@ -53,10 +50,13 @@ type MedicalHistoryBooleanKey =
   | "tb"
   | "mentalIllness";
 
+// No plain "Sickle cell disease" item here — MAJOR_RISK_FACTORS below already
+// asks it, with the genotype (SS/SC/CC) that actually matters clinically;
+// asking it twice let a midwife tick one and miss the other with nothing to
+// reconcile them.
 export const MEDICAL_HISTORY_ITEMS: { key: MedicalHistoryBooleanKey; label: string }[] = [
   { key: "hypertension", label: "Hypertension" },
   { key: "heartDisease", label: "Heart disease" },
-  { key: "sickleCellDisease", label: "Sickle cell disease" },
   { key: "diabetes", label: "Diabetes" },
   { key: "epilepsy", label: "Epilepsy" },
   { key: "hivInfection", label: "HIV infection" },
@@ -116,7 +116,7 @@ type FamilyHistoryBooleanKey =
 export const FAMILY_HISTORY_ITEMS: { key: FamilyHistoryBooleanKey; label: string }[] = [
   { key: "hypertension", label: "Hypertension" },
   { key: "heartDisease", label: "Heart disease" },
-  { key: "sickleCellDisease", label: "Sickle cell disease" },
+  { key: "sickleCellDisease", label: "Sickle cell disease (in family)" },
   { key: "diabetes", label: "Diabetes" },
   { key: "multiplePregnancies", label: "Multiple pregnancies" },
   { key: "birthDefects", label: "Birth defects" },

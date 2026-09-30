@@ -143,7 +143,11 @@ export default function ObstetricHistoryStep({
                   <Field label="Place of Birth" className="flex-1">
                     <Select
                       selectSize="sm"
-                      value={preg.placeOfBirth}
+                      value={
+                        preg.placeOfBirth === "" || PLACE_OF_BIRTH_OPTIONS.slice(0, -1).includes(preg.placeOfBirth)
+                          ? preg.placeOfBirth
+                          : "Other"
+                      }
                       onChange={(e) => updatePregnancy(i, { placeOfBirth: e.target.value })}
                     >
                       <option value="">Select</option>
@@ -169,6 +173,16 @@ export default function ObstetricHistoryStep({
                     </Select>
                   </Field>
                 </div>
+                {preg.placeOfBirth !== "" && !PLACE_OF_BIRTH_OPTIONS.slice(0, -1).includes(preg.placeOfBirth) && (
+                  <Field label="Specify Place of Birth">
+                    <input
+                      value={preg.placeOfBirth === "Other" ? "" : preg.placeOfBirth}
+                      onChange={(e) => updatePregnancy(i, { placeOfBirth: e.target.value })}
+                      placeholder="e.g. Sister's house, roadside"
+                      className="h-10 w-full rounded-md border border-[#E2E8F0] px-2.5 font-body text-sm text-text-primary outline-none focus:border-primary"
+                    />
+                  </Field>
+                )}
                 <div className="flex gap-2.5">
                   <Field label="Outcome" className="flex-1">
                     <Select

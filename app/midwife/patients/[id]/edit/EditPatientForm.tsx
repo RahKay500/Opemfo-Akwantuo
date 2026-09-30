@@ -121,7 +121,11 @@ export default function EditPatientForm({
   const [gravida, setGravida] = useState(initial.gravida);
   const [para, setPara] = useState(initial.para);
   const [bloodGroup, setBloodGroup] = useState(initial.bloodGroup);
-  const [knownConditions, setKnownConditions] = useState(initial.knownConditions);
+  // No longer editable here — it duplicated "Medical & Surgical History" /
+  // "Other Medical History" below in intent, asked earlier with nothing to
+  // reconcile the two. Kept as a frozen pass-through so a value entered
+  // before this change isn't silently wiped on the next save.
+  const [knownConditions] = useState(initial.knownConditions);
 
   const [abortionsSpontaneous, setAbortionsSpontaneous] = useState(initial.abortionsSpontaneous);
   const [abortionsInduced, setAbortionsInduced] = useState(initial.abortionsInduced);
@@ -481,15 +485,6 @@ export default function EditPatientForm({
                   </option>
                 ))}
               </Select>
-            </Field>
-            <Field label="Known Conditions" className="lg:col-span-2">
-              <textarea
-                value={knownConditions}
-                onChange={(e) => setKnownConditions(e.target.value)}
-                rows={3}
-                placeholder="Optional"
-                className="w-full resize-none rounded-input border-[1.5px] border-border-color bg-white p-[17.5px] font-body text-sm text-text-primary outline-none focus:border-primary"
-              />
             </Field>
           </>
         )}

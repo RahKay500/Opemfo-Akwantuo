@@ -140,7 +140,6 @@ async function main() {
       medicalHistory: {
         hypertension: false,
         heartDisease: false,
-        sickleCellDisease: false,
         diabetes: false,
         epilepsy: false,
         asthma: false,

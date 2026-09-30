@@ -1,5 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { calculatePregnancyProgress, type PregnancyProgress } from "@/lib/pregnancy";
+import type { MedicalHistoryState } from "@/lib/mch-record";
 
 export interface PartnerViewData {
   patientName: string;
@@ -97,7 +98,13 @@ export async function getPartnerViewData(userId: string): Promise<PartnerViewDat
     medicalHistory: permissions.shareMedicalHistory
       ? {
           bloodGroup: link.patient.bloodGroup,
-          knownConditions: link.patient.knownConditions,
+          // "Known conditions" used to be its own free-text question on the
+          // patient record; that question was removed as a duplicate of
+          // "Other Medical History" below, so this now reads from there —
+          // `knownConditions` itself stays frozen at whatever a patient
+          // registered before that change already had.
+          knownConditions:
+            (link.patient.medicalHistory as Partial<MedicalHistoryState> | null)?.other || link.patient.knownConditions,
           majorRiskFactors: link.patient.majorRiskFactors,
         }
       : null,

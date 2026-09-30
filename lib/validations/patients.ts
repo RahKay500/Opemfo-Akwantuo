@@ -17,7 +17,6 @@ const previousPregnancySchema = z.object({
 const medicalHistorySchema = z.object({
   hypertension: z.boolean(),
   heartDisease: z.boolean(),
-  sickleCellDisease: z.boolean(),
   diabetes: z.boolean(),
   epilepsy: z.boolean(),
   hivInfection: z.boolean(),
