@@ -16,6 +16,7 @@ export interface DoctorDashboardData {
   };
   referralQueue: DoctorReferralQueueItem[];
   monthlyReferrals: { month: string; received: number; seen: number }[];
+  unreadNotificationsCount: number;
 }
 
 function startOfDay(date: Date): Date {
@@ -41,8 +42,15 @@ export async function getDoctorDashboardData(userId: string): Promise<DoctorDash
   const todayEnd = endOfDay(now);
   const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
 
-  const [openReferrals, referralsThisWeek, recordsShared, recentShareRow, referralQueue, monthlyRaw] =
-    await Promise.all([
+  const [
+    openReferrals,
+    referralsThisWeek,
+    recordsShared,
+    recentShareRow,
+    referralQueue,
+    monthlyRaw,
+    unreadNotificationsCount,
+  ] = await Promise.all([
       prisma.referral.findMany({
         where: { toFacilityId: facilityId, status: { notIn: ["COMPLETED", "CANCELLED"] } },
         select: { priority: true, patientId: true },
@@ -59,6 +67,7 @@ export async function getDoctorDashboardData(userId: string): Promise<DoctorDash
         where: { toFacilityId: facilityId, sentAt: { gte: sixMonthsAgo } },
         select: { sentAt: true, arrivedAt: true, completedAt: true },
       }),
+      prisma.notification.count({ where: { userId, isRead: false } }),
     ]);
 
   const incomingReferrals = openReferrals.length;
@@ -117,5 +126,6 @@ export async function getDoctorDashboardData(userId: string): Promise<DoctorDash
     },
     referralQueue: referralQueue.slice(0, 5),
     monthlyReferrals,
+    unreadNotificationsCount,
   };
 }

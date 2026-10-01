@@ -3,11 +3,20 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { NavHomeIcon, NavProfileIcon } from "@/components/ui/icons";
+import { NavHomeIcon, NavProfileIcon, BellIcon } from "@/components/ui/icons";
 
-const NAV_ITEMS = [{ href: "/lab-technician/dashboard", label: "Dashboard", icon: NavHomeIcon }];
+const NAV_ITEMS = [
+  { href: "/lab-technician/dashboard", label: "Dashboard", icon: NavHomeIcon, badgeKey: "pending" as const },
+  { href: "/lab-technician/notifications", label: "Notifications", icon: BellIcon, badgeKey: "notifications" as const },
+];
 
-export default function LabTechnicianSidebar({ pendingCount }: { pendingCount: number }) {
+export default function LabTechnicianSidebar({
+  pendingCount,
+  unreadNotificationsCount,
+}: {
+  pendingCount: number;
+  unreadNotificationsCount: number;
+}) {
   const pathname = usePathname();
 
   return (
@@ -18,7 +27,7 @@ export default function LabTechnicianSidebar({ pendingCount }: { pendingCount: n
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
-        {NAV_ITEMS.map(({ href, label, icon: Icon }) => {
+        {NAV_ITEMS.map(({ href, label, icon: Icon, badgeKey }) => {
           const active = pathname === href || pathname.startsWith(href + "/");
           return (
             <Link
@@ -33,9 +42,14 @@ export default function LabTechnicianSidebar({ pendingCount }: { pendingCount: n
                 <Icon className="size-5" />
                 {label}
               </span>
-              {pendingCount > 0 && (
+              {badgeKey === "pending" && pendingCount > 0 && (
                 <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
                   {pendingCount}
+                </span>
+              )}
+              {badgeKey === "notifications" && unreadNotificationsCount > 0 && (
+                <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
+                  {unreadNotificationsCount}
                 </span>
               )}
             </Link>

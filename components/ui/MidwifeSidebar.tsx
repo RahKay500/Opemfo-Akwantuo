@@ -15,6 +15,7 @@ import {
   LabIcon,
   MessageIcon,
   NavVideosIcon,
+  BellIcon,
 } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
@@ -22,7 +23,8 @@ const NAV_ITEMS = [
   { href: "/midwife/patients", label: "Patients", icon: NavPatientsIcon },
   { href: "/midwife/log-vitals", label: "Log Vitals", icon: HeartRateIcon },
   { href: "/midwife/referral", label: "Referrals", icon: NavReferralsIcon },
-  { href: "/midwife/messages", label: "Messages", icon: MessageIcon, badge: true },
+  { href: "/midwife/messages", label: "Messages", icon: MessageIcon, badgeKey: "messages" as const },
+  { href: "/midwife/notifications", label: "Notifications", icon: BellIcon, badgeKey: "notifications" as const },
   { href: "/midwife/lab-requests", label: "Lab Requests", icon: LabIcon },
   { href: "/midwife/appointments", label: "Appointments", icon: CalendarIcon },
   { href: "/midwife/learn", label: "Learn & Prepare", icon: NavVideosIcon },
@@ -32,9 +34,11 @@ const NAV_ITEMS = [
 export default function MidwifeSidebar({
   activeEmergency,
   unreadMessagesCount,
+  unreadNotificationsCount,
 }: {
   activeEmergency: { patientId: string; patientName: string } | null;
   unreadMessagesCount: number;
+  unreadNotificationsCount: number;
 }) {
   const pathname = usePathname();
 
@@ -46,7 +50,7 @@ export default function MidwifeSidebar({
       </div>
 
       <nav className="flex flex-1 flex-col gap-1 px-3 pt-4">
-        {NAV_ITEMS.map(({ href, label, icon: Icon, badge }) => {
+        {NAV_ITEMS.map(({ href, label, icon: Icon, badgeKey }) => {
           const active = pathname === href;
           return (
             <Link
@@ -61,9 +65,14 @@ export default function MidwifeSidebar({
                 <Icon className="size-5" />
                 {label}
               </span>
-              {badge && unreadMessagesCount > 0 && (
+              {badgeKey === "messages" && unreadMessagesCount > 0 && (
                 <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
                   {unreadMessagesCount}
+                </span>
+              )}
+              {badgeKey === "notifications" && unreadNotificationsCount > 0 && (
+                <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
+                  {unreadNotificationsCount}
                 </span>
               )}
             </Link>

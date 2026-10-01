@@ -3,6 +3,7 @@ import { getCurrentUser } from "@/lib/current-user";
 import { getMidwifePatientList } from "@/lib/queries/midwife-patients";
 import { getMidwifeSidebarData } from "@/lib/queries/midwife-sidebar";
 import { shortFacilityName } from "@/lib/utils";
+import Link from "next/link";
 import IdentityMenu from "@/components/ui/IdentityMenu";
 import { BellIcon } from "@/components/ui/icons";
 import PatientListClient from "./PatientListClient";
@@ -27,7 +28,9 @@ export default async function MidwifePatientsPage() {
     <main className="flex flex-col">
       <div className="relative flex items-center justify-center border-b border-border-color bg-white px-5 pb-4 pt-14 lg:hidden">
         <h1 className="font-heading text-xl font-bold text-text-primary">My Patients</h1>
-        <BellIcon className="absolute right-5 size-[22px] text-text-primary" />
+        <Link href="/midwife/notifications" className="absolute right-5" aria-label="View notifications">
+          <BellIcon className="size-[22px] text-text-primary" />
+        </Link>
       </div>
 
       <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">

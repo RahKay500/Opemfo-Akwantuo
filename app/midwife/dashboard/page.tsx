@@ -57,10 +57,12 @@ export default async function MidwifeDashboardPage() {
         <p className="font-heading text-2xl font-bold text-white">{data.name}</p>
         <p className="font-body text-[13px] text-white">{data.facilityName}</p>
         <div className="absolute right-6 top-11 flex items-center gap-3">
-          <div className="relative">
+          <Link href="/midwife/notifications" className="relative" aria-label="View notifications">
             <BellIcon className="size-6 text-white" />
-            <span className="absolute -top-0.5 right-1 size-2 rounded-badge bg-pink-accent" />
-          </div>
+            {data.unreadNotificationsCount > 0 && (
+              <span className="absolute -top-0.5 right-1 size-2 rounded-badge bg-pink-accent" />
+            )}
+          </Link>
           <Link
             href="/midwife/profile"
             className="flex size-10 items-center justify-center rounded-badge bg-lilac-light"

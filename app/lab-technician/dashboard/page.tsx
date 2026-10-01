@@ -1,8 +1,10 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getCurrentUser } from "@/lib/current-user";
 import { getLabRequestQueue } from "@/lib/queries/lab-request-queue";
 import { getLabTechnicianSidebarData } from "@/lib/queries/lab-technician-sidebar";
 import IdentityMenu from "@/components/ui/IdentityMenu";
+import { BellIcon } from "@/components/ui/icons";
 import LabQueueClient from "./LabQueueClient";
 
 export default async function LabTechnicianDashboardPage() {
@@ -23,9 +25,19 @@ export default async function LabTechnicianDashboardPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="flex flex-col justify-end rounded-b-3xl bg-primary px-6 pb-5 pt-11 lg:hidden">
+      <div className="relative flex flex-col justify-end rounded-b-3xl bg-primary px-6 pb-5 pt-11 lg:hidden">
         <p className="font-heading text-[22px] font-bold text-white">Lab Requests</p>
         <p className="mt-1 font-body text-[13px] text-white">{sidebarData?.facilityName ?? ""}</p>
+        <Link
+          href="/lab-technician/notifications"
+          className="absolute right-6 top-11"
+          aria-label="View notifications"
+        >
+          <BellIcon className="size-6 text-white" />
+          {(sidebarData?.unreadNotificationsCount ?? 0) > 0 && (
+            <span className="absolute -top-0.5 right-0.5 size-2 rounded-badge bg-pink-accent" />
+          )}
+        </Link>
       </div>
 
       <div className="hidden items-center justify-between rounded-card bg-white px-6 py-5 border border-border-color lg:mx-5 lg:mt-8 lg:flex">

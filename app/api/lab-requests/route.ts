@@ -52,6 +52,21 @@ export async function POST(request: NextRequest) {
     ipAddress: request.headers.get("x-forwarded-for"),
   });
 
+  const labTechnicians = await prisma.user.findMany({
+    where: { facilityId: patient.facilityId, role: "LAB_TECHNICIAN", isActive: true },
+  });
+
+  await prisma.notification.createMany({
+    data: labTechnicians.map((tech) => ({
+      userId: tech.id,
+      type: "LAB_REQUEST",
+      title: "New lab request",
+      message: `${labRequest.testType} requested for ${patient.name}.`,
+      relatedId: labRequest.id,
+      relatedType: "LabRequest",
+    })),
+  });
+
   return NextResponse.json({ labRequest });
 }
 

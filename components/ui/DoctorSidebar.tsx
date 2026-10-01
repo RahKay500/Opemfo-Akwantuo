@@ -12,6 +12,7 @@ import {
   ShareIcon,
   LabIcon,
   MessageIcon,
+  BellIcon,
 } from "@/components/ui/icons";
 
 const NAV_ITEMS = [
@@ -19,6 +20,7 @@ const NAV_ITEMS = [
   { href: "/doctor/referral-queue", label: "Referral Queue", icon: NavReferralsIcon },
   { href: "/doctor/inbox", label: "Patient Records", icon: NavRecordsIcon, badgeKey: "shares" as const },
   { href: "/doctor/messages", label: "Messages", icon: MessageIcon, badgeKey: "messages" as const },
+  { href: "/doctor/notifications", label: "Notifications", icon: BellIcon, badgeKey: "notifications" as const },
   { href: "/doctor/lab-requests", label: "Lab Requests", icon: LabIcon },
   { href: "/doctor/analytics", label: "Analytics", icon: AnalyticsIcon },
 ];
@@ -26,9 +28,11 @@ const NAV_ITEMS = [
 export default function DoctorSidebar({
   newSharedRecordsCount,
   unreadMessagesCount,
+  unreadNotificationsCount,
 }: {
   newSharedRecordsCount: number;
   unreadMessagesCount: number;
+  unreadNotificationsCount: number;
 }) {
   const pathname = usePathname();
 
@@ -73,6 +77,11 @@ export default function DoctorSidebar({
               {badgeKey === "messages" && unreadMessagesCount > 0 && (
                 <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
                   {unreadMessagesCount}
+                </span>
+              )}
+              {badgeKey === "notifications" && unreadNotificationsCount > 0 && (
+                <span className="flex size-5 items-center justify-center rounded-badge bg-pink-deep font-body text-[11px] font-bold text-white">
+                  {unreadNotificationsCount}
                 </span>
               )}
             </Link>

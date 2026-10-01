@@ -6,22 +6,27 @@ export interface LabTechnicianSidebarData {
   facilityName: string;
   facilityType: FacilityType | null;
   pendingCount: number;
+  unreadNotificationsCount: number;
 }
 
 export async function getLabTechnicianSidebarData(userId: string): Promise<LabTechnicianSidebarData | null> {
   const user = await prisma.user.findUnique({ where: { id: userId }, include: { facility: true } });
   if (!user) return null;
 
-  const pendingCount = user.facilityId
-    ? await prisma.labRequest.count({
-        where: { facilityId: user.facilityId, status: { in: ["REQUESTED", "IN_PROGRESS"] } },
-      })
-    : 0;
+  const [pendingCount, unreadNotificationsCount] = await Promise.all([
+    user.facilityId
+      ? prisma.labRequest.count({
+          where: { facilityId: user.facilityId, status: { in: ["REQUESTED", "IN_PROGRESS"] } },
+        })
+      : Promise.resolve(0),
+    prisma.notification.count({ where: { userId, isRead: false } }),
+  ]);
 
   return {
     name: user.name,
     facilityName: user.facility?.name ?? "",
     facilityType: user.facility?.type ?? null,
     pendingCount,
+    unreadNotificationsCount,
   };
 }

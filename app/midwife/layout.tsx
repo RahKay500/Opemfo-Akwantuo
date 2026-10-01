@@ -16,6 +16,7 @@ export default async function MidwifeLayout({
       <MidwifeSidebar
         activeEmergency={sidebarData?.activeEmergency ?? null}
         unreadMessagesCount={sidebarData?.unreadMessagesCount ?? 0}
+        unreadNotificationsCount={sidebarData?.unreadNotificationsCount ?? 0}
       />
       <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:justify-stretch lg:overflow-x-auto lg:px-[10px] lg:pb-10">
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>

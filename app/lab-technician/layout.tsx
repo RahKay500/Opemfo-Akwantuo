@@ -13,7 +13,10 @@ export default async function LabTechnicianLayout({
   return (
     <div className="flex min-h-screen flex-col bg-[#F6F1F8] lg:flex-row">
       <SessionKeepAlive />
-      <LabTechnicianSidebar pendingCount={sidebarData?.pendingCount ?? 0} />
+      <LabTechnicianSidebar
+        pendingCount={sidebarData?.pendingCount ?? 0}
+        unreadNotificationsCount={sidebarData?.unreadNotificationsCount ?? 0}
+      />
       <div className="flex flex-1 justify-center overflow-x-hidden pb-20 lg:justify-stretch lg:overflow-x-auto lg:pb-10">
         <div className="w-full max-w-[430px] lg:max-w-none">{children}</div>
       </div>

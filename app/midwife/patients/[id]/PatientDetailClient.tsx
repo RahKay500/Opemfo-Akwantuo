@@ -8,9 +8,10 @@ import PriorityBadge from "@/components/ui/PriorityBadge";
 import ShareRecordSheet from "@/components/ui/ShareRecordSheet";
 import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
 import { ShareIcon, LabIcon, AlertTriangleIcon, MessageIcon } from "@/components/ui/icons";
+import IntakeSummary, { type IntakeSummaryData } from "@/components/records/IntakeSummary";
 import type { Priority, ReferralStatus, VisitType } from "@prisma/client";
 
-const TABS = ["Overview", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
+const TABS = ["Overview", "History", "Vitals", "Vaccinations", "Visits", "Referrals", "Delivery"] as const;
 
 export interface PatientDetailVisit {
   id: string;
@@ -76,6 +77,7 @@ export default function PatientDetailClient({
   nextVisitOverride,
   activeEmergencyAlert,
   canMessage,
+  intake,
 }: {
   patientId: string;
   patientName: string;
@@ -88,6 +90,7 @@ export default function PatientDetailClient({
   nextVisitOverride: { date: string; doctorName: string } | null;
   activeEmergencyAlert: { id: string; triggeredAt: string } | null;
   canMessage: boolean;
+  intake: IntakeSummaryData;
 }) {
   const router = useRouter();
   const [tab, setTab] = useState<(typeof TABS)[number]>("Overview");
@@ -284,6 +287,8 @@ export default function PatientDetailClient({
             )}
           </>
         )}
+
+        {tab === "History" && <IntakeSummary data={intake} />}
 
         {tab === "Vitals" && (
           <div className="flex flex-col gap-2.5">

@@ -36,6 +36,7 @@ export interface MidwifeDashboardData {
   }[];
   flaggedPatients: { patientId: string; name: string; week: number | null; status: FlaggedStatus }[];
   patientsThisWeek: { day: string; count: number }[];
+  unreadNotificationsCount: number;
 }
 
 function startOfDay(date: Date): Date {
@@ -86,6 +87,7 @@ export async function getMidwifeDashboardData(userId: string): Promise<MidwifeDa
     flaggedVisits,
     todaysAppointments,
     weeksVisits,
+    unreadNotificationsCount,
   ] = await Promise.all([
     prisma.patient.count({ where: { facilityId } }),
     prisma.referral.findMany({
@@ -121,6 +123,7 @@ export async function getMidwifeDashboardData(userId: string): Promise<MidwifeDa
       where: { patient: { facilityId }, createdAt: { gte: weekStart, lte: weekEnd } },
       select: { createdAt: true },
     }),
+    prisma.notification.count({ where: { userId, isRead: false } }),
   ]);
 
   const priorityRank: Record<Priority, number> = { CRITICAL: 0, HIGH: 1, MEDIUM: 2, LOW: 3 };
@@ -224,5 +227,6 @@ export async function getMidwifeDashboardData(userId: string): Promise<MidwifeDa
     todaysQueue,
     flaggedPatients,
     patientsThisWeek,
+    unreadNotificationsCount,
   };
 }
