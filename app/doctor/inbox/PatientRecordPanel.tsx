@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { formatDate } from "@/lib/utils";
 import { THRESHOLDS } from "@/lib/flagging";
-import { ShareIcon, NavRecordsIcon, CheckIcon, XIcon } from "@/components/ui/icons";
+import { ShareIcon, NavRecordsIcon, CheckIcon, XIcon, LabIcon } from "@/components/ui/icons";
+import RequestLabTestSheet from "@/components/ui/RequestLabTestSheet";
 import BPGraphLoader from "@/components/ui/BPGraphLoader";
 import type { BPGraphPoint } from "@/components/ui/BPGraph";
 import type { DoctorInboxStatus } from "@/lib/queries/doctor-inbox";
@@ -32,6 +33,7 @@ export interface LatestVitals {
 
 export default function PatientRecordPanel({
   shareId,
+  patientId,
   patientName,
   sharedByName,
   facilityName,
@@ -44,6 +46,7 @@ export default function PatientRecordPanel({
   otherDoctors,
 }: {
   shareId: string;
+  patientId: string;
   patientName: string;
   sharedByName: string;
   facilityName: string;
@@ -58,6 +61,7 @@ export default function PatientRecordPanel({
   const router = useRouter();
   const [doctorNotes, setDoctorNotes] = useState(initialDoctorNotes);
   const [reviewing, setReviewing] = useState(false);
+  const [labSheetOpen, setLabSheetOpen] = useState(false);
   const [currentStatus, setCurrentStatus] = useState(status);
   const [showForward, setShowForward] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
@@ -92,6 +96,14 @@ export default function PatientRecordPanel({
         <div className="flex shrink-0 items-center gap-3">
           <button
             type="button"
+            onClick={() => setLabSheetOpen(true)}
+            className="flex items-center gap-1.5 rounded-input border-[1.5px] border-border-color px-4 py-2.5 font-heading text-sm font-bold text-text-primary"
+          >
+            <LabIcon className="size-4" />
+            Request Lab Test
+          </button>
+          <button
+            type="button"
             onClick={() => setShowForward(true)}
             className="flex items-center gap-1.5 rounded-input bg-lilac-light px-4 py-2.5 font-heading text-sm font-bold text-lilac-deeper"
           >
@@ -108,6 +120,13 @@ export default function PatientRecordPanel({
           </button>
         </div>
       </div>
+
+      <RequestLabTestSheet
+        patientId={patientId}
+        patientName={patientName}
+        open={labSheetOpen}
+        onClose={() => setLabSheetOpen(false)}
+      />
 
       {reason && (
         <div className="rounded-card bg-pink-light p-5">
@@ -224,7 +243,7 @@ function ForwardModal({
 
   async function handleSend() {
     if (!doctorId) {
-      setError("Choose a doctor to forward to.");
+      setError("Choose a gynaecologist to forward to.");
       return;
     }
     setSubmitting(true);

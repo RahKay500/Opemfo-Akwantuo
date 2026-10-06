@@ -1,13 +1,13 @@
 import { prisma } from "@/lib/prisma";
 import type { DoctorInboxStatus } from "@/lib/queries/doctor-inbox";
 
-// Authorization gate: a doctor may only view a patient they've actually been
+// Authorization gate: a gynaecologist may only view a patient they've actually been
 // shared — checked by an existing ReferralShare row, not by facility (shares
 // are deliberately cross-facility). No share row at all means no access,
 // regardless of whether the share has since expired.
 export async function getDoctorPatientDetail(patientId: string, doctorId: string) {
   const share = await prisma.referralShare.findFirst({
-    where: { patientId, sharedWithDoctorId: doctorId },
+    where: { patientId, sharedWithDoctorId: doctorId, isActive: true, expiresAt: { gt: new Date() } },
     orderBy: { createdAt: "desc" },
     include: { sharedByNurse: { select: { name: true } } },
   });

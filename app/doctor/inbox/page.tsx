@@ -58,7 +58,7 @@ export default async function DoctorInboxPage({
             </span>
           )}
           {sidebarData?.name && (
-            <IdentityMenu name={sidebarData.name} subtitle={`${sidebarData.facilityName} · Doctor`} profileHref="/doctor/profile" />
+            <IdentityMenu name={sidebarData.name} subtitle={`${sidebarData.facilityName} · Gynaecologist`} profileHref="/doctor/profile" />
           )}
         </div>
       </div>
@@ -98,6 +98,7 @@ export default async function DoctorInboxPage({
         {detail ? (
           <PatientRecordPanel
             shareId={detail.share.id}
+            patientId={detail.patient.id}
             patientName={detail.patient.name}
             sharedByName={detail.share.sharedByNurse.name}
             facilityName={detail.patient.facility.name}

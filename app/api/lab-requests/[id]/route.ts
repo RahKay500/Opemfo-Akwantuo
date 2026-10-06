@@ -75,13 +75,42 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
       },
     });
 
+    const now = new Date();
+    const [facilityMidwives, activeShares] = await Promise.all([
+      prisma.user.findMany({
+        where: { facilityId: labRequest.patient.facilityId, role: "MIDWIFE", isActive: true },
+        select: { id: true },
+      }),
+      prisma.referralShare.findMany({
+        where: { patientId: labRequest.patientId, isActive: true, expiresAt: { gt: now } },
+        select: { sharedWithDoctorId: true },
+      }),
+    ]);
+    const staffIds = new Set([
+      ...facilityMidwives.map((m) => m.id),
+      ...activeShares.map((share) => share.sharedWithDoctorId),
+    ]);
+    staffIds.delete(labRequest.requestedById);
+    if (staffIds.size > 0) {
+      await prisma.notification.createMany({
+        data: [...staffIds].map((userId) => ({
+          userId,
+          type: "LAB_RESULT",
+          title: `${labRequest.testType} result ready`,
+          message: `${labRequest.patient.name}'s ${labRequest.testType} result is ready to view.`,
+          relatedId: labRequest.id,
+          relatedType: "LabRequest",
+        })),
+      });
+    }
+
     if (labRequest.patient.userId && labRequest.patient.notifyLabResults) {
       await prisma.notification.create({
         data: {
           userId: labRequest.patient.userId,
           type: "LAB_RESULT",
           title: "Your lab result is ready",
-          message: `Your ${labRequest.testType} result is ready. Ask your midwife/nurse for the details.`,
+          message: `Your ${labRequest.testType} result is ready. Ask your midwife for the details.`,
           relatedId: labRequest.id,
           relatedType: "LabRequest",
         },
