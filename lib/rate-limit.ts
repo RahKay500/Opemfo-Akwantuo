@@ -3,6 +3,21 @@
 // multiple instances, since this state doesn't survive a restart or scale-out.
 const hits = new Map<string, { count: number; resetAt: number }>();
 
+const SWEEP_INTERVAL_MS = 60_000;
+let lastSweep = 0;
+
+function sweepExpired(now: number): void {
+  if (now - lastSweep < SWEEP_INTERVAL_MS) return;
+  lastSweep = now;
+  for (const [key, entry] of hits) {
+    if (entry.resetAt <= now) hits.delete(key);
+  }
+}
+
+export function trackedKeyCount(): number {
+  return hits.size;
+}
+
 export interface RateLimitResult {
   success: boolean;
   remaining: number;
@@ -11,6 +26,7 @@ export interface RateLimitResult {
 
 export function rateLimit(key: string, limit: number, windowMs: number): RateLimitResult {
   const now = Date.now();
+  sweepExpired(now);
   const entry = hits.get(key);
 
   if (!entry || entry.resetAt <= now) {
