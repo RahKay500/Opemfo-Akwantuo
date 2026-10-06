@@ -46,7 +46,7 @@ export async function sendAdminActivationEmail(
     email,
     "Set up your Ɔpemfoɔ Akwantuo admin account",
     `<p>You've been added as the ${roleLabel} for ${jurisdictionName} on Ɔpemfoɔ Akwantuo.</p>
-     <p><a href="${link}">Click here to set your password and activate your account</a>.</p>
+     <p><a href="${link}">Click here to create your password and activate your account</a>.</p>
      <p>This link expires in 48 hours.</p>`
   );
 }
@@ -56,7 +56,7 @@ export async function sendStaffActivationEmail(email: string, link: string, role
     email,
     "Set up your Ɔpemfoɔ Akwantuo account",
     `<p>Welcome to Ɔpemfoɔ Akwantuo. You've been added as a ${roleLabel}.</p>
-     <p><a href="${link}">Click here to set your password and activate your account</a>.</p>
+     <p><a href="${link}">Click here to create your password and activate your account</a>.</p>
      <p>This link expires in 48 hours.</p>`
   );
 }

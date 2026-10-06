@@ -5,7 +5,7 @@ import { ArrowRightIcon, CheckIcon, MidwifeIcon, PersonIcon, ShieldCheckIcon } f
 
 const FEATURES = [
   "See every test result in one place",
-  "Midwives and doctors share one record",
+  "Midwives and gynaecologists share one record",
   "Track visits and your next appointment",
 ];
 
@@ -43,15 +43,26 @@ export default function OnboardingWelcomePage() {
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col items-center bg-[#F6F1F8] px-6 pb-8 pt-11 lg:w-1/2 lg:shrink-0 lg:justify-center lg:bg-white lg:px-10 lg:pt-0">
-        <div className="flex w-full max-w-sm flex-col gap-6">
-          <div className="flex items-center gap-2 lg:hidden">
-            <div className="flex size-8 items-center justify-center rounded-badge bg-primary">
-              <Image src="/images/logo.png" alt="" width={18} height={18} />
+      <div className="flex flex-1 flex-col items-center bg-[#F6F1F8] px-6 pb-8 pt-0 lg:w-1/2 lg:shrink-0 lg:justify-center lg:bg-white lg:px-10 lg:pt-0">
+        <div className="relative -mx-6 mb-8 flex h-56 items-end self-stretch overflow-hidden bg-lilac-deeper px-6 pb-5 lg:hidden">
+          <Image
+            src="/images/onboarding-hero.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-[68%_25%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-lilac-deeper/55 via-lilac-deeper/45 to-[#3a0f42]/80" />
+          <div className="relative z-10 flex items-center gap-3">
+            <div className="flex size-10 items-center justify-center rounded-badge bg-white">
+              <Image src="/images/logo.png" alt="" width={24} height={24} />
             </div>
-            <p className="font-heading text-base font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
+            <p className="font-heading text-xl font-bold text-white drop-shadow-md">Ɔpemfoɔ Akwantuo</p>
           </div>
+        </div>
 
+        <div className="flex w-full max-w-sm flex-col gap-6">
           <div className="flex flex-col gap-2">
             <h1 className="font-heading text-2xl font-bold text-text-primary">Who are you?</h1>
             <p className="font-body text-[15px] text-text-secondary">
@@ -70,7 +81,7 @@ export default function OnboardingWelcomePage() {
               href="/login"
               icon={<MidwifeIcon className="size-5 text-lilac-dark" />}
               title="I work at a health facility"
-              description="Midwife, doctor or lab technician. Your administrator sends an activation link. Open it to set your password."
+              description="Midwife, gynaecologist or lab technician. Your administrator sends an activation link. Open it to create your password."
             />
           </div>
 

@@ -120,13 +120,6 @@ export default function LoginForm() {
       >
         {submitting ? "Signing in…" : "Sign in"}
       </button>
-
-      <p className="text-center font-body text-sm text-text-secondary">
-        Registered by your midwife/nurse or Super Admin?{" "}
-        <Link href="/activate" className="font-medium text-pink-deep">
-          Activate account
-        </Link>
-      </p>
     </form>
   );
 }

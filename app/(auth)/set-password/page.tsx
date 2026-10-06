@@ -60,7 +60,7 @@ function SetPasswordForm() {
 
       <div className="w-full px-6 pt-10">
         <label className="mb-1.5 block font-body text-[13px] font-medium text-text-secondary">
-          New password
+          Create password
         </label>
         <div className="relative">
           <input
@@ -110,7 +110,7 @@ function SetPasswordForm() {
           disabled={submitting || !token}
           className="mt-6 h-14 w-full rounded-button bg-primary font-heading text-[17px] font-bold text-white disabled:opacity-60"
         >
-          {submitting ? "Setting password…" : "Set Password"}
+          {submitting ? "Creating password…" : "Create password"}
         </button>
         <p className="mt-3 text-center font-body text-xs text-text-secondary">
           Remember this password — you&apos;ll need it every time you sign in.

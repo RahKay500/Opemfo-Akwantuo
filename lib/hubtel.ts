@@ -35,21 +35,21 @@ export async function sendOtpSms(phone: string, otp: string): Promise<void> {
 export async function sendStaffActivationSms(phone: string, otp: string): Promise<void> {
   await sendSms(
     phone,
-    `Welcome to Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the app to set your password.`
+    `Welcome to Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the app to create your password.`
   );
 }
 
 export async function sendMotherActivationSms(phone: string, otp: string): Promise<void> {
   await sendSms(
     phone,
-    `Welcome to Ɔpemfoɔ Akwantuo! Your midwife/nurse has registered you. Your activation code is ${otp}. Open the app to set your password.`
+    `Welcome to Ɔpemfoɔ Akwantuo! Your midwife has registered you. Your activation code is ${otp}. Open the app to create your password.`
   );
 }
 
 export async function sendFacilityAdminActivationSms(phone: string, otp: string, facilityName: string): Promise<void> {
   await sendSms(
     phone,
-    `You've been added as the Facility Admin for ${facilityName} on Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the admin portal to set your password.`
+    `You've been added as the Facility Admin for ${facilityName} on Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the admin portal to create your password.`
   );
 }
 
@@ -65,7 +65,7 @@ export async function sendAdminActivationSms(
 ): Promise<void> {
   await sendSms(
     phone,
-    `You've been added as the ${roleLabel} for ${jurisdictionName} on Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the admin portal to set your password.`
+    `You've been added as the ${roleLabel} for ${jurisdictionName} on Ɔpemfoɔ Akwantuo. Your activation code is ${otp}. Open the admin portal to create your password.`
   );
 }
 
@@ -121,7 +121,7 @@ export async function sendEmergencyTriggeredSms(
 ): Promise<void> {
   await sendSms(nursePhone, `EMERGENCY: ${patientName} has triggered the emergency alert. Respond immediately.`);
   if (emergencyContactPhone) {
-    await sendSms(emergencyContactPhone, `${patientName} has triggered an emergency alert. Their midwife/nurse has been notified.`);
+    await sendSms(emergencyContactPhone, `${patientName} has triggered an emergency alert. Their midwife has been notified.`);
   }
 }
 
@@ -142,7 +142,7 @@ export async function sendPartnerInviteSms(partnerPhone: string, motherName: str
 export async function sendLabResultReadySms(patientPhone: string, testType: string): Promise<void> {
   await sendSms(
     patientPhone,
-    `Your ${testType} result is ready. Ask your midwife/nurse for the details on your next visit.`
+    `Your ${testType} result is ready. Ask your midwife for the details on your next visit.`
   );
 }
 
