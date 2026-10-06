@@ -5,12 +5,16 @@ import type { NextRequest, NextResponse } from "next/server";
 
 // jose (not jsonwebtoken) because middleware.ts runs on the edge runtime,
 // where Node's crypto module isn't available.
-const ACCESS_SECRET = new TextEncoder().encode(
-  process.env.JWT_ACCESS_SECRET ?? "dev-access-secret-change-me"
-);
-const REFRESH_SECRET = new TextEncoder().encode(
-  process.env.JWT_REFRESH_SECRET ?? "dev-refresh-secret-change-me"
-);
+// Fails closed in production so a missing env var can't silently sign tokens with a public default.
+export function jwtSecret(envName: string, devFallback: string): Uint8Array {
+  const value = process.env[envName];
+  if (value) return new TextEncoder().encode(value);
+  if (process.env.NODE_ENV === "production") throw new Error(`${envName} must be set in production`);
+  return new TextEncoder().encode(devFallback);
+}
+
+const accessSecret = () => jwtSecret("JWT_ACCESS_SECRET", "dev-access-secret-change-me");
+const refreshSecret = () => jwtSecret("JWT_REFRESH_SECRET", "dev-refresh-secret-change-me");
 
 export const ACCESS_TOKEN_EXPIRY = "15m";
 export const REFRESH_TOKEN_EXPIRY = "30d";
@@ -27,11 +31,11 @@ export async function signAccessToken(payload: AccessTokenPayload): Promise<stri
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(ACCESS_TOKEN_EXPIRY)
-    .sign(ACCESS_SECRET);
+    .sign(accessSecret());
 }
 
 export async function verifyAccessToken(token: string): Promise<AccessTokenPayload> {
-  const { payload } = await jwtVerify(token, ACCESS_SECRET);
+  const { payload } = await jwtVerify(token, accessSecret());
   return payload as unknown as AccessTokenPayload;
 }
 
@@ -40,11 +44,11 @@ export async function signRefreshToken(payload: AccessTokenPayload): Promise<str
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(REFRESH_TOKEN_EXPIRY)
-    .sign(REFRESH_SECRET);
+    .sign(refreshSecret());
 }
 
 export async function verifyRefreshToken(token: string): Promise<AccessTokenPayload> {
-  const { payload } = await jwtVerify(token, REFRESH_SECRET);
+  const { payload } = await jwtVerify(token, refreshSecret());
   return payload as unknown as AccessTokenPayload;
 }
 
@@ -72,11 +76,11 @@ export async function signSetupToken(userId: string, expiry: string = "10m"): Pr
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(expiry)
-    .sign(ACCESS_SECRET);
+    .sign(accessSecret());
 }
 
 export async function verifySetupToken(token: string): Promise<SetupTokenPayload> {
-  const { payload } = await jwtVerify(token, ACCESS_SECRET);
+  const { payload } = await jwtVerify(token, accessSecret());
   if (payload.purpose !== "set-password") {
     throw new Error("Invalid token purpose");
   }

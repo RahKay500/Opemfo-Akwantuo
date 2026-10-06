@@ -2,7 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import bcrypt from "bcryptjs";
 import type { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { generateOtp } from "@/lib/auth";
+import { generateOtp, jwtSecret } from "@/lib/auth";
 import { sendOtpSms } from "@/lib/hubtel";
 import { normalizeGhanaPhone } from "@/lib/utils";
 
@@ -10,9 +10,7 @@ import { normalizeGhanaPhone } from "@/lib/utils";
 // own secret, its own cookie, its own token shape, and its own SuperAdmin
 // table — nothing here should touch the `access_token`/`refresh_token`
 // cookies, JWT_ACCESS_SECRET, or the User table used by the rest of the app.
-const ADMIN_SECRET = new TextEncoder().encode(
-  process.env.SUPER_ADMIN_JWT_SECRET ?? "dev-admin-secret-change-me"
-);
+const adminSecret = () => jwtSecret("SUPER_ADMIN_JWT_SECRET", "dev-admin-secret-change-me");
 
 export const ADMIN_COOKIE_NAME = "admin_session";
 const ADMIN_SESSION_EXPIRY = "8h";
@@ -43,11 +41,11 @@ export async function signAdminToken(adminId: string, scope: AdminScope): Promis
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(ADMIN_SESSION_EXPIRY)
-    .sign(ADMIN_SECRET);
+    .sign(adminSecret());
 }
 
 export async function verifyAdminToken(token: string): Promise<AdminSessionPayload> {
-  const { payload } = await jwtVerify(token, ADMIN_SECRET);
+  const { payload } = await jwtVerify(token, adminSecret());
   if (typeof payload.sub !== "string" || !payload.sub) {
     throw new Error("Invalid admin token");
   }
@@ -294,11 +292,11 @@ export async function signAdminActivationToken(adminId: string): Promise<string>
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime("48h")
-    .sign(ADMIN_SECRET);
+    .sign(adminSecret());
 }
 
 export async function verifyAdminActivationToken(token: string): Promise<AdminActivationTokenPayload> {
-  const { payload } = await jwtVerify(token, ADMIN_SECRET);
+  const { payload } = await jwtVerify(token, adminSecret());
   if (payload.purpose !== "admin-activate" || typeof payload.adminId !== "string") {
     throw new Error("Invalid activation token");
   }
