@@ -34,7 +34,7 @@ export async function getLabRequestQueue(facilityId: string): Promise<LabRequest
     result: r.result,
     isAbnormal: r.isAbnormal,
     requestedByName: r.requestedBy.name,
-    requestedByRole: r.requestedBy.role === "DOCTOR" ? "Doctor" : "Midwife/Nurse",
+    requestedByRole: r.requestedBy.role === "DOCTOR" ? "Gynaecologist" : "Midwife",
     requestedAt: r.requestedAt.toISOString(),
   }));
 }

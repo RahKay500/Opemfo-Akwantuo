@@ -39,7 +39,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   if (staff.email) {
     const setupToken = await signSetupToken(staff.id, "48h");
     const link = `${request.nextUrl.origin}/set-password?token=${setupToken}`;
-    const roleLabel = staff.role === "DOCTOR" ? "Doctor" : staff.role === "LAB_TECHNICIAN" ? "Lab Technician" : "Midwife";
+    const roleLabel = staff.role === "DOCTOR" ? "Gynaecologist" : staff.role === "LAB_TECHNICIAN" ? "Lab Technician" : "Midwife";
     await sendStaffActivationEmail(staff.email, link, roleLabel);
     return NextResponse.json({
       success: true,

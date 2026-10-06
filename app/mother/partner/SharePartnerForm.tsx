@@ -207,7 +207,7 @@ export default function SharePartnerForm() {
       <div className="rounded-card bg-lilac-light p-4 lg:col-span-2">
         <p className="font-body text-xs text-lilac-deeper">
           <span className="font-semibold">✓ Your partner gets read-only access.</span> They cannot edit records,
-          contact your nurse, or create referrals. Revoke anytime from this screen.
+          contact your midwife, or create referrals. Revoke anytime from this screen.
         </p>
       </div>
 

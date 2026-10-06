@@ -95,7 +95,7 @@ export default function MotherSymptomsPage() {
   async function handleSubmit() {
     setError(null);
     if (!severity) {
-      setError("Let your nurse know how severe it feels.");
+      setError("Let your midwife know how severe it feels.");
       return;
     }
     if (selectedSymptoms.length === 0 && !notes.trim()) {
@@ -153,9 +153,9 @@ export default function MotherSymptomsPage() {
         <div className="flex size-16 items-center justify-center rounded-badge bg-[#F0FDF4]">
           <span className="text-3xl">✓</span>
         </div>
-        <h1 className="font-heading text-xl font-bold text-text-primary">Sent to your nurse</h1>
+        <h1 className="font-heading text-xl font-bold text-text-primary">Sent to your midwife</h1>
         <p className="font-body text-sm text-text-secondary">
-          Your nurse will review this and reach out if needed.
+          Your midwife will review this and reach out if needed.
         </p>
         <Button size="cta" shape="rect" onClick={() => router.push("/mother/dashboard")} className="mt-2">
           Back to Dashboard
@@ -174,8 +174,8 @@ export default function MotherSymptomsPage() {
         <div className="rounded-card bg-lilac-light p-4">
           <p className="font-body text-sm text-lilac-deeper">
             {editingId
-              ? "Editing a report you already sent — your nurse will see the updated version."
-              : "Tell your nurse how you're feeling. This helps them monitor your health between visits."}
+              ? "Editing a report you already sent — your midwife will see the updated version."
+              : "Tell your midwife how you're feeling. This helps them monitor your health between visits."}
           </p>
         </div>
 
@@ -272,11 +272,11 @@ export default function MotherSymptomsPage() {
                   disabled={submitting}
                   className="h-14 flex-1 rounded-button bg-lilac-mid font-heading text-[17px] font-bold text-lilac-deeper disabled:opacity-60"
                 >
-                  {submitting ? "Saving…" : editingId ? "Update report" : "Send to my nurse"}
+                  {submitting ? "Saving…" : editingId ? "Update report" : "Send to my midwife"}
                 </button>
               </div>
               <p className="mt-2.5 text-center font-body text-xs text-[#9CA3AF]">
-                Your nurse will review this and reach out if needed.
+                Your midwife will review this and reach out if needed.
               </p>
             </div>
           </div>
@@ -342,7 +342,7 @@ export default function MotherSymptomsPage() {
         <div className="flex flex-col items-center gap-4 text-center">
           <h2 className="font-heading text-xl font-bold text-text-primary">Cancel this report?</h2>
           <p className="font-body text-sm text-text-secondary">
-            Your nurse will be notified that this report was cancelled.
+            Your midwife will be notified that this report was cancelled.
           </p>
           <button
             type="button"

@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
       staff: staff.map((s) => ({
         id: s.id,
         name: s.name,
-        subtitle: `${s.role === "MIDWIFE" ? "Midwife" : s.role === "DOCTOR" ? "Doctor" : "Lab Technician"} · ${s.facility?.name ?? "Unassigned"}`,
+        subtitle: `${s.role === "MIDWIFE" ? "Midwife" : s.role === "DOCTOR" ? "Gynaecologist" : "Lab Technician"} · ${s.facility?.name ?? "Unassigned"}`,
         facilityId: s.facilityId,
       })),
     },

@@ -53,7 +53,7 @@ export default async function DoctorAnalyticsPage() {
             </span>
           )}
           {sidebarData?.name && (
-            <IdentityMenu name={sidebarData.name} subtitle={`${data.facilityName} · Doctor`} profileHref="/doctor/profile" />
+            <IdentityMenu name={sidebarData.name} subtitle={`${data.facilityName} · Gynaecologist`} profileHref="/doctor/profile" />
           )}
         </div>
       </div>

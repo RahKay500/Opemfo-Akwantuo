@@ -31,7 +31,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     prisma.user.findUnique({ where: { id: session.userId } }),
   ]);
   if (!doctor || doctor.role !== "DOCTOR") {
-    return NextResponse.json({ error: "Doctor not found." }, { status: 404 });
+    return NextResponse.json({ error: "Gynaecologist not found." }, { status: 404 });
   }
 
   const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
@@ -59,7 +59,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       userId: doctor.id,
       type: "RECORD_SHARE",
       title: `Record shared: ${patient.name}`,
-      message: `${midwife?.name ?? "A midwife/nurse"} shared ${patient.name}'s record with you for review.`,
+      message: `${midwife?.name ?? "A midwife"} shared ${patient.name}'s record with you for review.`,
       relatedId: share.id,
       relatedType: "ReferralShare",
     },

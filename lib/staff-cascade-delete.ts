@@ -35,7 +35,7 @@ export interface StaffCascadeDeleteResult {
   staffDeleted: boolean;
   // Set when the staff row itself couldn't be deleted — e.g. they're
   // referenced by a referral/visit belonging to a patient registered by
-  // someone else (a doctor who received a share from another facility).
+  // someone else (a gynaecologist who received a share from another facility).
   // Rather than force-deleting data outside the requested scope, the staff
   // account is left in place and this explains why.
   blockedReason?: string;

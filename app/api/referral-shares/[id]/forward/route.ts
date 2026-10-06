@@ -28,7 +28,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
   }
 
   if (parsed.data.doctorId === session.userId) {
-    return NextResponse.json({ error: "Choose a different doctor to forward to." }, { status: 400 });
+    return NextResponse.json({ error: "Choose a different gynaecologist to forward to." }, { status: 400 });
   }
 
   const [targetDoctor, forwardingDoctor] = await Promise.all([
@@ -36,7 +36,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     prisma.user.findUnique({ where: { id: session.userId } }),
   ]);
   if (!targetDoctor || targetDoctor.role !== "DOCTOR") {
-    return NextResponse.json({ error: "Doctor not found." }, { status: 404 });
+    return NextResponse.json({ error: "Gynaecologist not found." }, { status: 404 });
   }
 
   const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
       patientId: original.patientId,
       sharedByNurseId: original.sharedByNurseId,
       sharedWithDoctorId: targetDoctor.id,
-      reason: parsed.data.reason?.trim() || `Forwarded by ${forwardingDoctor?.name ?? "a doctor"}: ${original.reason ?? "no note provided"}`,
+      reason: parsed.data.reason?.trim() || `Forwarded by ${forwardingDoctor?.name ?? "a gynaecologist"}: ${original.reason ?? "no note provided"}`,
       expiresAt,
     },
   });

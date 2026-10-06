@@ -32,7 +32,7 @@ export default function ShareRecordSheet({
 
   async function handleShare() {
     if (!doctorId) {
-      setError("Choose a doctor to share with.");
+      setError("Choose a gynaecologist to share with.");
       return;
     }
     setSubmitting(true);
@@ -70,7 +70,7 @@ export default function ShareRecordSheet({
           <>
             <p className="font-heading text-lg font-bold text-text-primary">Record shared</p>
             <p className="font-body text-sm text-text-secondary">
-              A read-only copy of {patientName}&apos;s record is available to the doctor for 48 hours.
+              A read-only copy of {patientName}&apos;s record is available to the gynaecologist for 48 hours.
             </p>
             <button
               type="button"
@@ -84,17 +84,17 @@ export default function ShareRecordSheet({
           <>
             <p className="font-heading text-lg font-bold text-text-primary">Share with Gynaecologist</p>
             <p className="font-body text-sm text-text-secondary">
-              Grant a doctor read-only access to {patientName}&apos;s record for 48 hours.
+              Grant a gynaecologist read-only access to {patientName}&apos;s record for 48 hours.
             </p>
 
             <div>
-              <label className="font-body text-sm font-medium text-text-primary">Doctor</label>
+              <label className="font-body text-sm font-medium text-text-primary">Gynaecologist</label>
               <select
                 value={doctorId}
                 onChange={(e) => setDoctorId(e.target.value)}
                 className="mt-1.5 h-12 w-full rounded-input border-[1.5px] border-border-color bg-white px-3.5 font-body text-sm text-text-primary outline-none focus:border-primary"
               >
-                {doctors.length === 0 && <option value="">No doctors available</option>}
+                {doctors.length === 0 && <option value="">No gynaecologists available</option>}
                 {doctors.map((d) => (
                   <option key={d.id} value={d.id}>
                     {d.name} · {d.facilityName}

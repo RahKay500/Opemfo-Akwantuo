@@ -31,7 +31,7 @@ export async function resolveConversation(
     if (input.staffRole === "MIDWIFE") {
       staffId = patient.registeredById;
     } else {
-      if (!input.staffId) return { error: "Choose a doctor.", status: 400 };
+      if (!input.staffId) return { error: "Choose a gynaecologist.", status: 400 };
       const share = await prisma.referralShare.findFirst({
         where: { patientId: patient.id, sharedWithDoctorId: input.staffId },
       });

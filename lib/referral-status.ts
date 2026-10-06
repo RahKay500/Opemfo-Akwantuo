@@ -2,7 +2,7 @@ import type { ReferralStatus } from "@prisma/client";
 
 // Same ReferralStatus enum as the sending (midwife) side, relabeled from the
 // receiving hospital's point of view: a referral that's merely SENT hasn't
-// been looked at yet ("Awaiting"), ACKNOWLEDGED means a doctor has opened it
+// been looked at yet ("Awaiting"), ACKNOWLEDGED means a gynaecologist has opened it
 // ("In Review"), PATIENT_ARRIVED means the patient has been checked in
 // ("Accepted"), and COMPLETED means the doctor has actually seen them
 // ("Seen") — distinct stages, not the same state twice.

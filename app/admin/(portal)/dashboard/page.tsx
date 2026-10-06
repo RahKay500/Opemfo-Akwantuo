@@ -151,7 +151,7 @@ function PlatformDashboard({ platform }: { platform: PlatformDashboardData }) {
   );
 }
 
-const ROLE_LABELS: Record<string, string> = { MIDWIFE: "Midwife", DOCTOR: "Doctor", LAB_TECHNICIAN: "Lab Technician" };
+const ROLE_LABELS: Record<string, string> = { MIDWIFE: "Midwife", DOCTOR: "Gynaecologist", LAB_TECHNICIAN: "Lab Technician" };
 
 function FacilityAdminDashboard({ facility }: { facility: FacilityAdminDashboardData }) {
   return (
@@ -181,7 +181,7 @@ function FacilityAdminDashboard({ facility }: { facility: FacilityAdminDashboard
         <StatsCard
           label="Pending Referrals"
           value={facility.pendingReferrals}
-          caption="Awaiting doctor review"
+          caption="Awaiting gynaecologist review"
           color="orange"
           icon={ReferralArrowIcon}
         />

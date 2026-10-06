@@ -41,7 +41,7 @@ export default async function DoctorProfilePage() {
               {sidebarData.newSharedRecordsCount} shared record{sidebarData.newSharedRecordsCount === 1 ? "" : "s"} pending review
             </span>
           )}
-          <IdentityMenu name={data.name} subtitle={`${data.facilityName} · Doctor`} profileHref="/doctor/profile" />
+          <IdentityMenu name={data.name} subtitle={`${data.facilityName} · Gynaecologist`} profileHref="/doctor/profile" />
         </div>
       </div>
 
@@ -55,7 +55,7 @@ export default async function DoctorProfilePage() {
             </div>
             <p className="mt-3 font-heading text-xl font-bold text-text-primary lg:text-2xl">{data.name}</p>
             <p className="mt-0.5 font-body text-[13px] text-text-secondary lg:text-sm">
-              {data.specialty ?? "Doctor"}
+              {data.specialty ?? "Gynaecologist"}
             </p>
             {data.isVerified && (
               <span className="mt-3 flex items-center gap-1.5 rounded-badge bg-[#F0FDF4] px-3 py-1.5 font-body text-[13px] font-bold text-[#16A34A]">

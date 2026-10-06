@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 // Either conversationId (an existing thread) or patientId+staffRole (a
-// mother's first message to her midwife/a doctor, where no Conversation row
+// mother's first message to her midwife/a gynaecologist, where no Conversation row
 // exists yet — the route creates it) must be present.
 export const sendMessageSchema = z
   .object({

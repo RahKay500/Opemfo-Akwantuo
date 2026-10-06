@@ -26,8 +26,8 @@ export interface StaffDetail {
 }
 
 const ROLE_LABEL: Record<StaffDetail["role"], string> = {
-  MIDWIFE: "Midwife/Nurse",
-  DOCTOR: "Doctor",
+  MIDWIFE: "Midwife",
+  DOCTOR: "Gynaecologist",
   LAB_TECHNICIAN: "Lab Technician",
 };
 

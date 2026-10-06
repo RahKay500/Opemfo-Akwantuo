@@ -87,7 +87,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
             <div className="flex flex-col gap-2.5 rounded-card bg-white p-[18px] border border-border-color">
               <p className="font-heading text-[15px] font-bold text-text-primary">Recommended action</p>
               {[
-                `Contact your midwife/nurse ${visitDetail.nurseName} today`,
+                `Contact your midwife ${visitDetail.nurseName} today`,
                 "Rest and avoid stress until you are seen",
                 "Go to the nearest facility if you feel headache, blurred vision or swelling",
               ].map((tip) => (
@@ -103,7 +103,7 @@ export default async function MotherAlertDetailPage({ params }: { params: Promis
                 href={`tel:${visitDetail.nursePhone}`}
                 className="flex h-[54px] items-center justify-center rounded-card bg-lilac-dark font-heading text-base font-bold text-white"
               >
-                Call My Midwife/Nurse
+                Call My Midwife
               </a>
             )}
           </>

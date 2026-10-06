@@ -37,10 +37,10 @@ export default async function MotherMessagesPage() {
           unreadCount={conversations.midwife.unreadCount}
         />
 
-        <p className="mt-2 font-body text-xs font-medium uppercase tracking-[0.06em] text-text-secondary">Doctors</p>
+        <p className="mt-2 font-body text-xs font-medium uppercase tracking-[0.06em] text-text-secondary">Gynaecologists</p>
         {conversations.doctors.length === 0 && (
           <p className="font-body text-sm text-text-secondary">
-            You&apos;ll be able to message a doctor here once your midwife shares your record with one.
+            You&apos;ll be able to message a gynaecologist here once your midwife shares your record with one.
           </p>
         )}
         {conversations.doctors.map((d) => (

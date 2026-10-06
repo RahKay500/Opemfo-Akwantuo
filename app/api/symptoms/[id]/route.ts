@@ -24,7 +24,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     return NextResponse.json({ error: "This report has been cancelled." }, { status: 400 });
   }
   if (symptom.reviewedByNurseId) {
-    return NextResponse.json({ error: "Your nurse has already reviewed this report — it can no longer be edited." }, { status: 400 });
+    return NextResponse.json({ error: "Your midwife has already reviewed this report — it can no longer be edited." }, { status: 400 });
   }
 
   const { symptoms, severity, notes, startedWhen } = parsed.data;
@@ -58,7 +58,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     return NextResponse.json({ error: "This report has already been cancelled." }, { status: 400 });
   }
   if (symptom.reviewedByNurseId) {
-    return NextResponse.json({ error: "Your nurse has already reviewed this report — it can no longer be cancelled." }, { status: 400 });
+    return NextResponse.json({ error: "Your midwife has already reviewed this report — it can no longer be cancelled." }, { status: 400 });
   }
 
   const patient = await prisma.patient.findUnique({ where: { id: symptom.patientId } });

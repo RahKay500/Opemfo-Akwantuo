@@ -7,10 +7,10 @@ import { updateAppointmentStatusSchema } from "@/lib/validations/appointments";
 function statusMessage(status: "CONFIRMED" | "DECLINED", requestType: string): string {
   if (status === "CONFIRMED") {
     return requestType === "GYNAECOLOGIST"
-      ? "Your gynaecologist referral request has been confirmed. Your nurse will be in touch with next steps."
+      ? "Your gynaecologist referral request has been confirmed. Your midwife will be in touch with next steps."
       : "Your appointment request has been confirmed.";
   }
-  return "Your nurse wasn't able to confirm this request for the date given — please try a different date or speak with your nurse.";
+  return "Your midwife wasn't able to confirm this request for the date given — please try a different date or speak with your midwife.";
 }
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {

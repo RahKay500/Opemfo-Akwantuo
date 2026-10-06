@@ -102,7 +102,7 @@ export default async function MidwifePatientDetailPage({ params }: { params: Pro
           patient.doctorNextVisitOverride
             ? {
                 date: patient.doctorNextVisitOverride.toISOString(),
-                doctorName: patient.doctorNextVisitOverrideBy?.name ?? "a doctor",
+                doctorName: patient.doctorNextVisitOverrideBy?.name ?? "a gynaecologist",
               }
             : null
         }

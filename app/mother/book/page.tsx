@@ -24,7 +24,7 @@ const REQUEST_TYPES = [
     iconBg: "bg-pink-light",
     iconColor: "text-pink-deep",
     title: "Gynaecologist Referral",
-    blurb: "Request a specialist review from a doctor at the district hospital",
+    blurb: "Request a specialist review from a gynaecologist at the district hospital",
   },
 ];
 
@@ -82,7 +82,7 @@ export default function MotherBookPage() {
         </div>
         <h1 className="font-heading text-xl font-bold text-text-primary">Request sent</h1>
         <p className="font-body text-sm text-text-secondary">
-          Your nurse will confirm your appointment via SMS.
+          Your midwife will confirm your appointment via SMS.
         </p>
         <Button size="cta" shape="rect" onClick={() => router.push("/mother/dashboard")} className="mt-2">
           Back to Dashboard
@@ -189,7 +189,7 @@ export default function MotherBookPage() {
             {submitting ? "Sending…" : "Request Appointment"}
           </Button>
           <p className="mt-2.5 text-center font-body text-xs text-[#9CA3AF]">
-            Your nurse will confirm your appointment via SMS.
+            Your midwife will confirm your appointment via SMS.
           </p>
         </div>
       </div>

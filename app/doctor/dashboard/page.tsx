@@ -51,7 +51,7 @@ export default async function DoctorDashboardPage() {
   return (
     <main className="flex flex-col">
       <div className="relative flex flex-col justify-end rounded-b-3xl bg-primary px-6 pb-5 pt-11 lg:hidden">
-        <p className="font-body text-[11px] font-medium tracking-[0.1em] text-white">DOCTOR</p>
+        <p className="font-body text-[11px] font-medium tracking-[0.1em] text-white">GYNAECOLOGIST</p>
         <p className="font-heading text-2xl font-bold text-white">{data.name}</p>
         <p className="font-body text-[13px] text-white">{data.facilityName}</p>
         <div className="absolute right-6 top-11 flex items-center gap-3">
@@ -82,7 +82,7 @@ export default async function DoctorDashboardPage() {
               {data.stats.recordsShared} shared record{data.stats.recordsShared === 1 ? "" : "s"} pending review
             </span>
           )}
-          <IdentityMenu name={data.name} subtitle={`${data.facilityName} · Doctor`} profileHref="/doctor/profile" />
+          <IdentityMenu name={data.name} subtitle={`${data.facilityName} · Gynaecologist`} profileHref="/doctor/profile" />
         </div>
       </div>
 
@@ -123,7 +123,7 @@ export default async function DoctorDashboardPage() {
             <div className="flex items-start gap-3">
               <ShareIcon className="mt-0.5 size-5 shrink-0 text-pink-deep" />
               <p className="font-body text-sm text-text-primary">
-                <span className="font-bold text-pink-deep">New shared record</span> — Nurse {data.newSharedRecord.sharedByName}{" "}
+                <span className="font-bold text-pink-deep">New shared record</span> — Midwife {data.newSharedRecord.sharedByName}{" "}
                 shared {data.newSharedRecord.patientName}&apos;s vitals trend for your review.
               </p>
             </div>

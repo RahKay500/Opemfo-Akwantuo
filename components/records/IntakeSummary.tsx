@@ -47,7 +47,7 @@ function medicalDetail(mh: Partial<MedicalHistoryState> | null, key: string): st
 // Medical/Social/Family History, Physical Exam) captured at registration —
 // see components/forms/patient-intake/ for the form that collects this.
 // Deliberately shows only what's positive/abnormal/recorded, not a full
-// checklist replica — a doctor scanning a shared chart needs the flags
+// checklist replica — a gynaecologist scanning a shared chart needs the flags
 // (diabetic, HIV, mental illness, etc.), not a wall of "No"s.
 export default function IntakeSummary({ data }: { data: IntakeSummaryData }) {
   const medicalPositives = MEDICAL_HISTORY_ITEMS.filter((i) => data.medicalHistory?.[i.key]);

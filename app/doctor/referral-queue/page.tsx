@@ -28,7 +28,7 @@ export default async function DoctorReferralQueuePage() {
         </div>
         <div className="flex items-center gap-3">
           {sidebarData?.name && (
-            <IdentityMenu name={sidebarData.name} subtitle={`${sidebarData.facilityName} · Doctor`} profileHref="/doctor/profile" />
+            <IdentityMenu name={sidebarData.name} subtitle={`${sidebarData.facilityName} · Gynaecologist`} profileHref="/doctor/profile" />
           )}
         </div>
       </div>

@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { getSessionFromRequest } from "@/lib/auth";
 
 // Mother-only: look up a thread by relationship (staffRole, and staffId for
-// a doctor) rather than by conversation id, since no Conversation row exists
+// a gynaecologist) rather than by conversation id, since no Conversation row exists
 // until the first message is sent. Also marks the thread read.
 export async function GET(request: NextRequest) {
   const session = await getSessionFromRequest(request);

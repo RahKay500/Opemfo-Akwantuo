@@ -19,8 +19,8 @@ export interface StaffRow {
 }
 
 const ROLE_LABEL: Record<StaffRow["role"], string> = {
-  MIDWIFE: "Midwife/Nurse",
-  DOCTOR: "Doctor",
+  MIDWIFE: "Midwife",
+  DOCTOR: "Gynaecologist",
   LAB_TECHNICIAN: "Lab Technician",
 };
 
@@ -74,8 +74,8 @@ export default function StaffClient({ staff }: { staff: StaffRow[] }) {
           className="h-10 rounded-md border border-[#E2E8F0] px-3 text-sm outline-none focus:border-[#E4A8F3]"
         >
           <option value="All">All roles</option>
-          <option value="MIDWIFE">Midwife/Nurse</option>
-          <option value="DOCTOR">Doctor</option>
+          <option value="MIDWIFE">Midwife</option>
+          <option value="DOCTOR">Gynaecologist</option>
           <option value="LAB_TECHNICIAN">Lab Technician</option>
         </select>
       </div>

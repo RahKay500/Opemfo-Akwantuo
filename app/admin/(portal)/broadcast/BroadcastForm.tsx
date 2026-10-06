@@ -26,13 +26,13 @@ type StaffRole = "MIDWIFE" | "DOCTOR" | "LAB_TECHNICIAN";
 
 const AUDIENCE_LABEL: Record<Audience, string> = {
   ADMINS: "Facility Admins",
-  STAFF: "Staff (Midwives/Doctors/Lab Technicians)",
+  STAFF: "Staff (Midwives/Gynaecologists/Lab Technicians)",
   MOTHERS: "Mothers",
 };
 
 const STAFF_ROLE_LABEL: Record<StaffRole, string> = {
-  MIDWIFE: "Midwife/Nurse",
-  DOCTOR: "Doctor",
+  MIDWIFE: "Midwife",
+  DOCTOR: "Gynaecologist",
   LAB_TECHNICIAN: "Lab Technician",
 };
 

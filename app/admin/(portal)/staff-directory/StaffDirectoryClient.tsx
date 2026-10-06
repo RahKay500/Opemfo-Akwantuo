@@ -20,7 +20,7 @@ export interface StaffDirectoryRow {
 
 const ROLE_LABELS: Record<StaffDirectoryRow["role"], string> = {
   MIDWIFE: "Midwife",
-  DOCTOR: "Doctor",
+  DOCTOR: "Gynaecologist",
   LAB_TECHNICIAN: "Lab Technician",
 };
 
