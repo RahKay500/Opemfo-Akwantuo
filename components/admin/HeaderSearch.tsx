@@ -13,10 +13,9 @@ interface SearchResult {
 interface SearchResults {
   facilities: SearchResult[];
   staff: SearchResult[];
-  patients: SearchResult[];
 }
 
-const EMPTY: SearchResults = { facilities: [], staff: [], patients: [] };
+const EMPTY: SearchResults = { facilities: [], staff: [] };
 
 export default function HeaderSearch({ isPlatform }: { isPlatform: boolean }) {
   const router = useRouter();
@@ -49,13 +48,13 @@ export default function HeaderSearch({ isPlatform }: { isPlatform: boolean }) {
     return () => clearTimeout(timeout);
   }, [query]);
 
-  function goTo(section: "facilities" | "staff-directory" | "staff" | "patients", name: string) {
+  function goTo(section: "facilities" | "staff-directory" | "staff", name: string) {
     setOpen(false);
     setQuery("");
     router.push(`/admin/${section}?q=${encodeURIComponent(name)}`);
   }
 
-  const hasResults = results.facilities.length + results.staff.length + results.patients.length > 0;
+  const hasResults = results.facilities.length + results.staff.length > 0;
 
   return (
     <div ref={ref} className="relative w-full max-w-md">
@@ -65,7 +64,7 @@ export default function HeaderSearch({ isPlatform }: { isPlatform: boolean }) {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         onFocus={() => query.trim().length >= 2 && setOpen(true)}
-        placeholder={isPlatform ? "Search facilities, staff, patients..." : "Search staff, patients..."}
+        placeholder={isPlatform ? "Search facilities and staff..." : "Search staff..."}
         className="h-9 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-9 pr-3 text-sm text-[#1A1A2E] outline-none placeholder:text-[#94A3B8] focus:border-[#9F1AB1] focus:bg-white"
       />
 
@@ -85,14 +84,6 @@ export default function HeaderSearch({ isPlatform }: { isPlatform: boolean }) {
             <ResultGroup label="Staff">
               {results.staff.map((s) => (
                 <ResultRow key={s.id} result={s} onClick={() => goTo(isPlatform ? "staff-directory" : "staff", s.name)} />
-              ))}
-            </ResultGroup>
-          )}
-
-          {results.patients.length > 0 && (
-            <ResultGroup label="Patients">
-              {results.patients.map((p) => (
-                <ResultRow key={p.id} result={p} onClick={() => goTo("patients", p.name)} />
               ))}
             </ResultGroup>
           )}
