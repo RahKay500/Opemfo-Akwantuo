@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { generateOtp } from "@/lib/auth";
 import { isSmsUnconfigured, sendOtpSms } from "@/lib/hubtel";
 import { otpSendSchema } from "@/lib/validations/auth";
+import { clientIp, limitAttempts, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -12,6 +13,9 @@ export async function POST(request: NextRequest) {
   }
 
   const { phone } = parsed.data;
+  if (!limitAttempts("otp-send-ip", clientIp(request), 20) || !limitAttempts("otp-send-phone", phone, 5)) {
+    return NextResponse.json({ error: TOO_MANY_ATTEMPTS }, { status: 429 });
+  }
 
   const existing = await prisma.user.findUnique({ where: { phone } });
 

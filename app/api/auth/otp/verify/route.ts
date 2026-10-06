@@ -2,6 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { signSetupToken } from "@/lib/auth";
 import { otpVerifySchema } from "@/lib/validations/auth";
+import { clientIp, limitAttempts, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -11,6 +12,9 @@ export async function POST(request: NextRequest) {
   }
 
   const { phone, otp } = parsed.data;
+  if (!limitAttempts("otp-verify-ip", clientIp(request), 30) || !limitAttempts("otp-verify-phone", phone, 10)) {
+    return NextResponse.json({ error: TOO_MANY_ATTEMPTS }, { status: 429 });
+  }
   const user = await prisma.user.findUnique({ where: { phone } });
 
   if (!user || !user.otp || !user.otpExpiry) {

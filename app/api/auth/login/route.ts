@@ -4,6 +4,7 @@ import { comparePassword, signAccessToken, signRefreshToken, setAuthCookies } fr
 import { loginSchema } from "@/lib/validations/auth";
 import { normalizeGhanaPhone } from "@/lib/utils";
 import { logAudit } from "@/lib/audit";
+import { clientIp, limitAttempts, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 export async function POST(request: NextRequest) {
   const body = await request.json().catch(() => null);
@@ -13,6 +14,12 @@ export async function POST(request: NextRequest) {
   }
 
   const { identifier, password } = parsed.data;
+  if (
+    !limitAttempts("login-ip", clientIp(request), 50) ||
+    !limitAttempts("login-account", identifier.trim().toLowerCase(), 10)
+  ) {
+    return NextResponse.json({ error: TOO_MANY_ATTEMPTS }, { status: 429 });
+  }
   // Mothers log in by phone; staff (Midwife/Doctor) by email — same "@"
   // branch the admin portal's checkAdminCredentials already uses.
   const user = identifier.includes("@")

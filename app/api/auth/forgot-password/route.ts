@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { generateOtp } from "@/lib/auth";
 import { isSmsUnconfigured, sendOtpSms } from "@/lib/hubtel";
 import { forgotPasswordSchema } from "@/lib/validations/auth";
+import { clientIp, limitAttempts, TOO_MANY_ATTEMPTS } from "@/lib/rate-limit";
 
 // Reuses the same otp/verify + set-password routes as onboarding — verifying
 // an OTP and setting a new password is identical either way. This route just
@@ -15,6 +16,9 @@ export async function POST(request: NextRequest) {
   }
 
   const { phone } = parsed.data;
+  if (!limitAttempts("forgot-ip", clientIp(request), 20) || !limitAttempts("forgot-phone", phone, 5)) {
+    return NextResponse.json({ error: TOO_MANY_ATTEMPTS }, { status: 429 });
+  }
   const user = await prisma.user.findUnique({ where: { phone } });
   let devOtp: string | undefined;
 

@@ -25,3 +25,19 @@ export function rateLimit(key: string, limit: number, windowMs: number): RateLim
   entry.count += 1;
   return { success: true, remaining: limit - entry.count, resetAt: entry.resetAt };
 }
+
+const FIFTEEN_MINUTES = 15 * 60_000;
+
+// The last x-forwarded-for hop is the one the platform appends; earlier hops
+// are client-supplied and would let an attacker rotate its own bucket.
+export function clientIp(request: Request): string {
+  const forwarded = request.headers.get("x-forwarded-for");
+  const hops = forwarded?.split(",").map((hop) => hop.trim()).filter(Boolean) ?? [];
+  return hops[hops.length - 1] ?? "unknown";
+}
+
+export function limitAttempts(scope: string, key: string, limit: number): boolean {
+  return rateLimit(`${scope}:${key}`, limit, FIFTEEN_MINUTES).success;
+}
+
+export const TOO_MANY_ATTEMPTS = "Too many attempts. Please wait a few minutes and try again.";
