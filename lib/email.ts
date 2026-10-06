@@ -1,14 +1,30 @@
 import { Resend } from "resend";
+import nodemailer from "nodemailer";
 
+const SMTP_USER = process.env.SMTP_USER;
+const SMTP_PASS = process.env.SMTP_PASS;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
+// Gmail (App Password) is preferred when configured; Resend is the fallback.
+// Neither set means every trigger logs to the console instead of throwing,
+// so auth flows stay testable.
+const smtp =
+  SMTP_USER && SMTP_PASS
+    ? nodemailer.createTransport({ service: "gmail", auth: { user: SMTP_USER, pass: SMTP_PASS } })
+    : null;
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
-// No Resend API key is provisioned yet — every trigger below logs to the
-// console in that case instead of throwing, so auth flows stay testable
-// (same fallback shape as lib/hubtel.ts's sendSms).
 async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+  if (smtp && SMTP_USER) {
+    try {
+      await smtp.sendMail({ from: SMTP_USER, to, subject, html });
+    } catch (error) {
+      console.error(`SMTP email failed for ${to}:`, error);
+    }
+    return;
+  }
+
   if (!resend) {
     console.log(`[DEV EMAIL] to=${to} subject=${subject}\n${html}`);
     return;
@@ -51,7 +67,7 @@ export async function sendStaffActivationEmail(email: string, link: string, role
 // a real production deploy stays safe by default even if Resend is never
 // configured there.
 export function isEmailUnconfigured(): boolean {
-  if (resend) return false;
+  if (smtp || resend) return false;
   if (process.env.NODE_ENV !== "production") return true;
   return process.env.SHOW_DEV_OTP === "true";
 }
