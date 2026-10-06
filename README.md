@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Ɔpemfoɔ Akwantuo
 
-## Getting Started
+A maternal health record system for Ghana. Midwives register mothers, laboratory technicians process test requests, doctors review records, and mothers and their partners see their own care in one place.
 
-First, run the development server:
+Built with Next.js 14 (App Router), Prisma on PostgreSQL, and deployed on Vercel.
+
+## Running locally
 
 ```bash
+npm install
+# create a .env file with the values listed under Settings
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Checks
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint    # ESLint
+npx tsc --noEmit  # typecheck
+npm test        # unit tests (Vitest); these never send real email or SMS
+npm run build
+```
 
-## Learn More
+CI runs all four on every push and pull request (`.github/workflows/ci.yml`).
 
-To learn more about Next.js, take a look at the following resources:
+## Settings
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Set these as environment variables. Never commit real values.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Name | Purpose |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL connection string |
+| `JWT_ACCESS_SECRET`, `JWT_REFRESH_SECRET` | Sign staff and mother sessions. Required in production. |
+| `SUPER_ADMIN_JWT_SECRET` | Signs admin sessions. Required in production. |
+| `SUPER_ADMIN_EMAIL`, `SUPER_ADMIN_PASSWORD` | Bootstraps the first Super Admin on an empty database |
+| `SMTP_USER`, `SMTP_PASS` | Gmail address and App Password for activation emails |
+| `RESEND_API_KEY`, `RESEND_FROM_EMAIL` | Optional email provider, used if SMTP isn't set |
+| `HUBTEL_CLIENT_ID`, `HUBTEL_CLIENT_SECRET` | SMS for activation codes and lab result alerts |
+| `SHOW_DEV_OTP` | `true` shows activation codes on screen when SMS isn't connected. Development fallback only. |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob storage for uploaded Learn & Prepare videos and audio |
 
-## Deploy on Vercel
+Without email or SMS credentials, activation codes and links are shown on screen. That is a known gap; see the project notes before using the app with real patients.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deploying
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Deploys run from Vercel. The build command applies database migrations (`prisma migrate deploy`) before building. Production settings live in the Vercel project's Environment Variables.
+
+## Project layout
+
+- `app/`: pages and API routes, grouped by role (`mother`, `midwife`, `doctor`, `lab-technician`, `partner`, `admin`)
+- `lib/`: auth, access checks, database queries, validation, email and SMS
+- `prisma/`: schema and migrations
+- `tests/`: unit tests
