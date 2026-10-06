@@ -1,27 +1,20 @@
 import Image from "next/image";
 import Link from "next/link";
-import OnboardingIllustration from "@/components/illustrations/OnboardingIllustration";
 import OnboardingSeenMarker from "@/components/OnboardingSeenMarker";
-import { CheckIcon } from "@/components/ui/icons";
+import { ArrowRightIcon, CheckIcon, MidwifeIcon, PersonIcon, ShieldCheckIcon } from "@/components/ui/icons";
 
-const FEATURES = ["Real-time referral tracking", "Shared patient records", "Emergency alerts & escalation"];
+const FEATURES = [
+  "See every test result in one place",
+  "Midwives and doctors share one record",
+  "Track visits and your next appointment",
+];
 
-// Back to the simple split layout: a calm purple half-panel (logo, wordmark,
-// feature checklist) on desktop, illustration-led content on the other side
-// — the same structure the shared auth layout's branding panel still uses
-// for login/activate/etc., just inlined here since onboarding has its own
-// route (for the skip-for-returning-visitors logic) rather than sharing
-// that layout file.
 export default function OnboardingWelcomePage() {
   return (
     <main className="flex min-h-screen flex-col lg:flex-row">
       <OnboardingSeenMarker />
 
       <div className="relative hidden w-1/2 shrink-0 flex-col justify-center gap-10 overflow-hidden bg-lilac-deeper px-12 py-16 lg:flex">
-        {/* A real photo instead of an abstract gradient — a purple scrim on
-            top keeps the panel reading as the same brand color and keeps
-            the white text/logo legible over it, wherever the photo is
-            lighter (photo credit: Unsplash, free license). */}
         <Image
           src="/images/onboarding-hero.jpg"
           alt=""
@@ -44,47 +37,85 @@ export default function OnboardingWelcomePage() {
               <span className="flex size-6 shrink-0 items-center justify-center rounded-badge bg-white/25 backdrop-blur-sm">
                 <CheckIcon className="size-3.5 text-white" />
               </span>
-              <p className="font-body text-sm text-white drop-shadow-md">{f}</p>
+              <p className="font-body text-base font-medium text-white drop-shadow-md">{f}</p>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="flex flex-1 flex-col items-center bg-[#F6F1F8] px-6 pb-6 pt-11 lg:w-1/2 lg:shrink-0 lg:justify-center lg:bg-white lg:px-10 lg:pt-0">
-        <div className="flex aspect-square w-full max-w-[360px] items-center justify-center rounded-card bg-white shadow-card">
-          <OnboardingIllustration className="w-[85%]" />
-        </div>
-
-        <div className="mt-5 flex items-center gap-2 lg:hidden">
-          <div className="flex size-8 items-center justify-center rounded-badge bg-primary">
-            <Image src="/images/logo.png" alt="" width={18} height={18} />
+      <div className="flex flex-1 flex-col items-center bg-[#F6F1F8] px-6 pb-8 pt-11 lg:w-1/2 lg:shrink-0 lg:justify-center lg:bg-white lg:px-10 lg:pt-0">
+        <div className="flex w-full max-w-sm flex-col gap-6">
+          <div className="flex items-center gap-2 lg:hidden">
+            <div className="flex size-8 items-center justify-center rounded-badge bg-primary">
+              <Image src="/images/logo.png" alt="" width={18} height={18} />
+            </div>
+            <p className="font-heading text-base font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
           </div>
-          <p className="font-heading text-base font-bold text-text-primary">Ɔpemfoɔ Akwantuo</p>
-        </div>
 
-        <div className="flex max-w-sm flex-col items-center gap-3 pt-6 text-center lg:pt-8">
-          <h1 className="font-heading text-2xl font-bold text-text-primary">Caring for every mother</h1>
-          <p className="font-body text-[15px] text-text-secondary">
-            Track pregnancies, manage referrals and connect mothers, midwives/nurses and doctors — all in one
-            place.
+          <div className="flex flex-col gap-2">
+            <h1 className="font-heading text-2xl font-bold text-text-primary">Who are you?</h1>
+            <p className="font-body text-[15px] text-text-secondary">
+              Choose the option that fits you and we&apos;ll take you to the right place.
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            <RoleOption
+              href="/activate"
+              icon={<PersonIcon className="size-5 text-lilac-dark" />}
+              title="I'm a mother or partner"
+              description="Your midwife registers you first. You'll get an activation code by SMS."
+            />
+            <RoleOption
+              href="/login"
+              icon={<MidwifeIcon className="size-5 text-lilac-dark" />}
+              title="I work at a health facility"
+              description="Midwife, doctor or lab technician. Sign in with the email your administrator set up."
+            />
+          </div>
+
+          <div className="flex items-start gap-3 rounded-card bg-white p-4 border border-border-color">
+            <ShieldCheckIcon className="mt-0.5 size-4 shrink-0 text-lilac-dark" />
+            <p className="font-body text-[13px] leading-5 text-text-secondary">
+              Your health record is private. Health staff access it to care for you, and you choose what your
+              partner can see.
+            </p>
+          </div>
+
+          <p className="text-center font-body text-[13px] text-text-secondary">
+            Already have an account?{" "}
+            <Link href="/login" className="font-semibold text-pink-deep">
+              Sign in
+            </Link>
           </p>
         </div>
-
-        <div className="flex-1 lg:hidden" />
-
-        <Link
-          href="/activate"
-          className="flex h-14 w-full max-w-xs items-center justify-center rounded-button bg-lilac-dark font-heading text-[17px] font-bold text-white lg:mt-8"
-        >
-          Get Started
-        </Link>
-        <p className="pt-4 font-body text-[13px] text-text-secondary">
-          Already have an account?{" "}
-          <Link href="/login" className="font-semibold text-pink-deep">
-            Sign in
-          </Link>
-        </p>
       </div>
     </main>
+  );
+}
+
+function RoleOption({
+  href,
+  icon,
+  title,
+  description,
+}: {
+  href: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="flex items-center gap-4 rounded-card bg-white p-4 border border-border-color transition-colors hover:border-lilac-dark"
+    >
+      <span className="flex size-11 shrink-0 items-center justify-center rounded-badge bg-lilac-light">{icon}</span>
+      <span className="flex min-w-0 flex-1 flex-col gap-0.5">
+        <span className="font-heading text-[16px] font-bold text-text-primary">{title}</span>
+        <span className="font-body text-[13px] leading-5 text-text-secondary">{description}</span>
+      </span>
+      <ArrowRightIcon className="size-4 shrink-0 text-text-secondary" />
+    </Link>
   );
 }
