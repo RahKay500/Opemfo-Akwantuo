@@ -64,13 +64,13 @@ export default function OnboardingWelcomePage() {
               href="/activate"
               icon={<PersonIcon className="size-5 text-lilac-dark" />}
               title="I'm a mother or partner"
-              description="Your midwife registers you first. You'll get an activation code by SMS."
+              description="Your midwife registers you first. Then enter your phone number to get your activation code."
             />
             <RoleOption
               href="/login"
               icon={<MidwifeIcon className="size-5 text-lilac-dark" />}
               title="I work at a health facility"
-              description="Midwife, doctor or lab technician. Sign in with the email your administrator set up."
+              description="Midwife, doctor or lab technician. Your administrator sends an activation link. Open it to set your password."
             />
           </div>
 
