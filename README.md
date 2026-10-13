@@ -4,6 +4,8 @@ A maternal health record system for Ghana. Midwives register mothers, laboratory
 
 Built with Next.js 14 (App Router), Prisma on PostgreSQL, and deployed on Vercel.
 
+**Full documentation:** [`docs/`](./docs/README.md) — architecture, the full data model, roles & access control, the API reference, clinical workflows and flagging logic, and security/privacy/testing. This README is just the quick-start.
+
 ## Running locally
 
 ```bash
@@ -59,29 +61,12 @@ Deploys run from Vercel. The build command applies database migrations (`prisma 
 
 ## Roles
 
-- **Midwife** — registers mothers, logs vitals each visit, requests lab tests, initiates referrals. Scoped to her own facility.
-- **Doctor** (shown in the UI as "Gynaecologist") — receives referrals and time-limited shared records from midwives, manages their facility's referral queue.
-- **Lab Technician** — processes lab test requests (`Pending → In Progress → Ready`/`Cancelled`), scoped to their facility.
-- **Mother** — the patient. Her own dashboard: record, vitals trends, referral status, appointment booking, symptom reporting, an emergency alert, and notification preferences.
-- **Partner** — not self-registered. A mother generates a revocable share link from her profile; using it activates a read-only Partner account scoped to what she chose to share.
-- **Admin** — a separate login and session system from the five roles above (`admin_session` cookie vs. `access_token`, separate JWT secret, separate `SuperAdmin` table). Four tiers — Platform, Regional, District, Facility — inferred from which scope field is set on the admin's row. Admins manage facilities and staff; the admin search endpoint deliberately never returns patients.
+Five clinical/patient roles (Midwife, Doctor, Lab Technician, Mother, Partner) sharing one `User` table, plus a separate four-tier Admin hierarchy (Platform / Regional / District / Facility) with its own login system that never touches clinical data. Full breakdown: [`docs/roles-and-access-control.md`](./docs/roles-and-access-control.md).
 
 ## Clinical flagging
 
-Vitals are checked against published thresholds when logged, and support clinical judgement rather than diagnosing:
-
-| Vital | High | Critical | Source |
-| --- | --- | --- | --- |
-| Systolic BP | ≥140 mmHg | ≥160 mmHg | ISSHP (Magee et al., 2022) |
-| Diastolic BP | ≥90 mmHg | ≥110 mmHg | ISSHP (Magee et al., 2022) |
-| Fetal heart rate | outside 110–160 bpm | — | FIGO (Ayres-de-Campos et al., 2015) |
-| Temperature | >38°C | — | — |
-
-Thresholds are fixed system-wide; they are not yet configurable per facility.
+Vitals are checked against published thresholds (ISSHP for blood pressure, FIGO for fetal heart rate) when logged, and support clinical judgement rather than diagnosing. Full thresholds and sources: [`docs/workflows-and-clinical-logic.md`](./docs/workflows-and-clinical-logic.md).
 
 ## Known gaps
 
-- SMS/email delivery logs to console locally and is only sent for real once Hubtel/SMTP credentials are set — see Settings above.
-- No formal clinical validation or usability study has been run yet.
-- Some admin staff-management views can still show patient names/phone numbers, even though patient search itself is blocked for admins.
-- Rate limiting (e.g. login attempts) lives in an in-memory map on a single process; a multi-instance deployment needs a shared store first.
+SMS/email aren't connected to a live provider by default, there's no formal clinical validation or usability study yet, some admin views can still show patient identifiers, and rate limiting doesn't yet survive multiple server instances. Full list with context: [`docs/security-privacy-and-testing.md`](./docs/security-privacy-and-testing.md).
